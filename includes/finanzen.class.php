@@ -1106,11 +1106,12 @@ class finanzenNEW extends finanzen {
 		
 		# Wenn es Konten gibt:
 		if(isset($konten[0]->id)) {
-			echo "<ul>";
+			echo "<table class='flatnetTable'>";
+			echo "<thead>" . "<td>ID</td>" . "<td>Name</td>"."<td>Optionen</td>"."</thead>";
 			for($i = 0; $i < sizeof($konten); $i++) {
-				echo "<li>" .$konten[$i]->id. " | " .$konten[$i]->konto. " | edit / X</li>";
+				echo "<tbody><td>" .$konten[$i]->id. "</td><td>" .$konten[$i]->konto. "</td><td><a href='?'>edit</a> <a href='?'>X</a></td></tbody>";
 			}
-			echo "</ul>";
+			echo "</table>";
 		}
 	}
 	
