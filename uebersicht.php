@@ -46,8 +46,10 @@
 				
 				# SQL Abfrage für den Vornamen und Nachnamen
 				$row = $uebersicht->getObjektInfo("SELECT id, vorname, nachname FROM adressbuch ORDER by TIMESTAMP DESC LIMIT 1");
-				echo "<p id='limited'>Anzahl: " . $menge . " Einträge <br>";
-				echo "Letzter Eintrag:<br>" . " " . $row->vorname . " " . $row->nachname . "</p>";
+				if(isset($row->vorname)) {
+					echo "<p id='limited'>Anzahl: " . $menge . " Einträge <br>";
+					echo "Letzter Eintrag:<br>" . " " . $row->vorname . " " . $row->nachname . "</p>";
+				}
 				echo "</p>";
 				echo "</div>";
 				echo "</div>";

@@ -29,7 +29,7 @@ class sql {
 		if($mode == "phpfriends") {
 			# PHP Friends
 			$host = "127.0.0.1";
-			$sqlusername = "root";
+			$sqlusername = "devUser";
 			$sqluserpassword = "";
 			$sqldatabase = "flathacksql1";
 			$errorsqlconnect .= "<p class=''>Quaggan kann Seite nicht finden. Nur 404. Quaggan traurig. Fuuuu</p>";
@@ -198,6 +198,7 @@ class sql {
 	function getObjektInfo($query) {
 		$ergebnis = mysql_query($query);
 		$row = mysql_fetch_object($ergebnis);
+		
 		return $row;
 	}
 

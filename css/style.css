@@ -1744,6 +1744,55 @@ input[type=password]:focus {
 	background-color: #e0ffd2;
 }
 
+.FinanzenMonate {
+	margin: 5px 0px 5px 0px;
+}
+
+.FinanzenMonate a {
+	color: grey;
+}
+
+.FinanzenMonate #selected {
+	background-color: #ffcecf;
+	color: black;
+}
+
+.FinanzenMonate #selected a {
+	color: black;
+}
+
+.FinanzenMonate li {
+	display: inline-block;
+	background-color: #dbdbdb;
+	padding: 5px;
+	margin: 0px 10px 0px 0px;
+	
+}
+
+.FinanzenKonten {
+	margin: 0px;
+}
+
+.FinanzenKonten a {
+	color: grey;
+}
+
+.FinanzenKonten #selected {
+	background-color: #ffcecf;
+	color: black;
+}
+
+.FinanzenKonten #selected a {
+	color: black;
+}
+
+.FinanzenKonten li {
+	display: inline-block;
+	margin: 0px 5px 4px 0px;
+	border: 1px solid grey;
+	padding: 5px;
+}
+
 .kontoTable {
 	border-collapse: collapse;
 	border: 2px solid white;
@@ -1778,6 +1827,10 @@ input[type=password]:focus {
 	padding-bottom: 10px;
 }
 
+.kontoTable tfoot td {
+	background-color: #c1ccff;
+}
+
 .kontoTable #minus {
 	color: #ff5e5e;
 	text-align: right;
@@ -1789,7 +1842,8 @@ input[type=password]:focus {
 }
 
 .kontoTable #today {
-	background-color: #b0e6ff;
+	background-color: #f0faff;
+	border: 1px solid black;
 	color: black;
 }
 
@@ -2200,7 +2254,6 @@ input[type=password]:focus {
 	color: #931e00;
 	padding: 5px;
 	border: 1px solid #CC2900;
-	box-shadow: 0px 0px 5px #CC2900;
 	background: white;
 	margin-top: 5px;
 	margin-bottom: 5px;

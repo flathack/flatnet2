@@ -3,68 +3,7 @@ include 'objekt/functions.class.php';
 
 class finanzen extends functions {
 
-	function showErrors() {
-		# Summe aller Umsätze
-		$kontostand = $this->getObjektInfo("SELECT sum(umsatzWert) AS summe FROM finanzen_umsaetze");
-		
-		# Buchungsnummer Check:
-
-		# Wenn eine Buchung korrupt ist:
-		if($kontostand->summe > 0 OR $kontostand->summe < 0) {
-				
-			echo "<div class='newChar'>";
-			echo "Achtung, es wurde ein Fehler in mindestens einer Buchung entdeckt. 
-				Die Werte innerhalb einer Buchungsnummer sind unterschiedlich, 
-				dies kann verschiedene Gründe haben. Der Administrator wurde über
-				dieses Problem informiert, doch falls dir die Buchungsnummer bekannt
-				ist, kannst du diesen Fehler auch selbst über einen EDIT korrigieren.";
-
-			$selectProblem = "SELECT max(buchungsnr) as max FROM finanzen_umsaetze";
-			$max = $this->getObjectsToArray($selectProblem);
-
-			$max = $max[0]->max;
-
-			$i = 0;
-			for ($i = 0 ; $i <= $max ; $i++) {
-				$select = "SELECT * FROM finanzen_umsaetze WHERE buchungsnr = $i ";
-				
-				# ANZAHL ÜBERPRÜFEN:
-				$selectAnzahl = "SELECT * FROM finanzen_umsaetze WHERE buchungsnr = $i";
-				$anzahl = $this->getAmount($selectAnzahl);
-				
-				if($anzahl != 2 AND $anzahl != 0) {
-					echo "<p class='meldung'>Es wurde eine Unvollständige Buchung entdeckt, diese wird jetzt automatisch gelöscht...</p>";
-					$delete = "DELETE FROM finanzen_umsaetze
-					WHERE buchungsnr = '$i' LIMIT 1";
-					if($this->sql_insert_update_delete($delete) == true) {
-						$this->logEintrag(true, "Buchung $i wurde wegen Unvollständigkeit gelöscht.", "Error");
-						echo "<p class='erfolg'>Fehlerhafte Buchung gelöscht</p>";
-					}
-				}
-				
-				$buchung = $this->getObjectsToArray($select);
-				$j = 0;
-				for($j = 0; $j < 2 ; $j++) {
-					# $buchung[$j]->umsatzName . " " . $buchung[$j]->umsatzWert . "<br>";
-					if(isset($buchung[$j]->umsatzWert) AND isset($buchung[$j+1]->umsatzWert)) {
-						if($buchung[$j]->umsatzWert * (-1) != $buchung[$j+1]->umsatzWert) {
-							echo "<p class='meldung'>Es gibt ein Problem bei  <strong>Buchungs-Nr. $i</strong>: Werte: " 
-									. $buchung[$j]->umsatzWert 
-									. " und " 
-									. $buchung[$j+1]->umsatzWert 
-									. " <a href='?surpress&id=" . $buchung[$j]->konto . "&UmsatzID=" . $buchung[$j]->id . "'>klicke hier um einen EDIT vorzunehmen</a></p>";
-							
-						}
-					}
-				}
-			}
-			echo "Wenn du fertig bist, klicke hier: <a href='?' class='buttonlink'>OK</a>";
-			echo "</div>";
-			if(!isset($_GET['surpress'])) {
-				exit;
-			}
-		}
-	}
+	
 	
 	/**
 	 * Zeigt die Gesamte Finanzverwaltung an. Hieraus werden die benötigten Funktionen selbst aufgerufen.
@@ -419,224 +358,487 @@ class finanzen extends functions {
 		echo "</table>";
 	}
 
-	/**
-	 * Neue Überweisung. Ermöglicht das Überweisen von Geld von einem auf ein anderes Konto.
-	 */
-	function insertUeberweisung() {
-		if(isset($_GET['newUeberweisung'])) {
-			if($this->userHasRight("18", 0) == true) {
-				
-				# Zurückbutton Manipulieren:
-				if(isset($_GET['ursprungKonto'])) {
-					$konto = $_GET['ursprungKonto'];
-					echo "<a href='?id=$konto&umsaetze=OK' class='highlightedLink'>Zurück</a>";
-				} else {
-					echo "<a href='?' class='highlightedLink'>Zurück</a>";
-				}
-				
-				echo "<h2>Eine Buchung durchführen</h2>";
-				echo "<div><form method=post>";
-				echo "<table class='kontoTable'>";
-				echo "<tbody><td>Beschreibung</td><td><input type=text value='' placeholder='Text' name='textUeberweisung'/></td></tbody>";
-					
-				$besitzer = $this->getUserID($_SESSION['username']);
-				$select = "SELECT * FROM finanzen_konten WHERE besitzer = '$besitzer'";
-				$absenderKonten = $this->getObjectsToArray($select);
-					
-				echo "<tbody><td>Gutschrift hier</td><td><select name='zielKonto'>";
-				$i = 0;
-				for ($i = 0 ; $i < sizeof($absenderKonten) ; $i++) {
-					echo "<option value='". $absenderKonten[$i]->id . "'>" . $absenderKonten[$i]->konto . "</option>";
-				}
-				echo "</select></td></tbody>";
-					
-				echo "<tbody><td>Absender: </td><td><select name='absenderKonto'>";
-				$i = 0;
-				for ($i = 0 ; $i < sizeof($absenderKonten) ; $i++) {
-					echo "<option value='". $absenderKonten[$i]->id . "'>" . $absenderKonten[$i]->konto . "</option>";
-				}
-				echo "</select></td></tbody>";
-				$timestamp = time(); $date = date("Y-m-d", $timestamp);
-				echo "<tbody><td>Betrag</td><td><input type=text value='' placeholder='Betrag' name='valueUeberweisung'/></td></tbody>";
-				echo "<tbody><td>Datum</td><td><input type=date value='$date' placeholder='Datum' name='dateUeberweisung'/></td></tbody>";
-				echo "<tbody><td colspan='2'><input type=submit name=sendnewUeberweisung value='Absenden' /></td></tbody>";
-				echo "<tbody><td colspan='2'>";
-					
-				echo "<input type=checkbox name=weitere value='1' class='checkbox' />
-						<label for='weitere'>Diese Überweisung für folgende weitere Tage durchführen</label>
-						";
-				echo "</td></tbody>";
-				$j = 0;
 
-				for ($j = 0 ; $j < 12 ; $j++) {
-					echo "<tbody><td colspan='2'><input type=date name=dates[$j] value='' placeholder='weiteres Datum' /></td></tbody>";
-				}
 
-				echo "</form></div>";
 
-				if(isset($_POST['sendnewUeberweisung'])
-						AND isset($_POST['valueUeberweisung'])
-						AND isset($_POST['textUeberweisung'])
-						AND isset($_POST['dateUeberweisung'])
-						AND isset($_POST['zielKonto'])
-						AND isset($_POST['absenderKonto'])
-				) {
-					$von = $_POST['absenderKonto'];
-					$datum = $_POST['dateUeberweisung'];
-					$nach = $_POST['zielKonto'];
-					$betrag =str_replace(',', '.', $_POST['valueUeberweisung']);
+} # Class Ende
 
-					$betragMinus = $betrag * (-1);
-
-					# Wenn Absender und Ziel gleich ist:
-					if($von == $nach) {
-						echo "<p class='meldung'>Absende und Zielkonto ist gleich. Buchung abgebrochen.</p>";
-						exit;
-					}
-
-					# Nächste Buchungsnummer herausfinden:
-					$nextBuchungsnummer = $this->getObjektInfo("SELECT max(buchungsnr) as max FROM finanzen_umsaetze");
-					$buchungsnummer = $nextBuchungsnummer->max;
-					if(!isset($buchungsnummer)) {
-						$buchungsnummer = 0;
-					}
-					$buchungsnummer = $buchungsnummer + 1;
-
-					$text = $_POST['textUeberweisung'];
-					$besitzer = $this->getUserID($_SESSION['username']);
-
-					if($von != "" AND $nach != "" AND isset($besitzer) AND $betrag != "" AND $betrag > 0 AND $datum != "" AND $text != "") {
-						$query = "INSERT INTO finanzen_umsaetze (buchungsnr, besitzer, konto, gegenkonto, umsatzName, umsatzWert, datum)
-						VALUES ('$buchungsnummer','$besitzer','$von','$nach','$text','$betragMinus','$datum')";
-
-						$query2 = "INSERT INTO finanzen_umsaetze (buchungsnr, besitzer, konto, gegenkonto, umsatzName, umsatzWert, datum)
-						VALUES ('$buchungsnummer','$besitzer','$nach','$von','$text','$betrag','$datum')";
-
-						if ($this->sql_insert_update_delete($query) == true AND $this->sql_insert_update_delete($query2) == true) {
-							echo "<p class='erfolg'>Überweisung durchgeführt</p>";
-						}
-
-						# Weitere Daten einfügen:
-						if(isset($_POST['weitere'])) {
-
-							$dates = $_POST['dates'];
-							$j = 0;
-							for ($j = 0; $j < 12 ; $j++) {
-									
-								# Nur gefüllte Inputfelder verwenden.
-								if($dates[$j] != "") {
-
-									# Nächste Buchungsnummer herausfinden:
-									$nextBuchungsnummer = $this->getObjektInfo("SELECT max(buchungsnr) as max FROM finanzen_umsaetze");
-									$buchungsnummer = $nextBuchungsnummer->max;
-									$buchungsnummer = $buchungsnummer + 1;
-
-									$query = "INSERT INTO finanzen_umsaetze (buchungsnr, besitzer, konto, gegenkonto, umsatzName, umsatzWert, datum)
-									VALUES ('$buchungsnummer','$besitzer','$von','$nach','$text','$betragMinus','$dates[$j]')";
-
-									$query2 = "INSERT INTO finanzen_umsaetze (buchungsnr, besitzer, konto, gegenkonto, umsatzName, umsatzWert, datum)
-									VALUES ('$buchungsnummer','$besitzer','$nach','$von','$text','$betrag','$dates[$j]')";
-
-									if ($this->sql_insert_update_delete($query) == true AND $this->sql_insert_update_delete($query2) == true) {
-										echo "<p class='erfolg'>Überweisung durchgeführt</p>";
-									}
-								}
-							}
-						}
-					}
-				}
-			} else {
-				echo "<p class='meldung'>Keine Berechtigung</p>";
-			}
-		}
-	}
-
-	/**
-	 * Ermöglicht das Einsetzen eines neuen Umsatzes.
-	 */
-	function insertUmsatz() {
+class finanzenNEW extends finanzen {
+	
+	function mainFinanzFunction() {
+		$besitzer = $this->getUserID($_SESSION['username']);
 		
-		if($this->userHasRight("18", 0) == true) {
-
-			$besitzer = $this->getUserID($_SESSION['username']);
-			$select = "SELECT * FROM finanzen_konten WHERE besitzer = '$besitzer'"; $konten = $this->getObjectsToArray($select);
-			$timestamp = time(); $date = date("Y-m-d", $timestamp);
+		# Navigationslinks
+		$this->showKontenInSelect($besitzer);
+		$this->showJahreLinks();
+		$this->showMonateLinks();
+		
+		# Informationsmeldungen
+		$this->showErrors();
+		$this->showFuturePastJahr();
+		$this->showFuturePastMonat();
+		$this->checkJahresabschluss();
+		
+		# Umsatzveränderungen
+		$this->showCreateNewUeberweisung();
+		$this->alterUmsatz();
+		
+		# Hauptansicht Monat
+		$this->showCurrentMonthInKonto($besitzer);
+		
+		# automatische Jahresabschluss-Generation.
+		$this->erstelleJahresabschluesseFromOldEintraegen();
+		
+		# automatische Monatsabschlussgeneration
+		$this->erstelleMonatsabschluesseFromOldEintraegen();
+		
+	}
 	
-			if(!isset($konten)) {
-				echo "<p class='info'>Du hast keine Konten, bitte <a href='?kontoverwaltung&neuesKonto'>lege ein Konto an!</a></p>";
-			} else {
-				echo "<form method=post>";
-				echo "<div class='newChar'>";
-				echo "<h2>Neuer Umsatz</h2>";
-				echo "<input type=text name=umsatzText value='' placeholder='Text' />";
-				echo "<input type=text name=umsatzValue value='' placeholder='Wert' />";
+	function mainKontoFunction() {
+		$besitzer = $this->getUserID($_SESSION['username']);
+		$this->showCreateNewKonto($besitzer);
+		$this->showKontoUebersicht($besitzer);
+	}
 	
-				echo "<input type=date name=umsatzDate value='$date' placeholder='Datum' />";
-				echo "<select name='konto'>";
+	private $shows;
 	
-				$i = 0;
-				for($i = 0; $i < sizeof($konten); $i++) {
-					echo "<option ";
-					if(isset($_GET['id']) and $_GET['id'] == $konten[$i]->id) {
-						echo "selected ";
-					}
-					echo "value='" . $konten[$i]->id .  "'>" . $konten[$i]->konto . "</option>";
-				}
+	/**
+	 * Zeigt den aktuellen Monat an.
+	 * @param unknown $besitzer
+	 */
+	function showCurrentMonthInKonto($besitzer) {
+		# Kontoinfo bekommen:
+		$kontoID = $this->getKontoIDFromGet();
+		$monat = $this->getMonatFromGet();
+		$currentMonth = $monat;
+		# jetziger Monat:
 	
-				echo "</select>";
-				echo "<input type=submit name=insertNewUmsatz value=Speichern />";
-				echo "</div>";
-				echo "</form>";
-			}
+		$currentYear = $this->getJahrFromGet();
+	
+		if($kontoID > 0) {
+			$umsaetze = $this->getUmsaetzeMonthFromKonto($besitzer, $currentMonth, $currentYear, $kontoID);
 				
-			if(isset($_POST['insertNewUmsatz'])
-					AND isset($_POST['umsatzText'])
-					AND isset($_POST['konto'])
-					AND isset($_POST['umsatzValue'])
-					AND isset($_POST['umsatzDate'])
-					AND $_POST['umsatzDate'] != ""
-					AND $_POST['konto'] != ""
-					AND $_POST['umsatzValue'] != ""
-					AND $_POST['umsatzText'] != "") {
+			# Jahresanfangssaldo bekommen:
+			$letztesJahr = $currentYear -1;
+			$summeJahresabschluesseBisJetzt = $this->getJahresabschluesseBISJETZT($besitzer, $kontoID, $currentYear);
+			$summeUmsaetzeDiesesJahr = $this->getObjektInfo("SELECT sum(umsatzWert) as summe 
+					FROM finanzen_umsaetze
+					WHERE besitzer = $besitzer
+					AND konto = $kontoID
+					AND year(datum) = $currentYear
+					AND month(datum) < $currentMonth");
+				
+			$startsaldo = $summeJahresabschluesseBisJetzt + $summeUmsaetzeDiesesJahr->summe;
+			$zwischensumme = $startsaldo;
+			echo "<table class='kontoTable'>";
+				
+			echo "<thead>";
+			echo "<td colspan=7>Monat:<strong> $currentMonth </strong>im Jahr <strong>$currentYear</strong> / Startsaldo diesen Monat: <strong>$startsaldo €</strong></td>";
+			echo "</thead>";
 	
-						# Variablen übernahme:
-						$besitzer = $this->getUserID($_SESSION['username']);
-						$konto = $_POST['konto'];
-						$umsatzName = $_POST['umsatzText'];
-						$umsatzWert =str_replace(',', '.', $_POST['umsatzValue']);
-						$datum = $_POST['umsatzDate'];
+			echo "<thead>";
+			echo "<td>BuchNr.</td>";
+			echo "<td>Gegenkonto.</td>";
+			echo "<td>Umsatz</td>";
+			echo "<td>Tag</td>";
+			echo "<td>Wert</td>";
+			echo "<td>Saldo</td>";
+			echo "<td>Optionen</td>";
+			echo "</thead>";
 	
-						# Check, ob es das Konto des Users ist:
-						$kontoBesitzer = $this->getObjektInfo("SELECT * FROM finanzen_konten WHERE id = '$konto' LIMIT 1");
-						if($kontoBesitzer->besitzer == "") {
-							echo "<p class='meldung'>Fehler beim speichern.</p>";
-							exit;
-						}
-	
-						$query = "INSERT INTO finanzen_umsaetze
-						(besitzer,konto, umsatzName, umsatzWert, datum) VALUES ('$besitzer','$konto','$umsatzName','$umsatzWert','$datum') ";
-	
-						if ($this->sql_insert_update_delete($query) == true) {
-							echo "<p class='erfolg'>Umsatz eingefügt</p>";
-						}
-			}
+			if(isset($umsaetze[0]->id)) {
+				
+				# Zeilengeneration #
+				
+				for ($i = 0 ; $i < sizeof($umsaetze); $i++) {
+					$zwischensumme = $zwischensumme + $umsaetze[$i]->umsatzWert;
 					
+					if($zwischensumme < 0) {
+						$spaltenFarbe = "rot";
+					} else {
+						$spaltenFarbe = "rightAlign";
+					}
+					
+					if($zwischensumme < 0) { $zeile = " id='minus' "; } else { $zeile = ""; }
+					if($umsaetze[$i]->umsatzWert < 0) { $zelle = " id='minus' "; } else { $zelle = " id='plus' "; }
+					echo "<tbody>";
+					echo "<td>" . $umsaetze[$i]->buchungsnr . "</td>";
+					echo "<td>" . $umsaetze[$i]->gegenkonto . "</td>";
+					echo "<td>" . $umsaetze[$i]->umsatzName . "</td>";
+					echo "<td>" . $umsaetze[$i]->tag . "</td>";
+					echo "<td $zelle>" . $umsaetze[$i]->umsatzWert . "</td>";
+					echo "<td id='$spaltenFarbe'>" . $zwischensumme . "</td>";
+					echo "<td>" . "<a class='rightBlueLink' href='?konto=$kontoID&monat=$monat&jahr=$currentYear&edit=" . $umsaetze[$i]->id . "'>edit</a>" . "</td>";
+					echo "</tbody>";
+					
+					# HEUTE Zeile anzeigen
+					$timestamp = time(); $heute = date("Y-m-d", $timestamp);
+					if($umsaetze[$i]->datum < $heute AND isset($umsaetze[$i+1]->datum) AND $umsaetze[$i+1]->datum >= $heute) {
+						$heute = date("d.m.Y", $timestamp);
+						echo "<tbody id='today'><td colspan='7'><a name='heute'>Heute ist der $heute</a> nächster Umsatz: " . $umsaetze[$i+1]->umsatzName . "</td></tbody>";
+					}
+				}
+			} else {
+				echo "<tbody><td colspan=6>In diesem Monat gibt es keine Umsätze.</td></tbody>";
+			}
+			
+			echo "<tfoot><td colspan=5 id='rightAlign'>Endsaldo: </td><td id='rightAlign'>$zwischensumme</td><td></td></tfoot>";
+	
+			echo "</table>";
+				
 		}
 	}
-
+	
+	/**
+	 * Zeigt die Navigation innerhalb der Finanzanwendung an.
+	 */
+	function showNavigation() {
+		
+		$kontoID = $this->getKontoIDFromGet();
+		$monat = $this->getMonatFromGet();
+		$jahr = $this->getJahrFromGet();
+		
+		echo "<div class='rightOuterBody'>
+				<ul>
+					<li><a href='index.php' >Start</a></li>
+					<li><a href='konten.php' >Konten</a></li>
+					<li><a href='?konto=$kontoID&monat=$monat&jahr=$jahr&newUeberweisung' >Neue Buchung</a></li>
+					<li><a href='?konto=$kontoID&monat=$monat&jahr=$jahr&checkJahresabschluesse' >Jahresabschlusscheck</a></li>
+				</ul>
+			</div>";
+	}
+	
+	function showMonateLinks() {
+		
+		if(isset($_GET['konto'])) {
+			$konto = $_GET['konto'];
+		} else {
+			$konto = 0;
+		}
+		
+		if(isset($_GET['jahr'])) {
+			$jahr = $_GET['jahr'];
+		} else {
+			$jahr = date("Y");
+		}
+		
+		if(isset($_GET['monat'])) {
+			$monat = $_GET['monat'];
+		} else {
+			$monat = "";
+		}
+		
+		echo "<ul class='FinanzenMonate'>";
+		
+			
+			echo "<li "; if($monat == 1) { echo " id='selected' "; } echo "><a href='?konto=$konto&monat=1&jahr=$jahr'>Januar</a></li>";
+			echo "<li "; if($monat == 2) { echo " id='selected' "; } echo "><a href='?konto=$konto&monat=2&jahr=$jahr'>Februar</a></li>";
+			echo "<li "; if($monat == 3) { echo " id='selected' "; } echo "><a href='?konto=$konto&monat=3&jahr=$jahr'>März</a></li>";
+			echo "<li "; if($monat == 4) { echo " id='selected' "; } echo "><a href='?konto=$konto&monat=4&jahr=$jahr'>April</a></li>";
+			echo "<li "; if($monat == 5) { echo " id='selected' "; } echo "><a href='?konto=$konto&monat=5&jahr=$jahr'>Mai</a></li>";
+			echo "<li "; if($monat == 6) { echo " id='selected' "; } echo "><a href='?konto=$konto&monat=6&jahr=$jahr'>Juni</a></li>";
+			echo "<li "; if($monat == 7) { echo " id='selected' "; } echo "><a href='?konto=$konto&monat=7&jahr=$jahr'>Juli</a></li>";
+			echo "<li "; if($monat == 8) { echo " id='selected' "; } echo "><a href='?konto=$konto&monat=8&jahr=$jahr'>August</a></li>";
+			echo "<li "; if($monat == 9) { echo " id='selected' "; } echo "><a href='?konto=$konto&monat=9&jahr=$jahr'>September</a></li>";
+			echo "<li "; if($monat == 10) { echo " id='selected' "; } echo "><a href='?konto=$konto&monat=10&jahr=$jahr'>Oktober</a></li>";
+			echo "<li "; if($monat == 11) { echo " id='selected' "; } echo "><a href='?konto=$konto&monat=11&jahr=$jahr'>November</a></li>";
+			echo "<li "; if($monat == 12) { echo " id='selected' "; } echo "><a href='?konto=$konto&monat=12&jahr=$jahr'>Dezember</a></li>";
+		echo "</ul>";
+	}
+	
+	function showJahreLinks() {
+	
+		if(isset($_GET['konto'])) {
+			$konto = $_GET['konto'];
+		} else {
+			$konto = 0;
+		}
+		
+		if(isset($_GET['monat'])) {
+			$monat = $_GET['monat'];
+		} else {
+			$monat = date("m");
+		}
+		
+		if(isset($_GET['jahr'])) {
+			$jahr = $_GET['jahr'];
+		} else {
+			$jahr = date("Y");
+		}
+		
+		echo "<ul class='FinanzenMonate'>";
+		echo "<li "; if($jahr == 2013) { echo " id='selected' "; } echo "><a href='?konto=$konto&monat=$monat&jahr=2013'>2013</a></li>";
+		echo "<li "; if($jahr == 2014) { echo " id='selected' "; } echo "><a href='?konto=$konto&monat=$monat&jahr=2014'>2014</a></li>";
+		echo "<li "; if($jahr == 2015) { echo " id='selected' "; } echo "><a href='?konto=$konto&monat=$monat&jahr=2015'>2015</a></li>";
+		echo "<li "; if($jahr == 2016) { echo " id='selected' "; } echo "><a href='?konto=$konto&monat=$monat&jahr=2016'>2016</a></li>";
+		echo "<li "; if($jahr == 2017) { echo " id='selected' "; } echo "><a href='?konto=$konto&monat=$monat&jahr=2017'>2017</a></li>";
+		echo "<li "; if($jahr == 2018) { echo " id='selected' "; } echo "><a href='?konto=$konto&monat=$monat&jahr=2018'>2018</a></li>";
+		echo "</ul>";
+	}
+	
+	/**
+	 * Zeigt ein Select mit den Konten des Nutzers an.
+	 * @param unknown $besitzer
+	 */
+	function showKontenInSelect($besitzer) {
+		$monat = $this->getMonatFromGet();
+		$jahr = $this->getJahrFromGet();
+		
+		$konten = $this->getAllKonten($besitzer);
+		
+		if(isset($_GET['konto'])) {
+			$konto = $_GET['konto'];
+		} else {
+			$konto = "";
+		}
+		
+		echo "<ul class='FinanzenKonten'>";
+			for ($i = 0; $i < sizeof($konten); $i++) {
+				echo "<li "; 
+				if($konto == $konten[$i]->id) { echo " id='selected' "; } 
+				echo "><a href='?konto=".$konten[$i]->id."&monat=$monat&jahr=$jahr'>" .$konten[$i]->konto. "</a></li>";
+			}
+		echo "</ul>";
+	}
+	
+	/**
+	 * Gibt die Get Variable KONTO zurück.
+	 * @return unknown|boolean
+	 */
+	function getKontoIDFromGet() {
+		if(isset($_GET['konto'])) {
+			$kontoID = $_GET['konto'];
+			
+			return $kontoID;
+		} else {
+			return false;
+		}
+	}
+	
+	/**
+	 * Gibt den Monat zurück.
+	 * @return unknown|boolean
+	 */
+	function getMonatFromGet() {
+		if(isset($_GET['monat'])) {
+			$monat = $_GET['monat'];
+		} else {
+			$monat = date("m");
+		}
+		
+		return $monat;
+	}
+	
+	/**
+	 * Gibt das Jahr zurück.
+	 * @return unknown|boolean
+	 */
+	function getJahrFromGet() {
+		if(isset($_GET['jahr'])) {
+			$jahr = $_GET['jahr'];
+		} else {
+			$jahr = date("Y");
+		}
+	
+		return $jahr;
+	}
+	
+	/**
+	 * Zeigt eine Meldung an, wenn das gewählte Jahr in der Zukunft liegt.
+	 */
+	function showFuturePastJahr() {
+		if(isset($_GET['jahr'])) {
+			$jahr = $_GET['jahr'];
+			$currentJahr = date("Y");
+			
+			if($this->checkIfJahrIsInFuture($currentJahr, $jahr) == true) {
+				echo "<p class='info'>Das gewählte Jahr liegt in der Zukunft.";
+			}
+			
+			if($this->checkIfJahrIsInPast($currentJahr, $jahr) == true) {
+				echo "<p class='info'>Das Jahr liegt in der Vergangenheit.";
+			}
+		}
+	}
+	
+	/**
+	 * Zeigt eine Meldung an, wenn der gewählte Monat in der Zukunft liegt.
+	 */
+	function showFuturePastMonat() {
+		if(isset($_GET['monat'])) {
+			$monat = $_GET['monat'];
+			$currentMonat = date("m");
+				
+			if($this->checkIfJahrIsInFuture($currentMonat, $monat) == true) {
+				# echo "<p class='info'>Der Monat liegt in der Zukunft";
+			}
+				
+			if($this->checkIfJahrIsInPast($currentMonat, $monat) == true) {
+				echo "<p class='info'>Der Monat liegt in der Vergangenheit.";
+			}
+		}
+	}
+	
+	/**
+	 * Prüft, ob Jahr in der Zukunft ist.
+	 * @param unknown $currentJahr
+	 * @param unknown $zuPruefendesJahr
+	 * @return boolean
+	 */
+	function checkIfJahrIsInFuture($currentJahr, $zuPruefendesJahr) {
+		if($zuPruefendesJahr > $currentJahr) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+	
+	/**
+	 * Prüft, ob Jahr in der Vergangenheit liegt.
+	 * @param unknown $currentJahr
+	 * @param unknown $zuPruefendesJahr
+	 * @return boolean
+	 */
+	function checkIfJahrIsInPast($currentJahr, $zuPruefendesJahr) {
+		if($zuPruefendesJahr < $currentJahr) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+	
+	/**
+	 * Prüft, ob Monat in der Zukunft ist.
+	 * @param unknown $currentJahr
+	 * @param unknown $zuPruefendesJahr
+	 * @return boolean
+	 */
+	function checkIfMonatIsInFuture($currentMonat, $zuPruefenderMonat) {
+		if($zuPruefenderMonat > $currentMonat) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+	
+	/**
+	 * Prüft, ob Monat in der Vergangenheit liegt.
+	 * @param unknown $currentJahr
+	 * @param unknown $zuPruefendesJahr
+	 * @return boolean
+	 */
+	function checkIfMonatIsInPast($currentMonat, $zuPruefenderMonat) {
+		if($zuPruefenderMonat < $currentMonat) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+	
+	private $reCalc;
+	
+	/**
+	 * Berechnet die Monatsabschlüsse neu, wenn sich z. B. in der Vergangenheit etwas geändert hat.
+	 * @param unknown $besitzer
+	 * @param unknown $konto
+	 */
+	function reCalcMonatsabschluesse($besitzer, $konto, $jahr) {
+		
+	}
+	
+	/**
+	 * Berechnet die Jahresabschlüsse neu, wenn sich in der Vergangenheit etwas geändert hat.
+	 * @param unknown $besitzer
+	 * @param unknown $konto
+	 */
+	function reCalcJahresabschluesse($besitzer, $konto) {
+		
+	}
+	
+	private $errors;
+	
+	function showErrors() {
+		# Summe aller Umsätze
+		$kontostand = $this->getObjektInfo("SELECT sum(umsatzWert) AS summe FROM finanzen_umsaetze");
+	
+		# Buchungsnummer Check:
+	
+		# Wenn eine Buchung korrupt ist:
+		if($kontostand->summe > 0 OR $kontostand->summe < 0) {
+	
+			echo "<div class='newChar'>";
+			echo "Achtung, es wurde ein Fehler in mindestens einer Buchung entdeckt.
+				Die Werte innerhalb einer Buchungsnummer sind unterschiedlich,
+				dies kann verschiedene Gründe haben. Der Administrator wurde über
+				dieses Problem informiert, doch falls dir die Buchungsnummer bekannt
+				ist, kannst du diesen Fehler auch selbst über einen EDIT korrigieren.";
+	
+			$selectProblem = "SELECT max(buchungsnr) as max FROM finanzen_umsaetze";
+			$max = $this->getObjectsToArray($selectProblem);
+	
+			$max = $max[0]->max;
+	
+			$i = 0;
+			for ($i = 0 ; $i <= $max ; $i++) {
+				$select = "SELECT * FROM finanzen_umsaetze WHERE buchungsnr = $i ";
+	
+				# ANZAHL ÜBERPRÜFEN:
+				$selectAnzahl = "SELECT * FROM finanzen_umsaetze WHERE buchungsnr = $i";
+				$anzahl = $this->getAmount($selectAnzahl);
+	
+				if($anzahl != 2 AND $anzahl != 0) {
+					echo "<p class='meldung'>Es wurde eine Unvollständige Buchung entdeckt, diese wird jetzt automatisch gelöscht...</p>";
+					$delete = "DELETE FROM finanzen_umsaetze
+					WHERE buchungsnr = '$i' LIMIT 1";
+					if($this->sql_insert_update_delete($delete) == true) {
+						$this->logEintrag(true, "Buchung $i wurde wegen Unvollständigkeit gelöscht.", "Error");
+						echo "<p class='erfolg'>Fehlerhafte Buchung gelöscht</p>";
+					}
+				}
+	
+				$buchung = $this->getObjectsToArray($select);
+				$j = 0;
+				for($j = 0; $j < 2 ; $j++) {
+					# $buchung[$j]->umsatzName . " " . $buchung[$j]->umsatzWert . "<br>";
+					if(isset($buchung[$j]->umsatzWert) AND isset($buchung[$j+1]->umsatzWert)) {
+						if($buchung[$j]->umsatzWert * (-1) != $buchung[$j+1]->umsatzWert) {
+							echo "<p class='meldung'>Es gibt ein Problem bei  <strong>Buchungs-Nr. $i</strong>: Werte: "
+							. $buchung[$j]->umsatzWert
+							. " und "
+									. $buchung[$j+1]->umsatzWert
+									. " <a href='?surpress&id=" . $buchung[$j]->konto . "&UmsatzID=" . $buchung[$j]->id . "'>klicke hier um einen EDIT vorzunehmen</a></p>";
+								
+						}
+					}
+				}
+			}
+			echo "Wenn du fertig bist, klicke hier: <a href='?' class='buttonlink'>OK</a>";
+			echo "</div>";
+			if(!isset($_GET['surpress'])) {
+				exit;
+			}
+		}
+	}
+	
+	private $umsaetze;
+	
 	/**
 	 * Ermöglicht das modifizieren eines Umsatzes.
 	 */
 	function alterUmsatz() {
 		if($this->userHasRight("18", 0) == true) {
-			if(isset($_GET['UmsatzID'])) {
+			if(isset($_GET['edit'])) {
+				
+				$kontoLink = $this->getKontoIDFromGet();
+				$monat = $this->getMonatFromGet();
+				$jahr = $this->getJahrFromGet();
 	
-				$id = $_GET['UmsatzID'];
+				$id = $_GET['edit'];
 				$besitzer = $this->getUserID($_SESSION['username']);
 				$umsatzInfo = $this->getObjektInfo("SELECT * FROM finanzen_umsaetze WHERE id = '$id' and besitzer = '$besitzer'");
 	
 				echo "<div id='draggable' class='alterUmsatz'>";
-				echo "<a href='?umsaetze&id=" . $umsatzInfo->konto . "#showRow" . $umsatzInfo->id . "' class='neuerSchliessKnopf'>X</a>";
+				echo "<a href='?konto=$kontoLink&monat=$monat&jahr=$jahr' class='neuerSchliessKnopf'>X</a>";
 				echo "<form method=post>";
 				echo "<p class=''>Umsatz Nr. " . $umsatzInfo->id . "</p>";
 				echo "<input type=text name=umsatzName value='" . $umsatzInfo->umsatzName . "' /><br>";
@@ -658,8 +860,8 @@ class finanzen extends functions {
 					$wert = str_replace(',', '.', $_POST['umsatzWert']);
 					$datum = $_POST['umsatzDatum'];
 					$besitzer = $this->getUserID($_SESSION['username']);
-					$id = $_GET['UmsatzID'];
-						
+					$id = $_GET['edit'];
+	
 					# Buchungsnummer herausfinden;
 					$objektBuchungsNr = $this->getObjektInfo("SELECT id, buchungsnr FROM finanzen_umsaetze WHERE id = '$id'");
 					$buchungsnr = $objektBuchungsNr->buchungsnr;
@@ -708,7 +910,7 @@ class finanzen extends functions {
 					$wert = $_POST['umsatzWert'];
 					$besitzer = $this->getUserID($_SESSION['username']);
 					$datum = $_POST['umsatzDatum'];
-					$id = $_GET['UmsatzID'];
+					$id = $_GET['edit'];
 	
 					#Buchungsnummer herausfinden;
 					$objektBuchungsNr = $this->getObjektInfo("SELECT id, buchungsnr FROM finanzen_umsaetze WHERE id = '$id'");
@@ -733,104 +935,164 @@ class finanzen extends functions {
 			}
 		}
 	}
-
-
-} # Class Ende
-
-class finanzenNEW extends finanzen {
-	
-	function mainFinanzFunction() {
-		# automatische Jahresabschluss-Generation.
-		$this->erstelleJahresabschluesseFromOldEintraegen();
-		# automatische Monatsabschlussgeneration
-	#	$this->erstelleMonatsabschluesseFromOldEintraegen();
-		
-	}
 	
 	/**
-	 * Zeigt die Navigation an.
+	 * Neue Überweisung. Ermöglicht das Überweisen von Geld von einem auf ein anderes Konto.
 	 */
-	function showNavigation() {
-		echo "<div class='rightOuterBody'>
-				<ul>
-				<li><a href='index.php' >Umsätze</a></li>
-				<li><a href='?kontoverwaltung' >Konten</a></li>
-				<li><a href='?sollhabenKonten' >Soll / Haben</a></li>
-				</ul>
-			</div>";
+	function showCreateNewUeberweisung() {
+		if(isset($_GET['newUeberweisung'])) {
+			if($this->userHasRight("18", 0) == true) {
+				
+				$kontoID = $this->getKontoIDFromGet();
+				$monat = $this->getMonatFromGet();				
+				$jahr = $this->getJahrFromGet();
+					
+				echo "<a href='?konto=$kontoID&monat=$monat&jahr=$jahr' class='highlightedLink'>Zurück</a>";
+	
+				echo "<h2>Eine Buchung durchführen</h2>";
+				echo "<div><form method=post>";
+				echo "<table class='kontoTable'>";
+				echo "<tbody><td>Beschreibung</td><td><input type=text value='' placeholder='Text' name='textUeberweisung'/></td></tbody>";
+					
+				$besitzer = $this->getUserID($_SESSION['username']);
+				$select = "SELECT * FROM finanzen_konten WHERE besitzer = '$besitzer'";
+				$absenderKonten = $this->getObjectsToArray($select);
+					
+				echo "<tbody><td>Gutschrift hier</td><td><select name='zielKonto'>";
+				$i = 0;
+				for ($i = 0 ; $i < sizeof($absenderKonten) ; $i++) {
+					echo "<option value='". $absenderKonten[$i]->id . "'>" . $absenderKonten[$i]->konto . "</option>";
+				}
+				echo "</select></td></tbody>";
+					
+				echo "<tbody><td>Absender: </td><td><select name='absenderKonto'>";
+				$i = 0;
+				for ($i = 0 ; $i < sizeof($absenderKonten) ; $i++) {
+					echo "<option value='". $absenderKonten[$i]->id . "'>" . $absenderKonten[$i]->konto . "</option>";
+				}
+				echo "</select></td></tbody>";
+				$timestamp = time(); $date = date("Y-m-d", $timestamp);
+				echo "<tbody><td>Betrag</td><td><input type=text value='' placeholder='Betrag' name='valueUeberweisung'/></td></tbody>";
+				echo "<tbody><td>Datum</td><td><input type=date value='$date' placeholder='Datum' name='dateUeberweisung'/></td></tbody>";
+				echo "<tbody><td colspan='2'><input type=submit name=sendnewUeberweisung value='Absenden' /></td></tbody>";
+				echo "<tbody><td colspan='2'>";
+					
+				echo "<input type=checkbox name=weitere value='1' class='checkbox' />
+						<label for='weitere'>Diese Überweisung für folgende weitere Tage durchführen</label>
+						";
+				echo "</td></tbody>";
+				$j = 0;
+	
+				for ($j = 0 ; $j < 12 ; $j++) {
+					echo "<tbody><td colspan='2'><input type=date name=dates[$j] value='' placeholder='weiteres Datum' /></td></tbody>";
+				}
+	
+				echo "</form></div>";
+	
+				if(isset($_POST['sendnewUeberweisung'])
+						AND isset($_POST['valueUeberweisung'])
+						AND isset($_POST['textUeberweisung'])
+						AND isset($_POST['dateUeberweisung'])
+						AND isset($_POST['zielKonto'])
+						AND isset($_POST['absenderKonto'])
+				) {
+					$von = $_POST['absenderKonto'];
+					$datum = $_POST['dateUeberweisung'];
+					$nach = $_POST['zielKonto'];
+					$betrag =str_replace(',', '.', $_POST['valueUeberweisung']);
+	
+					$betragMinus = $betrag * (-1);
+	
+					# Wenn Absender und Ziel gleich ist:
+					if($von == $nach) {
+						echo "<p class='meldung'>Absende und Zielkonto ist gleich. Buchung abgebrochen.</p>";
+						exit;
+					}
+	
+					# Nächste Buchungsnummer herausfinden:
+					$nextBuchungsnummer = $this->getObjektInfo("SELECT max(buchungsnr) as max FROM finanzen_umsaetze");
+					$buchungsnummer = $nextBuchungsnummer->max;
+					if(!isset($buchungsnummer)) {
+						$buchungsnummer = 0;
+					}
+					$buchungsnummer = $buchungsnummer + 1;
+	
+					$text = $_POST['textUeberweisung'];
+					$besitzer = $this->getUserID($_SESSION['username']);
+	
+					if($von != "" AND $nach != "" AND isset($besitzer) AND $betrag != "" AND $betrag > 0 AND $datum != "" AND $text != "") {
+						$query = "INSERT INTO finanzen_umsaetze (buchungsnr, besitzer, konto, gegenkonto, umsatzName, umsatzWert, datum)
+						VALUES ('$buchungsnummer','$besitzer','$von','$nach','$text','$betragMinus','$datum')";
+	
+						$query2 = "INSERT INTO finanzen_umsaetze (buchungsnr, besitzer, konto, gegenkonto, umsatzName, umsatzWert, datum)
+						VALUES ('$buchungsnummer','$besitzer','$nach','$von','$text','$betrag','$datum')";
+	
+						if ($this->sql_insert_update_delete($query) == true AND $this->sql_insert_update_delete($query2) == true) {
+							echo "<p class='erfolg'>Überweisung durchgeführt</p>";
+						}
+	
+						# Weitere Daten einfügen:
+						if(isset($_POST['weitere'])) {
+	
+							$dates = $_POST['dates'];
+							$j = 0;
+							for ($j = 0; $j < 12 ; $j++) {
+									
+								# Nur gefüllte Inputfelder verwenden.
+								if($dates[$j] != "") {
+	
+									# Nächste Buchungsnummer herausfinden:
+									$nextBuchungsnummer = $this->getObjektInfo("SELECT max(buchungsnr) as max FROM finanzen_umsaetze");
+									$buchungsnummer = $nextBuchungsnummer->max;
+									$buchungsnummer = $buchungsnummer + 1;
+	
+									$query = "INSERT INTO finanzen_umsaetze (buchungsnr, besitzer, konto, gegenkonto, umsatzName, umsatzWert, datum)
+									VALUES ('$buchungsnummer','$besitzer','$von','$nach','$text','$betragMinus','$dates[$j]')";
+	
+									$query2 = "INSERT INTO finanzen_umsaetze (buchungsnr, besitzer, konto, gegenkonto, umsatzName, umsatzWert, datum)
+									VALUES ('$buchungsnummer','$besitzer','$nach','$von','$text','$betrag','$dates[$j]')";
+	
+									if ($this->sql_insert_update_delete($query) == true AND $this->sql_insert_update_delete($query2) == true) {
+										echo "<p class='erfolg'>Überweisung durchgeführt</p>";
+									}
+								}
+							}
+						}
+					}
+				}
+			} else {
+				echo "<p class='meldung'>Keine Berechtigung</p>";
+			}
+		}
 	}
 	
 	/**
-	 * Zeigt alle Monatsabschlüsse an.
+	 * Gibt die Umsaetze des angegeben Monats aus dem Konto zurück.
 	 * @param unknown $besitzer
 	 * @param unknown $monat
-	 */
-	function showMonateUebersicht($besitzer, $monat) {
-		
-	}
-	
-	/**
-	 * Zeigt alle Jahresabschlüsse an.
-	 * @param unknown $besitzer
-	 * @param unknown $jahr
-	 */
-	function showJahreUebersicht($besitzer, $jahr) {
-		
-	}
-	
-	/**
-	 * Zeigt die Informationen eines Monats zu einem bestimmten Konto an.
-	 * @param unknown $besitzer
-	 * @param unknown $monat
-	 * @param unknown $konto
-	 */
-	function showMonatInfo($besitzer, $monat, $konto) {
-		
-	}
-	
-	/**
-	 * Zeigt die Informationen eines Jahres zu einem bestimmten Jahr an.
-	 * @param unknown $besitzer
 	 * @param unknown $jahr
 	 * @param unknown $konto
+	 * @return unknown|boolean
 	 */
-	function showJahresInfo($besitzer, $jahr, $konto) {
+	function getUmsaetzeMonthFromKonto($besitzer, $monat, $jahr, $konto) {
+		$umsaetze = "SELECT *
+		, day(datum) as tag
+		, year(datum) as jahr
+		, month(datum) as monat 
+		FROM finanzen_umsaetze
+		WHERE besitzer = $besitzer
+		AND konto = $konto
+		HAVING jahr = $jahr
+		AND monat = $monat
+		ORDER BY tag, id";
 		
-	}
-	
-	/**
-	 * Erstellt einen Monatsabschluss zum angegeben Konto
-	 */
-	function erstelleMonatsAbschluss($besitzer, $konto, $monat) {
+		$ergebnis = $this->getObjectsToArray($umsaetze);
 		
-	}
-	
-	/**
-	 * Erstellt einen Jahresabschluss
-	 * @param unknown $besitzer
-	 * @param unknown $konto
-	 * @param unknown $jahr
-	 */
-	function erstelleJahresabschluss($besitzer, $konto, $jahr) {
-		
-	}
-	
-	/**
-	 * Berechnet die Monatsabschlüsse neu, wenn sich z. B. in der Vergangenheit etwas geändert hat.
-	 * @param unknown $besitzer
-	 * @param unknown $konto
-	 */
-	function reCalcMonatsabschluesse($besitzer, $konto) {
-		
-	}
-	
-	/**
-	 * Berechnet die Jahresabschlüsse neu, wenn sich in der Vergangenheit etwas geändert hat.
-	 * @param unknown $besitzer
-	 * @param unknown $konto
-	 */
-	function reCalcJahresabschluesse($besitzer, $konto) {
-		
+		if(isset($ergebnis[0]->id)) {
+			return $ergebnis;
+		} else {
+			return false;
+		}
 	}
 	
 	private $konto;
@@ -840,25 +1102,16 @@ class finanzenNEW extends finanzen {
 	 * @param unknown $besitzer
 	 */
 	function showKontoUebersicht($besitzer) {
+		$konten = $this->getAllKonten($besitzer);
 		
-	}
-	
-	/**
-	 * Gibt die Informationen des angegeben Kontos des Bsitzers zurück.
-	 * @param unknown $besitzer
-	 * @param unknown $kontonummer
-	 */
-	function showKontoInfo($besitzer, $kontonummer) {
-		
-	}
-	
-	/**
-	 * gibt die Kontoinformationen der angegeben Kontonummer und des Besitzers zurück.
-	 * @param unknown $besitzer
-	 * @param unknown $kontonummer
-	 */
-	function getKontoInfo($besitzer, $kontonummer) {
-		
+		# Wenn es Konten gibt:
+		if(isset($konten[0]->id)) {
+			echo "<ul>";
+			for($i = 0; $i < sizeof($konten); $i++) {
+				echo "<li>" .$konten[$i]->id. " | " .$konten[$i]->konto. " | edit / X</li>";
+			}
+			echo "</ul>";
+		}
 	}
 	
 	/**
@@ -877,22 +1130,139 @@ class finanzenNEW extends finanzen {
 	}
 	
 	/**
-	 * Gibt den Monatsabschluss aus den angegebenen Daten wider.
+	 * Ernöglicht die Erstellung eines neuen Kontos.
+	 */
+	function showCreateNewKonto($besitzer) {
+		echo "<a href='?neuesKonto' class='buttonlink'>Neues Konto</a>";
+		if(isset($_GET['neuesKonto'])) {
+			echo "<div class='newChar'><form method=post><input type=text name=newKonto value='' placeholder='Kontoname' />";
+			echo "<input type=submit name=insertNewKonto value=Speichern />";
+			echo "</form></div>";
+		
+			if(isset($_POST['insertNewKonto']) AND $this->userHasRight("18", 0) == true) {
+				$konto = $_POST['newKonto'];
+				if($konto != "") {
+					if($this->createNewKonto($besitzer, $konto) == true) {
+						echo "<p class='erfolg'>Konto wurde erstellt.";
+					} else {
+						echo "<p class='meldung'>Es gab einen Fehler beim erstellen des Kontos</p>";
+					}
+				}
+			}
+		}
+	}
+	
+	/**
+	 * Erstellt ein Konto für den Besitzer.
+	 * @param unknown $besitzer
+	 * @param unknown $kontoname
+	 * @return boolean
+	 */
+	function createNewKonto($besitzer, $kontoname) {
+		$query = "INSERT INTO finanzen_konten (besitzer,konto) VALUES ('$besitzer','$kontoname') ";
+		
+		if ($this->sql_insert_update_delete($query) == true) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+	
+	private $abschluesse;
+	
+	/**
+	 * Summiert die Umsätze der vergangenen Monate
+	 * @param unknown $besitzer
+	 * @param unknown $jetzigerMonat
+	 * @param unknown $jahr
+	 * @param unknown $konto
+	 * @return number
+	 */
+	function getMonatsabschluesseBISJETZT($besitzer, $jetzigerMonat, $jahr, $konto) {
+		$summierendeMonate = $jetzigerMonat - 1;
+		$summe = 0;
+		for ($i = 1 ; $i <= $summierendeMonate; $i++) {
+			$summe = $summe + $this->getMonatsabschluss($besitzer, $konto, $i, $jahr);
+		}
+		
+		return $summe;
+		
+	}
+	
+	/**
+	 * Gibt die Summe der Jahresabschlüsse wieder.
+	 * @param unknown $besitzer
+	 * @param unknown $jahr
+	 * @param unknown $konto
+	 * @return unknown
+	 */
+	function getJahresabschluesseBISJETZT($besitzer, $konto, $jetzigesJahr) {
+		$query = "SELECT sum(wert) as summe 
+		FROM finanzen_jahresabschluss 
+		WHERE besitzer = $besitzer 
+		AND konto = $konto 
+		AND jahr < $jetzigesJahr";	
+		$summe = $this->getObjektInfo($query);
+		
+		if(isset($summe->summe)) {
+			$summeWert = $summe->summe;
+		} else {
+			$summeWert = 0;
+		}
+		
+		return $summeWert;
+	}
+	
+	private $monat;
+	
+	/**
+	 * Gibt den Monatsabschluss aus den angegebenen Daten wieder.
 	 * @param unknown $besitzer
 	 * @param unknown $konto
 	 * @param unknown $monat
 	 * @param unknown $jahr
 	 */
 	function getMonatsabschluss($besitzer, $konto, $monat, $jahr) {
-		$query = "SELECT * FROM finanzen_monatsabschluss WHERE konto = '$konto' AND besitzer = '$besitzer' AND jahr = '$jahr' AND monat = '$monat'";
+		$query = "SELECT * 
+		FROM finanzen_monatsabschluss 
+		WHERE konto = '$konto' 
+		AND besitzer = '$besitzer' 
+		AND year = '$jahr' 
+		AND monat = '$monat'";
 		
 		$monatsabschluss = $this->getObjektInfo($query);
 		
-		if(isset($jahresabschluss->jahr)) {
+		if(isset($monatsabschluss->year)) {
 			return $monatsabschluss->wert;
 		} else {
 			return false;
 		}
+	}
+	
+	/**
+	 * gibt den Saldo des Monats im aktuellen Jahr, dieses Besitzers, zu diesem Konto zurück.
+	 * @param unknown $besitzer
+	 * @param unknown $konto
+	 * @param unknown $jahr
+	 * @param unknown $monat
+	 */
+	function getSaldoFromMonat($besitzer, $konto, $monat, $jahr) {
+		$query = "SELECT *
+		FROM finanzen_umsaetze
+		WHERE konto = $konto
+		AND besitzer = $besitzer
+		HAVING year(datum) = $jahr
+		AND month(datum) = $monat;";
+	
+		$umsaetze = $this->getObjectsToArray($query);
+	
+		# SUMME bilden
+		$summe = 0;
+		for($i = 0 ; $i < sizeof($umsaetze); $i++) {
+			$summe = $summe + $umsaetze[$i]->umsatzWert;
+		}
+	
+		return $summe;
 	}
 	
 	/**
@@ -901,43 +1271,56 @@ class finanzenNEW extends finanzen {
 	function erstelleMonatsabschluesseFromOldEintraegen() {
 		$besitzer = $this->getUserID($_SESSION['username']);
 		
-		# jetziges Jahr:
-		$currentMonth = date("M");
-		$juengstesDatum = 2013;
-		$numberOfYears = $currentYear - $juengstesDatum;
-		echo "<table class='flatnetTable'>";
-		# Jahre, die in der Vergangenheit liegen
-		for ($j = 0; $j < $numberOfYears; $j++) {
-			$juengstesDatum = $juengstesDatum + $j;
-			$kontenDesNutzers = $this->getAllKonten($besitzer);
-			# Konten in diesem Jahr ohne Jahresabschluss.
-			#	echo "<thead><td>Jahr: $juengstesDatum </td></thead>";
-			for ($i = 0; $i < sizeof($kontenDesNutzers); $i++) {
-				if($this->getJahresabschluss($besitzer, $kontenDesNutzers[$i]->id, $juengstesDatum) == false) {
-					echo "<tbody><td>Es gibt keinen Jahresabschluss für Konto <strong>" . $kontenDesNutzers[$i]->konto . "</strong>, dieser wird jetzt erstellt:</td></tbody>";
-						
-					echo "<tbody><td>";
-					# Saldo dieses Jahres bekommen:
-					$saldo = $this->getSaldoFromYear($besitzer, $kontenDesNutzers[$i]->id, $juengstesDatum);
-					echo "Der Saldo ist: " . $saldo;
-					$konto = $kontenDesNutzers[$i]->id;
-					$query = "INSERT INTO finanzen_jahresabschluss (besitzer, jahr, wert, konto) VALUES ('$besitzer','$juengstesDatum','$saldo','$konto')";
-					if($this->sql_insert_update_delete($query) == true) {
-						echo "<p class='erfolg'>Der Jahresabschluss wurde erstellt.</p>";
-					} else {
-						echo "<p class='meldung'>Es gab einen Fehler.</p>";
-					}
-						
-					echo "</td></tbody>";
-						
-				}
-			}
-				
+		# jetzigen Monat ziehen:
+		$currentMonat = date("m");
+		$currentJahr = date("Y");
+		$abzueglicheMonate = $currentMonat - 1;
+		$anzahlMonate = 12;
+		
+		# Konten des Nutzers ziehen:
+		$konten = $this->getAllKonten($besitzer);
+		
+		# Prüfen, ob der Benutzer konten hat.
+		if(!isset($konten[0]->id)) {
+			echo "<p class='info'>Du hast noch keine Konten, bitte erstelle dir ein Konto!</p>";
+			exit;
 		}
 		
-		echo "</table>";
+		# Anzahl Monatsabschlüsse zählen
+		$counter = 0;
 		
+		# Pro Konto durchlaufen
+		for ($i = 0; $i < sizeof($konten); $i++) {
+			# prüfen, ob der aktuelle Monatsabschluss existiert.
+			
+			# Pro vergangenen Monat durchlaufen:
+			for($gepruefterMonat = 1; $gepruefterMonat < $currentMonat; $gepruefterMonat++) {
+				if($this->getMonatsabschluss($besitzer, $konten[$i]->id, $gepruefterMonat, $currentJahr) == false) {
+					
+					$saldo = $this->getSaldoFromMonat($besitzer, $konten[$i]->id, $gepruefterMonat, $currentJahr);
+					
+					$konto = $konten[$i]->id;
+					$query = "INSERT INTO finanzen_monatsabschluss (besitzer, monat, year, wert, konto) 
+					VALUES 
+					('$besitzer','$gepruefterMonat','$currentJahr','$saldo','$konto')";
+					
+					if($this->sql_insert_update_delete($query) == true) {
+						$counter = $counter + 1;
+					} else {
+						echo "<p class='meldung'>Es gab einen Fehler beim erstellen des Monatsabschlusses $currentJahr, im Monat $gepruefterMonat.</p>";
+					}
+				
+				}
+			}
+			
+		}
+		
+		if($counter > 0) {
+			echo "<p class='erfolg'>Es wurden $counter Monatsabschlüsse erstellt.</p>";
+		}
 	}
+	
+	private $jahr;
 	
 	/**
 	 * Gibt zurück, ob ein Jahresabschluss vorhanden ist, wenn ja, dann wird der wert zurückgegeben.
@@ -983,46 +1366,142 @@ class finanzenNEW extends finanzen {
 	}
 	
 	/**
+	 * Gibt das Erstellungsjahr des aktuellen Kontos zurück.
+	 * @param unknown $besitzer
+	 * @param unknown $kontonummer
+	 * @return boolean
+	 */
+	function getErstellungsdatumKonto($besitzer, $kontonummer) {
+		# frühesten Eintrag im Konto finden:
+		
+		$frueherEintrag = $this->getObjektInfo("SELECT min(year(datum)) as min FROM finanzen_umsaetze
+				WHERE besitzer = '$besitzer' AND konto = '$kontonummer'");
+		
+		if(isset($frueherEintrag->min)) {
+			return $frueherEintrag->min;
+		} else {
+			$frueherEintrag = date("Y");
+			return $frueherEintrag;
+		}
+	}
+	
+	/**
+	 * Checkt den Jahresabschluss.
+	 * @param unknown $besitzer
+	 * @param unknown $konto
+	 */
+	function checkJahresabschluss() {
+		
+		$besitzer = $this->getUserID($_SESSION['username']);
+		
+		# Konten des Nutzers ziehen:
+		$kontenDesNutzers = $this->getAllKonten($besitzer);
+		
+		for ($i = 0 ; $i < sizeof($kontenDesNutzers); $i++) {
+			
+			if(isset($_GET['checkJahresabschluesse'])) {
+				
+				$konto = $kontenDesNutzers[$i]->id;
+				
+				$currentYear = date("Y");
+				# Prüfen, ob Jahresabschluss KORREKT ist.
+				$jahresabschlusswert = $this->getObjektInfo("SELECT sum(wert) as summe
+				FROM finanzen_jahresabschluss
+				WHERE besitzer = $besitzer
+				AND konto = $konto");
+				
+				$tatsaechlicheSumme = $this->getObjektInfo("SELECT sum(umsatzWert) as summe
+						FROM finanzen_umsaetze
+						WHERE besitzer = $besitzer
+						AND konto = $konto
+						AND year(datum) < $currentYear");
+				
+				if(isset($jahresabschlusswert->summe)) {
+					if($jahresabschlusswert->summe != $tatsaechlicheSumme->summe) {
+						echo "<p class='meldung'>Fehler bei Konto $konto, die tatsächliche Summe ist " . $tatsaechlicheSumme->summe . ", aber der eingetragene ist " . $jahresabschlusswert->summe . "
+					Lösche jetzt die Jahresabschlüsse.";
+					
+						if($this->sql_insert_update_delete("DELETE FROM finanzen_jahresabschluss WHERE besitzer = $besitzer AND konto = $konto") == true) {
+							echo "<br><br>Fehlerhaften Abschluss gelöscht!.</p>";
+						}
+					} else {
+						# echo "<p class='erfolg'>Für Konto $konto gibt es keine Fehler.</p>";
+					}
+				} else {
+					# echo "<p class='erfolg'>Für Konto $konto gibt es scheinbar keinen Abschluss.</p>";
+				}
+				
+				
+			}
+		}
+	}
+	
+	/**
 	 * Erstellt Jahresabschlüsse aus den alten Einträgen.
 	 */
 	function erstelleJahresabschluesseFromOldEintraegen() {
 		$besitzer = $this->getUserID($_SESSION['username']);
 		
-		# jetziges Jahr:
+		# Konten des Nutzers ziehen:
+		$kontenDesNutzers = $this->getAllKonten($besitzer);
+		
+		# Prüfen, ob der Benutzer konten hat.
+		if(!isset($kontenDesNutzers[0]->id)) {
+			echo "<p class='info'>Du hast noch keine Konten, bitte erstelle dir ein Konto!</p>";
+			exit;
+		}
+		
+		# Jetziges Jahr:
 		$currentYear = date("Y");
-		$juengstesDatum = 2013;
-		$numberOfYears = $currentYear - $juengstesDatum;
-		echo "<table class='flatnetTable'>";
-		# Jahre, die in der Vergangenheit liegen
-		for ($j = 0; $j < $numberOfYears; $j++) {
-			$juengstesDatum = $juengstesDatum + $j;			
-			$kontenDesNutzers = $this->getAllKonten($besitzer);
-			# Konten in diesem Jahr ohne Jahresabschluss.
-		#	echo "<thead><td>Jahr: $juengstesDatum </td></thead>";
-			for ($i = 0; $i < sizeof($kontenDesNutzers); $i++) {
-				if($this->getJahresabschluss($besitzer, $kontenDesNutzers[$i]->id, $juengstesDatum) == false) {
-					echo "<tbody><td>Es gibt keinen Jahresabschluss für Konto <strong>" . $kontenDesNutzers[$i]->konto . "</strong>, dieser wird jetzt erstellt:</td></tbody>";
+		
+		# Pro Konto durchführen:
+		for($i = 0; $i < sizeof($kontenDesNutzers); $i++) {
+			
+			echo "<table class='flatnetTable'>";
+			# Ersten Eintrag im Konto suchen:
+			$erstellungsDatumKonto = $this->getErstellungsdatumKonto($besitzer, $kontenDesNutzers[$i]->id);
+			
+			if($erstellungsDatumKonto < $currentYear) {
+				$differnz = $currentYear - $erstellungsDatumKonto;
+				$geprueftesJahr = $erstellungsDatumKonto;
+				
+				# Für Anzahl der Jahre:
+				for ($j = 0; $j < $differnz; $j++) {
+					if($this->getJahresabschluss($besitzer, $kontenDesNutzers[$i]->id, $geprueftesJahr) == false) {
+						echo "<tbody><td>Es gibt keinen Jahresabschluss für Konto <strong>" . $kontenDesNutzers[$i]->konto . "</strong>, dieser wird jetzt erstellt:</td></tbody>";
 					
-					echo "<tbody><td>";
-					# Saldo dieses Jahres bekommen:
-					$saldo = $this->getSaldoFromYear($besitzer, $kontenDesNutzers[$i]->id, $juengstesDatum);
-					echo "Der Saldo ist: " . $saldo;
-					$konto = $kontenDesNutzers[$i]->id;
-					$query = "INSERT INTO finanzen_jahresabschluss (besitzer, jahr, wert, konto) VALUES ('$besitzer','$juengstesDatum','$saldo','$konto')";
-					if($this->sql_insert_update_delete($query) == true) {
-						echo "<p class='erfolg'>Der Jahresabschluss wurde erstellt.</p>";
-					} else {
-						echo "<p class='meldung'>Es gab einen Fehler.</p>";
+						echo "<tbody><td>";
+						# Saldo dieses Jahres bekommen:
+						$saldo = $this->getSaldoFromYear($besitzer, $kontenDesNutzers[$i]->id, $geprueftesJahr);
+						echo "Der Saldo ist: " . $saldo;
+						$konto = $kontenDesNutzers[$i]->id;
+						$query = "INSERT INTO finanzen_jahresabschluss (besitzer, jahr, wert, konto) VALUES ('$besitzer','$geprueftesJahr','$saldo','$konto')";
+						
+						if($this->sql_insert_update_delete($query) == true) {
+							echo "<p class='erfolg'>Der Jahresabschluss wurde erstellt.</p>";
+							# alte Monatsabschlüsse löschen: 
+		
+							if($this->sql_insert_update_delete("DELETE FROM finanzen_monatsabschluss WHERE besitzer = $besitzer AND year < $currentYear") == true) {
+								echo "<p class='info'>Alte Monatsabschlüsse gelöscht</p>";
+							} else {
+								echo "<p class='meldung'>Alte Monatsabschlüsse konnten nicht gelöscht werden.</p>";
+							}
+						} else {
+							echo "<p class='meldung'>Es gab einen Fehler.</p>";
+						}
+					
+						echo "</td></tbody>";
+						
+						$geprueftesJahr = $geprueftesJahr + 1;
+					
 					}
-					
-					echo "</td></tbody>";
-					
 				}
 			}
 			
+			echo "</table>";
+			
 		}
 		
-		echo "</table>";
 				
 	}
 		

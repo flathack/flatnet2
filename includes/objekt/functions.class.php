@@ -678,7 +678,9 @@ class functions extends sql {
 		if($this->userHasRight("24", 0) == true) {
 			echo "<div class='InfoCenter'>";
 			$docuInfo = $this->getObjektInfo("SELECT *, month(timestamp) AS monat, day(timestamp) AS tag, year(timestamp) AS jahr FROM docu ORDER BY timestamp DESC LIMIT 1");
-			echo $docuInfo->tag . "." . $docuInfo->monat . "." . $docuInfo->jahr . ": " . $docuInfo->text . "";
+			if(isset($docuInfo->text)) {
+				echo $docuInfo->tag . "." . $docuInfo->monat . "." . $docuInfo->jahr . ": " . $docuInfo->text . "";
+			}
 			echo "</div>";
 		}
 	}

@@ -205,7 +205,12 @@ class fahrten extends functions {
 			// Spritpreis: Letzten Spritpreis automatisch einfügen.
 			$userID = $this->getUserID ( $_SESSION ['username'] );
 			$lastPreis = $this->getObjektInfo ( "SELECT id, spritpreis as preis FROM fahrkosten WHERE besitzer = '$userID' order by id DESC" );
-			$preis = $lastPreis->preis;
+			if(isset($lastPreis->preis)) {
+				$preis = $lastPreis->preis;
+			} else {
+				$preis = 0;
+			}
+			
 			echo "<tr><td>Spritpreis: </td><td><input type=text placeholder='Preis' name='spritpreis' value='$preis' /></td></tr>";
 			echo "<tr><td>Fahrt: </td><td><input type=text placeholder='Hin- und Rückfahrt?' name='fahrrichtung' value='2' /></td></tr>";
 			
