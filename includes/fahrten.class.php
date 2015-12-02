@@ -1,0 +1,573 @@
+<?php
+include 'objekt/functions.class.php';
+/**
+ * Ermöglicht das Erstellen und Verwalten von Fahrtkosten.
+ *
+ * @author BSSCHOE
+ *        
+ */
+class fahrten extends functions {
+	
+	/**
+	 * Zeigt eine Statistik zum Thema Verbrauch usw.
+	 * an.
+	 */
+	function showStatistik() {
+		if($this->userHasRight("60", 0) == true) {
+			echo "<h2>Statistik</h2>";
+			
+			echo "<div class=''>";
+			echo "<table class='flatnetTable'>";
+			echo "<thead><td>Ziele</td><td></td><td>Gesamt</td></thead>";
+			
+			$userID = $this->getUserID ( $_SESSION ['username'] );
+			$ziele = $this->getObjectsToArray ( "SELECT *, count(ziel) as anzahl FROM fahrkosten WHERE besitzer = '$userID' AND spritpreis > 0 GROUP BY ziel" );
+			
+			$kmgesamt = 0;
+			
+			for($i = 0; $i < sizeof ( $ziele ); $i ++) {
+				
+				$entfernungInfo = $this->getObjektInfo ( "SELECT * FROM fahrkostenZiele WHERE besitzer = '$userID' AND name = '" . $ziele [$i]->ziel . "' LIMIT 1" );
+				
+				$kmgesamt = $entfernungInfo->entfernung * $ziele [$i]->fahrrichtung * $ziele [$i]->anzahl;
+				echo "<tbody><td>" . $ziele [$i]->ziel . " (" . $entfernungInfo->entfernung . " km)" . " </td><td>" . $ziele [$i]->anzahl . "</td><td>$kmgesamt km</td></tbody>";
+			}
+			
+			$gesamtkilometer = 0;
+			$gesamtKosten = 0;
+			
+			echo "<thead><td>Fahrzeuge</td><td></td><td></td></thead>";
+			$infos = $this->getObjectsToArray ( "SELECT *, count(fahrart) as anzahl FROM fahrkosten WHERE besitzer = '$userID' GROUP BY fahrart" );
+			
+			for($i = 0; $i < sizeof ( $infos ); $i ++) {
+				
+				$fahrzeugeInfo = $this->getObjektInfo ( "SELECT * FROM fahrzeuge WHERE besitzer = '$userID' AND name_tag = '" . $infos [$i]->fahrart . "' LIMIT 1" );
+				
+				# Berechnung der gefahrenen Kilometer für dieses Fahrzeug:
+				
+				
+				
+				// Berechnung der Kosten:
+				$gesamtKosten = $fahrzeugeInfo->verbrauch / 100 * $infos [$i]->anzahl * $gesamtkilometer; // hier fehlen die Kilometer.
+				
+				echo "<tbody><td>" . $infos [$i]->fahrart . " (" . $fahrzeugeInfo->name . ")" . "</td><td> " . $infos [$i]->anzahl . "</td><td>$gesamtKosten &#8364;</td></tbody>";
+			}
+			
+			echo "</table>";
+			echo "</div>";
+		}
+	}
+	
+	/**
+	 * Zeigt alle Fahrten an.
+	 */
+	function showFahrten() {
+		
+		if($this->userHasRight("11", 0) == true) {
+			
+			echo "<h2>Fahrkosten</h2>";
+			$userID = $this->getUserID ( $_SESSION ['username'] );
+			
+			# ###################################
+			# SEITEN ANZEIGEN					#
+			# ###################################
+			$proSeite = 15;
+			$this->SeitenZahlen("SELECT *, day(datum) as tag, month(datum) as monat, year(datum) as jahr FROM fahrkosten WHERE besitzer = '$userID' ORDER BY datum DESC", $proSeite);
+			$LimitUndOffset = $this->seitenAnzeigen($proSeite);
+			# Neue Query wird gelesen und in die richtige Query eingefügt:
+			$fahrten = $this->getObjectsToArray ( "SELECT *, day(datum) as tag, month(datum) as monat, year(datum) as jahr FROM fahrkosten WHERE besitzer = '$userID' ORDER BY datum DESC $LimitUndOffset " );
+			$this->getFahrtInfo($fahrten);
+			# ################################# #
+			# Tabelle anzeigen					#
+			# ################################# #
+	
+			echo "<table class='flatnetTable'>";
+			echo "<thead>";
+			echo "<td>Datum</td>";
+			echo "<td>Fahrart</td>";
+			echo "<td>Ziel</td>";
+			echo "<td>Notizen</td>";
+			echo "<td>Spritpreis</td>";
+			echo "<td>Kosten</td>";
+			echo "<td></td>";
+			for($i = 0; $i < sizeof ( $fahrten ); $i ++) {
+				echo "<tbody><td>";
+				echo "<a href='#' onclick=\"document.getElementById('fahrt$i').style.display = 'block'\">" . $fahrten [$i]->tag . "-" . $fahrten [$i]->monat . "-" . $fahrten [$i]->jahr . "</a></td><td>" . $fahrten [$i]->fahrart . "</td><td>" . $fahrten [$i]->ziel . "</td><td>" . substr ( $fahrten [$i]->notizen, 0, 10 ) . "..</td><td>" . $fahrten [$i]->spritpreis . " &#8364;</td>";
+				
+				// BERECHNUNG DER KOSTEN
+				echo "<td>";
+				// Fahrzeug Infos:
+				$fahrzeugInfo = $this->getObjektInfo ( "SELECT * FROM fahrzeuge WHERE besitzer = '$userID' AND name_tag = '" . $fahrten [$i]->fahrart . "'" );
+				// Streckeninfos:
+				$zielInfo = $this->getObjektInfo ( "SELECT * FROM fahrkostenZiele WHERE besitzer = '$userID' AND name = '" . $fahrten [$i]->ziel . "'" );
+				$liter = $fahrzeugInfo->verbrauch / 100 * $zielInfo->entfernung * $fahrten [$i]->fahrrichtung;
+				$kosten = round ( $liter * $fahrten [$i]->spritpreis, 2 );
+				echo $kosten . " &#8364;";
+				echo "</td>";
+				// OPTIONEN
+				echo "<td><a href='?edit=" . $fahrten [$i]->id . "' class='rightBlueLink'>edit</a>
+				<a href='?loeschen&loeschid=" . $fahrten [$i]->id . "' class='rightRedLink'>X</a>
+				</td>" . "</tbody>";
+			}
+			
+			echo "</table>";
+		}
+	}
+	
+	/**
+	 * Gibt Detailsinformationen zu einer bestimmten Fahrt zurück. Hat den Charakter einer Statistik.
+	 */
+	function getFahrtInfo($fahrten) {
+		
+		for ($i = 0 ; $i < sizeof($fahrten) ; $i++) {
+			echo "<div class='summe' style=\"display: none;\" id=\"fahrt$i\">";
+			echo "<a href=\"#\"  class='highlightedLink' onclick=\"document.getElementById('fahrt$i').style.display = 'none'\">X</a>";
+			echo "<h2>Fahrt vom " . $fahrten[$i]->datum . "</h2>";
+			
+			$userID = $this->getUserID($_SESSION['username']);
+			$fahrzeugInfo = $this->getObjektInfo ( "SELECT * FROM fahrzeuge WHERE besitzer = '$userID' AND name_tag = '" . $fahrten [$i]->fahrart . "'" );
+			
+			$zielInfo = $this->getObjektInfo ( "SELECT * FROM fahrkostenZiele WHERE besitzer = '$userID' AND name = '" . $fahrten [$i]->ziel . "'" );
+			$liter = $fahrzeugInfo->verbrauch / 100 * $zielInfo->entfernung * $fahrten [$i]->fahrrichtung;
+			$kosten = round ( $liter * $fahrten [$i]->spritpreis, 2 );
+			
+			echo "<p>Du bist mit dem <strong>" . $fahrten[$i]->fahrart . " ($fahrzeugInfo->name)</strong> gefahren und hattest das Ziel <strong>" .$fahrten[$i]->ziel. "</strong></p>";
+			echo "<p>Du hast <strong>$liter</strong> Liter verbraucht und <strong>$kosten</strong> € dafür bezahlt. </p>";
+			echo "<p>Notizen: <strong>" .$fahrten[$i]->notizen . "</strong></p>";
+			echo "</div>";
+		}
+		
+	}
+	
+	/**
+	 * Ermöglicht das erstellen einer neuen Fahrt
+	 */
+	function newFahrt() {
+		// Right Check
+		if($this->userHasRight("12", 0) == true) {
+			
+			// Feld zur Eingabe anzeigen.
+			echo "<div class='newChar' style=\"display: none;\" id=\"neueFahrt\">";
+			echo "<a href=\"#\"  class='highlightedLink' onclick=\"document.getElementById('neueFahrt').style.display = 'none'\">X</a>";
+			echo "<h2>Neue Fahrt erstellen</h2>";
+			echo "<form method=post>";
+
+			if (isset ( $_POST ['fahrart'] )) {
+				$fahrtart = $_POST ['fahrart'];
+			} else {
+				$fahrtart = "";
+			}
+			if (isset ( $_POST ['ziel'] )) {
+				$ziel = $_POST ['ziel'];
+			} else {
+				$ziel = "";
+			}
+			
+			# Heutiges Datum:
+			$timestamp = time();
+			$heute = date("Y-m-d", $timestamp);
+			
+			echo "<table>";
+			echo "<tr><td>" . "Datum der Fahrt:</td><td> <input type=date id='datepicker' placeholder='Datum' name='datum' value='$heute' required /></td></tr>";
+			echo "<tr><td>Welches Fahrzeug: </td>";
+			
+			$userID = $this->getUserID ( $_SESSION ['username'] );
+			$fahrzeuge = $this->getObjectsToArray ( "SELECT * FROM fahrzeuge WHERE besitzer = '$userID'" );
+			echo "<td><select name='fahrart'>";
+			echo "<option></option>";
+			for($i = 0; $i < sizeof ( $fahrzeuge ); $i ++) {
+				echo "<option";
+				if (isset ( $_POST ['fahrart'] )) {
+					if ($_POST ['fahrart'] == $fahrzeuge [$i]->name_tag) {
+						echo " selected ";
+					}
+				}
+				echo ">" . $fahrzeuge [$i]->name_tag . "</option>";
+			}
+			echo "</select></td></tr>";
+			
+			$ziele = $this->getObjectsToArray ( "SELECT * FROM fahrkostenZiele WHERE besitzer = '$userID'" );
+			echo "<tr><td>Welches Ziel: </td>";
+			echo "<td><select name='ziel'>";
+			echo "<option></option>";
+			for($i = 0; $i < sizeof ( $ziele ); $i ++) {
+				echo "<option";
+				if (isset ( $_POST ['ziel'] )) {
+					if ($_POST ['ziel'] == $ziele [$i]->name) {
+						echo " selected ";
+					}
+				}
+				echo ">" . $ziele [$i]->name . "</option>";
+			}
+			echo "</select></td></tr>";
+			echo "<tr><td>Bemerkungen: </td><td><input type=text placeholder='Platz für Bemerkungen' name='notizen' value='' /></td></tr>";
+			
+			// Spritpreis: Letzten Spritpreis automatisch einfügen.
+			$userID = $this->getUserID ( $_SESSION ['username'] );
+			$lastPreis = $this->getObjektInfo ( "SELECT id, spritpreis as preis FROM fahrkosten WHERE besitzer = '$userID' order by id DESC" );
+			$preis = $lastPreis->preis;
+			echo "<tr><td>Spritpreis: </td><td><input type=text placeholder='Preis' name='spritpreis' value='$preis' /></td></tr>";
+			echo "<tr><td>Fahrt: </td><td><input type=text placeholder='Hin- und Rückfahrt?' name='fahrrichtung' value='2' /></td></tr>";
+			
+			echo "<tr><td><input type=submit name=ok value='Absenden' /></td></tr>";
+			echo "</table>";
+			echo "</form>";
+			
+			echo "</div>";
+			
+			// Wenn abgeschickt wurde:
+			if (isset ( $_POST ['ok'] )) {
+				if ($_POST ['datum'] != "" and $_POST ['fahrart'] != "" and $_POST ['ziel'] != "") {
+					
+					// Benötigte Variablen erstellen.
+					$userID = $this->getUserID ( $_SESSION ['username'] );
+					$datum = $_POST ['datum'];
+					$fahrtart = $_POST ['fahrart'];
+					$ziel = $_POST ['ziel'];
+					$notizen = $_POST ['notizen'];
+					$spritpreis = $_POST ['spritpreis'];
+					$fahrrichtung = $_POST ['fahrrichtung'];
+					
+					// Einfügen
+					$query = "INSERT INTO fahrkosten (besitzer, datum, fahrart, ziel, notizen, spritpreis, fahrrichtung)
+						values ('$userID','$datum','$fahrtart','$ziel','$notizen','$spritpreis','$fahrrichtung')";
+					
+					if ($this->sql_insert_update_delete ( $query ) == true) {
+						
+						echo "<p class='erfolg'>Erfolg</p>";
+					} else {
+						
+						echo "<p class='meldung'>Fehler</p>";
+					}
+				} else {
+					echo "<p class='meldung'>Einige Felder waren leer!</p>";
+				} // If alles leer ENDE
+			} // If Isset OK ende
+				  // }
+				  
+			// ENDE
+		} // Right Check Ende
+	} // Function Ende
+	
+	/**
+	 * Ermöglicht das bearbeiten einer bestehenden Fahrt.
+	 */
+	function alterFahrt() {
+		if($this->userHasRight("12", 0) == true) {
+			
+			//
+			// LOESCHEN
+			//
+			if (isset ( $_GET ['loeschid'] )) {
+				
+				// Prüfen ob der "löscher" das zu löschende Objekt besitzt.
+				$userID = $this->getUserID ( $_SESSION ['username'] );
+				$id = (isset ( $_GET ['loeschid'] )) ? $_GET ['loeschid'] : '';
+				$objekt = $this->getObjektInfo ( "SELECT * FROM fahrkosten WHERE id = $id" );
+				if ($userID == $objekt->besitzer) {
+					$this->sqlDelete ( "fahrkosten" );
+				} else {
+					echo "<p class='meldung'>Fehler</p>";
+				}
+			}
+			
+			//
+			// EDITIEREN
+			//
+			if (isset ( $_GET ['edit'] )) {
+				$id = $_GET ['edit'];
+				
+				echo "<div id='draggable' class='newChar'>";
+				echo "<a href='?' class='highlightedLink'>X</a>";
+				
+				// Wenn abgeschickt wurde:
+				if (isset ( $_POST ['editOk'] )) {
+					if ($_POST ['datum'] != "" and $_POST ['fahrart'] != "" and $_POST ['ziel'] != "") {
+						
+						// Benötigte Variablen erstellen.
+						$userID = $this->getUserID ( $_SESSION ['username'] );
+						$datum = $_POST ['datum'];
+						$fahrart = $_POST ['fahrart'];
+						$ziel = $_POST ['ziel'];
+						$notizen = $_POST ['notizen'];
+						$spritpreis = $_POST ['spritpreis'];
+						if ($spritpreis == "") {
+							$spritpreis = 0;
+						}
+						$fahrrichtung = $_POST ['fahrrichtung'];
+						$id = $_POST ['id'];
+						
+						// Einfügen
+						$query = "UPDATE fahrkosten SET 
+						datum='$datum', 
+						fahrart='$fahrart',
+						ziel='$ziel', 
+						notizen='$notizen',
+						spritpreis='$spritpreis',
+						fahrrichtung='$fahrrichtung'
+						
+						WHERE besitzer='$userID' 
+						AND id='$id'";
+						
+						if ($this->sql_insert_update_delete ( $query ) == true) {
+							echo "<p class='erfolg'>Erfolg</p>";
+						} else {
+							echo "<p class='meldung'>Fehler</p>";
+						}
+					} else {
+						echo "<p class='meldung'>Einige Felder sind leer</p>";
+					} // If alles leer ENDE
+				} // If Isset OK ende
+				
+				$userID = $this->getUserID ( $_SESSION ['username'] );
+				$objektInfo = $this->getObjektInfo ( "SELECT * FROM fahrkosten WHERE besitzer = '$userID' AND id = '$id'" );
+				
+				echo "<h2>Eintrag editieren</h2>";
+				echo "<form method=post>";
+				
+				echo "<table><tr><td>Datum</td><td><input type=date placeholder='Datum' name='datum' value='" . $objektInfo->datum . "' /></td></tr>";
+				
+				$userID = $this->getUserID ( $_SESSION ['username'] );
+				$fahrzeuge = $this->getObjectsToArray ( "SELECT * FROM fahrzeuge WHERE besitzer = '$userID'" );
+				echo "<tr><td>Welches Fahrzeug</td><td><select name='fahrart'>";
+				echo "<option></option>";
+				for($i = 0; $i < sizeof ( $fahrzeuge ); $i ++) {
+					echo "<option";
+					if ($objektInfo->fahrart == $fahrzeuge [$i]->name_tag) {
+						echo " selected ";
+					}
+					echo ">" . $fahrzeuge [$i]->name_tag . "</option>";
+				}
+				echo "</select></td></tr>";
+				
+				$ziele = $this->getObjectsToArray ( "SELECT * FROM fahrkostenZiele WHERE besitzer = '$userID'" );
+				echo "<tr><td>Welches Ziel: </td>";
+				echo "<td><select name='ziel'>";
+				echo "<option></option>";
+				for($i = 0; $i < sizeof ( $ziele ); $i ++) {
+					echo "<option";
+					if ($objektInfo->ziel == $ziele [$i]->name) {
+						echo " selected ";
+					}
+					echo ">" . $ziele [$i]->name . "</option>";
+				}
+				echo "</select></td></tr>";
+				
+	# alt	#	echo "<tr><td>Bemerkungen</td><td><input type=text placeholder='Notizen' name='notizen' value='" . $objektInfo->notizen . "' /></td></tr>";
+				echo "<tr><td>Bemerkungen</td><td><textarea placeholder='Notizen' name='notizen' rows=2 cols=70>" . $objektInfo->notizen . "</textarea></td></tr>";
+				echo "<tr><td>Spritpreis: </td><td><input type=text placeholder='Preis' name='spritpreis' value='" . $objektInfo->spritpreis . "' /></td></tr>";
+				echo "<tr><td>Fahrrichtung: </td><td><input type=text placeholder='Hin- und Rückfahrt?' name='fahrrichtung' value='" . $objektInfo->fahrrichtung . "' /></td></tr>";
+				echo "<tr><td><input type=submit name=editOk value='Absenden' /></td></tr>";
+				echo "<tr><td></td><td><input type=hidden name='id' value='" . $objektInfo->id . "' />";
+				echo "</form>";
+				echo "</table>";
+				
+				echo "</div>";
+			}
+		}
+	}
+	
+	/**
+	 * Zeigt eine Liste der Fahrzeuge des Benutzers an.
+	 */
+	function listFahrzeuge() {
+		if($this->userHasRight("11", 0) == true) {
+		#	if(isset($_GET['listFahrzeuge'])) {
+				$userID = $this->getUserID($_SESSION['username']);
+				$fahrzeugInfos = $this->getObjectsToArray("SELECT id, name, name_tag FROM fahrzeuge WHERE besitzer = '$userID'");
+				
+				# Ausgabe
+				echo "<div class='summe' style=\"display: none;\" id=\"listFahrzeuge\">";
+				echo "<a href=\"#\"  class='highlightedLink' onclick=\"document.getElementById('listFahrzeuge').style.display = 'none'\">X</a>";
+				#echo "<div id='draggable' class='summe'>";
+				echo "<ul>";
+		#		echo "<a href='?' class='closeSumme'>X</a>";
+				for ($i = 0 ; $i < sizeof($fahrzeugInfos) ; $i++) {
+					echo "<div class='invSuchErgeb'><a name='fahrzeug".$fahrzeugInfos[$i]->id."' href='?alterFahrzeug=" . $fahrzeugInfos[$i]->id . "#fahrzeug".$fahrzeugInfos[$i]->id."'>" . $fahrzeugInfos[$i]->name . " = " . $fahrzeugInfos[$i]->name_tag . "</a></div>" ; 
+				}
+				echo "</ul>";
+				echo "</div>";
+				
+		#	}
+		}
+	}
+	
+	/**
+	 * Ermöglicht das Anlegen eines neuen Fahrzeuges.
+	 */
+	function newFahrzeug() {
+		if($this->userHasRight("12", 0) == true) {
+		
+			echo "<div class='newChar' style=\"display: none;\" id=\"neuesFahrzeug\">";
+			echo "<a href=\"#\"  class='highlightedLink' onclick=\"document.getElementById('neuesFahrzeug').style.display = 'none'\">X</a>";
+			echo "<h2>Neues Fahrzeug erstellen</h2>";
+			
+			echo "<form method=post>";
+			
+			echo "<table>";
+				echo "<tr><td>Vollständiger Name</td><td><input type=text placeholder='Name des Fahrzeugs' name='name' value='' required /></td></tr>";
+				echo "<tr><td>Verbrauch (l / 100km)</td><td><input type=text placeholder='Verbrauch des Fahrzeugs' name='verbrauch' value='5.5' required /></td></tr>";
+				echo "<tr><td>Abkürzung</td><td><input type=text placeholder='z. B. AYGO oder BAHN' name='name_tag' value='' required /></td></tr>";
+				echo "<tr><td><input type=submit name=FahrzeugOk value='Absenden' /></td></tr>";
+			echo "</table>";
+			echo "</form>";
+			echo "</div>";
+			
+			################## ANLAGE ##########################
+			
+			if (isset ( $_POST ['FahrzeugOk'] )) {
+				if ($_POST ['name'] != "" and $_POST ['verbrauch'] != "" and $_POST ['name_tag'] != "") {
+					
+					// Benötigte Variablen erstellen.
+					$userID = $this->getUserID ( $_SESSION ['username'] );
+					$name = $_POST ['name'];
+					$verbrauch = $_POST ['verbrauch'];
+					$name_tag = $_POST ['name_tag'];
+					
+					// Einfügen
+					$query = "INSERT INTO fahrzeuge (besitzer, name, verbrauch, name_tag) values ('$userID','$name','$verbrauch','$name_tag')";
+					
+					if ($this->sql_insert_update_delete ( $query ) == true) {
+						
+						echo "<p class='erfolg'>Fahrzeug angelegt</p>";
+					} else {
+						
+						echo "<p class='meldung'>Fehler beim speichern!</p>";
+					}
+				} else {
+					echo "<p class='meldung'>Einige Felder waren leer!</p>";
+				} // If alles leer ENDE
+			} // If Isset OK ende
+		
+		}
+		
+		
+	}
+	
+	/**
+	 * Ermögluicht das editieren und löschen von Fahrzeugen
+	 */
+	function alterFahrzeug() {
+		if($this->userHasRight("12", 0) == true) {
+			if(isset($_GET['alterFahrzeug'])) {
+				$id = $_GET['alterFahrzeug'];
+				
+				$userID = $this->getUserID($_SESSION['username']);
+				
+				$getFahrzeugInfo = $this->getObjektInfo("SELECT * FROM fahrzeuge WHERE besitzer = '$userID' AND id = '$id'");
+				
+				echo "<div id='draggable' class='summe'><ul>";
+				echo "<a href='?' class='closeSumme'>X</a>";
+				
+				echo "<h2><a name=fahrzeug'".$getFahrzeugInfo->id."'>" . $getFahrzeugInfo->name . "</a></h2>";
+				
+				echo "Abkürzung: " . $getFahrzeugInfo->name_tag . "<br>";
+				echo "Verbrauch: " . $getFahrzeugInfo->verbrauch . " Liter auf 100 km<br>";
+				
+				echo "<a href='?listFahrzeuge' class='buttonlink'>Speichern</a>";
+				echo "<a href='?listFahrzeuge' class='buttonlink'>Zurück</a>";
+				echo "</ul></div>";
+			}
+		
+		}
+	}
+	
+	/**
+	 * Zeigt eine Liste der Ziele des Benutzers an.
+	 */
+	function listZiele() {
+		
+		if($this->userHasRight("11", 0) == true) {
+			
+		#	if(isset($_GET['listZiele'])) {
+				$userID = $this->getUserID($_SESSION['username']);
+				$zieleInfos = $this->getObjectsToArray("SELECT id, name, entfernung FROM fahrkostenZiele WHERE besitzer = '$userID'");
+					
+				# Ausgabe
+				echo "<div class='summe' style=\"display: none;\" id=\"listZiele\">";
+				echo "<a href=\"#\"  class='highlightedLink' onclick=\"document.getElementById('listZiele').style.display = 'none'\">X</a>";
+			#	echo "<div id='draggable' class='summe'>";
+				echo "<ul>";
+			#	echo "<a href='?' class='closeSumme'>X</a>";
+				for ($i = 0 ; $i < sizeof($zieleInfos) ; $i++) {
+					echo "<div class='invSuchErgeb'><a href='?alterZiel=". $zieleInfos[$i]->id ."'>" . $zieleInfos[$i]->name . " = " . $zieleInfos[$i]->entfernung . " km</a></div>" ;
+				}
+				echo "</ul></div>";
+		#	}
+		}
+
+	}
+	
+	/**
+	 * Ermöglicht das erstellen eines neuen Ziels.
+	 */
+	function newZiel() {
+		if($this->userHasRight("12", 0) == true) {
+			
+			echo "<div class='newChar' style=\"display: none;\" id=\"neuesZiel\">";
+			echo "<a href=\"#\"  class='highlightedLink' onclick=\"document.getElementById('neuesZiel').style.display = 'none'\">X</a>";
+			echo "<h2>Neues Ziel erstellen</h2>";
+			
+			echo "<form method=post>";
+			
+			echo "<table>";
+			echo "<tr><td>Name</td><td><input type=text placeholder='Name des Ziels' name='name' value='' required /></td></tr>";
+			echo "<tr><td>Entfernung</td><td><input type=text placeholder='Entfernung in Kilometern' name='entfernung' value='' required /></td></tr>";
+			echo "<tr><td><input type=submit name=ZielOK value='Absenden' /></td></tr>";
+			echo "</table>";
+			echo "</form>";
+			echo "</div>";
+			
+			################## ANLAGE ##########################
+			
+			if (isset ( $_POST ['ZielOK'] )) {
+				if ($_POST ['name'] != "" and $_POST ['entfernung'] != "" ) {
+			
+					// Benötigte Variablen erstellen.
+					$userID = $this->getUserID ( $_SESSION ['username'] );
+					$name = $_POST ['name'];
+					$entfernung = $_POST ['entfernung'];
+			
+					// Einfügen
+					$query = "INSERT INTO fahrkostenZiele (besitzer, name, entfernung) values ('$userID','$name','$entfernung')";
+			
+					if ($this->sql_insert_update_delete ( $query ) == true) {
+							
+						echo "<p class='erfolg'>Ziel angelegt</p>";
+					} else {
+							
+						echo "<p class='meldung'>Fehler beim speichern!</p>";
+					}
+				} else {
+					echo "<p class='meldung'>Einige Felder waren leer!</p>";
+				} // If alles leer ENDE
+			} // If Isset OK ende
+		}
+	}
+	
+	/**
+	 * Ermöglicht das verändern und löschen von Zielen.
+	 */
+	function alterZiel() {
+		if($this->userHasRight("12", 0) == true) {
+			if(isset($_GET['alterZiel'])) {
+				$id = $_GET['alterZiel'];
+				
+				$userID = $this->getUserID($_SESSION['username']);
+				
+				$getFahrzeugInfo = $this->getObjektInfo("SELECT * FROM fahrkostenZiele WHERE besitzer = '$userID' AND id = '$id'");
+				
+				echo "<div id='draggable' class='summe'><ul>";
+				echo "<a href='?' class='closeSumme'>X</a>";
+				
+				echo "<h2><a name=fahrzeug'".$getFahrzeugInfo->id."'>" . $getFahrzeugInfo->name . "</a></h2>";
+				
+				echo "Entfernung: " . $getFahrzeugInfo->entfernung . "<br>";
+				
+				echo "<a href='?listZiele' class='buttonlink'>Speichern</a>";
+				echo "<a href='?listZiele' class='buttonlink'>Zurück</a>";
+				echo "</ul></div>";
+			}
+		}
+	}
+}
