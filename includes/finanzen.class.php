@@ -427,8 +427,20 @@ class finanzenNEW extends finanzen {
 					AND konto = $kontoID
 					AND year(datum) = $currentYear
 					AND month(datum) < $currentMonth");
-				
-			$startsaldo = $summeJahresabschluesseBisJetzt + $summeUmsaetzeDiesesJahr->summe;
+			
+			# Wenn das Jahr in der Zukunft liegt, werden alle 
+			# Umsätze der Vergangenheit einzeln addiert.
+			$diesesJahr = date("Y");
+			if($this->checkIfJahrIsInFuture($diesesJahr, $currentYear) == true) {
+				$getSaldoUntilNow = $this->getObjektInfo("SELECT sum(umsatzWert) as summe 
+					FROM finanzen_umsaetze
+					WHERE besitzer = $besitzer
+					AND konto = $kontoID
+					AND year(datum) < $currentYear");
+				$startsaldo = $getSaldoUntilNow->summe + $summeUmsaetzeDiesesJahr->summe;
+			} else {
+				$startsaldo = $summeJahresabschluesseBisJetzt + $summeUmsaetzeDiesesJahr->summe;
+			}
 			$zwischensumme = $startsaldo;
 			echo "<table class='kontoTable'>";
 				
@@ -668,12 +680,15 @@ class finanzenNEW extends finanzen {
 		if(isset($_GET['monat'])) {
 			$monat = $_GET['monat'];
 			$currentMonat = date("m");
+
+			$jahr = $_GET['jahr'];
+			$currentJahr = date("Y");
 				
-			if($this->checkIfJahrIsInFuture($currentMonat, $monat) == true) {
+			if($this->checkIfMonatIsInFuture($currentMonat, $monat) == true) {
 				# echo "<p class='info'>Der Monat liegt in der Zukunft";
 			}
 				
-			if($this->checkIfJahrIsInPast($currentMonat, $monat) == true) {
+			if($this->checkIfMonatIsInPast($currentMonat, $monat, $currentJahr, $jahr) == true) {
 				echo "<p class='info'>Der Monat liegt in der Vergangenheit.";
 			}
 		}
@@ -727,11 +742,15 @@ class finanzenNEW extends finanzen {
 	 * @param unknown $zuPruefendesJahr
 	 * @return boolean
 	 */
-	function checkIfMonatIsInPast($currentMonat, $zuPruefenderMonat) {
-		if($zuPruefenderMonat < $currentMonat) {
-			return true;
-		} else {
+	function checkIfMonatIsInPast($currentMonat, $zuPruefenderMonat, $currentJahr, $pruefendesJahr) {
+		if($this->checkIfJahrIsInFuture($currentJahr, $pruefendesJahr) == true) {
 			return false;
+		} else {
+			if($zuPruefenderMonat < $currentMonat) {
+				return true;
+			} else {
+				return false;
+			}
 		}
 	}
 	

@@ -116,13 +116,13 @@ class login extends functions {
 	 */
 	public function anmeldeCheck() {
 		$ausgabe = "";
-		$notLoggedIn = "<p>Ein Login ist notwendig</p>";
+		$notLoggedIn = "<p id='loginTitel'>Accountname</p>";
 
 		if(!isset($_SESSION['angemeldet'])) {
 			$ausgabe .= $notLoggedIn;
 			$ausgabe .= '<form action="index.php" method=post>';
-			$ausgabe .= '<input type="text" value="" name="username" placeholder="Benutzername" /><br><br>';
-			$ausgabe .= '<input type="password" value = "" name = "passwort" placeholder = "Passwort" /><br><br>';
+			$ausgabe .= '<input type="text" value="" name="username" placeholder="Benutzername" />';
+			$ausgabe .= '<input type="password" value = "" name = "passwort" placeholder = "Passwort" />';
 			$ausgabe .= '<input type="submit" value="Einloggen" />';
 			$ausgabe .= '</form>';
 		} else {

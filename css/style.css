@@ -465,18 +465,18 @@ blockquote {
 }
 
 ::-webkit-input-placeholder { /* WebKit, Blink, Edge */
-    color: #8a8aff;
+    color: grey;
 }
 :-moz-placeholder { /* Mozilla Firefox 4 to 18 */
-   color: #8a8aff;
+   color: grey;
    opacity:  1;
 }
 ::-moz-placeholder { /* Mozilla Firefox 19+ */
-   color: #8a8aff;
+   color: grey;
    opacity:  1;
 }
 :-ms-input-placeholder { /* Internet Explorer 10-11 */
-   color: #8a8aff;
+   color: grey;
 }
 
 .handwerkField input[type=number] {
@@ -1765,8 +1765,14 @@ input[type=password]:focus {
 	display: inline-block;
 	background-color: #dbdbdb;
 	padding: 5px;
-	margin: 0px 10px 0px 0px;
-	
+	margin: 0px 5px 0px 0px;
+	border: 1px solid transparent;	
+}
+
+.FinanzenMonate li:hover,
+.FinanzenKonten li:hover {
+	background-color: #fed3d5;
+	border: 1px solid red;
 }
 
 .FinanzenKonten {
@@ -1788,7 +1794,7 @@ input[type=password]:focus {
 
 .FinanzenKonten li {
 	display: inline-block;
-	margin: 0px 5px 4px 0px;
+	margin: 0px 2px 2px 0px;
 	border: 1px solid grey;
 	padding: 5px;
 }
@@ -2078,17 +2084,69 @@ input[type=password]:focus {
 }
 
 .login {
-	background: #d4d4d4;
-	background-image: url("../images/index-login.jpg");
+	background: white;
+	background-image: url("../images/index-login3.jpg");
 	padding: 10px 20px 40px 20px;
-	width: 200px;
+	background-repeat: no-repeat;
+	background-position: right;
+	width: 900px;
 	height: 500px;
 	margin-left: auto;
 	margin-right: auto;
 	margin-top: 20px;
-	border: 2px solid #970000;
+	border: 2px solid #3a3a3a;
 	color: #000000;
 	
+}
+
+.login h1 {
+	font-size: 40px;
+	color: grey;
+}
+
+.login #loginTitel {
+	font-style: italic;
+	font-size: large;
+	color: #b1b1b1;
+}
+
+.login input[type=text],
+.login input[type=password] {
+	width: 300px;
+	padding: 10px;
+	box-shadow: 0px 0px 7px blue;
+	border: none;
+	margin-bottom: 10px;
+	background-color: transparent;
+	color: blue;
+}
+
+.login #register {
+	float: right;
+	width: 100px;
+}
+
+.login #register a {
+	box-shadow: none;
+	color: green !important;
+	border: 1px solid green;
+}
+
+.login #funktion {
+	float: right;
+	width: 300px;
+	margin-right: 50px;
+}
+
+.login #loginFelder {
+	position: relative;
+	top: 150px;
+	width: 400px;
+}
+
+.login #loginFelder input[type=submit] {
+	box-shadow: none;
+	background-color: transparent;
 }
 
 .innerBody {

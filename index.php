@@ -27,24 +27,24 @@ $indexlogin->connectToDB();
 
 <body id='index'>
 	<div class='login'>
-		<h2>Willkommen</h2>
-		<?php
-
-		# Zeigt die Logineingabefelder an.
-		echo $indexlogin->anmeldeCheck();
+		<h1>STEVEN.NET</h1>
 		
-		$indexlogin->registerNewUser();
-
-		# Führt die Anmeldung durch.
-		echo $indexlogin->login_user();
-		?>
+		<div id="loginFelder">
+		<?php # Zeigt die Logineingabefelder an.
+		echo $indexlogin->anmeldeCheck(); ?>
+		</div>
+		
+		<div id="register">
+		<?php $indexlogin->registerNewUser(); ?>
+		<a href='?createUser' class='highlightedLink'>Todestempler-Mitglieder bitte Registrieren</a>
+		</div>
+		
+		<div id="funktion"> <?php # Führt die Anmeldung durch. 
+		echo $indexlogin->login_user(); ?> </div>
 		<p class="infoText">
 			<br><br>
-			<a href='?createUser' class='highlightedLink'>Todestempler-Mitglieder bitte Registrieren</a>";
+			";
 		</p>
-		
-		
-		<p><a class='impressumButton' href='?impressum'>Impressum</a></p>
 		
 		<?php if(isset($_GET['impressum'])) { echo "<p class='meldung'>Es ist ein temporärer Fehler aufgetreten, das tut uns leid, bitte versuchen Sie es später erneut.</p>"; }?>
 		
