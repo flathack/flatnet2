@@ -201,7 +201,12 @@ class sql {
 		
 		return $row;
 	}
-
+	
+	/**
+	 * Läd Informationen in ein Objekt.
+	 * @param unknown $query
+	 * @return unknown
+	 */
 	function getObjectsToArray($query) {
 		$ergebnis = mysql_query($query);
 		$i = 0;
@@ -214,6 +219,22 @@ class sql {
 			return $objects;
 		}
 
+	}
+	
+	/**
+	 * Ermöglicht das Abfragen, ob ein Objekt in einer Datenbank bereits existiert.
+	 * und gibt True oder False zurück.
+	 */
+	function objectExists($table, $column, $object) {
+		$check = "SELECT * FROM $table WHERE $column LIKE '$object' LIMIT 1";
+		$checkergebnis = mysql_query($check);
+		$row = mysql_fetch_object($checkergebnis);
+	
+		if($row == "") {
+			return false;
+		} else {
+			return true;
+		}
 	}
 
 }

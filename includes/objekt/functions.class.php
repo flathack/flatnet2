@@ -744,22 +744,5 @@ class functions extends sql {
 		}
 	}
 	
-	
-	/**
-	 * Ermöglicht das Abfragen, ob ein Objekt in einer Datenbank bereits existiert.
-	 * und gibt True oder False zurück.
-	 */
-	function objectExists($table, $column, $object) {
-		$check = "SELECT * FROM $table WHERE $column LIKE '$object' LIMIT 1";
-		$checkergebnis = mysql_query($check);
-		$row = mysql_fetch_object($checkergebnis);
-
-		if($row == "") {
-			return false;
-		} else {
-			return true;
-		}
-	}
-	
 } # CLASS ENDE
 ?>

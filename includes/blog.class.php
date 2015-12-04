@@ -2,6 +2,7 @@
 /**
  * @history Steven 20.08.2014 angelegt.
  * @history Steven 24.08.2014 Blog funktionalität teilweise implementiert, wie anzeigen, auswählen.
+ * @history Steven Irgend wann 2015: Blog in Forum umprogrammiert.
  * @author Steven
  */
 include 'objekt/functions.class.php';

@@ -1,8 +1,5 @@
 <?php
-/**
- * @historie Steven 17.08.2014 angelegt.
- * Dies ist ein Projekt, welches Objektorientiert erstellt werden soll.
- */
+/** @historie Steven 17.08.2014 angelegt. */
 header('Content-Type: text/html; charset=ISO-8859-1'); 
 session_start(); ?>
 
@@ -32,12 +29,13 @@ $indexlogin->connectToDB();
 		<div id="loginFelder">
 		<?php # Zeigt die Logineingabefelder an.
 		echo $indexlogin->anmeldeCheck(); ?>
+		<?php if(isset($_GET['createUser'])) { echo ""; } else { echo "<a href='?createUser' class='rightBlueLink' >Account erstellen</a>"; }?>
 		</div>
 		
 		<div id="register">
 			<?php $indexlogin->registerNewUser(); ?>
 			
-			<?php if(isset($_GET['createUser'])) { echo ""; } else { echo "<a href='?createUser' >Account erstellen</a>"; }?>
+			
 			
 		</div>
 		
@@ -64,7 +62,7 @@ $indexlogin->connectToDB();
 				<h2>Datenverarbeitung auf dieser Internetseite</h2>
 				
 				<p>Der Anbieter erhebt und speichert 
-				automatisch in ihren Server Log Files 
+				automatisch in seinen Server Log Files 
 				Informationen, die Ihr Browser an uns 
 				übermittelt. Dies sind:</p>
 				
@@ -73,9 +71,10 @@ $indexlogin->connectToDB();
 				<li>Uhrzeit der Serveranfrage.</li>
 				<p>Diese Daten sind für den Anbieter nicht bestimmten 
 				Personen zuordenbar. Eine Zusammenführung dieser Daten
-				mit anderen Datenquellen wird nicht vorgenommen, die
-				Daten werden zudem nach einer statistischen 
-				Auswertung gelöscht.</p>
+				mit anderen Datenquellen wird nicht vorgenommen, die 
+				Daten, speziell die IP Adresse dient dem Erkennen
+				von Angriffen von außen. Nach einer Auswertung 
+				werden diese Daten aber gelöscht.</p>
 				
 				<h2>Cookies</h2>
 				
@@ -112,7 +111,7 @@ $indexlogin->connectToDB();
 				Wenn Sie Fragen haben, die Ihnen diese Datenschutzerklärung 
 				nicht beantworten konnte oder wenn Sie zu einem Punkt
 				vertiefte Informationen wünschen, wenden Sie sich 
-				bitte jederzeit an den Anbieter.</p>
+				bitte jederzeit an den Anbieter. <a href="mailto:todestempler@guildwars.pfweb.eu">Senden Sie mir eine E-Mail.</a> </p>
 		</div>
 	</div>
 </body>

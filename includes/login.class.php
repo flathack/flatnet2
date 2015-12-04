@@ -254,7 +254,7 @@ class login extends functions {
 									$used = $row->used + 1;
 									
 									# Coderechte für den Benutzer übernehmen
-									$codeRechte = $row->rights;
+									# $codeRechte = $row->rights;
 									
 									# Update des Codes.
 									$update = "UPDATE registercode SET used='$used',usedBy='$username',ipadress='$ip' WHERE code = '$code'";
@@ -273,7 +273,7 @@ class login extends functions {
 							
 							# Benutzer anlegen
 							$passwortneu = md5($passwort1);
-							$query="INSERT INTO benutzer (Name, Passwort, rights, versuche) VALUES ('$username','$passwortneu','$codeRechte','0')";
+							$query="INSERT INTO benutzer (Name, Passwort, rights, versuche) VALUES ('$username','$passwortneu','0','0')";
 							$ergebnis = mysql_query($query);
 							if($ergebnis == true) {
 								echo "<p class='erfolg'>Hallo $username! Du hast dich erfolgreich registriert.</p>";

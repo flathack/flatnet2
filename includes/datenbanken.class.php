@@ -407,7 +407,7 @@ class datenbanken extends functions {
 			$ausgabe = "";
 			
 			$ergebnis = mysql_query ( $query );
-			$row = mysql_fetch_object ( $ergebnis ) or die ( "Error: $query <br>" . mysql_error () );
+			$row = mysql_fetch_object ( $ergebnis );
 			$ausgabe .= "<div></div>";
 			while ( $row = mysql_fetch_object ( $ergebnis ) ) {
 				$ausgabe .= "<div class='adresseintrag'>";
