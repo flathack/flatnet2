@@ -74,7 +74,6 @@ class login extends functions {
 						$updateErgeb = mysql_query($update);
 						if($updateErgeb == "true") {
 							header("Location: $umleitung");
-							return true;
 						} else {
 							$errorMessage .= "<p class='info'>Ein Login ist derzeit nicht möglich.</p>";
 							$this->logEintrag(false, "Versuche von $username konnten nicht auf 0 gesetzt werden.", "Error");
@@ -126,7 +125,7 @@ class login extends functions {
 			$ausgabe .= '<input type="submit" value="Einloggen" />';
 			$ausgabe .= '</form>';
 		} else {
-			$ausgabe .= "<p>Du bist bereits angemeldet <a href='uebersicht.php' class='buttonlink'>Weiter</a></p>";
+			$ausgabe .= "<p id='loginTitel'>Du bist angemeldet<br><a href='uebersicht.php' class=''>Gehe zur Übersicht</a></p>";
 		}
 		if(!isset($_GET['createUser'])) { return $ausgabe; }
 	}
@@ -222,7 +221,7 @@ class login extends functions {
 							# Register Code Check
 							
 							if($this->objectExists("registercode", "code", $code) == false) {
-								echo "<p class='meldung'>Es gibt Probleme mit dem Code, kontaktiere den Administrtor.</p>";
+								echo "<p class='meldung'>Es gibt Probleme mit dem Code, kontaktiere den Administrator.</p>";
 								# Logeintrag
 								$this->logEintrag(true, "hat den Code $code benutzt, dieser existiert aber nicht.", "Error");
 								return false;

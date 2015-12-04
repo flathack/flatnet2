@@ -2075,7 +2075,7 @@ input[type=password]:focus {
 .login {
 	background: white;
 	background-image: url("../images/index-login.jpg");
-	padding: 10px 20px 40px 20px;
+	padding: 10px;
 	background-repeat: no-repeat;
 	background-position: right;
 	width: 900px;
@@ -2088,22 +2088,22 @@ input[type=password]:focus {
 	
 }
 
-.login h1 {
-	font-size: 40px;
+.login h1 a {
+	font-size: 35px;
 	color: grey;
 }
 
 .login #loginTitel {
 	font-style: italic;
 	font-size: large;
-	color: #b1b1b1;
+	color: #595959;
 }
 
 .login input[type=text],
 .login input[type=password] {
 	width: 300px;
 	padding: 10px;
-	box-shadow: 0px 0px 7px blue;
+	box-shadow: 0px 0px 7px #620000;
 	border: none;
 	margin-bottom: 10px;
 	background-color: transparent;
@@ -2112,48 +2112,76 @@ input[type=password]:focus {
 
 .login #register {
 	width: 320px;
+	margin-top: 100px;
 }
 
-.login #register a {
-	
+.login #optionen {
+	margin-top: -70px;
+	margin-left: 300px;
 }
 
-.login #DatenschutzInfos  {
+.login #optionen li {
+	display: inline;
+	margin: 0px 0px 0px 0px;
+	border-left: 1px solid grey;
+	padding-left: 5px;
+}
+
+.login li a {
+	color: grey;
+}
+
+.login #DatenschutzInfos,
+.login #Impressum,
+.login #zweck  {
+	margin-top: 10px;
 	float: right;
 	width: 520px;
 	background-color: white;
 	position: relative;
-	top: -370px;
+	top: 0px;
 	padding: 5px;
 	border-radius: 10px;
-	border: 1px solid grey;
+	overflow-y: scroll;
+	height: 400px;
 }
 
 .login #DatenschutzInfos p,
-.login #DatenschutzInfos li {
+.login #DatenschutzInfos li,
+.login #Impressum p,
+.login #Impressum li,
+.login #zweck p,
+.login #zweck li {
 	font-size: 12px;
 	margin-left: 0px;
 }
 
-.login #DatenschutzInfos h2 {
+.login #DatenschutzInfos h2,
+.login #DatenschutzInfos h1,
+.login #Impressum h1,
+.login #Impressum h2,
+.login #zweck h1,
+.login #zweck h2 {
 	font-size: 15px;
+	color: grey;
 }
 
 .login #funktion {
-	float: right;
-	width: 300px;
-	margin-right: 50px;
+	width: 400px;
+	margin-left: 330px;
+	margin-top: -60px;
 }
 
 .login #loginFelder {
 	position: relative;
 	top: 150px;
-	width: 400px;
+	width: 320px;
 }
 
 .login #loginFelder input[type=submit] {
 	box-shadow: none;
 	background-color: transparent;
+	margin-left: 238px;
 }
 
 .innerBody {

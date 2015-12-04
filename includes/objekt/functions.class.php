@@ -118,9 +118,14 @@ class functions extends sql {
 		$selectUsername = "SELECT id, Name FROM benutzer WHERE Name = '$username' LIMIT 1";
 		$ergebnisUsername = mysql_query($selectUsername);
 		while ($rowUsername = mysql_fetch_object($ergebnisUsername)) {
-			$userID = $rowUsername->id;
+			
+			if(!isset($rowUsername->id)) {
+				$userID = 0;
+			} else {
+				$userID = $rowUsername->id;
+			}
 		}
-		# DB CLOSE
+		
 		return $userID;
 
 	}
@@ -347,7 +352,12 @@ class functions extends sql {
 
 		if($state == true) {
 			# Log Eintrag erstellen.
-			$username = $_SESSION['username'];
+			if(isset($_SESSION['username'])) {
+				$username = $_SESSION['username'];
+			} else {
+				$username = "Unbekannter Benutzer";
+			}
+			
 			$userID = $this->getUserID($username);
 			$insert="INSERT INTO vorschlaege (text, autor, status, ipadress) VALUES ('$username $art','$userID','$status','$ip')";
 			$ergebnis = mysql_query($insert);
