@@ -15,36 +15,23 @@ include '../includes/learn.class.php';
 #Forum Function
 $learn = NEW learn;
 
-# STELLT DEN HEADER ZUR VERFÜGUNG
+# STELLT DEN HEADER ZUR VERFÃœGUNG
 $learn->connectToDB();
 $learn->header();
 
 $learn->logged_in("redirect", "index.php");
 
-$learn->userHasRightPruefung("36");
+$learn->userHasRightPruefung("70");
 
 $suche = isset($_GET['suche']) ? $_GET['suche'] : '';
 echo $learn->suche($suche, "learnlernkarte", "frage", "?frage");
 ?>
-<title>Steven.NET - Lernbereich</title>
+<title>Steven.NET - Export</title>
 	</head>
 	<body>
-		
 		<div class='mainbodyDark'>
-		
-		<h2>Lernbereich</h2>
-		
-		<?php 
-		$learn->mainStatusFunction();
-		$learn->showOptionsForAll();
-		# Kategorien anzeigen
-		$learn->showKategorien();
-		?>
-		
-		<?php $learn->mainKategorieFunction(); ?>
-		<?php $learn->createNewEintragInKategorie(); ?>
-		<?php $learn->showKategorieEintraege(); ?>
-		
+		<a href='index.php'>Zurück</a>
+			<?php $learn->export(); ?>
 		</div>
 	</body>
 </div>

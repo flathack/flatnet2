@@ -179,15 +179,17 @@ class login extends functions {
 	function registerNewUser() {
 		if(isset($_GET['createUser'])) {
 			echo "<form action='?createUser' method=post>";
-			echo "<input type=text name=user placeholder='Benutzername' value='' /><br><br>";
-			echo "<input type=password name=pass placeholder='Passwort' value='' /><br><br>";
-			echo "<input type=password name=pass2 placeholder='wiederholen' value='' /><br><br>";
-			echo "<input type=text name=code placeholder='Einladungscode' value='' /><br><br>";
-			echo "<p class='dezentInfo'>Hinweis: Es werden keine persönlichen Daten gespeichert. </p>";
-			echo "<input type=submit name=register value='Registrieren' /><a href='?' class='greenLink'>Zum Login</a><br><br>";
+			echo "<input type=text name=user placeholder='Benutzername' value='' />";
+			echo "<input type=password name=pass placeholder='Passwort' value='' />";
+			echo "<input type=password name=pass2 placeholder='Passwort wiederholen' value='' />";
+			echo "<input type=text name=code placeholder='Einladungscode' value='' />";
+			echo "<input type=checkbox name=authorisation value=1 /><label for=authorisation>Datenschutzklausel</label>";
+			echo '<br><br><a href="#" class="" onclick="document.getElementById(\'DatenschutzInfos\').style.display = \'block\'"> Datenschutzinformationen anzeigen</a><br><br>';
+			
+			echo "<input type=submit name=register value='Registrieren' /><a href='?' class='greenLink'>Zum Login</a>";
 			echo "</form>";
 				
-			if(isset($_POST['register']) AND isset($_POST['pass']) AND isset($_POST['pass2']) AND isset($_POST['code']) AND isset($_POST['user'])) {
+			if(isset($_POST['register']) AND isset($_POST['pass']) AND isset($_POST['pass2']) AND isset($_POST['code']) AND isset($_POST['user']) AND isset($_POST['authorisation'])) {
 				$code = strip_tags( stripslashes($_POST['code']));
 				$name = strip_tags( stripslashes($_POST['user']));
 				$pass = strip_tags( stripslashes($_POST['pass']));

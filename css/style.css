@@ -2085,7 +2085,7 @@ input[type=password]:focus {
 
 .login {
 	background: white;
-	background-image: url("../images/index-login3.jpg");
+	background-image: url("../images/index-login.jpg");
 	padding: 10px 20px 40px 20px;
 	background-repeat: no-repeat;
 	background-position: right;
@@ -2122,14 +2122,32 @@ input[type=password]:focus {
 }
 
 .login #register {
-	float: right;
-	width: 100px;
+	width: 320px;
 }
 
 .login #register a {
-	box-shadow: none;
-	color: green !important;
-	border: 1px solid green;
+	
+}
+
+.login #DatenschutzInfos  {
+	float: right;
+	width: 520px;
+	background-color: white;
+	position: relative;
+	top: -370px;
+	padding: 5px;
+	border-radius: 10px;
+	border: 1px solid grey;
+}
+
+.login #DatenschutzInfos p,
+.login #DatenschutzInfos li {
+	font-size: 12px;
+	margin-left: 0px;
+}
+
+.login #DatenschutzInfos h2 {
+	font-size: 15px;
 }
 
 .login #funktion {
