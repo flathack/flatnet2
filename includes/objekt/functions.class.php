@@ -18,7 +18,7 @@ class functions extends sql {
 	 * @param string $pfad // Welcher Pfad hinterlegt werden soll.
 	 * @return string // Gibt die komplette Suche, samt umgebenen DIV wieder.
 	 */
-	function suche($suchWort = "test", $tabelle = "inventar", $name = "name", $pfad = "?id") {
+	function suche($suchWort = "test", $tabelle = "docu", $name = "text", $pfad = "?id") {
 		if($this->userHasRight("23", 0) == true) {
 			if($suchWort) {
 	
@@ -177,20 +177,6 @@ class functions extends sql {
 		}
 
 		return $catName;
-	}
-
-	/**
-	 * Inventareintrags ID wird eingemissen und Autor ID ausgegeben.
-	 * @param unknown $id
-	 */
-	function getInventarErsteller($id) {
-		$selectKat = "SELECT id, ersteller FROM inventar WHERE id = '$id' LIMIT 1";
-		$katergeb = mysql_query($selectKat);
-		while($row = mysql_fetch_object($katergeb)) {
-			$catID = $row->ersteller;
-		}
-
-		return $catID;
 	}
 
 	/** Quelle: http://www.webmasterpro.de/coding/article/php-ein-einfaches-flexibles-rechtesystem.html
@@ -658,10 +644,6 @@ class functions extends sql {
 			echo "<li>	<a href='/flatnet2/finanzen/index.php' id='finanzen'>	Finanzen </a>	</li>";
 		}
 		
-		# INVENTAR
-		#if($this->check("128", 0) == "true") {
-		#	echo "<li>	<a href='/flatnet2/datenbank/inventar/inventar.php' id='inventar'>	Inventar		</a>	</li>";
-		#}		
 		echo "</ul>
 				<div id='ueberschrift'>
 				<h1><a href='/flatnet2/uebersicht.php'>Steven.NET</a></h1>

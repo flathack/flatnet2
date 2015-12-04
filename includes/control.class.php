@@ -239,17 +239,6 @@ class control extends functions {
 					echo "</table>";
 					echo "</div>";
 					
-					// Check, ob der Benutzer noch vorhandene Inventareinträge,
-					// Guildwars Charakter, Dokumentationseinträge, BlogKommentare
-					// Vorschläge oder Blogtexte hat.
-					// # Invtentar
-					$selectInventar = "SELECT * FROM inventar WHERE ersteller = '$bearb'";
-					$ergebnisInventar = mysql_query ( $selectInventar );
-					$mengeInventar = mysql_num_rows ( $ergebnisInventar );
-					if (! isset ( $mengeInventar )) {
-						$mengeInventar = 0;
-					}
-					
 					// # Guildwars
 					$selectGuildwars = "SELECT * FROM gw_chars WHERE besitzer = '$bearb'";
 					$ergebnisGuildwars = mysql_query ( $selectGuildwars );
@@ -320,7 +309,7 @@ class control extends functions {
 					// }
 					
 					// Ausgabe der Meldungen:
-					if ($mengeBlogKommentare + $mengeBlogTexte + $mengeVorschlaege + $mengeDocu + $mengeGuildwars + $mengeInventar > 0) {
+					if ($mengeBlogKommentare + $mengeBlogTexte + $mengeVorschlaege + $mengeDocu + $mengeGuildwars > 0) {
 						echo "<p class=''><h2>Dieser Benutzer hat folgende Objekte: </h2>";
 						if ($mengeGuildwars > 0) {
 							echo $mengeGuildwars . " Guildwars-Charakter, <br>";
@@ -342,18 +331,6 @@ class control extends functions {
 						
 						if ($mengeDocu > 0) {
 							echo $mengeDocu . " Doku Einträge, <br>";
-						}
-						
-						if ($mengeInventar > 0) {
-							echo $mengeInventar . " Inventareinträge.<br>";
-						}
-						
-						if ($mengeInventar > 0) {
-							echo $mengeKonten . " Konten in der Finanzverwaltung.<br>";
-						}
-						
-						if ($mengeInventar > 0) {
-							echo $mengeUmsaetze . " Umsätze innerhalb dieser Konten.<br>";
 						}
 						
 						echo "<br><br><br><br><br><br><br><br><br><br><br><br>";

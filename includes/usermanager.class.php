@@ -118,24 +118,6 @@ class usermanager extends functions {
 		echo "<h2>Guildwars</h2>";
 		echo "<p>Du hast " . $menge . " Charakter</p></div>";
 
-		# Inventar Account Information
-		$selectRealName = "SELECT id, Name, realName FROM benutzer WHERE id = '$user'";
-		$realNameergebnis = mysql_query($selectRealName);
-		$rowRealName = mysql_fetch_object($realNameergebnis);
-		if($rowRealName->realName == "") {
-			$select = "SELECT * FROM inventar WHERE besitzer = '$user'";
-		} else {
-			$select = "SELECT * FROM inventar 
-						WHERE 
-						ersteller = '$user' ";
-		}
-		$ergebnis = mysql_query($select);
-		$menge = mysql_num_rows($ergebnis);
-		echo "<div id=''>";
-		echo "<h2>Inventar</h2>";
-		echo "<p>Besitzer von " . $menge . " Inventareinträgen.";
-		echo "</div>";
-
 		# Dokumentation Account Information
 		$select = "SELECT * FROM docu WHERE autor = '$user'";
 		$ergebnis = mysql_query($select);
@@ -288,8 +270,7 @@ class usermanager extends functions {
 			$ergebnis = mysql_query($select);
 			$row = mysql_fetch_object($ergebnis);
 			if($row->realName == "") {
-				echo "<p class='info'>Bitte trage deinen echten Namen ein! Damit kann ich dir 
-						Inventareinträge und andere nützliche Dinge zuordnen. Klicke dazu 
+				echo "<p class='info'>Bitte trage deinen echten Namen ein! Klicke dazu 
 					<a href='?addRealName=1' class='buttonlink'>Hier</a></p>";
 			}
 		}

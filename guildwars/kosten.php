@@ -16,7 +16,7 @@
 include '../includes/gw.class.php';
 
 # GW start
-$guildwars = NEW guildwars;
+$guildwars = NEW gw_costs;
 
 # STELLT DEN HEADER ZUR VERFÜGUNG
 $guildwars->connectToDB();

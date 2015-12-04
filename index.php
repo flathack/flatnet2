@@ -69,8 +69,6 @@ $indexlogin->connectToDB();
 				übermittelt. Dies sind:</p>
 				
 				<li>Browsertyp/ -version</li>
-				<li>verwendetes Betriebssystem</li>
-				<li>Referrer URL (die zuvor besuchte Seite)</li>
 				<li>Hostname des zugreifenden Rechners (IP Adresse)</li>
 				<li>Uhrzeit der Serveranfrage.</li>
 				<p>Diese Daten sind für den Anbieter nicht bestimmten 

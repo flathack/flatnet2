@@ -23,7 +23,7 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur fÃ¼r Tabelle `account_infos`
+-- Tabellenstruktur für Tabelle `account_infos`
 --
 
 CREATE TABLE `account_infos` (
@@ -36,7 +36,7 @@ CREATE TABLE `account_infos` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
--- Tabellenstruktur fÃ¼r Tabelle `adressbuch`
+-- Tabellenstruktur für Tabelle `adressbuch`
 --
 
 CREATE TABLE `adressbuch` (
@@ -75,13 +75,13 @@ CREATE TABLE `benutzer` (
   `timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `rights` bigint(20) NOT NULL COMMENT 'Rechte des Benutzers',
   `forumRights` bigint(20) NOT NULL COMMENT 'Rechte zum Anzeigen von Inhalten im Forum',
-  `versuche` int(3) DEFAULT NULL COMMENT 'Versuche fÃ¼r den Login',
+  `versuche` int(3) DEFAULT NULL COMMENT 'Versuche für den Login',
   `realName` varchar(50) NOT NULL COMMENT 'Echter Name des Benutzers',
   `titel` varchar(250) NOT NULL COMMENT 'Titel des Benutzers'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
--- Daten fÃ¼r Tabelle `benutzer`
+-- Daten für Tabelle `benutzer`
 --
 
 INSERT INTO `benutzer` (`id`, `Name`, `Passwort`, `timestamp`, `rights`, `forumRights`, `versuche`, `realName`, `titel`) VALUES
@@ -90,7 +90,7 @@ INSERT INTO `benutzer` (`id`, `Name`, `Passwort`, `timestamp`, `rights`, `forumR
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur fÃ¼r Tabelle `blogkategorien`
+-- Tabellenstruktur für Tabelle `blogkategorien`
 --
 
 CREATE TABLE `blogkategorien` (
@@ -104,7 +104,7 @@ CREATE TABLE `blogkategorien` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
--- Tabellenstruktur fÃ¼r Tabelle `blogtexte`
+-- Tabellenstruktur für Tabelle `blogtexte`
 --
 
 CREATE TABLE `blogtexte` (
@@ -119,7 +119,7 @@ CREATE TABLE `blogtexte` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
--- Tabellenstruktur fÃ¼r Tabelle `blog_kommentare`
+-- Tabellenstruktur für Tabelle `blog_kommentare`
 --
 
 CREATE TABLE `blog_kommentare` (
@@ -131,7 +131,7 @@ CREATE TABLE `blog_kommentare` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
--- Tabellenstruktur fÃ¼r Tabelle `docu`
+-- Tabellenstruktur für Tabelle `docu`
 --
 
 CREATE TABLE `docu` (
@@ -142,7 +142,7 @@ CREATE TABLE `docu` (
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='hilfe.php';
 
 --
--- Tabellenstruktur fÃ¼r Tabelle `fahrkosten`
+-- Tabellenstruktur für Tabelle `fahrkosten`
 --
 
 CREATE TABLE `fahrkosten` (
@@ -158,7 +158,7 @@ CREATE TABLE `fahrkosten` (
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
--- Tabellenstruktur fÃ¼r Tabelle `fahrkostenziele`
+-- Tabellenstruktur für Tabelle `fahrkostenziele`
 --
 
 CREATE TABLE `fahrkostenziele` (
@@ -170,7 +170,7 @@ CREATE TABLE `fahrkostenziele` (
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
--- Tabellenstruktur fÃ¼r Tabelle `fahrzeuge`
+-- Tabellenstruktur für Tabelle `fahrzeuge`
 --
 
 CREATE TABLE `fahrzeuge` (
@@ -183,7 +183,7 @@ CREATE TABLE `fahrzeuge` (
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
--- Tabellenstruktur fÃ¼r Tabelle `finanzen_jahresabschluss`
+-- Tabellenstruktur für Tabelle `finanzen_jahresabschluss`
 --
 
 CREATE TABLE `finanzen_jahresabschluss` (
@@ -196,7 +196,7 @@ CREATE TABLE `finanzen_jahresabschluss` (
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
--- Tabellenstruktur fÃ¼r Tabelle `finanzen_konten`
+-- Tabellenstruktur für Tabelle `finanzen_konten`
 --
 
 CREATE TABLE `finanzen_konten` (
@@ -207,7 +207,7 @@ CREATE TABLE `finanzen_konten` (
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
--- Tabellenstruktur fÃ¼r Tabelle `finanzen_monatsabschluss`
+-- Tabellenstruktur für Tabelle `finanzen_monatsabschluss`
 --
 
 CREATE TABLE `finanzen_monatsabschluss` (
@@ -223,7 +223,7 @@ CREATE TABLE `finanzen_monatsabschluss` (
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur fÃ¼r Tabelle `finanzen_umsaetze`
+-- Tabellenstruktur für Tabelle `finanzen_umsaetze`
 --
 
 CREATE TABLE `finanzen_umsaetze` (
@@ -239,7 +239,7 @@ CREATE TABLE `finanzen_umsaetze` (
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
--- Tabellenstruktur fÃ¼r Tabelle `gwcosts`
+-- Tabellenstruktur für Tabelle `gwcosts`
 --
 
 CREATE TABLE `gwcosts` (
@@ -252,7 +252,7 @@ CREATE TABLE `gwcosts` (
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
--- Tabellenstruktur fÃ¼r Tabelle `gwmatlist`
+-- Tabellenstruktur für Tabelle `gwmatlist`
 --
 
 CREATE TABLE `gwmatlist` (
@@ -264,8 +264,425 @@ CREATE TABLE `gwmatlist` (
   `kategorie` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
+
 --
--- Tabellenstruktur fÃ¼r Tabelle `gwusersmats`
+-- Daten für Tabelle `gwmatlist`
+--
+INSERT INTO `gwmatlist` (`id`, `timestamp`, `matID`, `matName`, `matPrice`, `kategorie`) VALUES
+(1, '2015-03-03 06:27:25', 1, 'Zinnbrocken', '0', 1),
+(2, '2015-03-03 06:27:25', 2, 'Bronzebarren', '0', 1),
+(3, '2015-03-03 06:27:25', 3, 'Kupfererz', '0', 1),
+(4, '2015-03-03 06:27:25', 6, 'Spule Jutefaden', '0', 1),
+(5, '2015-03-03 06:27:25', 11, 'Eisenerz', '0', 1),
+(6, '2015-03-03 06:27:25', 16, 'Spule Wollfaden', '0', 1),
+(7, '2015-03-03 06:27:25', 21, 'Holzkohlebrocken', '0', 1),
+(8, '2015-03-03 06:27:25', 23, 'Silbererz', '0', 1),
+(9, '2015-03-03 06:27:25', 26, 'Spule Baumwollfaden', '0', 1),
+(10, '2015-03-03 06:27:25', 31, 'Platinerz', '0', 1),
+(11, '2015-03-03 06:27:25', 36, 'Spule Leinenfaden', '0', 1),
+(12, '2015-03-03 06:27:25', 43, 'Golderz', '0', 1),
+(13, '2015-03-03 06:27:25', 46, 'Spule Seidenfaden', '0', 1),
+(14, '2015-03-03 06:27:25', 51, 'Mithrilerz', '0', 1),
+(15, '2015-03-03 06:27:25', 52, 'Mithrilbarren', '0', 1),
+(16, '2015-03-03 06:27:25', 53, 'Goldbarren', '0', 1),
+(17, '2015-03-03 06:27:25', 55, 'Gazeballen', '0', 1),
+(18, '2015-03-03 06:27:25', 56, 'Spule Gazefaden', '0', 1),
+(19, '2015-03-03 06:27:25', 61, 'Orichalcumerz', '0', 1),
+(20, '2015-03-03 06:27:25', 62, 'Orichalcumbarren', '0', 1),
+(21, '2015-03-03 06:30:22', 4, 'Juterest', '0', 1),
+(22, '2015-03-03 06:30:22', 5, 'Juteballen', '0', 1),
+(23, '2015-03-03 06:30:22', 9, 'Grüner Holzblock', '0', 1),
+(24, '2015-03-03 06:30:22', 10, 'Grüne Holzplanke', '0', 1),
+(25, '2015-03-03 06:30:22', 14, 'Wollrest', '0', 1),
+(26, '2015-03-03 06:30:22', 15, 'Wollballen', '0', 1),
+(27, '2015-03-03 06:30:22', 19, 'Geschmeidiger Holzblock', '0', 1),
+(28, '2015-03-03 06:30:22', 20, 'Geschmeidige Holzplanken', '0', 1),
+(29, '2015-03-03 06:30:22', 24, 'Baumwollrest', '0', 1),
+(30, '2015-03-03 06:30:22', 25, 'Baumwollballen', '0', 1),
+(31, '2015-03-03 06:30:22', 29, 'Abgelagerter Holzblock', '0', 1),
+(32, '2015-03-03 06:30:22', 30, 'Abgelagerte Holzplanke', '0', 1),
+(33, '2015-03-03 06:30:22', 32, 'Platinbarren', '0', 1),
+(34, '2015-03-03 06:30:22', 33, 'Silberbarren', '0', 1),
+(35, '2015-03-03 06:30:22', 34, 'Leinenrest', '0', 1),
+(36, '2015-03-03 06:30:22', 35, 'Leinenballen', '0', 1),
+(37, '2015-03-03 06:30:22', 39, 'Harter Holzblock', '0', 1),
+(38, '2015-03-03 06:30:22', 40, 'Harte Holzplanke', '0', 1),
+(39, '2015-03-03 06:30:22', 42, 'Dunkelstahlbarren', '0', 1),
+(40, '2015-03-03 06:30:22', 44, 'Seidenrest', '0', 1),
+(41, '2015-03-03 06:30:22', 45, 'Seidenballen', '0', 1),
+(42, '2015-03-03 06:30:22', 49, 'Alter Holzblock', '0', 1),
+(43, '2015-03-03 06:30:22', 50, 'Alte Holzplanke', '0', 1),
+(44, '2015-03-03 06:30:22', 59, 'Antikes Holz', '0', 1),
+(45, '2015-03-03 06:30:22', 60, 'Antike Holzplanke', '0', 1),
+(46, '2015-03-03 13:16:02', 7, 'Rohlederstücke', '0', 1),
+(47, '2015-03-03 13:16:02', 17, 'Dünnes Lederstück', '0', 1),
+(48, '2015-03-03 13:16:02', 27, 'Raues Lederstück', '0', 1),
+(49, '2015-03-03 13:16:02', 37, 'Robustes Lederstück', '0', 1),
+(50, '2015-03-03 13:16:02', 47, 'Dickes Lederstück', '0', 1),
+(51, '2015-03-03 13:16:46', 8, 'Gespannter Rohlederflicken', '0', 1),
+(52, '2015-03-03 13:17:39', 12, 'Eisenbarren', '0', 1),
+(53, '2015-03-03 13:17:39', 54, 'Gazerest', '0', 1),
+(54, '2015-03-03 13:21:28', 65, 'Knochensplitter', '0', 2),
+(55, '2015-03-03 13:21:28', 66, 'Winzige Klauen', '0', 2),
+(56, '2015-03-03 13:21:28', 69, 'Winzige Schuppe', '0', 2),
+(57, '2015-03-03 13:21:28', 70, 'Winzige Totem', '0', 2),
+(58, '2015-03-03 13:21:28', 71, 'Winziger Giftbeutel', '0', 2),
+(59, '2015-03-03 13:21:28', 75, 'Knochenscherbe', '0', 2),
+(60, '2015-03-03 13:21:28', 78, 'Kleiner Fangzahn', '0', 2),
+(61, '2015-03-03 13:21:28', 79, 'Kleine Schuppen', '0', 2),
+(62, '2015-03-03 13:21:28', 80, 'Kleines Totem', '0', 2),
+(63, '2015-03-03 13:21:28', 81, 'Kleiner Giftbeutel', '0', 2),
+(64, '2015-03-03 13:21:28', 85, 'Knochen', '0', 2),
+(65, '2015-03-03 13:21:28', 88, 'Fangzahn', '0', 2),
+(66, '2015-03-03 13:21:28', 89, 'Schuppen', '0', 2),
+(67, '2015-03-03 13:21:28', 90, 'Totem', '0', 2),
+(68, '2015-03-03 13:21:28', 91, 'Giftbeutel', '0', 2),
+(69, '2015-03-03 13:21:28', 95, 'Dicker Knochen', '0', 2),
+(70, '2015-03-03 13:21:28', 96, 'Scharfe Klaue', '0', 2),
+(71, '2015-03-03 13:21:28', 99, 'Glatte Schuppen', '0', 2),
+(72, '2015-03-03 13:21:28', 100, 'Graviertes Totem', '0', 2),
+(73, '2015-03-03 13:21:28', 101, 'Voller Giftbeutel', '0', 2),
+(74, '2015-03-03 13:21:28', 105, 'Großer Knochen', '0', 2),
+(75, '2015-03-03 13:21:28', 106, 'Große Klaue', '0', 2),
+(76, '2015-03-03 13:21:28', 110, 'Verziertes Totem', '0', 2),
+(77, '2015-03-03 13:21:28', 111, 'Wirkungsvolle Giftbeutel', '0', 2),
+(78, '2015-03-03 13:22:20', 41, 'Primordiumbrocken', '0', 1),
+(79, '2015-03-05 17:05:29', 13, 'Kupferbarren', '0', 1),
+(80, '2015-03-05 17:05:29', 18, 'Getrockneter Dünner Lederflicken', '0', 1),
+(81, '2015-03-05 17:05:29', 22, 'Stahlbarren', '0', 1),
+(82, '2015-03-05 17:05:29', 28, 'Getrockneter rauer Lederflicken', '0', 1),
+(83, '2015-03-05 17:05:29', 38, 'Getrockneter Robuster Lederflicken', '0', 1),
+(84, '2015-03-05 17:05:29', 48, 'Getrockneter Dicker Lederflicken', '0', 1),
+(85, '2015-03-05 17:05:29', 57, 'Gehärtetes Lederstück', '0', 1),
+(86, '2015-03-05 17:05:29', 58, 'Getrockneter Gehärteter Lederflicken', '0', 1),
+(87, '2015-03-05 17:05:29', 63, 'Rucksack-Rahmengestell des Handwerkers', '0', 1),
+(88, '2015-03-05 17:05:29', 64, 'Phiole mit schwachem Blut', '0', 2),
+(89, '2015-03-05 17:05:29', 67, 'Haufen glitzernden Staubs', '0', 2),
+(90, '2015-03-05 17:05:29', 74, 'Phiole mit dünnem Blut', '0', 2),
+(91, '2015-03-05 17:05:29', 76, 'Kleine Klaue', '0', 2),
+(92, '2015-03-05 17:05:29', 77, 'Haufen funkelnder Staub', '0', 2),
+(93, '2015-03-05 17:05:29', 84, 'Phiole mit Blut', '0', 2),
+(94, '2015-03-05 17:05:29', 86, 'Klaue', '0', 2),
+(95, '2015-03-05 17:05:29', 87, 'Haufen strahlenden Staub', '0', 2),
+(96, '2015-03-05 17:05:29', 94, 'Phiole mit dickem Blut', '0', 2),
+(97, '2015-03-05 17:05:29', 97, 'Haufen leuchtenden Staub', '0', 2),
+(98, '2015-03-05 17:05:29', 104, 'Phiole mit wirkungsvollem Blut', '0', 2),
+(99, '2015-03-05 17:05:29', 107, 'Haufen weißglühenden Staub', '0', 2),
+(100, '2015-03-05 20:02:30', 68, 'Winziger Fangzahn', '0', 2),
+(101, '2015-03-05 20:02:30', 72, 'Phiole mit kraftvollem Blut', '0', 2),
+(102, '2015-03-05 20:02:30', 73, 'Antiker Knochen', '0', 2),
+(103, '2015-03-05 20:02:30', 82, 'Scheußliche Klaue', '0', 2),
+(104, '2015-03-05 20:02:30', 83, 'Haufen kristallinen Staubs', '0', 2),
+(105, '2015-03-05 20:02:30', 92, 'Scheußlicher Fangzahn', '0', 2),
+(106, '2015-03-05 20:02:30', 93, 'Gepanzerte Schuppe', '0', 2),
+(107, '2015-03-05 20:02:30', 98, 'Scharfer Fangzahn', '0', 2),
+(108, '2015-03-05 20:02:30', 102, 'Kunstvolles Totem', '0', 2),
+(109, '2015-03-05 20:02:30', 103, 'Kraftvoller Giftbeutel', '0', 2),
+(110, '2015-03-05 20:02:30', 108, 'Großer Fangzahn', '0', 2),
+(111, '2015-03-05 20:02:30', 109, 'Große Schuppe', '0', 2),
+(112, '2015-03-05 20:02:30', 112, 'Karka-Panzer', '0', 2),
+(113, '2015-03-05 20:02:30', 113, 'Uhrwerk-Zwischenzahnrad', '0', 2),
+(114, '2015-03-05 20:03:46', 169, 'Haufen Blutsteinstaub', '0', 4),
+(115, '2015-03-05 20:03:46', 171, 'Dragoniterz', '0', 4),
+(116, '2015-03-05 20:03:46', 172, 'Aufsteigendes Fragment', '0', 4),
+(117, '2015-03-05 20:03:46', 178, 'Klumpen aus dunkler Materie', '0', 4),
+(118, '2015-03-05 20:03:46', 187, 'Thermokatalytisches Reagens', '0', 4),
+(119, '2015-03-05 20:08:18', 114, 'Kristall-Span', '0', 3),
+(120, '2015-03-05 20:08:18', 115, 'Zerstörer-Span', '0', 3),
+(121, '2015-03-05 20:08:18', 116, 'Verdorbener-Span', '0', 3),
+(122, '2015-03-05 20:08:18', 117, 'Haufen beschmutzter Essenz', '0', 3),
+(123, '2015-03-05 20:08:18', 118, 'Gelandener Span', '0', 3),
+(124, '2015-03-05 20:08:18', 119, 'Onyx-Span', '0', 3),
+(125, '2015-03-05 20:08:18', 120, 'Geschmolzener Span', '0', 3),
+(126, '2015-03-05 20:08:18', 121, 'Gletscher-Span', '0', 3),
+(127, '2015-03-05 20:08:18', 122, 'Großer Schädel', '0', 3),
+(128, '2015-03-05 20:08:18', 170, 'Kristallinerz', '0', 4),
+(129, '2015-03-05 20:08:18', 233, 'Karotte', '0', 6),
+(130, '2015-03-05 20:08:18', 234, 'Salatkopf', '0', 6),
+(131, '2015-03-05 20:08:18', 235, 'Pilz', '0', 6),
+(132, '2015-03-05 20:08:18', 236, 'Zwiebel', '0', 6),
+(133, '2015-03-05 20:08:18', 237, 'Kartoffel', '0', 6),
+(134, '2015-03-05 20:08:18', 238, 'Petersilienblatt', '0', 6),
+(135, '2015-03-05 20:08:18', 239, 'Blaubeere', '0', 6),
+(136, '2015-03-05 20:08:18', 240, 'Knoblauchknolle', '0', 6),
+(137, '2015-03-05 20:08:18', 241, 'Apfel', '0', 6),
+(138, '2015-03-05 20:08:18', 243, 'Selleriestange', '0', 6),
+(139, '2015-03-05 20:08:18', 244, 'Chilischote', '0', 6),
+(140, '2015-03-05 20:08:19', 245, 'Zimtstange', '0', 6),
+(141, '2015-03-05 20:08:19', 246, 'Kreuzkümmel', '0', 6),
+(142, '2015-03-05 20:08:19', 247, 'Grüne Bohne', '0', 6),
+(143, '2015-03-05 20:08:19', 248, 'Zitrone', '0', 6),
+(144, '2015-03-05 20:08:19', 249, 'Muskatnuss', '0', 6),
+(145, '2015-03-05 20:08:19', 250, 'Thymianblatt', '0', 6),
+(146, '2015-03-05 20:08:19', 251, 'Tomate', '0', 6),
+(147, '2015-03-05 20:08:19', 252, 'Vanilleschote', '0', 6),
+(148, '2015-03-05 20:11:25', 253, 'Stück Butter', '0', 6),
+(149, '2015-03-05 20:11:25', 256, 'Ei', '0', 6),
+(150, '2015-03-05 20:11:25', 258, 'Stück Wildfleisch', '0', 6),
+(151, '2015-03-05 20:11:25', 259, 'Stück Geflügelfleisch', '0', 6),
+(152, '2015-03-05 20:11:25', 260, 'Beutel Mehl', '0', 6),
+(153, '2015-03-05 20:11:25', 261, 'Krug Pflanzenöl', '0', 6),
+(154, '2015-03-05 20:11:25', 262, 'Paket Backpulver', '0', 6),
+(155, '2015-03-05 20:11:25', 263, 'Paket Salz', '0', 6),
+(156, '2015-03-05 20:11:25', 264, 'Flasche Sojasoße', '0', 6),
+(157, '2015-03-05 20:11:25', 265, 'Beutel mit Stärke', '0', 6),
+(158, '2015-03-05 20:11:25', 266, 'Sack Zucker', '0', 6),
+(159, '2015-03-05 20:11:25', 267, 'Flasche Essig', '0', 6),
+(160, '2015-03-05 20:11:25', 268, 'Krug Wasser', '0', 6),
+(161, '2015-03-05 20:11:25', 269, 'Erdbeere', '0', 6),
+(162, '2015-03-05 20:11:25', 270, 'Rote Beete', '0', 6),
+(163, '2015-03-05 20:11:25', 271, 'Muschel', '0', 6),
+(164, '2015-03-05 20:11:25', 272, 'Oreganoblatt', '0', 6),
+(165, '2015-03-05 20:11:25', 273, 'Salbeiblatt', '0', 6),
+(166, '2015-03-05 20:11:25', 274, 'Spinatblatt', '0', 6),
+(167, '2015-03-05 20:11:25', 275, 'Steckrübe', '0', 6),
+(168, '2015-03-05 20:11:25', 276, 'Reisbällchen', '0', 6),
+(169, '2015-03-05 20:11:25', 277, 'Banane', '0', 6),
+(170, '2015-03-05 20:11:25', 278, 'Basilikumblatt', '0', 6),
+(171, '2015-03-05 20:11:25', 279, 'Lorbeerblatt', '0', 6),
+(172, '2015-03-05 20:11:25', 280, 'Paprika', '0', 6),
+(173, '2015-03-05 20:11:25', 281, 'Schwarze Bohne', '0', 6),
+(174, '2015-03-05 20:11:25', 282, 'Kidneybohne', '0', 6),
+(175, '2015-03-05 20:16:56', 283, 'Walnuss', '0', 6),
+(176, '2015-03-05 20:16:56', 284, 'Schoko-Riegel', '0', 6),
+(177, '2015-03-05 20:16:56', 285, 'Kohlkopf', '0', 6),
+(178, '2015-03-05 20:16:56', 286, 'Dillzweig', '0', 6),
+(179, '2015-03-05 20:16:56', 287, 'Traube', '0', 6),
+(180, '2015-03-05 20:16:56', 288, 'Grünkohlblatt', '0', 6),
+(181, '2015-03-05 20:16:56', 289, 'Portobellopilz', '0', 6),
+(182, '2015-03-05 20:16:56', 290, 'Rosmarinzweig', '0', 6),
+(183, '2015-03-05 20:16:56', 291, 'Sesamsamen', '0', 6),
+(184, '2015-03-05 20:16:56', 292, 'Süßkartoffel', '0', 6),
+(185, '2015-03-05 20:16:56', 293, 'Zucchini', '0', 6),
+(186, '2015-03-05 20:16:56', 294, 'Mandel', '0', 6),
+(187, '2015-03-05 20:16:56', 295, 'Avocado', '0', 6),
+(188, '2015-03-05 20:16:56', 296, 'Kirsche', '0', 6),
+(189, '2015-03-05 20:16:56', 297, 'Ingwerwurzel', '0', 6),
+(190, '2015-03-05 20:16:56', 298, 'Limette', '0', 6),
+(191, '2015-03-05 20:16:56', 299, 'Schüssel mit Sauerrahm', '0', 6),
+(192, '2015-03-05 20:16:56', 300, 'Brombeere', '0', 6),
+(193, '2015-03-05 20:16:56', 301, 'Blumenkohlkopf', '0', 6),
+(194, '2015-03-05 20:16:56', 302, 'Nelke', '0', 6),
+(195, '2015-03-05 20:16:56', 303, 'Koriandersamen', '0', 6),
+(196, '2015-03-05 20:16:56', 304, 'Grüne Zwiebel', '0', 6),
+(197, '2015-03-05 20:16:56', 305, 'Minzblatt', '0', 6),
+(198, '2015-03-05 20:16:56', 306, 'Kohlrübe', '0', 6),
+(199, '2015-03-05 20:16:56', 307, 'Zuckerkürbis', '0', 6),
+(200, '2015-03-05 20:16:56', 308, 'Kichererbse', '0', 6),
+(201, '2015-03-05 20:16:56', 309, 'Kokosnuss', '0', 6),
+(202, '2015-03-05 20:16:56', 310, 'Meerrettchwurzel', '0', 6),
+(203, '2015-03-05 20:16:56', 311, 'Orange', '0', 6),
+(204, '2015-03-05 20:16:56', 312, 'Birne', '0', 6),
+(205, '2015-03-05 20:16:56', 313, 'Pinienkern', '0', 6),
+(206, '2015-03-05 20:16:56', 314, 'Schalotte', '0', 6),
+(207, '2015-03-05 20:16:56', 315, 'Artischocke', '0', 6),
+(208, '2015-03-05 20:16:56', 316, 'Spargelstange', '0', 6),
+(209, '2015-03-05 20:16:56', 317, 'Butternusskürbis', '0', 6),
+(210, '2015-03-05 20:16:56', 318, 'Cayennepfeffer', '0', 6),
+(211, '2015-03-05 20:16:56', 319, 'Lauch', '0', 6),
+(212, '2015-03-05 20:16:56', 320, 'Pastinakenwurzel', '0', 6),
+(213, '2015-03-05 20:16:56', 321, 'Himbeere', '0', 6),
+(214, '2015-03-05 20:16:56', 322, 'Estragonblätter', '0', 6),
+(215, '2015-03-05 20:16:56', 323, 'Lotuswurzel', '0', 6),
+(216, '2015-03-05 20:16:56', 324, 'Seetang', '0', 6),
+(217, '2015-03-05 20:16:56', 325, 'Schneetrüffel', '0', 6),
+(218, '2015-03-05 20:16:56', 326, 'Aubergine', '0', 6),
+(219, '2015-03-05 20:16:56', 327, 'Pfirsich', '0', 6),
+(220, '2015-03-05 20:16:56', 328, 'Orrianischer Trüffel', '0', 6),
+(221, '2015-03-05 20:16:56', 329, 'Geister-Paprika', '0', 6),
+(222, '2015-03-05 20:16:56', 330, 'Zitronengras', '0', 6),
+(223, '2015-03-05 20:16:56', 331, 'Omnombeere', '0', 6),
+(224, '2015-03-05 20:16:56', 332, 'Safranfaden', '0', 6),
+(225, '2015-03-05 20:16:56', 333, 'Mango', '0', 6),
+(226, '2015-03-05 20:16:56', 334, 'Maracuja', '0', 6),
+(227, '2015-03-05 20:16:56', 335, 'Nopal', '0', 6),
+(228, '2015-03-05 20:16:56', 336, 'Stachelbirne', '0', 6),
+(229, '2015-03-06 04:22:19', 337, 'Stück Candy-Corn', '0', 7),
+(230, '2015-03-06 04:22:19', 338, 'Geschwätziger Schädel', '0', 7),
+(231, '2015-03-06 04:22:19', 339, 'Nougatfüllung', '0', 7),
+(232, '2015-03-06 04:22:19', 340, 'Plastikzähne', '0', 7),
+(233, '2015-03-06 04:22:19', 341, 'Winzige Schneeflocke', '0', 7),
+(234, '2015-03-06 04:22:19', 342, 'Filigrane Schneeflocke', '0', 7),
+(235, '2015-03-06 04:22:19', 343, 'Glitzernde Schneeflocke', '0', 7),
+(236, '2015-03-06 04:22:19', 344, 'Einzigartige Schneeflocke', '0', 7),
+(237, '2015-03-06 04:22:19', 345, 'Unberührte Schneeflocke', '0', 7),
+(238, '2015-03-06 04:22:19', 346, 'Makellose Schneeflocke', '0', 7),
+(239, '2015-03-06 04:22:19', 347, 'Stück Zhaikritze', '0', 7),
+(240, '2015-03-06 04:22:19', 348, 'Candy-Corn-Kolben', '0', 7),
+(241, '2015-03-06 04:22:19', 349, 'Plappernder Schädel', '0', 7),
+(242, '2015-03-06 04:22:19', 350, 'Hochwertige Plastikzähne', '0', 7),
+(243, '2015-03-06 04:22:19', 351, 'Tyrias beste Nougatfüllung', '0', 7),
+(244, '2015-03-08 08:05:59', 242, 'Schwarzes Pfefferkorn', '0', 6),
+(245, '2015-08-05 16:49:48', 188, 'Bernsteinkiesel', NULL, 5),
+(246, '2015-08-05 16:51:48', 123, 'Phiole kondensierter Nebelessenz', NULL, 3),
+(247, '2015-08-05 16:52:40', 132, 'Sonnenperlen', NULL, 3),
+(248, '2015-08-05 16:53:30', 153, 'Obsidian Scherben', NULL, 3),
+(249, '2015-08-05 16:54:12', 152, 'Ektoplasmakugeln', NULL, 3),
+(250, '2015-08-05 16:55:05', 162, 'Mystische Münzen', NULL, 3),
+(251, '2015-08-05 16:56:19', 160, 'Geschmolzener Magnetstein', NULL, 3),
+(252, '2015-08-05 16:57:06', 149, 'Onyx Kern', NULL, 3),
+(253, '2015-08-05 16:57:31', 148, 'Geladener Kern', NULL, 3),
+(254, '2015-08-05 16:58:46', 164, 'Makellose Toxische Sporenproben', NULL, 3),
+(255, '2015-08-05 16:59:21', 166, 'Ambrit-Stücke', NULL, 3),
+(256, '2015-08-05 17:01:39', 168, 'Aufgeladene Ambrit-Platten', NULL, 3),
+(257, '2015-08-05 17:04:10', 189, 'Granatkiesel', NULL, 5),
+(258, '2015-08-05 17:04:10', 190, 'Malachitkiesel', NULL, 5),
+(259, '2015-08-05 17:04:10', 191, 'Perlen', NULL, 5),
+(260, '2015-08-05 17:04:10', 192, 'Tigeraugenkiesel', NULL, 5),
+(261, '2015-08-05 17:04:10', 193, 'Türkiskiesel', NULL, 5),
+(262, '2015-08-05 17:06:23', 194, 'Amethystnugget', NULL, 5),
+(263, '2015-08-05 17:06:23', 195, 'Karneolnugget', NULL, 5),
+(264, '2015-08-05 17:06:23', 196, 'Lapisnugget', NULL, 5),
+(265, '2015-08-05 17:06:23', 197, 'Peridotnugget', NULL, 5),
+(266, '2015-08-05 17:10:30', 198, 'Spinellnugget', NULL, 5),
+(267, '2015-08-05 17:10:30', 199, 'Sonnensteinnugget', NULL, 5),
+(268, '2015-08-05 17:10:30', 200, 'Topasnugget', NULL, 5),
+(269, '2015-08-05 17:10:30', 201, 'Amethystbrocken', NULL, 5),
+(270, '2015-08-05 17:10:30', 202, 'Karneolbrocken', NULL, 5),
+(271, '2015-08-05 17:10:30', 203, 'Lapisbrocken', NULL, 5),
+(272, '2015-08-05 17:10:30', 204, 'Peridotbrocken', NULL, 5),
+(273, '2015-08-05 17:10:30', 205, 'Spinellbrocken', NULL, 5),
+(274, '2015-08-05 17:10:30', 207, 'Topasbrocken', NULL, 5),
+(275, '2015-08-05 17:17:22', 208, 'Beryll-Scherben', NULL, 5),
+(276, '2015-08-05 17:17:22', 209, 'Chrysokoll-Scherben', NULL, 5),
+(277, '2015-08-05 17:17:22', 212, 'Opal-Scherben', NULL, 5),
+(278, '2015-08-05 17:17:22', 213, 'Rubin-Scherbe', NULL, 5),
+(279, '2015-08-05 17:17:22', 214, 'Saphir-Scherben', NULL, 5),
+(280, '2015-08-05 17:17:22', 215, 'Beryllkristalle', NULL, 5),
+(281, '2015-08-05 17:17:22', 216, 'Chrysokollkristalle', NULL, 5),
+(282, '2015-08-05 17:17:22', 217, 'Korallententakeln', NULL, 5),
+(283, '2015-08-05 17:20:18', 218, 'Smaragdkristalle', NULL, 5),
+(284, '2015-08-05 17:20:18', 219, 'Opalkristalle', NULL, 5),
+(285, '2015-08-05 17:20:18', 220, 'Rubinkristalle', NULL, 5),
+(286, '2015-08-05 17:20:18', 221, 'Saphirkristalle', NULL, 5),
+(287, '2015-08-05 17:20:18', 224, 'Beryllkugeln', NULL, 5),
+(288, '2015-08-05 17:20:18', 225, 'Chrysokollkugeln', NULL, 5),
+(289, '2015-08-05 17:21:24', 230, 'Saphirkugeln', NULL, 5),
+(290, '2015-08-05 17:21:24', 232, 'Quarzkristalle', NULL, 5),
+(291, '2015-08-05 17:24:09', 254, 'Gläser Buttermilch', NULL, 6),
+(292, '2015-08-05 17:24:09', 255, 'Käseecken', NULL, 6),
+(293, '2015-08-05 17:24:09', 257, 'Pakete Hefe', NULL, 6),
+(294, '2015-08-05 17:25:45', 206, 'Sonnensteinbrocken', NULL, 5),
+(295, '2015-08-05 17:26:44', 210, 'Korallenstück', NULL, 5),
+(296, '2015-08-05 17:26:44', 211, 'Smaragd-Scherbe', NULL, 5),
+(297, '2015-08-05 17:29:35', 222, 'Maracujablüte', NULL, 5),
+(298, '2015-08-05 17:29:35', 223, 'Azuritkristall', NULL, 5),
+(299, '2015-08-05 17:29:35', 226, 'Korallenkugel', NULL, 5),
+(300, '2015-08-05 17:29:35', 227, 'Smaragdkugel', NULL, 5),
+(301, '2015-08-05 17:29:35', 228, 'Opalkugel', NULL, 5),
+(302, '2015-08-05 17:29:35', 229, 'Rubinkugel', NULL, 5),
+(303, '2015-08-05 17:29:35', 231, 'Azuritkugel', NULL, 5),
+(304, '2015-08-05 17:33:20', 179, 'Blutsteinziegel', NULL, 4),
+(305, '2015-08-05 17:33:20', 180, 'Kristallinbarren', NULL, 4),
+(306, '2015-08-05 17:33:20', 181, 'Dragonitbarren', NULL, 4),
+(307, '2015-08-05 17:33:20', 182, 'Aufsteigender Stern', NULL, 4),
+(308, '2015-08-05 17:34:51', 167, 'Ambrit-Platte', NULL, 3),
+(309, '2015-08-07 11:33:14', 124, 'Kristall-Fragment', NULL, 3),
+(310, '2015-08-19 10:56:51', 125, 'Zerstörer-Fragment', NULL, 3),
+(311, '2015-08-19 10:56:51', 126, 'Verdorbenes-Fragment', NULL, 3),
+(312, '2015-08-19 10:56:51', 127, 'Haufen übler Essenz', NULL, 3),
+(313, '2015-08-19 10:56:51', 128, 'Geladenes Fragment', NULL, 3),
+(314, '2015-08-19 10:56:51', 129, 'Onyx-Fragment', NULL, 3),
+(315, '2015-08-19 10:56:51', 130, 'Geschmolzenes Fragment', NULL, 3),
+(316, '2015-08-19 10:56:51', 131, 'Gletscher-Fragment', NULL, 3),
+(317, '2015-08-19 10:56:51', 133, 'Batzen geronnener Nebelessenz', NULL, 3),
+(318, '2015-08-19 10:56:51', 134, 'Kristall-Scherbe', NULL, 3),
+(319, '2015-08-19 10:56:51', 144, 'Kristall-Kern', NULL, 3),
+(320, '2015-08-19 10:56:51', 154, 'Kristall-Magnetstein', NULL, 3),
+(321, '2015-08-19 10:56:51', 165, 'Uhrwerkmechanismus', NULL, 3),
+(322, '2015-08-19 10:59:10', 143, 'Scherbe kristallisierter Nebelessenz', NULL, 3),
+(323, '2015-08-19 10:59:10', 163, 'Aufgeladener Quarzkristall', NULL, 3),
+(324, '2015-08-19 11:00:05', 142, 'Riesenauge', NULL, 3),
+(325, '2015-08-24 03:20:13', 146, 'Verdorbener Kern', NULL, 3),
+(326, '2015-08-25 11:06:39', 147, 'Haufen widerwärtiger Essenz', NULL, 3),
+(327, '2015-08-25 11:09:56', 150, 'Geschmolzener Kern', NULL, 3),
+(328, '2015-08-25 11:09:56', 151, 'Gletscher-Kern', NULL, 3),
+(329, '2015-08-25 11:09:56', 155, 'Zerstörer-Magnetstein', NULL, 3),
+(330, '2015-08-25 11:09:56', 156, 'Verdorbener Magnetstein', NULL, 3),
+(331, '2015-08-25 11:09:56', 157, 'Haufen fauler Essenz', NULL, 3),
+(332, '2015-08-25 11:09:56', 158, 'Geladener Magnetstein', NULL, 3),
+(333, '2015-08-25 11:09:56', 159, 'Onyx-Magnetstein', NULL, 3),
+(334, '2015-08-25 11:09:56', 161, 'Gletscher-Magnetstein', NULL, 3),
+(335, '2015-08-25 11:14:05', 135, 'Zerstörer-Scherbe', NULL, 3),
+(336, '2015-08-25 11:14:05', 136, 'Verdorbene Scherbe', NULL, 3),
+(337, '2015-08-25 11:14:05', 137, 'Haufen schmutziger Essenz', NULL, 3),
+(338, '2015-08-25 11:14:05', 138, 'Geladene Scherbe', NULL, 3),
+(339, '2015-08-25 11:14:05', 139, 'Onyx-Scherbe', NULL, 3),
+(340, '2015-08-25 11:14:05', 140, 'Geschmolzene Scherbe', NULL, 3),
+(341, '2015-08-25 11:14:05', 141, 'Gletscher-Scherbe', NULL, 3),
+(342, '2015-08-25 11:14:05', 145, 'Zerstörer-Kern', NULL, 3),
+(343, '2015-08-25 11:19:21', 173, 'Batzen von Rückständen des Ältesten-Geists', NULL, 4),
+(344, '2015-08-25 11:19:21', 174, 'Spule dicker elonischer Schnur', NULL, 4),
+(345, '2015-08-25 11:19:21', 175, 'Spule Seidenwebfaden', NULL, 4),
+(346, '2015-08-25 11:19:21', 176, 'Mithrilliumbrocken', NULL, 4),
+(347, '2015-08-25 11:19:21', 177, 'Xunlai-Elektrumbarren', NULL, 4),
+(348, '2015-08-25 11:19:21', 183, 'Geisterholzplanke', NULL, 4),
+(349, '2015-08-25 11:19:21', 184, 'Elonischer Lederflicken', NULL, 4),
+(350, '2015-08-25 11:19:21', 185, 'Damastballen', NULL, 4),
+(351, '2015-08-25 11:19:21', 186, 'Deldrimor-Stahlbarren', NULL, 4),
+(352, '2015-10-28 20:26:49', 352, 'Haufen aus Leinsamen', NULL, 1),
+(353, '2015-10-28 20:27:12', 353, 'Mühlstein', NULL, 1),
+(354, '2015-10-28 20:31:55', 354, 'Phiole mit Leinsamen-Öl', NULL, 2),
+(355, '2015-10-28 20:31:55', 355, 'Blatt-Fossil', NULL, 2),
+(356, '2015-10-28 20:31:55', 356, 'Stachel-Dorn', NULL, 2),
+(357, '2015-10-28 20:31:55', 357, 'Haufen rauer Sand', NULL, 2),
+(358, '2015-10-28 20:34:49', 375, 'Flaschen Luftschiff-Öl', NULL, 4),
+(359, '2015-10-28 20:36:31', 384, 'Süßwasserperle', NULL, 5),
+(360, '2015-10-30 21:18:21', 385, 'Cassavawurzel', NULL, 6),
+(361, '2015-10-30 21:18:21', 386, 'Beutel mit Cassavamehl', NULL, 6),
+(362, '2015-10-30 21:18:21', 387, 'Miesmuscheln', NULL, 6),
+(363, '2015-10-31 01:01:30', 358, 'Mordrem-Span', NULL, 3),
+(364, '2015-10-31 01:01:30', 359, 'Mordrem-Fragment', NULL, 3),
+(365, '2015-10-31 01:01:30', 360, 'Mordrem-Scherbe', NULL, 3),
+(366, '2015-10-31 01:01:30', 361, 'Mordrem-Kern', NULL, 3),
+(367, '2015-10-31 01:01:30', 362, 'Mordrem-Magnetstein', NULL, 3),
+(368, '2015-10-31 01:01:30', 363, 'Immergrün-Späne', NULL, 3),
+(369, '2015-10-31 01:01:30', 364, 'Immergrün-Fragment', NULL, 3),
+(370, '2015-10-31 01:01:30', 365, 'Immergrün-Scherbe', NULL, 3),
+(371, '2015-10-31 01:01:30', 366, 'Immergrün-Kern', NULL, 3),
+(372, '2015-10-31 01:01:30', 367, 'Immergrün-Magnetstein', NULL, 3),
+(373, '2015-10-31 01:01:30', 368, 'Aufgeladenes Fossil', NULL, 3),
+(374, '2015-10-31 01:01:30', 369, 'Aufgeladener Dorn', NULL, 3),
+(375, '2015-10-31 01:01:30', 370, 'Leuchtpilzgruppe', NULL, 3),
+(376, '2015-10-31 01:01:30', 371, 'Scherbe des Ruhms', NULL, 3),
+(377, '2015-10-31 01:01:30', 372, 'Erinnerungen des Kampfes', NULL, 3),
+(378, '2015-10-31 01:01:30', 373, 'Mystischer Glücksklee', NULL, 3),
+(379, '2015-10-31 01:02:51', 374, 'Fulgurit', NULL, 4),
+(380, '2015-10-31 01:02:51', 376, 'Haufen Güldener Staub', NULL, 4),
+(381, '2015-10-31 01:02:51', 377, 'Ley-Linien-Funke', NULL, 4),
+(382, '2015-10-31 01:04:22', 378, 'Schwarzer Diamant', NULL, 5),
+(383, '2015-10-31 01:04:22', 379, 'Stück Maguuma-Wurzelholz', NULL, 5),
+(384, '2015-10-31 01:04:22', 380, 'Ebenholzkugel', NULL, 5),
+(385, '2015-10-31 01:04:22', 381, 'Leinblüte', NULL, 5),
+(386, '2015-10-31 01:04:22', 382, 'Maguuma-Lilie', NULL, 5),
+(387, '2015-10-31 01:04:22', 383, 'Mondsteinkugel', NULL, 5),
+(388, '2015-11-01 14:11:43', 388, 'Haufen Pimentbeeren', NULL, 6),
+(389, '2015-11-01 14:11:43', 389, 'Sägeblattpilz', NULL, 6),
+(390, '2015-11-04 21:13:59', 390, 'Flachsfaser', '0', 1),
+(391, '2015-11-04 21:13:59', 391, 'Beutel mit rotem Pigment', '0', 1),
+(392, '2015-11-04 21:13:59', 392, 'Beutel mit orangenem Pigment', '0', 1),
+(393, '2015-11-04 21:13:59', 393, 'Beutel mit gelben Pigment', '0', 1),
+(394, '2015-11-04 21:13:59', 394, 'Beutel mit grünem Pigment', '0', 1),
+(395, '2015-11-04 21:13:59', 395, 'Beutel mit blauen Pigment', '0', 1),
+(396, '2015-11-04 21:13:59', 396, 'Beutel mit lilanen Pigment', '0', 1),
+(397, '2015-11-04 21:13:59', 397, 'Beutel mit weißem Pigment', '0', 1),
+(398, '2015-11-04 21:13:59', 398, 'Beutel mit schwarzem Pigment', '0', 1),
+(399, '2015-11-04 21:13:59', 399, 'Beutel mit braunem Pigment', '0', 1),
+(400, '2015-11-04 21:16:42', 400, 'Perlmutt-Stück', '0', 2),
+(401, '2015-11-04 21:16:42', 401, 'Güldene Späne', '0', 3),
+(402, '2015-11-04 21:16:42', 402, 'Güldene Barren', '0', 3),
+(403, '2015-11-04 21:16:42', 403, 'Resornierender Span', '0', 3),
+(404, '2015-11-04 21:16:42', 404, 'Resornierendes Fragment', '0', 3),
+(405, '2015-11-04 21:16:42', 405, 'Resornierender Kern', '0', 3),
+(406, '2015-11-04 21:16:42', 406, 'Resornierender Magnetstein', '0', 3),
+(407, '2015-11-04 21:17:53', 407, 'Stabilisierende Matrix', '0', 4),
+(408, '2015-11-04 21:17:53', 408, 'Kugel aus dunkler Energie', '0', 4),
+(409, '2015-11-04 21:17:53', 409, 'Würfel aus stabilisierender dunkler Energie', '0', 4),
+(410, '2015-11-05 05:24:09', 410, 'Achatkugel', '198', 5);
+
+
+--
+-- Tabellenstruktur für Tabelle `gwusersmats`
 --
 
 CREATE TABLE `gwusersmats` (
@@ -278,7 +695,7 @@ CREATE TABLE `gwusersmats` (
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
--- Tabellenstruktur fÃ¼r Tabelle `gw_accounts`
+-- Tabellenstruktur für Tabelle `gw_accounts`
 --
 
 CREATE TABLE `gw_accounts` (
@@ -290,19 +707,7 @@ CREATE TABLE `gw_accounts` (
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
--- Tabellenstruktur fÃ¼r Tabelle `gw_animals`
---
-
-CREATE TABLE `gw_animals` (
-  `id` int(11) NOT NULL,
-  `timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  `tierName` varchar(254) NOT NULL,
-  `tierStandort` varchar(254) NOT NULL,
-  `nameWegmarke` varchar(254) NOT NULL
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
-
---
--- Tabellenstruktur fÃ¼r Tabelle `gw_chars`
+-- Tabellenstruktur für Tabelle `gw_chars`
 --
 
 CREATE TABLE `gw_chars` (
@@ -324,59 +729,10 @@ CREATE TABLE `gw_chars` (
   `account` int(11) DEFAULT NULL COMMENT 'Welchem Account dieser Charakter zugeordnet ist'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
---
--- Tabellenstruktur fÃ¼r Tabelle `inventar`
---
-
-CREATE TABLE `inventar` (
-  `id` int(11) NOT NULL,
-  `timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  `name` varchar(254) NOT NULL,
-  `kaufdat` date NOT NULL,
-  `preis` float DEFAULT NULL,
-  `kaufort` varchar(254) NOT NULL,
-  `standort` varchar(254) NOT NULL,
-  `bestellnummer` varchar(254) NOT NULL,
-  `kategorie` varchar(254) NOT NULL,
-  `status` int(2) DEFAULT NULL,
-  `garantie` date NOT NULL,
-  `verkÃ¤ufer` varchar(254) NOT NULL,
-  `menge` int(11) NOT NULL,
-  `notizen` text NOT NULL,
-  `besitzer` varchar(254) NOT NULL,
-  `ersteller` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
---
--- Tabellenstruktur fÃ¼r Tabelle `inventar_hilfe`
---
-
-CREATE TABLE `inventar_hilfe` (
-  `id` int(11) NOT NULL,
-  `timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  `statusID` int(11) NOT NULL COMMENT 'ID des Status',
-  `wert` varchar(254) NOT NULL COMMENT 'der DazugehÃ¶rige Wert'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Regelt alle Hilfsvariablen fÃ¼r das Inventar.';
-
---
--- Daten fÃ¼r Tabelle `inventar_hilfe`
---
-
-INSERT INTO `inventar_hilfe` (`id`, `timestamp`, `statusID`, `wert`) VALUES
-(1, '2014-09-18 08:09:57', 0, 'Alle'),
-(2, '2014-09-18 08:09:57', 1, 'In Betrieb'),
-(3, '2014-09-18 08:10:56', 2, 'Kaputt'),
-(4, '2014-09-18 08:10:56', 3, 'Verkauft'),
-(6, '2014-09-18 08:10:56', 5, 'Bestellt'),
-(7, '2014-09-18 08:10:56', 6, 'RÃ¼cksendung'),
-(8, '2014-09-18 08:11:47', 7, 'Verschenkt'),
-(10, '2014-09-18 08:11:53', 9, 'Im Auftrag bestellt'),
-(11, '2014-09-18 18:34:20', 10, 'Wunschliste');
-
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur fÃ¼r Tabelle `learnkategorie`
+-- Tabellenstruktur für Tabelle `learnkategorie`
 --
 
 CREATE TABLE `learnkategorie` (
@@ -388,7 +744,7 @@ CREATE TABLE `learnkategorie` (
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
--- Tabellenstruktur fÃ¼r Tabelle `learnlernkarte`
+-- Tabellenstruktur für Tabelle `learnlernkarte`
 --
 
 CREATE TABLE `learnlernkarte` (
@@ -401,7 +757,7 @@ CREATE TABLE `learnlernkarte` (
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
--- Tabellenstruktur fÃ¼r Tabelle `registercode`
+-- Tabellenstruktur für Tabelle `registercode`
 --
 
 CREATE TABLE `registercode` (
@@ -416,7 +772,7 @@ CREATE TABLE `registercode` (
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
--- Tabellenstruktur fÃ¼r Tabelle `rightkategorien`
+-- Tabellenstruktur für Tabelle `rightkategorien`
 --
 
 CREATE TABLE `rightkategorien` (
@@ -425,7 +781,7 @@ CREATE TABLE `rightkategorien` (
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
--- Daten fÃ¼r Tabelle `rightkategorien`
+-- Daten für Tabelle `rightkategorien`
 --
 
 INSERT INTO `rightkategorien` (`id`, `name`) VALUES
@@ -443,7 +799,7 @@ INSERT INTO `rightkategorien` (`id`, `name`) VALUES
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur fÃ¼r Tabelle `rights`
+-- Tabellenstruktur für Tabelle `rights`
 --
 
 CREATE TABLE `rights` (
@@ -453,7 +809,7 @@ CREATE TABLE `rights` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
--- Daten fÃ¼r Tabelle `rights`
+-- Daten für Tabelle `rights`
 --
 
 INSERT INTO `rights` (`timestamp`, `besitzer`, `right_id`) VALUES
@@ -526,7 +882,7 @@ INSERT INTO `rights` (`timestamp`, `besitzer`, `right_id`) VALUES
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur fÃ¼r Tabelle `userrights`
+-- Tabellenstruktur für Tabelle `userrights`
 --
 
 CREATE TABLE `userrights` (
@@ -539,7 +895,7 @@ CREATE TABLE `userrights` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
--- Daten fÃ¼r Tabelle `userrights`
+-- Daten für Tabelle `userrights`
 --
 
 INSERT INTO `userrights` (`id`, `timestamp`, `kategorie`, `recht`, `potenz`, `dezimalerWert`) VALUES
@@ -614,7 +970,7 @@ INSERT INTO `userrights` (`id`, `timestamp`, `kategorie`, `recht`, `potenz`, `de
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur fÃ¼r Tabelle `vorschlaege`
+-- Tabellenstruktur für Tabelle `vorschlaege`
 --
 
 CREATE TABLE `vorschlaege` (
@@ -631,13 +987,13 @@ CREATE TABLE `vorschlaege` (
 --
 
 --
--- Indizes fÃ¼r die Tabelle `account_infos`
+-- Indizes für die Tabelle `account_infos`
 --
 ALTER TABLE `account_infos`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indizes fÃ¼r die Tabelle `adressbuch`
+-- Indizes für die Tabelle `adressbuch`
 --
 ALTER TABLE `adressbuch`
   ADD PRIMARY KEY (`id`),
@@ -645,308 +1001,275 @@ ALTER TABLE `adressbuch`
   ADD KEY `id_2` (`id`);
 
 --
--- Indizes fÃ¼r die Tabelle `benutzer`
+-- Indizes für die Tabelle `benutzer`
 --
 ALTER TABLE `benutzer`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indizes fÃ¼r die Tabelle `blogkategorien`
+-- Indizes für die Tabelle `blogkategorien`
 --
 ALTER TABLE `blogkategorien`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indizes fÃ¼r die Tabelle `blogtexte`
+-- Indizes für die Tabelle `blogtexte`
 --
 ALTER TABLE `blogtexte`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indizes fÃ¼r die Tabelle `blog_kommentare`
+-- Indizes für die Tabelle `blog_kommentare`
 --
 ALTER TABLE `blog_kommentare`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indizes fÃ¼r die Tabelle `docu`
+-- Indizes für die Tabelle `docu`
 --
 ALTER TABLE `docu`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indizes fÃ¼r die Tabelle `fahrkosten`
+-- Indizes für die Tabelle `fahrkosten`
 --
 ALTER TABLE `fahrkosten`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indizes fÃ¼r die Tabelle `fahrkostenziele`
+-- Indizes für die Tabelle `fahrkostenziele`
 --
 ALTER TABLE `fahrkostenziele`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indizes fÃ¼r die Tabelle `fahrzeuge`
+-- Indizes für die Tabelle `fahrzeuge`
 --
 ALTER TABLE `fahrzeuge`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indizes fÃ¼r die Tabelle `finanzen_jahresabschluss`
+-- Indizes für die Tabelle `finanzen_jahresabschluss`
 --
 ALTER TABLE `finanzen_jahresabschluss`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indizes fÃ¼r die Tabelle `finanzen_konten`
+-- Indizes für die Tabelle `finanzen_konten`
 --
 ALTER TABLE `finanzen_konten`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indizes fÃ¼r die Tabelle `finanzen_monatsabschluss`
+-- Indizes für die Tabelle `finanzen_monatsabschluss`
 --
 ALTER TABLE `finanzen_monatsabschluss`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indizes fÃ¼r die Tabelle `finanzen_umsaetze`
+-- Indizes für die Tabelle `finanzen_umsaetze`
 --
 ALTER TABLE `finanzen_umsaetze`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indizes fÃ¼r die Tabelle `gwcosts`
+-- Indizes für die Tabelle `gwcosts`
 --
 ALTER TABLE `gwcosts`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indizes fÃ¼r die Tabelle `gwmatlist`
+-- Indizes für die Tabelle `gwmatlist`
 --
 ALTER TABLE `gwmatlist`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indizes fÃ¼r die Tabelle `gwusersmats`
+-- Indizes für die Tabelle `gwusersmats`
 --
 ALTER TABLE `gwusersmats`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indizes fÃ¼r die Tabelle `gw_accounts`
+-- Indizes für die Tabelle `gw_accounts`
 --
 ALTER TABLE `gw_accounts`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indizes fÃ¼r die Tabelle `gw_animals`
---
-ALTER TABLE `gw_animals`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indizes fÃ¼r die Tabelle `gw_chars`
+-- Indizes für die Tabelle `gw_chars`
 --
 ALTER TABLE `gw_chars`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indizes fÃ¼r die Tabelle `inventar`
---
-ALTER TABLE `inventar`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indizes fÃ¼r die Tabelle `inventar_hilfe`
---
-ALTER TABLE `inventar_hilfe`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indizes fÃ¼r die Tabelle `learnkategorie`
+-- Indizes für die Tabelle `learnkategorie`
 --
 ALTER TABLE `learnkategorie`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indizes fÃ¼r die Tabelle `learnlernkarte`
+-- Indizes für die Tabelle `learnlernkarte`
 --
 ALTER TABLE `learnlernkarte`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indizes fÃ¼r die Tabelle `registercode`
+-- Indizes für die Tabelle `registercode`
 --
 ALTER TABLE `registercode`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indizes fÃ¼r die Tabelle `rightkategorien`
+-- Indizes für die Tabelle `rightkategorien`
 --
 ALTER TABLE `rightkategorien`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indizes fÃ¼r die Tabelle `rights`
+-- Indizes für die Tabelle `rights`
 --
 ALTER TABLE `rights`
   ADD PRIMARY KEY (`besitzer`,`right_id`);
 
 --
--- Indizes fÃ¼r die Tabelle `userrights`
+-- Indizes für die Tabelle `userrights`
 --
 ALTER TABLE `userrights`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indizes fÃ¼r die Tabelle `vorschlaege`
+-- Indizes für die Tabelle `vorschlaege`
 --
 ALTER TABLE `vorschlaege`
   ADD PRIMARY KEY (`id`);
 
 --
--- AUTO_INCREMENT fÃ¼r exportierte Tabellen
+-- AUTO_INCREMENT für exportierte Tabellen
 --
 
 --
--- AUTO_INCREMENT fÃ¼r Tabelle `account_infos`
+-- AUTO_INCREMENT für Tabelle `account_infos`
 --
 ALTER TABLE `account_infos`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 --
--- AUTO_INCREMENT fÃ¼r Tabelle `adressbuch`
+-- AUTO_INCREMENT für Tabelle `adressbuch`
 --
 ALTER TABLE `adressbuch`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 --
--- AUTO_INCREMENT fÃ¼r Tabelle `benutzer`
+-- AUTO_INCREMENT für Tabelle `benutzer`
 --
 ALTER TABLE `benutzer`
   MODIFY `id` int(10) NOT NULL AUTO_INCREMENT;
 --
--- AUTO_INCREMENT fÃ¼r Tabelle `blogkategorien`
+-- AUTO_INCREMENT für Tabelle `blogkategorien`
 --
 ALTER TABLE `blogkategorien`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 --
--- AUTO_INCREMENT fÃ¼r Tabelle `blogtexte`
+-- AUTO_INCREMENT für Tabelle `blogtexte`
 --
 ALTER TABLE `blogtexte`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Primary Key';
 --
--- AUTO_INCREMENT fÃ¼r Tabelle `blog_kommentare`
+-- AUTO_INCREMENT für Tabelle `blog_kommentare`
 --
 ALTER TABLE `blog_kommentare`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 --
--- AUTO_INCREMENT fÃ¼r Tabelle `docu`
+-- AUTO_INCREMENT für Tabelle `docu`
 --
 ALTER TABLE `docu`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Primary Key';
 --
--- AUTO_INCREMENT fÃ¼r Tabelle `fahrkosten`
+-- AUTO_INCREMENT für Tabelle `fahrkosten`
 --
 ALTER TABLE `fahrkosten`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 --
--- AUTO_INCREMENT fÃ¼r Tabelle `fahrkostenziele`
+-- AUTO_INCREMENT für Tabelle `fahrkostenziele`
 --
 ALTER TABLE `fahrkostenziele`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 --
--- AUTO_INCREMENT fÃ¼r Tabelle `fahrzeuge`
+-- AUTO_INCREMENT für Tabelle `fahrzeuge`
 --
 ALTER TABLE `fahrzeuge`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 --
--- AUTO_INCREMENT fÃ¼r Tabelle `finanzen_jahresabschluss`
+-- AUTO_INCREMENT für Tabelle `finanzen_jahresabschluss`
 --
 ALTER TABLE `finanzen_jahresabschluss`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 --
--- AUTO_INCREMENT fÃ¼r Tabelle `finanzen_konten`
+-- AUTO_INCREMENT für Tabelle `finanzen_konten`
 --
 ALTER TABLE `finanzen_konten`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 --
--- AUTO_INCREMENT fÃ¼r Tabelle `finanzen_monatsabschluss`
+-- AUTO_INCREMENT für Tabelle `finanzen_monatsabschluss`
 --
 ALTER TABLE `finanzen_monatsabschluss`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 --
--- AUTO_INCREMENT fÃ¼r Tabelle `finanzen_umsaetze`
+-- AUTO_INCREMENT für Tabelle `finanzen_umsaetze`
 --
 ALTER TABLE `finanzen_umsaetze`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 --
--- AUTO_INCREMENT fÃ¼r Tabelle `gwcosts`
+-- AUTO_INCREMENT für Tabelle `gwcosts`
 --
 ALTER TABLE `gwcosts`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 --
--- AUTO_INCREMENT fÃ¼r Tabelle `gwmatlist`
+-- AUTO_INCREMENT für Tabelle `gwmatlist`
 --
 ALTER TABLE `gwmatlist`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 --
--- AUTO_INCREMENT fÃ¼r Tabelle `gwusersmats`
+-- AUTO_INCREMENT für Tabelle `gwusersmats`
 --
 ALTER TABLE `gwusersmats`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 --
--- AUTO_INCREMENT fÃ¼r Tabelle `gw_accounts`
+-- AUTO_INCREMENT für Tabelle `gw_accounts`
 --
 ALTER TABLE `gw_accounts`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 --
--- AUTO_INCREMENT fÃ¼r Tabelle `gw_animals`
---
-ALTER TABLE `gw_animals`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
---
--- AUTO_INCREMENT fÃ¼r Tabelle `gw_chars`
+-- AUTO_INCREMENT für Tabelle `gw_chars`
 --
 ALTER TABLE `gw_chars`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 --
--- AUTO_INCREMENT fÃ¼r Tabelle `inventar`
---
-ALTER TABLE `inventar`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
---
--- AUTO_INCREMENT fÃ¼r Tabelle `inventar_hilfe`
---
-ALTER TABLE `inventar_hilfe`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
---
--- AUTO_INCREMENT fÃ¼r Tabelle `learnkategorie`
+-- AUTO_INCREMENT für Tabelle `learnkategorie`
 --
 ALTER TABLE `learnkategorie`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 --
--- AUTO_INCREMENT fÃ¼r Tabelle `learnlernkarte`
+-- AUTO_INCREMENT für Tabelle `learnlernkarte`
 --
 ALTER TABLE `learnlernkarte`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 --
--- AUTO_INCREMENT fÃ¼r Tabelle `registercode`
+-- AUTO_INCREMENT für Tabelle `registercode`
 --
 ALTER TABLE `registercode`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 --
--- AUTO_INCREMENT fÃ¼r Tabelle `rightkategorien`
+-- AUTO_INCREMENT für Tabelle `rightkategorien`
 --
 ALTER TABLE `rightkategorien`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 --
--- AUTO_INCREMENT fÃ¼r Tabelle `userrights`
+-- AUTO_INCREMENT für Tabelle `userrights`
 --
 ALTER TABLE `userrights`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 --
--- AUTO_INCREMENT fÃ¼r Tabelle `vorschlaege`
+-- AUTO_INCREMENT für Tabelle `vorschlaege`
 --
 ALTER TABLE `vorschlaege`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;

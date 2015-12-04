@@ -102,29 +102,6 @@
 			}
 			?>
 			
-			<?php /*
-			if($uebersicht->check("128", 0) == true) {
-			echo "<div class='bereiche'>";
-			echo "	<div id='inventar'>";
-			echo "		<a href='datenbank/inventar/inventar.php'><h2>Inventar</h2>";
-			echo "			<p>Eine Inventarverwaltung</p> </a>";
-			echo "		<p>";
-							
-							$userID = $uebersicht->getUserID($_SESSION['username']);
-							$menge = $uebersicht->getAmount("SELECT id FROM inventar WHERE ersteller = '$userID'");
-							
-							# Zeigt die Anzahl der Einträge nur dann, wenn der Benutzer auch Einträge anlegen darf.
-							
-							if($uebersicht->check("128", 0) == "true") {
-								echo "<a href='datenbank/inventar/inventar.php' class='bereichLink'>Du hast " . $menge . " Einträge.</a>";
-							}
-						
-			echo "		</p>";
-			echo "	</div>";
-			echo "</div>";
-			
-			} */
-			?>
 			<?php 
 			if($uebersicht->userHasRight("7", 0) == true) {
 			echo "<div class='bereiche'>";
