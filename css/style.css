@@ -319,6 +319,43 @@ blockquote {
 	width: 64%;
 }
 
+.bereiche #newEntity {
+	padding: 5px;
+	border: 1px solid grey;
+	background-color: #e4dfff;
+}
+
+.bereiche #newEntity #name {
+	width: 150px;
+}
+
+.bereiche #newEntity #link {
+	width: 98px;
+}
+
+.bereiche #newEntity #desc {
+	margin-top: 10px;
+	margin-bottom: 10px;
+	padding: 10px;
+	width: 90%;
+}
+
+.bereiche #newEntity #sort,
+.bereiche #newEntity #css,
+.bereiche #newEntity #right {
+	width: 50px;
+}
+
+.bereiche #newEntity #submit {
+	box-shadow: none;
+	padding: none;
+	margin-top: 1px;	
+}
+
+.bereiche #newEntity #checkbox {
+	margin-left: 10px;
+}
+
 .bereiche #guildwars {
 	background-color: white;
 	background-image: url(../images/tiles/guildwars2.png);

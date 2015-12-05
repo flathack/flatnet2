@@ -32,9 +32,9 @@ class sql {
 			$sqlusername = "devUser";
 			$sqluserpassword = "";
 			$sqldatabase = "flathacksql1";
-			$errorsqlconnect .= "<p class=''>Quaggan kann Seite nicht finden. Nur 404. Quaggan traurig. Fuuuu</p>";
+			$errorsqlconnect .= "<p class=''>Quaggan kann Seite nicht finden. Nur 404. Quaggan traurig.</p>";
 			$errorsqlconnect .= "<img src='/flatnet2/images/fehler/404.png' name='' alt='404 Fehler'>";
-			$errordbconnect .= "<p class=''>Quaggan kann Seite nicht finden. Nur 404. Quaggan traurig. Fuuuu</p>";
+			$errordbconnect .= "<p class=''>Quaggan kann Seite nicht finden. Nur 404. Quaggan traurig.</p>";
 			$errordbconnect .= "<img src='/flatnet2/images/fehler/404.png' name='' alt='404 Fehler'>";
 		}
 
@@ -44,7 +44,7 @@ class sql {
 		
 		mysql_connect($host, $sqlusername, $sqluserpassword);
 		
-		mysql_select_db($sqldatabase) or die ($errordbconnect);
+		mysql_select_db($sqldatabase) or die ("<body id='wrapper'>" . $errordbconnect . "<div class='mainbody'><p class='meldung'>Grund für den Fehler: " . mysql_error() . "</p></div></body>");
 	}
 
 	/**

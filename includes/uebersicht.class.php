@@ -43,6 +43,9 @@ class uebersicht extends functions {
 		
 	}
 	
+	/**
+	 * Zeigt die Kachel zum erstelen einer Kachel
+	 */
 	function showCreateEntity() {
 		
 		if(isset($_POST['name']) AND isset($_POST['link'])) {
@@ -63,7 +66,7 @@ class uebersicht extends functions {
 			
 		}
 		
-		echo "<div class='bereiche'><form method=post>";
+		echo "<div class='bereiche'><div id='newEntity'><form method=post>";
 		if(isset($_POST['name'])) {
 			$name = $_POST['name'];
 		} else {
@@ -99,15 +102,15 @@ class uebersicht extends functions {
 		} else {
 			$active = "";
 		}
-			echo "<input type=text name=name value='" .$name. "' placeholder=Name />";
-			echo "<input type=text name=link value='" .$link. "' placeholder=Link />";
-			echo "<input type=text name=beschreibung value='" .$beschreibung. "' placeholder=Beschreibung />";
-			echo "<input type=number name=sortierung value='" .$sortierung. "' placeholder=Sortierung />";
-			echo "<input type=text name=css value='" .$css. "' placeholder=cssClass />";
-			echo "<input type=number name=rightID value='" .$rightID. "' placeholder=Recht />";
-			echo "<input type=checkbox checked value='" .$active. "' name=active /><label for=active>Aktiv</label>";
-			echo "<input type=submit value=speichern />";
-		echo "</form></div>";
+			echo "<input id='name' type=text name=name value='" .$name. "' placeholder=Name />";
+			echo "<input id='link' type=text name=link value='" .$link. "' placeholder=Link />";
+			echo "<input id='desc' type=text name=beschreibung value='" .$beschreibung. "' placeholder=Beschreibung />";
+			echo "<input id='sort' type=number name=sortierung value='" .$sortierung. "' placeholder=sort />";
+			echo "<input id='css' type=text name=css value='" .$css. "' placeholder=css />";
+			echo "<input id='right' type=number name=rightID value='" .$rightID. "' placeholder=Recht />";
+			echo "<input id='checkbox' type=checkbox checked value='" .$active. "' name=active /><label for=active>Aktiv</label>";
+			echo "<input id='submit' type=submit value=speichern />";
+		echo "</form></div></div>";
 	}
 	
 	/**

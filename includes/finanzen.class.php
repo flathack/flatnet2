@@ -603,14 +603,16 @@ class finanzenNEW extends finanzen {
 		} else {
 			$konto = "";
 		}
-		
-		echo "<ul class='FinanzenKonten'>";
+		if(isset($konten[0]->id) AND $konten[0]->id != "") {
+			echo "<ul class='FinanzenKonten'>";
 			for ($i = 0; $i < sizeof($konten); $i++) {
-				echo "<li "; 
-				if($konto == $konten[$i]->id) { echo " id='selected' "; } 
+				echo "<li ";
+				if($konto == $konten[$i]->id) { echo " id='selected' "; }
 				echo "><a href='?konto=".$konten[$i]->id."&monat=$monat&jahr=$jahr'>" .$konten[$i]->konto. "</a></li>";
 			}
-		echo "</ul>";
+			echo "</ul>";
+		}
+		
 	}
 	
 	/**
@@ -1302,7 +1304,7 @@ class finanzenNEW extends finanzen {
 		
 		# Prüfen, ob der Benutzer konten hat.
 		if(!isset($konten[0]->id)) {
-			echo "<p class='info'>Du hast noch keine Konten, bitte erstelle dir ein Konto!</p>";
+			echo "<p class='info'>Du hast noch keine Konten, du brauchst mindestens zwei Konten. Klicke <a href='?'>hier</a> um eine Standardkonfiguration zu erstellen</p>";
 			exit;
 		}
 		
@@ -1467,7 +1469,22 @@ class finanzenNEW extends finanzen {
 		
 		# Prüfen, ob der Benutzer konten hat.
 		if(!isset($kontenDesNutzers[0]->id)) {
-			echo "<p class='info'>Du hast noch keine Konten, bitte erstelle dir ein Konto!</p>";
+			echo "<p class='info'>Du hast noch keine Konten, du brauchst mindestens zwei Konten. Klicke <a href='?createStandardConfig'>hier</a> um eine Standardkonfiguration zu erstellen</p>";
+			
+			if(isset($_GET['createStandardConfig'])) {
+				if($this->objectExists("finanzen_konten", "konto", "Hauptkonto") == false) {
+					if($this->sql_insert_update_delete("INSERT INTO finanzen_konten (konto, besitzer) VALUES ('Hauptkonto','$besitzer')") == true) {
+						echo "<p class='erfolg'>Ein Hauptkonto wurde erstellt.</p>";
+					}
+				}
+				
+				if($this->objectExists("finanzen_konten", "konto", "Ausgaben") == false) {
+					if($this->sql_insert_update_delete("INSERT INTO finanzen_konten (konto, besitzer) VALUES ('Ausgaben','$besitzer')") == true){
+						echo "<p class='erfolg'>Ein Ausgabenkonto wurde erstellt.</p>";
+					}
+				}
+			}
+			
 			exit;
 		}
 		
