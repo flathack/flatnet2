@@ -60,9 +60,9 @@ class learn extends functions {
 				$getKategorieInfos = $this->getObjektInfo("SELECT * FROM learnkategorie WHERE id = '$kategorie' ");
 				
 				if($getKategorieInfos->public == 1) {
-					$getEintraege = $this->getObjectsToArray("SELECT * FROM learnlernkarte WHERE kategorie = $kategorie AND verfallen=NULL");
+					$getEintraege = $this->getObjectsToArray("SELECT * FROM learnlernkarte WHERE kategorie = $kategorie");
 				} else {
-					$getEintraege = $this->getObjectsToArray("SELECT * FROM learnlernkarte WHERE besitzer = $userid AND kategorie = $kategorie AND verfallen=NULL");
+					$getEintraege = $this->getObjectsToArray("SELECT * FROM learnlernkarte WHERE besitzer = $userid AND kategorie = $kategorie");
 				}
 				
 				$this->editEintrag();
@@ -649,7 +649,7 @@ class learn extends functions {
 		if($this->checkIfKategorieExists($kategorie) == true 
 				AND $this->checkIfUserIsAllowedToSeeKategorie($besitzer, $kategorie) == true) {
 			
-			$query = "SELECT * FROM learnlernkarte WHERE kategorie = '$kategorie' AND verfallen=NULL";
+			$query = "SELECT * FROM learnlernkarte WHERE kategorie = '$kategorie'";
 			$eintraege = $this->getObjectsToArray($query);
 			
 			return $eintraege;
