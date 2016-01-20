@@ -105,31 +105,30 @@ class blog extends functions {
 			
 			# Gibt alle Kategorien aus.
 			echo "<select name='blogkategorie' value='' size='1'>";
-			$selectKat = "SELECT id, kategorie, rightWert FROM blogkategorien";
-			$katergeb = mysql_query($selectKat);
-			while($row = mysql_fetch_object($katergeb)) {
+			$selectKat = "SELECT id, kategorie, rightWert FROM blogkategorien";			
+			$row = $this->getObjektInfo($selectKat);
+			for ($i = 0 ; $i < sizeof($row) ; $i++) {
 				
 				# BenutzerRecht selektieren:
 				# Check ob die Kategorie in der Auswahlliste auftauchen soll.
 				$userID = $this->getUserID($_SESSION['username']);
 				$selectBenutzerRecht = "SELECT id, forumRights FROM benutzer WHERE id = '$userID' LIMIT 1";
-				$ergebRecht = mysql_query($selectBenutzerRecht);
-				$rowRecht = mysql_fetch_object($ergebRecht);
+				$rowRecht = $this->getObjektInfo($selectBenutzerRecht);
 				
-				$aktuelleBenutzerrechte = $rowRecht->forumRights;
-				$kategorieRechte = $row->rightWert;
+				$aktuelleBenutzerrechte = $rowRecht[0]->forumRights;
+				$kategorieRechte = $row[$i]->rightWert;
 				
 				if($this->check($kategorieRechte, $aktuelleBenutzerrechte) == true) {
 					echo "<option";
 					# Checked die Kategorie, wenn der Link im Forum geklickt wurde.
 					if(isset($_GET['blogcategory'])) {
-						if($_GET['blogcategory'] == $row->id) {
+						if($_GET['blogcategory'] == $row[$i]->id) {
 							echo " selected ";
 						}
 					}
 						
-					echo " value='$row->id'>";
-					echo $row->kategorie;
+					echo " value='".$row[$i]->id."'>";
+					echo $row[$i]->kategorie;
 					echo "</option>";
 				}
 			}
@@ -193,7 +192,8 @@ class blog extends functions {
 						echo '<p class="erfolg">Der Foreneintrag mit dem Titel <strong>' . $titel . ' </strong>wurde erstellt.';
 					} else {
 						echo '<p class="meldung">Das speichern ist fehlgeschlagen! 
-								Kopiere den unteren Text in einen anderen Editor um ihn zu speichern und versuche es später erneut.</p>';
+								Kopiere den unteren Text in einen anderen Editor 
+								um ihn zu speichern und versuche es später erneut.</p>';
 					}
 				}
 			} 

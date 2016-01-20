@@ -86,7 +86,7 @@ class finanzen extends functions {
 				# @todo
 			}
 			$user = $this->getUserID($_SESSION['username']);
-			$select = "SELECT * FROM finanzen_konten WHERE besitzer = '$user'"; $konten = $this->getObjectsToArray($select);
+			$select = "SELECT * FROM finanzen_konten WHERE besitzer = '$user'"; $konten = $this->getObjektInfo($select);
 			$i = 0;
 			echo "<div>";
 			echo "<table class='flatnetTable'><thead><td>KontoNr.</td><td>Kontoname</td><td>Kontostand</td><td>Optionen</td></thead>";
@@ -102,7 +102,7 @@ class finanzen extends functions {
 	 */
 	function listKonten() {
 		$user = $this->getUserID($_SESSION['username']);
-		$select = "SELECT * FROM finanzen_konten WHERE besitzer = '$user'"; $konten = $this->getObjectsToArray($select);
+		$select = "SELECT * FROM finanzen_konten WHERE besitzer = '$user'"; $konten = $this->getObjektInfo($select);
 
 		if(!isset($_GET['umsaetze'])) {
 			echo "<p class='info'>Bitte ein Kontoauswählen, um die Umsätze anzuzeigen.</p>";
@@ -131,7 +131,7 @@ class finanzen extends functions {
 	function soll_haben_konten() {
 		if($this->userHasRight("18", 0) == true and isset($_GET['sollhabenKonten'])) {
 			$user = $this->getUserID($_SESSION['username']);
-			$select = "SELECT * FROM finanzen_konten WHERE besitzer = '$user'"; $konten = $this->getObjectsToArray($select);
+			$select = "SELECT * FROM finanzen_konten WHERE besitzer = '$user'"; $konten = $this->getObjektInfo($select);
 			echo "<table class='kontoTable'>";
 			echo "<thead><td colspan='2'>Kontenplan</td></thead>";
 			$i = 0;
@@ -141,9 +141,9 @@ class finanzen extends functions {
 					echo "<thead><td colspan='2'>" . $konten[$i]->konto . "</td></thead>";
 					$kontoID = $konten[$i]->id;
 					$soll = "SELECT * FROM finanzen_umsaetze WHERE besitzer = '$user' AND konto = '$kontoID' AND umsatzWert > 0";
-					$sollUmsatz = $this->getObjectsToArray($soll);
+					$sollUmsatz = $this->getObjektInfo($soll);
 					$haben = "SELECT * FROM finanzen_umsaetze WHERE besitzer = '$user' AND konto = '$kontoID' AND umsatzWert < 0";
-					$habenUmsatz = $this->getObjectsToArray($haben);
+					$habenUmsatz = $this->getObjektInfo($haben);
 						
 					$j = 0;
 					echo "<tbody><td>SOLL</td><td>HABEN</td></tbody>";
@@ -185,7 +185,7 @@ class finanzen extends functions {
 	 */
 	function themenAnzeigen($user, $id) {
 		# Themen:
-		$themen = $this->getObjectsToArray("SELECT id, umsatzName FROM finanzen_umsaetze
+		$themen = $this->getObjektInfo("SELECT id, umsatzName FROM finanzen_umsaetze
 		WHERE besitzer = $user AND konto = '$id' GROUP BY umsatzName");
 		$i = 0;
 		for ($i = 0; $i < sizeof($themen); $i++)  {
@@ -207,18 +207,14 @@ class finanzen extends functions {
 		if(isset($_GET['umsatzKategorie']) AND isset($_GET['id'])) {
 			$umsatzKategorie = $_GET['umsatzKategorie'];
 
-			$umsatzName = $this->getObjectsToArray("SELECT id, umsatzName FROM finanzen_umsaetze WHERE besitzer = '$user' AND id='$umsatzKategorie'");
-			$umsaetze = $this->getObjectsToArray("SELECT *, day(datum) as tag, month(datum) as monat, year(datum) as jahr
+			$umsatzName = $this->getObjektInfo("SELECT id, umsatzName FROM finanzen_umsaetze WHERE besitzer = '$user' AND id='$umsatzKategorie'");
+			$umsaetze = $this->getObjektInfo("SELECT *, day(datum) as tag, month(datum) as monat, year(datum) as jahr
 					FROM finanzen_umsaetze
 					WHERE besitzer = '$user' AND konto = '$id' AND umsatzName='" . $umsatzName[0]->umsatzName . "'");
 		} else {
-			$umsaetze = $this->getObjectsToArray("SELECT *, day(datum) as tag, month(datum) as monat, year(datum) as jahr
+			$umsaetze = $this->getObjektInfo("SELECT *, day(datum) as tag, month(datum) as monat, year(datum) as jahr
 					FROM finanzen_umsaetze
 					WHERE besitzer = '$user' AND konto = '$id' ORDER BY datum ASC, id ASC");
-		}
-
-		if(!isset($kontostand) OR !isset($umsaetze) OR !isset($kontostandArray) OR !isset($umsatzName)) {
-			#	exit;
 		}
 
 		#Alle Umsätze anzeigen
@@ -226,7 +222,7 @@ class finanzen extends functions {
 		$kontostand = $this->getObjektInfo("SELECT sum(umsatzWert) AS summe FROM finanzen_umsaetze
 		WHERE besitzer = '$user'
 		AND konto = '$id'");
-		$kontostandArray = $this->getObjectsToArray("
+		$kontostandArray = $this->getObjektInfo("
 				SELECT * FROM finanzen_umsaetze
 				WHERE besitzer = '$user'
 				AND konto = '$id'");
@@ -306,7 +302,7 @@ class finanzen extends functions {
 			}
 			$kontoID = $umsaetze[$i]->gegenkonto;
 			$gegenkonto = $this->getObjektInfo("SELECT * FROM finanzen_konten WHERE id = '$kontoID'");
-			$zeile .= "<td><a name='#showRow" . $umsaetze[$i]->id . "' href='?umsaetze&id=$id&UmsatzID=" . $umsaetze[$i]->id . "#showRow" . $umsaetze[$i]->id . "'>BuchNr. ". $umsaetze[$i]->buchungsnr . ":</a> " . $umsaetze[$i]->umsatzName . " von " . $gegenkonto->konto . "</td>";
+			$zeile .= "<td><a name='#showRow" . $umsaetze[$i]->id . "' href='?umsaetze&id=$id&UmsatzID=" . $umsaetze[$i]->id . "#showRow" . $umsaetze[$i]->id . "'>BuchNr. ". $umsaetze[$i]->buchungsnr . ":</a> " . $umsaetze[$i]->umsatzName . " von " . $gegenkonto[0]->konto . "</td>";
 			if($umsaetze[$i]->umsatzWert < 0) {
 				$zeile .= "<td id='minus'>";
 			} elseif($umsaetze[$i]->umsatzWert > 0) {
@@ -419,7 +415,7 @@ class finanzenNEW extends finanzen {
 			$umsaetze = $this->getUmsaetzeMonthFromKonto($besitzer, $currentMonth, $currentYear, $kontoID);
 				
 			# Jahresanfangssaldo bekommen:
-			$letztesJahr = $currentYear -1;
+			$letztesJahr = $currentYear - 1;
 			$summeJahresabschluesseBisJetzt = $this->getJahresabschluesseBISJETZT($besitzer, $kontoID, $currentYear);
 			$summeUmsaetzeDiesesJahr = $this->getObjektInfo("SELECT sum(umsatzWert) as summe 
 					FROM finanzen_umsaetze
@@ -437,9 +433,9 @@ class finanzenNEW extends finanzen {
 					WHERE besitzer = $besitzer
 					AND konto = $kontoID
 					AND year(datum) < $currentYear");
-				$startsaldo = $getSaldoUntilNow->summe + $summeUmsaetzeDiesesJahr->summe;
+				$startsaldo = $getSaldoUntilNow[0]->summe + $summeUmsaetzeDiesesJahr[0]->summe;
 			} else {
-				$startsaldo = $summeJahresabschluesseBisJetzt + $summeUmsaetzeDiesesJahr->summe;
+				$startsaldo = $summeJahresabschluesseBisJetzt + $summeUmsaetzeDiesesJahr[0]->summe;
 			}
 			$zwischensumme = $startsaldo;
 			echo "<table class='kontoTable'>";
@@ -475,7 +471,9 @@ class finanzenNEW extends finanzen {
 					if($umsaetze[$i]->umsatzWert < 0) { $zelle = " id='minus' "; } else { $zelle = " id='plus' "; }
 					echo "<tbody>";
 					echo "<td>" . $umsaetze[$i]->buchungsnr . "</td>";
-					echo "<td>" . $umsaetze[$i]->gegenkonto . "</td>";
+					# Name des Gegenkontos bekommen
+					$nameGegenkonto = $this->getObjektInfo("SELECT * FROM finanzen_konten WHERE besitzer = $besitzer AND id = ".$umsaetze[$i]->gegenkonto." LIMIT 1");
+					echo "<td>" . $nameGegenkonto[0]->konto . "</td>";
 					echo "<td>" . $umsaetze[$i]->umsatzName . "</td>";
 					echo "<td>" . $umsaetze[$i]->tag . "</td>";
 					echo "<td $zelle>" . $umsaetze[$i]->umsatzWert . "</td>";
@@ -493,11 +491,11 @@ class finanzenNEW extends finanzen {
 			} else {
 				echo "<tbody><td colspan=6>In diesem Monat gibt es keine Umsätze.</td></tbody>";
 			}
-			
+			$differenz = $zwischensumme - $startsaldo;
 			echo "<tfoot><td colspan=5 id='rightAlign'>Endsaldo: </td><td id='rightAlign'>$zwischensumme</td><td></td></tfoot>";
 	
 			echo "</table>";
-				
+			echo "<p class='info'>Kontostandveränderung: $differenz €</p>";
 		}
 	}
 	
@@ -785,7 +783,7 @@ class finanzenNEW extends finanzen {
 		# Buchungsnummer Check:
 	
 		# Wenn eine Buchung korrupt ist:
-		if($kontostand->summe > 0 OR $kontostand->summe < 0) {
+		if($kontostand[0]->summe > 0 OR $kontostand[0]->summe < 0) {
 	
 			echo "<div class='newChar'>";
 			echo "Achtung, es wurde ein Fehler in mindestens einer Buchung entdeckt.
@@ -795,7 +793,7 @@ class finanzenNEW extends finanzen {
 				ist, kannst du diesen Fehler auch selbst über einen EDIT korrigieren.";
 	
 			$selectProblem = "SELECT max(buchungsnr) as max FROM finanzen_umsaetze";
-			$max = $this->getObjectsToArray($selectProblem);
+			$max = $this->getObjektInfo($selectProblem);
 	
 			$max = $max[0]->max;
 	
@@ -817,7 +815,7 @@ class finanzenNEW extends finanzen {
 					}
 				}
 	
-				$buchung = $this->getObjectsToArray($select);
+				$buchung = $this->getObjektInfo($select);
 				$j = 0;
 				for($j = 0; $j < 2 ; $j++) {
 					# $buchung[$j]->umsatzName . " " . $buchung[$j]->umsatzWert . "<br>";
@@ -861,16 +859,16 @@ class finanzenNEW extends finanzen {
 				echo "<div id='draggable' class='alterUmsatz'>";
 				echo "<a href='?konto=$kontoLink&monat=$monat&jahr=$jahr' class='neuerSchliessKnopf'>X</a>";
 				echo "<form method=post>";
-				echo "<p class=''>Umsatz Nr. " . $umsatzInfo->id . "</p>";
-				echo "<input type=text name=umsatzName value='" . $umsatzInfo->umsatzName . "' /><br>";
-				$kontoID = $umsatzInfo->gegenkonto;
-				$konto2ID = $umsatzInfo->konto . "<br>";
+				echo "<p class=''>Umsatz Nr. " . $umsatzInfo[0]->id . "</p>";
+				echo "<input type=text name=umsatzName value='" . $umsatzInfo[0]->umsatzName . "' /><br>";
+				$kontoID = $umsatzInfo[0]->gegenkonto;
+				$konto2ID = $umsatzInfo[0]->konto . "<br>";
 				$gegenkonto = $this->getObjektInfo("SELECT * FROM finanzen_konten WHERE id = '$kontoID'");
 				$konto = $this->getObjektInfo("SELECT * FROM finanzen_konten WHERE id = '$konto2ID'");
-				echo "Buchung auf: " . $konto->konto . " ";
-				echo " - " . $gegenkonto->konto . "<br>";
-				echo "<input type=text name=umsatzWert value='" . $umsatzInfo->umsatzWert . "' /><br>";
-				echo "<input type=date name=umsatzDatum value='" . $umsatzInfo->datum . "'  /><br>";
+				echo "Buchung auf: " . $konto[0]->konto . " ";
+				echo " - " . $gegenkonto[0]->konto . "<br>";
+				echo "<input type=text name=umsatzWert value='" . $umsatzInfo[0]->umsatzWert . "' /><br>";
+				echo "<input type=date name=umsatzDatum value='" . $umsatzInfo[0]->datum . "'  /><br>";
 				echo "<input type=submit name=alterUmsatz value=Speichern />";
 				echo "<input type=submit name=loeschUmsatz value=Löschen />";
 				echo "</form>";
@@ -885,7 +883,7 @@ class finanzenNEW extends finanzen {
 	
 					# Buchungsnummer herausfinden;
 					$objektBuchungsNr = $this->getObjektInfo("SELECT id, buchungsnr FROM finanzen_umsaetze WHERE id = '$id'");
-					$buchungsnr = $objektBuchungsNr->buchungsnr;
+					$buchungsnr = $objektBuchungsNr[0]->buchungsnr;
 	
 					# Werte errechnen:
 	
@@ -904,11 +902,11 @@ class finanzenNEW extends finanzen {
 	
 					# ID mit Minuswert herausfinden:
 					$minusObjekt = $this->getObjektInfo("SELECT * FROM finanzen_umsaetze WHERE buchungsnr = '$buchungsnr' AND umsatzWert < 0 LIMIT 1");
-					$minusID = $minusObjekt->id;
+					$minusID = $minusObjekt[0]->id;
 	
 					# ID mit Minuswert herausfinden:
 					$plusObjekt = $this->getObjektInfo("SELECT id, buchungsnr, umsatzWert FROM finanzen_umsaetze WHERE buchungsnr = '$buchungsnr' AND umsatzWert > 0 LIMIT 1");
-					$plusID = $plusObjekt->id;
+					$plusID = $plusObjekt[0]->id;
 	
 					if($text != "" AND $wert != "" AND $besitzer != "" AND $id != "" AND $buchungsnr != "") {
 						$plusQuery = "UPDATE finanzen_umsaetze set umsatzName='$text',umsatzWert='$plusWert' ,datum='$datum' WHERE besitzer='$besitzer' and id = '$plusID'";
@@ -935,7 +933,7 @@ class finanzenNEW extends finanzen {
 	
 					#Buchungsnummer herausfinden;
 					$objektBuchungsNr = $this->getObjektInfo("SELECT id, buchungsnr FROM finanzen_umsaetze WHERE id = '$id'");
-					$buchungsnr = $objektBuchungsNr->buchungsnr;
+					$buchungsnr = $objektBuchungsNr[0]->buchungsnr;
 	
 					if(!isset($buchungsnr) OR $buchungsnr == "") {
 						exit;
@@ -977,7 +975,7 @@ class finanzenNEW extends finanzen {
 					
 				$besitzer = $this->getUserID($_SESSION['username']);
 				$select = "SELECT * FROM finanzen_konten WHERE besitzer = '$besitzer'";
-				$absenderKonten = $this->getObjectsToArray($select);
+				$absenderKonten = $this->getObjektInfo($select);
 					
 				echo "<tbody><td>Gutschrift hier</td><td><select name='zielKonto'>";
 				$i = 0;
@@ -1032,7 +1030,7 @@ class finanzenNEW extends finanzen {
 	
 					# Nächste Buchungsnummer herausfinden:
 					$nextBuchungsnummer = $this->getObjektInfo("SELECT max(buchungsnr) as max FROM finanzen_umsaetze");
-					$buchungsnummer = $nextBuchungsnummer->max;
+					$buchungsnummer = $nextBuchungsnummer[0]->max;
 					if(!isset($buchungsnummer)) {
 						$buchungsnummer = 0;
 					}
@@ -1064,7 +1062,7 @@ class finanzenNEW extends finanzen {
 	
 									# Nächste Buchungsnummer herausfinden:
 									$nextBuchungsnummer = $this->getObjektInfo("SELECT max(buchungsnr) as max FROM finanzen_umsaetze");
-									$buchungsnummer = $nextBuchungsnummer->max;
+									$buchungsnummer = $nextBuchungsnummer[0]->max;
 									$buchungsnummer = $buchungsnummer + 1;
 	
 									$query = "INSERT INTO finanzen_umsaetze (buchungsnr, besitzer, konto, gegenkonto, umsatzName, umsatzWert, datum)
@@ -1107,7 +1105,7 @@ class finanzenNEW extends finanzen {
 		AND monat = $monat
 		ORDER BY tag, id";
 		
-		$ergebnis = $this->getObjectsToArray($umsaetze);
+		$ergebnis = $this->getObjektInfo($umsaetze);
 		
 		if(isset($ergebnis[0]->id)) {
 			return $ergebnis;
@@ -1142,7 +1140,7 @@ class finanzenNEW extends finanzen {
 	 * @return object|boolean
 	 */
 	function getAllKonten($besitzer) {
-		$konten = $this->getObjectsToArray("SELECT * FROM finanzen_konten WHERE besitzer = '$besitzer'");
+		$konten = $this->getObjektInfo("SELECT * FROM finanzen_konten WHERE besitzer = '$besitzer'");
 		
 		if(isset($konten)) {
 			return $konten;
@@ -1226,8 +1224,8 @@ class finanzenNEW extends finanzen {
 		AND jahr < $jetzigesJahr";	
 		$summe = $this->getObjektInfo($query);
 		
-		if(isset($summe->summe)) {
-			$summeWert = $summe->summe;
+		if(isset($summe[0]->summe)) {
+			$summeWert = $summe[0]->summe;
 		} else {
 			$summeWert = 0;
 		}
@@ -1254,8 +1252,8 @@ class finanzenNEW extends finanzen {
 		
 		$monatsabschluss = $this->getObjektInfo($query);
 		
-		if(isset($monatsabschluss->year)) {
-			return $monatsabschluss->wert;
+		if(isset($monatsabschluss[0]->year)) {
+			return $monatsabschluss[0]->wert;
 		} else {
 			return false;
 		}
@@ -1276,7 +1274,7 @@ class finanzenNEW extends finanzen {
 		HAVING year(datum) = $jahr
 		AND month(datum) = $monat;";
 	
-		$umsaetze = $this->getObjectsToArray($query);
+		$umsaetze = $this->getObjektInfo($query);
 	
 		# SUMME bilden
 		$summe = 0;
@@ -1356,8 +1354,8 @@ class finanzenNEW extends finanzen {
 		
 		$jahresabschluss = $this->getObjektInfo($query);
 		
-		if(isset($jahresabschluss->jahr)) {
-			return $jahresabschluss->wert;
+		if(isset($jahresabschluss[0]->jahr)) {
+			return $jahresabschluss[0]->wert;
 		} else {
 			return false;
 		}
@@ -1376,7 +1374,7 @@ class finanzenNEW extends finanzen {
         AND besitzer = $besitzer
         HAVING year(datum) = $jahr;";
 		
-		$umsaetze = $this->getObjectsToArray($query);
+		$umsaetze = $this->getObjektInfo($query);
 		
 		# SUMME bilden
 		$summe = 0;
@@ -1399,8 +1397,8 @@ class finanzenNEW extends finanzen {
 		$frueherEintrag = $this->getObjektInfo("SELECT min(year(datum)) as min FROM finanzen_umsaetze
 				WHERE besitzer = '$besitzer' AND konto = '$kontonummer'");
 		
-		if(isset($frueherEintrag->min)) {
-			return $frueherEintrag->min;
+		if(isset($frueherEintrag[0]->min)) {
+			return $frueherEintrag[0]->min;
 		} else {
 			$frueherEintrag = date("Y");
 			return $frueherEintrag;
@@ -1438,9 +1436,9 @@ class finanzenNEW extends finanzen {
 						AND konto = $konto
 						AND year(datum) < $currentYear");
 				
-				if(isset($jahresabschlusswert->summe)) {
-					if($jahresabschlusswert->summe != $tatsaechlicheSumme->summe) {
-						echo "<p class='meldung'>Fehler bei Konto $konto, die tatsächliche Summe ist " . $tatsaechlicheSumme->summe . ", aber der eingetragene ist " . $jahresabschlusswert->summe . "
+				if(isset($jahresabschlusswert[0]->summe)) {
+					if($jahresabschlusswert[0]->summe != $tatsaechlicheSumme[0]->summe) {
+						echo "<p class='meldung'>Fehler bei Konto $konto, die tatsächliche Summe ist " . $tatsaechlicheSumme[0]->summe . ", aber der eingetragene ist " . $jahresabschlusswert[0]->summe . "
 					Lösche jetzt die Jahresabschlüsse.";
 					
 						if($this->sql_insert_update_delete("DELETE FROM finanzen_jahresabschluss WHERE besitzer = $besitzer AND konto = $konto") == true) {

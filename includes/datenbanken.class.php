@@ -11,6 +11,7 @@ class datenbanken extends functions {
 	/**
 	 * ermögtlicht das exportieren von Dateien, wenn über GET die Zahl 1 angegeben wird und der User Steven ist.
 	 * @status: getestet, funktioniert, Ausgabe muss noch formatiert werden.
+	 * VERALTET
 	 */
 	function export($tabelle) {
 		if (isset ( $_GET ['export'] )) {
@@ -84,68 +85,71 @@ class datenbanken extends functions {
 			$ausgabe .= "<table class='AdressTable'>";
 			$ausgabe .= "<form action='?' METHOD=GET>";
 			$bearbeiten = $_GET ["bearbeiten"];
+			
+			# Informationen heranholen
 			$modsql = "SELECT * FROM adressbuch WHERE id=$bearbeiten";
-			$readfurbearbeiten = mysql_query ( $modsql );
-			while ( $rowbearb = mysql_fetch_object ( $readfurbearbeiten ) ) {
+			$rowbearb = $this->getObjektInfo($modsql);
+			
+			for ($i = 0 ; $i < sizeof($rowbearb) ; $i++) {
 				$_GET ['userid'] = $userid;
 				$ausgabe .= "
 
 				<tr>
-				<td><input type='hidden' name='id' value='$rowbearb->id' readonly></td>
+				<td><input type='hidden' name='id' value='".$rowbearb[0]->id."' readonly></td>
 
 				<tr>
-				<td ><input type='text'   name='vorname' value='$rowbearb->vorname' required autofocus /></td>
-				<td><input placeholder='Nachname' type='text'  name='nachname' value='$rowbearb->nachname' required></td>
-				<td rowspan='10'> <textarea name='notizen' class='ckeditor' cols='52' rows='5' wrap='physical'>$rowbearb->notizen</textarea> </td>
+				<td ><input type='text'   name='vorname' value='".$rowbearb[0]->vorname."' required autofocus /></td>
+				<td><input placeholder='Nachname' type='text'  name='nachname' value='".$rowbearb[0]->nachname."' required></td>
+				<td rowspan='10'> <textarea name='notizen' class='ckeditor' cols='52' rows='5' wrap='physical'>".$rowbearb[0]->notizen."</textarea> </td>
 				</tr>
 
 				<tr>
-				<td ><input type='text'   name='strasse' value='$rowbearb->strasse'  placeholder='Straße'>
-				<input  type='text'   name='hausnummer' value='$rowbearb->hausnummer' placeholder='Nr.'></td><td></td>
+				<td ><input type='text'   name='strasse' value='".$rowbearb[0]->strasse."'  placeholder='Straße'>
+				<input  type='text'   name='hausnummer' value='".$rowbearb[0]->hausnummer."' placeholder='Nr.'></td><td></td>
 				</tr>
 
 				<tr>
-				<td ><input placeholder='PLZ' type='text'   name='postleitzahl' value='$rowbearb->postleitzahl'></td>
-				<td><input placeholder='Stadt' type='text'   name='stadt' value='$rowbearb->stadt'></td>
+				<td ><input placeholder='PLZ' type='text'   name='postleitzahl' value='".$rowbearb[0]->postleitzahl."'></td>
+				<td><input placeholder='Stadt' type='text'   name='stadt' value='".$rowbearb[0]->stadt."'></td>
 				</tr>
 
 				<tr>
-				<td ><input placeholder='Bundesland' type='text'   name='bundesland' value='$rowbearb->bundesland'></td>
-				<td><input placeholder='Land' type='text'   name='land' value='$rowbearb->land'></td>
+				<td ><input placeholder='Bundesland' type='text'   name='bundesland' value='".$rowbearb[0]->bundesland."'></td>
+				<td><input placeholder='Land' type='text'   name='land' value='".$rowbearb[0]->land."'></td>
 				</tr>
 
 				<tr>
-				<td><input placeholder='Telefon 1' type='text'   name='telefon1' value='$rowbearb->telefon1' >
-				<input type='text'  size='10'  name='telefon1art' value='$rowbearb->telefon1art' placeholder='Handy'></td>
-				<td><input placeholder='Fax' type='text'   name='fax' value='$rowbearb->fax'></td>
+				<td><input placeholder='Telefon 1' type='text'   name='telefon1' value='".$rowbearb[0]->telefon1."' >
+				<input type='text'  size='10'  name='telefon1art' value='".$rowbearb[0]->telefon1art."' placeholder='Handy'></td>
+				<td><input placeholder='Fax' type='text'   name='fax' value='".$rowbearb[0]->fax."'></td>
 				</tr>
 
 				<tr>
-				<td><input placeholder='Telefon 2' type='text'   name='telefon2' value='$rowbearb->telefon2' >
-				<input type='text'  size='10'  name='telefon2art' value='$rowbearb->telefon2art' placeholder='Home'></td>
-				<td><input placeholder='Gruppe' type='text'   name='gruppe' value='$rowbearb->gruppe'></td>
+				<td><input placeholder='Telefon 2' type='text'   name='telefon2' value='".$rowbearb[0]->telefon2."' >
+				<input type='text'  size='10'  name='telefon2art' value='".$rowbearb[0]->telefon2art."' placeholder='Home'></td>
+				<td><input placeholder='Gruppe' type='text'   name='gruppe' value='".$rowbearb[0]->gruppe."'></td>
 				</tr>
 
 				<tr>
-				<td><input placeholder='Telefon 3' type='text'   name='telefon3' value='$rowbearb->telefon3' >
-				<input type='text'  size='10'  name='telefon3art' value='$rowbearb->telefon3art' placeholder='Arbeit'></td>
-				<td><input placeholder='E-Mail' type='text'   name='email' value='$rowbearb->email'></td>
+				<td><input placeholder='Telefon 3' type='text'   name='telefon3' value='".$rowbearb[0]->telefon3."' >
+				<input type='text'  size='10'  name='telefon3art' value='".$rowbearb[0]->telefon3art."' placeholder='Arbeit'></td>
+				<td><input placeholder='E-Mail' type='text'   name='email' value='".$rowbearb[0]->email."'></td>
 				</tr>
 
 				<tr>
-				<td><input placeholder='Telefon 4' type='text'   name='telefon4' value='$rowbearb->telefon4' >
-				<input  type='text' size='10'  name='telefon4art' value='$rowbearb->telefon4art' placeholder='Privat'></td>
-				<td><input placeholder='Geburtstag' type='date'  maxlength='10' name='geburtstag' value='$rowbearb->geburtstag'></td></tr>
+				<td><input placeholder='Telefon 4' type='text'   name='telefon4' value='".$rowbearb[0]->telefon4."' >
+				<input  type='text' size='10'  name='telefon4art' value='".$rowbearb[0]->telefon4art."' placeholder='Privat'></td>
+				<td><input placeholder='Geburtstag' type='date'  maxlength='10' name='geburtstag' value='".$rowbearb[0]->geburtstag."'></td></tr>
 
 				<tr>
-				<td><input placeholder='Skype' type='text'   name='skype' value='$rowbearb->skype'></td>
+				<td><input placeholder='Skype' type='text'   name='skype' value='".$rowbearb[0]->skype."'></td>
 				<td><input placeholder='Facebook' type='text'   name='facebook' value=''></tr>";
 				$ausgabe .= "<tr>
 				<td>
 				<input type='submit' name='update' value='Speichern'>
 				</td>
 				<td>
-				<a href='?loeschen=ja&loeschid=$rowbearb->id' class='buttonlink'>&#10008; löschen</a>
+				<a href='?loeschen=ja&loeschid=".$rowbearb[0]->id."' class='buttonlink'>&#10008; löschen</a>
 				</td>
 				</tr>";
 			}
@@ -198,8 +202,8 @@ class datenbanken extends functions {
 					$sqlupdate = "UPDATE adressbuch SET geburtstag='$geburtstag', vorname='$vorname', nachname='$nachname', strasse='$strasse', hausnummer='$hausnummer', postleitzahl='$postleitzahl',
 					stadt='$stadt', bundesland='$bundesland', land='$land', telefon1='$telefon1', telefon2='$telefon2', telefon3='$telefon3', telefon4='$telefon4', telefon1art='$telefon1art', telefon2art='$telefon2art',
 					telefon3art='$telefon3art', telefon4art='$telefon4art', email='$email', skype='$skype', facebook='$facebook', fax='$fax', gruppe='$gruppe', notizen='$notizen' WHERE id='$updid'";
-					$update = mysql_query ( $sqlupdate );
-					if ($update == true) {
+									
+					if ($this->sql_insert_update_delete($sqlupdate) == true) {
 						$fehler .= "<p class='erfolg'>Adressbucheintrag wurde erfolgreich geändert!</p>";
 					} else {
 						$fehler .= "<p class='meldung'>Fehler beim speichern</p>";
@@ -383,8 +387,8 @@ class datenbanken extends functions {
 						'$vorname','$nachname','$strasse','$hausnummer','$postleitzahl','$stadt','$bundesland','$land'
 						,'$telefon1','$telefon2','$telefon3','$telefon4','$telefon1art','$telefon2art','$telefon3art',
 						'$telefon4art','$email','$skype','$facebook','$fax','$gruppe','$notizen')";
-						$eintragen = mysql_query ( $eintrag );
-						if ($eintragen == true) {
+						
+						if ($this->sql_insert_update_delete($eintrag) == true) {
 							$ausgabe .= "<p class='erfolg'>Adressbucheintrag wurde erfolgreich hinzugefügt! <a href='?eintragenja=1'>Zurück</a></p>";
 						} else {
 							$ausgabe .= "<p class='meldung'>Fehler beim speichern der Daten, das tut uns leid.<a href='?eintragenja=1'>Zurück</a></p>";
@@ -406,25 +410,26 @@ class datenbanken extends functions {
 		if($this->userHasRight("13", 0) == true) {
 			$ausgabe = "";
 			
-			$ergebnis = mysql_query ( $query );
-			$row = mysql_fetch_object ( $ergebnis );
+			# Daten beschaffen
+			$row = $this->getObjektInfo($query);
+			
 			$ausgabe .= "<div></div>";
-			while ( $row = mysql_fetch_object ( $ergebnis ) ) {
+			for($i = 0; $i < sizeof($row) ; $i++) {
 				$ausgabe .= "<div class='adresseintrag'>";
 				$ausgabe .= "<table>";
 				$ausgabe .= "<tr>";
-				$ausgabe .= "<td colspan='2'>	<a href='eintrag.php?bearbeiten=$row->id'>$row->vorname	";
-				$ausgabe .= "	$row->nachname ";
-				if ($row->gruppe != "") {
-					$ausgabe .= "($row->gruppe)</a>";
+				$ausgabe .= "<td colspan='2'>	<a href='eintrag.php?bearbeiten=" . $row[0]->id. "'> ".$row[0]->vorname." ";
+				$ausgabe .= $row[0]->nachname;
+				if ($row[0]->gruppe != "") {
+					$ausgabe .= "(".$row[0]->gruppe.")</a>";
 				}
 				$ausgabe .= "</td>";
-				$ausgabe .= "<td>	<a href='eintrag.php?bearbeiten=$row->id' class='adressbuchlink'>&#10150;</a>	</td>";
+				$ausgabe .= "<td>	<a href='eintrag.php?bearbeiten=".$row[0]->id."' class='adressbuchlink'>&#10150;</a>	</td>";
 				$ausgabe .= "</tr>";
-				if ($row->telefon1 != "") {
-					$ausgabe .= "<tr><td><strong> $row->telefon1art: </strong> </td><td><strong> $row->telefon1 </strong> </td></tr>";
-				} else if ($row->email != "") {
-					$ausgabe .= "<tr><td colspan='3'><strong> $row->email</td></tr>";
+				if ($row[0]->telefon1 != "") {
+					$ausgabe .= "<tr><td><strong>".$row[0]->telefon1art.": </strong> </td><td><strong>".$row[0]->telefon1." </strong> </td></tr>";
+				} else if ($row[0]->email != "") {
+					$ausgabe .= "<tr><td colspan='3'><strong>".$row[0]->email."</td></tr>";
 				} else {
 					$ausgabe .= "<tr><td colspan = '2' class='grey'>Füge eine Nummer hinzu!</td><td></td></tr>";
 				}
@@ -448,12 +453,12 @@ class datenbanken extends functions {
 				if ($monat != "") {
 					$select = "SELECT *, month(geburtstag) AS monat, day(geburtstag) as tag FROM adressbuch WHERE month(geburtstag) = '$monat' ORDER BY tag";
 					
-					$ergebnis = mysql_query ( $select );
+					$row = $this->getObjektInfo($select);
 					echo "<div id='draggable' class='summe'>";
 					echo "<a href='?#gebs' class='closeSumme'>X</a>";
 					echo "<h2>Detailansicht Monat</h2>";
-					while ( $row = mysql_fetch_object ( $ergebnis ) ) {
-						echo "<a href='eintrag.php?bearbeiten=$row->id'><strong>" . $row->tag . ".</strong> " . $row->vorname . " " . $row->nachname . "</a><br>";
+					for ($i = 0 ; $i < sizeof($row) ; $i++) {
+						echo "<a href='eintrag.php?bearbeiten=".$row[0]->id."'><strong>" . $row[0]->tag . ".</strong> " . $row[0]->vorname . " " . $row[0]->nachname . "</a><br>";
 					}
 					
 					echo "</div>";
@@ -469,7 +474,7 @@ class datenbanken extends functions {
 	 */
 	function showContractsFromGroup($group) {
 		if($this->userHasRight("22", 0) == true) {
-			$contacts = $this->getObjectsToArray("SELECT * FROM adressbuch WHERE gruppe = '$group'");
+			$contacts = $this->getObjektInfo("SELECT * FROM adressbuch WHERE gruppe = '$group'");
 		
 			return $contacts;
 		}

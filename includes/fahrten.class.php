@@ -21,7 +21,7 @@ class fahrten extends functions {
 			echo "<thead><td>Ziele</td><td></td><td>Gesamt</td></thead>";
 			
 			$userID = $this->getUserID ( $_SESSION ['username'] );
-			$ziele = $this->getObjectsToArray ( "SELECT *, count(ziel) as anzahl FROM fahrkosten WHERE besitzer = '$userID' AND spritpreis > 0 GROUP BY ziel" );
+			$ziele = $this->getObjektInfo ( "SELECT *, count(ziel) as anzahl FROM fahrkosten WHERE besitzer = '$userID' AND spritpreis > 0 GROUP BY ziel" );
 			
 			$kmgesamt = 0;
 			
@@ -29,15 +29,15 @@ class fahrten extends functions {
 				
 				$entfernungInfo = $this->getObjektInfo ( "SELECT * FROM fahrkostenZiele WHERE besitzer = '$userID' AND name = '" . $ziele [$i]->ziel . "' LIMIT 1" );
 				
-				$kmgesamt = $entfernungInfo->entfernung * $ziele [$i]->fahrrichtung * $ziele [$i]->anzahl;
-				echo "<tbody><td>" . $ziele [$i]->ziel . " (" . $entfernungInfo->entfernung . " km)" . " </td><td>" . $ziele [$i]->anzahl . "</td><td>$kmgesamt km</td></tbody>";
+				$kmgesamt = $entfernungInfo[0]->entfernung * $ziele[$i]->fahrrichtung * $ziele[$i]->anzahl;
+				echo "<tbody><td>" . $ziele [$i]->ziel . " (" . $entfernungInfo[0]->entfernung . " km)" . " </td><td>" . $ziele [$i]->anzahl . "</td><td>$kmgesamt km</td></tbody>";
 			}
 			
 			$gesamtkilometer = 0;
 			$gesamtKosten = 0;
 			
 			echo "<thead><td>Fahrzeuge</td><td></td><td></td></thead>";
-			$infos = $this->getObjectsToArray ( "SELECT *, count(fahrart) as anzahl FROM fahrkosten WHERE besitzer = '$userID' GROUP BY fahrart" );
+			$infos = $this->getObjektInfo ( "SELECT *, count(fahrart) as anzahl FROM fahrkosten WHERE besitzer = '$userID' GROUP BY fahrart" );
 			
 			for($i = 0; $i < sizeof ( $infos ); $i ++) {
 				
@@ -48,9 +48,9 @@ class fahrten extends functions {
 				
 				
 				// Berechnung der Kosten:
-				$gesamtKosten = $fahrzeugeInfo->verbrauch / 100 * $infos [$i]->anzahl * $gesamtkilometer; // hier fehlen die Kilometer.
+				$gesamtKosten = $fahrzeugeInfo[0]->verbrauch / 100 * $infos [$i]->anzahl * $gesamtkilometer; // hier fehlen die Kilometer.
 				
-				echo "<tbody><td>" . $infos [$i]->fahrart . " (" . $fahrzeugeInfo->name . ")" . "</td><td> " . $infos [$i]->anzahl . "</td><td>$gesamtKosten &#8364;</td></tbody>";
+				echo "<tbody><td>" . $infos [$i]->fahrart . " (" . $fahrzeugeInfo[0]->name . ")" . "</td><td> " . $infos [$i]->anzahl . "</td><td>$gesamtKosten &#8364;</td></tbody>";
 			}
 			
 			echo "</table>";
@@ -75,7 +75,7 @@ class fahrten extends functions {
 			$this->SeitenZahlen("SELECT *, day(datum) as tag, month(datum) as monat, year(datum) as jahr FROM fahrkosten WHERE besitzer = '$userID' ORDER BY datum DESC", $proSeite);
 			$LimitUndOffset = $this->seitenAnzeigen($proSeite);
 			# Neue Query wird gelesen und in die richtige Query eingefügt:
-			$fahrten = $this->getObjectsToArray ( "SELECT *, day(datum) as tag, month(datum) as monat, year(datum) as jahr FROM fahrkosten WHERE besitzer = '$userID' ORDER BY datum DESC $LimitUndOffset " );
+			$fahrten = $this->getObjektInfo ( "SELECT *, day(datum) as tag, month(datum) as monat, year(datum) as jahr FROM fahrkosten WHERE besitzer = '$userID' ORDER BY datum DESC $LimitUndOffset " );
 			$this->getFahrtInfo($fahrten);
 			# ################################# #
 			# Tabelle anzeigen					#
@@ -100,7 +100,7 @@ class fahrten extends functions {
 				$fahrzeugInfo = $this->getObjektInfo ( "SELECT * FROM fahrzeuge WHERE besitzer = '$userID' AND name_tag = '" . $fahrten [$i]->fahrart . "'" );
 				// Streckeninfos:
 				$zielInfo = $this->getObjektInfo ( "SELECT * FROM fahrkostenZiele WHERE besitzer = '$userID' AND name = '" . $fahrten [$i]->ziel . "'" );
-				$liter = $fahrzeugInfo->verbrauch / 100 * $zielInfo->entfernung * $fahrten [$i]->fahrrichtung;
+				$liter = $fahrzeugInfo[0]->verbrauch / 100 * $zielInfo[0]->entfernung * $fahrten [$i]->fahrrichtung;
 				$kosten = round ( $liter * $fahrten [$i]->spritpreis, 2 );
 				echo $kosten . " &#8364;";
 				echo "</td>";
@@ -111,6 +111,8 @@ class fahrten extends functions {
 			}
 			
 			echo "</table>";
+		} else {
+			echo "<p class='meldung'>Keine Rechte</p>";
 		}
 	}
 	
@@ -128,10 +130,10 @@ class fahrten extends functions {
 			$fahrzeugInfo = $this->getObjektInfo ( "SELECT * FROM fahrzeuge WHERE besitzer = '$userID' AND name_tag = '" . $fahrten [$i]->fahrart . "'" );
 			
 			$zielInfo = $this->getObjektInfo ( "SELECT * FROM fahrkostenZiele WHERE besitzer = '$userID' AND name = '" . $fahrten [$i]->ziel . "'" );
-			$liter = $fahrzeugInfo->verbrauch / 100 * $zielInfo->entfernung * $fahrten [$i]->fahrrichtung;
+			$liter = $fahrzeugInfo[0]->verbrauch / 100 * $zielInfo[0]->entfernung * $fahrten [$i]->fahrrichtung;
 			$kosten = round ( $liter * $fahrten [$i]->spritpreis, 2 );
 			
-			echo "<p>Du bist mit dem <strong>" . $fahrten[$i]->fahrart . " ($fahrzeugInfo->name)</strong> gefahren und hattest das Ziel <strong>" .$fahrten[$i]->ziel. "</strong></p>";
+			echo "<p>Du bist mit dem <strong>" . $fahrten[$i]->fahrart . " (".$fahrzeugInfo[0]->name.")</strong> gefahren und hattest das Ziel <strong>" .$fahrten[$i]->ziel. "</strong></p>";
 			echo "<p>Du hast <strong>$liter</strong> Liter verbraucht und <strong>$kosten</strong> € dafür bezahlt. </p>";
 			echo "<p>Notizen: <strong>" .$fahrten[$i]->notizen . "</strong></p>";
 			echo "</div>";
@@ -172,7 +174,7 @@ class fahrten extends functions {
 			echo "<tr><td>Welches Fahrzeug: </td>";
 			
 			$userID = $this->getUserID ( $_SESSION ['username'] );
-			$fahrzeuge = $this->getObjectsToArray ( "SELECT * FROM fahrzeuge WHERE besitzer = '$userID'" );
+			$fahrzeuge = $this->getObjektInfo ( "SELECT * FROM fahrzeuge WHERE besitzer = '$userID'" );
 			echo "<td><select name='fahrart'>";
 			echo "<option></option>";
 			for($i = 0; $i < sizeof ( $fahrzeuge ); $i ++) {
@@ -186,7 +188,7 @@ class fahrten extends functions {
 			}
 			echo "</select></td></tr>";
 			
-			$ziele = $this->getObjectsToArray ( "SELECT * FROM fahrkostenZiele WHERE besitzer = '$userID'" );
+			$ziele = $this->getObjektInfo ( "SELECT * FROM fahrkostenZiele WHERE besitzer = '$userID'" );
 			echo "<tr><td>Welches Ziel: </td>";
 			echo "<td><select name='ziel'>";
 			echo "<option></option>";
@@ -205,8 +207,8 @@ class fahrten extends functions {
 			// Spritpreis: Letzten Spritpreis automatisch einfügen.
 			$userID = $this->getUserID ( $_SESSION ['username'] );
 			$lastPreis = $this->getObjektInfo ( "SELECT id, spritpreis as preis FROM fahrkosten WHERE besitzer = '$userID' order by id DESC" );
-			if(isset($lastPreis->preis)) {
-				$preis = $lastPreis->preis;
+			if(isset($lastPreis[0]->preis)) {
+				$preis = $lastPreis[0]->preis;
 			} else {
 				$preis = 0;
 			}
@@ -268,8 +270,8 @@ class fahrten extends functions {
 				// Prüfen ob der "löscher" das zu löschende Objekt besitzt.
 				$userID = $this->getUserID ( $_SESSION ['username'] );
 				$id = (isset ( $_GET ['loeschid'] )) ? $_GET ['loeschid'] : '';
-				$objekt = $this->getObjektInfo ( "SELECT * FROM fahrkosten WHERE id = $id" );
-				if ($userID == $objekt->besitzer) {
+				$objekt = $this->getObjektInfo ( "SELECT * FROM fahrkosten WHERE id = $id LIMIT 1" );
+				if ($userID == $objekt[0]->besitzer) {
 					$this->sqlDelete ( "fahrkosten" );
 				} else {
 					echo "<p class='meldung'>Fehler</p>";
@@ -330,28 +332,28 @@ class fahrten extends functions {
 				echo "<h2>Eintrag editieren</h2>";
 				echo "<form method=post>";
 				
-				echo "<table><tr><td>Datum</td><td><input type=date placeholder='Datum' name='datum' value='" . $objektInfo->datum . "' /></td></tr>";
+				echo "<table><tr><td>Datum</td><td><input type=date placeholder='Datum' name='datum' value='" . $objektInfo[0]->datum . "' /></td></tr>";
 				
 				$userID = $this->getUserID ( $_SESSION ['username'] );
-				$fahrzeuge = $this->getObjectsToArray ( "SELECT * FROM fahrzeuge WHERE besitzer = '$userID'" );
+				$fahrzeuge = $this->getObjektInfo ( "SELECT * FROM fahrzeuge WHERE besitzer = '$userID'" );
 				echo "<tr><td>Welches Fahrzeug</td><td><select name='fahrart'>";
 				echo "<option></option>";
 				for($i = 0; $i < sizeof ( $fahrzeuge ); $i ++) {
 					echo "<option";
-					if ($objektInfo->fahrart == $fahrzeuge [$i]->name_tag) {
+					if ($objektInfo[0]->fahrart == $fahrzeuge [$i]->name_tag) {
 						echo " selected ";
 					}
 					echo ">" . $fahrzeuge [$i]->name_tag . "</option>";
 				}
 				echo "</select></td></tr>";
 				
-				$ziele = $this->getObjectsToArray ( "SELECT * FROM fahrkostenZiele WHERE besitzer = '$userID'" );
+				$ziele = $this->getObjektInfo ( "SELECT * FROM fahrkostenZiele WHERE besitzer = '$userID'" );
 				echo "<tr><td>Welches Ziel: </td>";
 				echo "<td><select name='ziel'>";
 				echo "<option></option>";
 				for($i = 0; $i < sizeof ( $ziele ); $i ++) {
 					echo "<option";
-					if ($objektInfo->ziel == $ziele [$i]->name) {
+					if ($objektInfo[0]->ziel == $ziele [$i]->name) {
 						echo " selected ";
 					}
 					echo ">" . $ziele [$i]->name . "</option>";
@@ -359,11 +361,11 @@ class fahrten extends functions {
 				echo "</select></td></tr>";
 				
 	# alt	#	echo "<tr><td>Bemerkungen</td><td><input type=text placeholder='Notizen' name='notizen' value='" . $objektInfo->notizen . "' /></td></tr>";
-				echo "<tr><td>Bemerkungen</td><td><textarea placeholder='Notizen' name='notizen' rows=2 cols=70>" . $objektInfo->notizen . "</textarea></td></tr>";
-				echo "<tr><td>Spritpreis: </td><td><input type=text placeholder='Preis' name='spritpreis' value='" . $objektInfo->spritpreis . "' /></td></tr>";
-				echo "<tr><td>Fahrrichtung: </td><td><input type=text placeholder='Hin- und Rückfahrt?' name='fahrrichtung' value='" . $objektInfo->fahrrichtung . "' /></td></tr>";
+				echo "<tr><td>Bemerkungen</td><td><textarea placeholder='Notizen' name='notizen' rows=2 cols=70>" . $objektInfo[0]->notizen . "</textarea></td></tr>";
+				echo "<tr><td>Spritpreis: </td><td><input type=text placeholder='Preis' name='spritpreis' value='" . $objektInfo[0]->spritpreis . "' /></td></tr>";
+				echo "<tr><td>Fahrrichtung: </td><td><input type=text placeholder='Hin- und Rückfahrt?' name='fahrrichtung' value='" . $objektInfo[0]->fahrrichtung . "' /></td></tr>";
 				echo "<tr><td><input type=submit name=editOk value='Absenden' /></td></tr>";
-				echo "<tr><td></td><td><input type=hidden name='id' value='" . $objektInfo->id . "' />";
+				echo "<tr><td></td><td><input type=hidden name='id' value='" . $objektInfo[0]->id . "' />";
 				echo "</form>";
 				echo "</table>";
 				
@@ -379,7 +381,7 @@ class fahrten extends functions {
 		if($this->userHasRight("11", 0) == true) {
 		#	if(isset($_GET['listFahrzeuge'])) {
 				$userID = $this->getUserID($_SESSION['username']);
-				$fahrzeugInfos = $this->getObjectsToArray("SELECT id, name, name_tag FROM fahrzeuge WHERE besitzer = '$userID'");
+				$fahrzeugInfos = $this->getObjektInfo("SELECT id, name, name_tag FROM fahrzeuge WHERE besitzer = '$userID'");
 				
 				# Ausgabe
 				echo "<div class='summe' style=\"display: none;\" id=\"listFahrzeuge\">";
@@ -464,10 +466,10 @@ class fahrten extends functions {
 				echo "<div id='draggable' class='summe'><ul>";
 				echo "<a href='?' class='closeSumme'>X</a>";
 				
-				echo "<h2><a name=fahrzeug'".$getFahrzeugInfo->id."'>" . $getFahrzeugInfo->name . "</a></h2>";
+				echo "<h2><a name=fahrzeug'".$getFahrzeugInfo[0]->id."'>" . $getFahrzeugInfo[0]->name . "</a></h2>";
 				
-				echo "Abkürzung: " . $getFahrzeugInfo->name_tag . "<br>";
-				echo "Verbrauch: " . $getFahrzeugInfo->verbrauch . " Liter auf 100 km<br>";
+				echo "Abkürzung: " . $getFahrzeugInfo[0]->name_tag . "<br>";
+				echo "Verbrauch: " . $getFahrzeugInfo[0]->verbrauch . " Liter auf 100 km<br>";
 				
 				echo "<a href='?listFahrzeuge' class='buttonlink'>Speichern</a>";
 				echo "<a href='?listFahrzeuge' class='buttonlink'>Zurück</a>";
@@ -486,7 +488,7 @@ class fahrten extends functions {
 			
 		#	if(isset($_GET['listZiele'])) {
 				$userID = $this->getUserID($_SESSION['username']);
-				$zieleInfos = $this->getObjectsToArray("SELECT id, name, entfernung FROM fahrkostenZiele WHERE besitzer = '$userID'");
+				$zieleInfos = $this->getObjektInfo("SELECT id, name, entfernung FROM fahrkostenZiele WHERE besitzer = '$userID'");
 					
 				# Ausgabe
 				echo "<div class='summe' style=\"display: none;\" id=\"listZiele\">";
@@ -565,9 +567,9 @@ class fahrten extends functions {
 				echo "<div id='draggable' class='summe'><ul>";
 				echo "<a href='?' class='closeSumme'>X</a>";
 				
-				echo "<h2><a name=fahrzeug'".$getFahrzeugInfo->id."'>" . $getFahrzeugInfo->name . "</a></h2>";
+				echo "<h2><a name=fahrzeug'".$getFahrzeugInfo[0]->id."'>" . $getFahrzeugInfo[0]->name . "</a></h2>";
 				
-				echo "Entfernung: " . $getFahrzeugInfo->entfernung . "<br>";
+				echo "Entfernung: " . $getFahrzeugInfo[0]->entfernung . "<br>";
 				
 				echo "<a href='?listZiele' class='buttonlink'>Speichern</a>";
 				echo "<a href='?listZiele' class='buttonlink'>Zurück</a>";

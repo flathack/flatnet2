@@ -40,70 +40,75 @@ class login extends functions {
 					
 				//SQL Abfrage
 				$abfrage = "SELECT id, Name, Passwort, versuche FROM benutzer WHERE Name LIKE '$username' LIMIT 1";
-				$ergebnis = mysql_query($abfrage);
-				$row = mysql_fetch_object($ergebnis);
+								
+				$row = $this->getObjektInfo($abfrage);
 
-				if(!isset($row->Name)) {
+				if(!isset($row[0]->Name)) {
 					$this->logEintrag(false, "Login Fehlgeschlagen: Name $username existiert nicht in der Datenbank.", "Error");
 					return $errorMessage;
 				} else {
-					$userID = $row->id;
+					$userID = $row[0]->id;
 				}
 
-				if($row->versuche >= 3) {
-					$gesperrterNutzer = $row->Name;
+				if($row[0]->versuche >= 3) {
+					$gesperrterNutzer = $row[0]->Name;
 					$this->logEintrag(false, "Login Fehlgeschlagen: Benutzer $gesperrterNutzer ist gesperrt", "Error");
 					return $errorMessage;
 				} else {
 					// Benutzername und Passwort werden gecheckt
 
-					if($row->Passwort == $passwort) {
+					if($row[0]->Passwort == $passwort) {
 						#setzen der Session Variablen
 						$_SESSION['angemeldet'] = true;
-						$_SESSION['username'] = $row->Name;
+						$_SESSION['username'] = $row[0]->Name;
 							
 						# Hilfseinstellung für Guildwars
-						$_SESSION['selectUser'] = $row->Name;
-						$_SESSION['selectGWUser'] = $row->Name;
+						$_SESSION['selectUser'] = $row[0]->Name;
+						$_SESSION['selectGWUser'] = $row[0]->Name;
 
 						# Logeintrag
 						$this->logEintrag(true, "hat sich eingeloggt", "login");
+						
+						# Versuche um eins erhöhen
+						
+						$this->sql_insert_update_delete("UPDATE benutzer SET versuche=5 WHERE Name='" .$row[0]->Name. "' LIMIT 1");
 							
 						#Versuche Updaten
-						$update = "UPDATE benutzer SET versuche='0' WHERE Name = '$username'";
-						$updateErgeb = mysql_query($update);
-						if($updateErgeb == "true") {
+						$update = "UPDATE benutzer SET versuche=0 WHERE Name = '" .$row[0]->Name. "' LIMIT 1";
+						
+						if($this->sql_insert_update_delete($update) == true) {
 							header("Location: $umleitung");
 						} else {
 							$errorMessage .= "<p class='info'>Ein Login ist derzeit nicht möglich.</p>";
 							$this->logEintrag(false, "Versuche von $username konnten nicht auf 0 gesetzt werden.", "Error");
 							return $errorMessage;
 						}
+
 							
 					} else {
 
 						# Versuche hochzählen // ab hier ist sicher, dass der Benutzer existiert.
 						$abfrage = "SELECT Name, versuche FROM benutzer WHERE Name LIKE '$username' LIMIT 1";
-						$ergebnis = mysql_query($abfrage);
-						$row2 = mysql_fetch_object($ergebnis);
+						$row2 = $this->getObjektInfo($abfrage);
 						
 						# Zur Sicherheit wird der Benutzername aus der Tabelle genommen
-						$usernameSAVE = $row2->Name;
+						$usernameSAVE = $row2[0]->Name;
 
 						# Neue Versuche ausrechnen
-						$bisherigeVersuche = $row->versuche;
+						$bisherigeVersuche = $row[0]->versuche;
 						$neueVersuche = $bisherigeVersuche + 1;
 
 						# Versuche speichern
 						$updateVersuche = "UPDATE benutzer SET versuche='$neueVersuche' WHERE Name = '$usernameSAVE'";
-						$updateErgeb2 = mysql_query($updateVersuche);
-						if($updateErgeb2 == "true") {
+						
+						if($this->sql_insert_update_delete($updateVersuche) == true) {
 							$this->logEintrag(false, "Versuche von $usernameSAVE wurden hochgezählt (falsches Passwort).", "Error");
 							return $errorMessage;
 						} else {
 							$this->logEintrag(false, "Versuche konnten nicht geupdatet werden.", "Error");
 							return $errorMessage;
-						} # else ende
+						} # else Ende
+						
 					} # else ende
 				} # else ende
 			} # if isset ende
@@ -207,13 +212,12 @@ class login extends functions {
 					echo "<p class='meldung'>Fehler, es wurden nicht alle Felder ausgefüllt.</p>";
 				} else {
 					$check = "SELECT * FROM benutzer WHERE Name LIKE '$username' LIMIT 1";
-					$checkergebnis = mysql_query($check);
-					$row = mysql_fetch_object($checkergebnis);
+					$row = $this->getObjektInfo($check);
 
 					/* Hier tritt ein Notice Fehler auf, ist aber normal,
 					 * da im Normalfall kein Benutzer gefunden wird.
 					*/
-					if(isset($row->Name)) {
+					if(isset($row[0]->Name)) {
 						echo "<p class='meldung'>Fehler, der Benutzer <strong>$username</strong> existiert bereits.</p>";
 					} else {
 						if($passwort1 == $passwort2) {
@@ -230,11 +234,10 @@ class login extends functions {
 								
 								# Den Code überprüfen
 								$select = "SELECT * FROM registercode WHERE code = '$code' LIMIT 1";
-								$checkergebnis = mysql_query($select);
-								$row = mysql_fetch_object($checkergebnis);
+								$row = $this->getObjektInfo($select);
 								
 								# Check, ob der Code zu oft benutzt wurde
-								if($row->used >= $row->usageTimes) {
+								if($row[0]->used >= $row[0]->usageTimes) {
 									echo "<p class='meldung'>Es gibt Probleme mit dem Code, kontaktiere den Administrtor.</p>";
 									# Logeintrag
 									$this->logEintrag(true, "hat den Code $code benutzt, die vorgeschriebene Nutzungszahl wurde überschritten.", "Error");
@@ -250,17 +253,16 @@ class login extends functions {
 										$ip = $_SERVER['HTTP_X_FORWARDED_FOR'];
 									}
 									# neue Benutzung ausrechnen
-									$used = $row->used + 1;
+									$used = $row[0]->used + 1;
 									
 									# Coderechte für den Benutzer übernehmen
-									# $codeRechte = $row->rights;
+									# $codeRechte = $row[0]->rights;
 									
 									# Update des Codes.
 									$update = "UPDATE registercode SET used='$used',usedBy='$username',ipadress='$ip' WHERE code = '$code'";
-									$sqlupdategesamt = mysql_query($update);
-									if($sqlupdategesamt == true) {
+									if($this->sql_insert_update_delete($update) == true) {
 										# Logeintrag
-										$this->logEintrag(true, "hat den Code $code benutzt, dieser wurde von $row->used nach $used geupdatet", "Error");
+										$this->logEintrag(true, "hat den Code $code benutzt, dieser wurde von $row[0]->used nach $used geupdatet", "Error");
 									} else {
 										echo "<p class='meldung'>Es gibt Probleme mit dem Code, kontaktiere den Administrtor.</p>";
 										# Logeintrag
@@ -273,8 +275,7 @@ class login extends functions {
 							# Benutzer anlegen
 							$passwortneu = md5($passwort1);
 							$query="INSERT INTO benutzer (Name, Passwort, rights, versuche) VALUES ('$username','$passwortneu','0','0')";
-							$ergebnis = mysql_query($query);
-							if($ergebnis == true) {
+							if($this->sql_insert_update_delete($query) == true) {
 								echo "<p class='erfolg'>Hallo $username! Du hast dich erfolgreich registriert.</p>";
 								# Logeintrag
 								$this->logEintrag(true, "hat sich registriert", "login");

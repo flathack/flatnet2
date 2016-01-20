@@ -39,14 +39,15 @@ class docu extends functions {
 		}
 
 		# Ausgabe der Doku aus der Datenbank
-		$query = "SELECT *, month(timestamp) AS monat, day(timestamp) AS tag, year(timestamp) AS jahr FROM docu ORDER BY timestamp DESC";
-		$ergebnis = mysql_query($query);
+		$query = "SELECT *, month(timestamp) AS monat, day(timestamp) AS tag, year(timestamp) AS jahr FROM docu ORDER BY timestamp DESC";	
+		$row = $this->getObjektInfo($query);
+		
 		echo  "<table class='flatnetTable'>";
 		echo  "<thead><td id='datum'>Datum</td><td id='text'>Text</td><td></td></thead>";
-		while ($row = mysql_fetch_object($ergebnis)) {
-			echo  "<tbody><td>" . $row->tag . "." . $row->monat . "." . $row->jahr . "</td><td>" . $row->text . "</td><td>";
+		for ($i = 0 ; $i < sizeof($row); $i++) {
+			echo  "<tbody><td>" . $row[$i]->tag . "." . $row[$i]->monat . "." . $row[$i]->jahr . "</td><td>" . $row[$i]->text . "</td><td>";
 			if($this->userHasRight("19", 0) == true) {
-				echo "<a href='?loeschen&loeschid=$row->id' class='highlightedLink'>X</a>";
+				echo "<a href='?loeschen&loeschid=".$row[$i]->id."' class='highlightedLink'>X</a>";
 			}
 			echo"</td></tbody>";
 		}
@@ -81,8 +82,7 @@ class docu extends functions {
 			} else {
 				$autor = $this->getUserID($_SESSION['username']);
 				$insert = "INSERT INTO docu (text, autor) VALUES ('$text','$autor')";
-				$ergebnis2 = mysql_query($insert);
-				if($ergebnis2 == true) {
+				if($this->sql_insert_update_delete($insert) == true) {
 					echo "<p class='erfolg'>Eintrag gespeichert.</p>";
 				} else {
 					echo "<p class='meldung'>Fehler beim speichern in der Datenbank.</p>";

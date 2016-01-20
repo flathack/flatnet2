@@ -9,19 +9,16 @@ include 'objekt/functions.class.php';
 
 class guildwars extends functions {
 
-
-
 	/**
 	 * Gibt den Namen des Charakter zurück.
 	 */
 	function getCharname($id) {
 		$select = "SELECT id, name FROM gw_chars WHERE id = '$id' LIMIT 1";
-		$ergebnis = mysql_query($select);
-		$row = mysql_fetch_object($ergebnis);
-		if(!isset($row->name) OR $row->name == "") {
+		$row = $this->getObjektInfo($select);
+		if(!isset($row[0]->name) OR $row[0]->name == "") {
 			$name = "Kein Name";
 		} else {
-			$name = $row->name;
+			$name = $row[0]->name;
 		}
 		return $name;
 	}
@@ -31,13 +28,12 @@ class guildwars extends functions {
 	 */
 	function getBesitzer($id) {
 		$select = "SELECT id, besitzer FROM gw_chars WHERE id = '$id' LIMIT 1";
-		$ergebnis = mysql_query($select);
-		$row = mysql_fetch_object($ergebnis);
+		$row = $this->getObjektInfo($select);
 		
-		if(!isset($row->besitzer) OR $row->besitzer == "") {
+		if(!isset($row[0]->besitzer) OR $row[0]->besitzer == "") {
 			$name = "Kein Besitzer";
 		} else {
-			$name = $row->besitzer;
+			$name = $row[0]->besitzer;
 		}
 		return $name;
 	}
@@ -95,9 +91,10 @@ class guildwars extends functions {
 
 		# Accounts ermitteln
 		$getAccounts = "SELECT * FROM gw_accounts WHERE besitzer = '$user'";
-		$ergebnis2 = mysql_query($getAccounts);
+		$row2 = $this->getObjektInfo($getAccounts);
 
-		$menge = $this->getAmount("SELECT * FROM gw_accounts WHERE besitzer = '$user'");
+		$mengeGrund = $this->getObjektInfo("SELECT count(*) as anzahl FROM gw_accounts WHERE besitzer = '$user'");
+		$menge = $mengeGrund[0]->anzahl;
 
 		# Accounts
 		echo "<form action='#account' method=post>";
@@ -105,19 +102,19 @@ class guildwars extends functions {
 			echo "<input type=radio value='1' name='gw_account' id='standard' onclick='' checked />";
 			echo "<label for='standard'>Standard Account</label>";
 		}
-		while($row2 = mysql_fetch_object($ergebnis2)) {
+		for ($i = 0 ; $i < sizeof($row2); $i++) {
 			if(!isset($_SESSION['gw_account'])) {
 				$_SESSION['gw_account'] = 1;
 			}
 
-			echo "<input onChange='this.form.submit();' type=radio value='$row2->account' name='gw_account' id='$row2->mail' onclick=''";
-			if($_SESSION['gw_account'] == $row2->account){
+			echo "<input onChange='this.form.submit();' type=radio value='$row2[0]->account' name='gw_account' id='$row2[0]->mail' onclick=''";
+			if($_SESSION['gw_account'] == $row2[0]->account){
 				echo "checked";
 			} else {
 				echo "unchecked";
 			}
 			echo " />";
-			echo "<label for='$row2->mail'>$row2->mail</label>";
+			echo "<label for='$row2[0]->mail'>$row2[0]->mail</label>";
 
 		}
 		if($menge != 0) {
@@ -152,18 +149,24 @@ class gw_costs extends guildwars {
 	
 			# Ausgabe der Doku aus der Datenbank
 			$user = $this->getUserID($_SESSION['username']);
+			
 			$query = "SELECT *, month(kaufdat) AS monat, day(kaufdat) AS tag, year(kaufdat) AS jahr FROM gwcosts WHERE besitzer = '$user' ORDER BY kaufdat DESC";
-			$ergebnis = mysql_query($query);
+			$row = $this->getObjektInfo($query);
+			
 			echo  "<table class='flatnetTable'>";
 			$summe = 0;
 			echo  "<thead><td id='datum'>Datum</td><td id=''>Text</td><td>Wert</td><td></td></thead>";
-			while ($row = mysql_fetch_object($ergebnis)) {
-				$summe = $summe + $row->wert;
-				echo  "<tbody><td>" . $row->tag . "." . $row->monat . "." . $row->jahr . "</td><td>" . $row->text . "</td><td>$row->wert €</td><td><a href='?loeschen&loeschid=$row->id' class='highlightedLink'>X</a></td></tbody>";
+			for($i = 0; $i < sizeof($row) ; $i++) {
+				$summe = $summe + $row[0]->wert;
+				echo  "<tbody>
+						<td>".$row[0]->tag.".".$row[0]->monat.".".$row[0]->jahr."</td>
+						<td>".$row[0]->text."</td>
+						<td>".$row[0]->wert." €</td><td><a href='?loeschen&loeschid=".$row[0]->id."' class='highlightedLink'>X</a></td>
+					  </tbody>";
 			}
 	
 			echo  "</table>";
-			echo "<h1>Gesamt: " . $summe . " €</h1>";
+			echo "<h1>Gesamt: ".$summe." €</h1>";
 		}
 	}
 	
@@ -201,8 +204,8 @@ class gw_costs extends guildwars {
 			} else {
 				$autor = $this->getUserID($_SESSION['username']);
 				$insert = "INSERT INTO gwcosts (text, wert, besitzer, kaufdat) VALUES ('$text','$wert','$autor','$kaufdat')";
-				$ergebnis2 = mysql_query($insert);
-				if($ergebnis2 == true) {
+				
+				if($this->sql_insert_update_delete($insert) == true) {
 					echo "<p class='erfolg'>Eintrag gespeichert.</p>";
 				} else {
 					echo "<p class='meldung'>Fehler beim speichern in der Datenbank.</p>";
@@ -236,11 +239,11 @@ class gw_costs extends guildwars {
 			echo "<h3>Account Info</h3>";
 			$user = $this->getUserID($_SESSION['username']);
 			$select2 = "SELECT DATEDIFF(NOW(), MIN(kaufdat)) AS differenz, sum(wert) AS summe FROM gwcosts WHERE besitzer = '$user'";
-	
-			$ergebnis = mysql_query($select2);
-			while($row = mysql_fetch_object($ergebnis)) {
-				$differenz = $row->differenz;
-				$summe = $row->summe;
+			
+			$row = $this->getObjektInfo($select2);
+			for($i = 0; $i < sizeof($row) ; $i++ ) {
+				$differenz = $row[0]->differenz;
+				$summe = $row[0]->summe;
 			}
 	
 			if($differenz == 0) {
@@ -281,27 +284,27 @@ class gw_kalender extends guildwars {
 				, month(geboren) AS monat
 				, day(geboren) as tag FROM gw_chars
 				WHERE month(geboren) = '$i' ORDER BY tag";
-	
-				$ergebnis = mysql_query($select);
-	
-				$menge = mysql_num_rows($ergebnis);
+				
+				$row = $this->getObjektInfo($select);
+		
+				$mengeGrund = $this->getObjektInfo("SELECT count(*) AS anzahl FROM gw_chars WHERE month(geboren) = '$i'");
+				$menge = $mengeGrund[0]->anzahl;
+				
 				$j = 1;
 				if($menge > 4) { # wenn nicht genug Platz ist.
-					while($row = mysql_fetch_object($ergebnis) AND $j <= 4) {
+					for($k = 0; $k < sizeof($row) AND $j <= 4; $k++) {
 	
-						$monat = $row->monat;
+						$monat = $row[$k]->monat;
 	
-						echo "<a href='charakter.php?charID=$row->id'><strong>". $row->tag . ".</strong> "
-								. $row->name . " (" . $this->getUserName($row->besitzer) . ") </a><br>";
+						echo "<a href='charakter.php?charID=$row[0]->id'><strong>". $row[$k]->tag . ".</strong> "
+								. $row[$k]->name . " (" . $this->getUserName($row[$k]->besitzer) . ") </a><br>";
 						$j++;
 	
 					}
 					echo "<br><a href='?month=$monat#gebs' class='kalenderLink'>alle</a>";
 				} else { # wenn genug plazt ist.
-					while($row = mysql_fetch_object($ergebnis)) {
-	
-						echo "<a href='charakter.php?charID=$row->id'><strong>". $row->tag . ".</strong> " . $row->name . " (" . $this->getUserName($row->besitzer) .  ")</a><br>";
-	
+					for($k = 0 ; $k < sizeof($row) ; $k++) {	
+						echo "<a href='charakter.php?charID=".$row[$k]->id."'><strong>". $row[$k]->tag . ".</strong> " . $row[$k]->name . " (" . $this->getUserName($row[$k]->besitzer) .  ")</a><br>";
 					}
 				}
 				echo "</div>";
@@ -324,16 +327,17 @@ class gw_kalender extends guildwars {
 					, day(geboren) as tag
 					, CURRENT_DATE,(YEAR(CURRENT_DATE)-YEAR(geboren))-(RIGHT(CURRENT_DATE,5)<RIGHT(geboren,5)) AS jahr
 					FROM gw_chars WHERE month(geboren) = '$monat' ORDER BY tag";
+					
+					$row = $this->getObjektInfo($select);
 					$monthName = $this->getMonthName($monat);
-					$ergebnis = mysql_query($select);
 						
 					echo "<div id='draggable' class='summe'><a class='closeSumme' href='?#gebs'>X</a>";
 					echo "<h2>Detailansicht $monthName</h2>";
-					while($row = mysql_fetch_object($ergebnis)) {
+					for ($i = 0 ; $i < sizeof($row) ; $i++) {
 						# Nächsten Geb berechnen
-						$wirdalt = $row->jahr + 1;
+						$wirdalt = $row[$i]->jahr + 1;
 						echo "<div class=''>";
-						echo "<a href='charakter.php?charID=$row->id'><strong>". $row->tag . "." . $row->monat . ":</strong> " . $row->name . " (" . $this->getUserName($row->besitzer) .  ") wird " . $wirdalt . " Jahre alt</a>";
+						echo "<a href='charakter.php?charID=".$row[$i]->id."'><strong>". $row[$i]->tag . "." . $row[$i]->monat . ":</strong> " . $row[$i]->name . " (" . $this->getUserName($row[$i]->besitzer) .  ") wird " . $wirdalt . " Jahre alt</a>";
 						echo "</div>";
 					}
 					echo "</div>";
@@ -377,10 +381,11 @@ class gw_charakter extends guildwars {
 			$limit = 5;
 				
 			# Menge aktueller Benutzer bekommen.
-			$menge = $this->getAmount("SELECT Name FROM benutzer ORDER BY Name");
+			$mengeGrund = $this->getObjektInfo("SELECT count(*) as anzahl FROM benutzer");
+			$menge = $mengeGrund[0]->anzahl;
 				
 			# Benutzer in Array laden
-			$allUsers = $this->getObjectsToArray("SELECT id, Name, rights FROM benutzer ORDER BY Name");
+			$allUsers = $this->getObjektInfo("SELECT id, Name, rights FROM benutzer ORDER BY Name");
 				
 			# Radio Buttons wenn weniger als Menge X, ansonsten Auswahlliste
 				
@@ -410,7 +415,6 @@ class gw_charakter extends guildwars {
 			}
 				
 			# SELECT, ab bestimmter Menge
-			#$getusersErgeb2 = mysql_query($getusers);
 			if($menge > $limit) {
 				echo "<select class='selectUsers' onChange='this.form.submit();' name='userNameForGW' onclick='' >";
 	
@@ -485,18 +489,17 @@ class gw_charakter extends guildwars {
 			} else {
 				$sort = "geboren";
 			}
-	
-			$birthdays = mysql_query("SELECT
+			
+			$birthdaysSelect = "SELECT
 					id, name, besitzer, geboren, rasse,	klasse,
 					stufe, handwerk1, handwerk2, handwerk1stufe,
 					handwerk2stufe, erkundung, spielstunden,
 					CURRENT_DATE,(YEAR(CURRENT_DATE)-YEAR(geboren))-(RIGHT(CURRENT_DATE,5)<RIGHT(geboren,5)) AS jahre,
 					year(timestamp) AS jahr, month(timestamp) AS monat, day(timestamp) AS tag
 					FROM gw_chars
-					WHERE besitzer = '$user' AND account = '$account' ORDER BY $sort");
+					WHERE besitzer = '$user' AND account = '$account' ORDER BY $sort";
 	
-			# Anzahl der Datensätze ermitteln
-			$num = mysql_num_rows($birthdays);
+			$dsatz = $this->getObjektInfo($birthdaysSelect);
 	
 			$today = date("Y/m/d");
 			$tyear = date("Y");
@@ -506,10 +509,10 @@ class gw_charakter extends guildwars {
 			$getAllSpielstunden = $this->getObjektInfo("SELECT sum(spielstunden) as summe FROM gw_chars WHERE besitzer = '$user' AND account = '$account'");
 	
 			# Ausgabe
-			while ($dsatz = mysql_fetch_assoc($birthdays)) {
+			for ($i = 0 ; $i < sizeof($dsatz) ; $i++) {
 	
 				# Erstelldatum in Variable ziehen
-				$gebdat = date("$tyear/m/d", strtotime($dsatz["geboren"]));
+				$gebdat = date("$tyear/m/d", strtotime($dsatz[$i]->geboren));
 	
 				# Wenn ein Geb schon vergangen ist, den fürs nächste Jahr ausrechnen
 				if(strtotime($gebdat) < strtotime($today)) {
@@ -520,12 +523,12 @@ class gw_charakter extends guildwars {
 				$days = ceil((strtotime($gebdat) - strtotime($today)) / (24 * 3600));
 	
 				# Namen in die Variable laden
-				$name = $dsatz["name"];
-				$klasse = $dsatz["klasse"];
-				$spielstunden = $dsatz["spielstunden"];
-				$stufe = $dsatz["stufe"];
-				$id = $dsatz["id"];
-				$rasse = $dsatz["rasse"];
+				$name = $dsatz[$i]->name;
+				$klasse = $dsatz[$i]->klasse;
+				$spielstunden = $dsatz[$i]->spielstunden;
+				$stufe = $dsatz[$i]->stufe;
+				$id = $dsatz[$i]->id;
+				$rasse = $dsatz[$i]->rasse;
 	
 				# braucht man das?
 				$tage = $days;
@@ -534,8 +537,8 @@ class gw_charakter extends guildwars {
 				# Wenn bisher keine Stunden eingetragen wurden und somit
 				# die Summe aller Spielstunden NULL ist, dann entsteht
 				# ein "division with NULL fehler".
-				if($getAllSpielstunden->summe != 0) {
-					$ProzenzDerSpielstunden = round($spielstunden / $getAllSpielstunden->summe * 100, 2);
+				if($getAllSpielstunden[0]->summe != 0) {
+					$ProzenzDerSpielstunden = round($spielstunden / $getAllSpielstunden[0]->summe * 100, 2);
 				} else {
 					$ProzenzDerSpielstunden = 0;
 				}
@@ -544,19 +547,19 @@ class gw_charakter extends guildwars {
 				$ausgabe .= "<div class='gwstart1'>";
 	
 				$ausgabe .= "<div class='IconPlacement'>
-						<img height=60px width=60px src='../images/Icons/" . $dsatz["klasse"] . "Ico.png'></img></div>";
+						<img height=60px width=60px src='../images/Icons/" . $dsatz[$i]->klasse . "Ico.png'></img></div>";
 					
 				# Klasse für CSS selektieren
 				$ausgabe .= "<div id=";
-				if($dsatz["klasse"] == "Krieger") 		{	$ausgabe .= "'gwkrieger'";			}
-				if($dsatz["klasse"] == "Wächter") 		{	$ausgabe .= "'gwwaechter'";			}
-				if($dsatz["klasse"] == "Dieb")			{ 	$ausgabe .= "'gwdieb'"; 			}
-				if($dsatz["klasse"] == "Waldläufer") 	{	$ausgabe .= "'gwwaldlaeufer'";		}
-				if($dsatz["klasse"] == "Ingenieur") 	{	$ausgabe .= "'gwengineer'";			}
-				if($dsatz["klasse"] == "Elementarmagier") {	$ausgabe .= "'gwelementarmagier'";	}
-				if($dsatz["klasse"] == "Nekromant") 	{	$ausgabe .= "'gwnekromant'";		}
-				if($dsatz["klasse"] == "Mesmer") 		{	$ausgabe .= "'gwmesmer'";			}
-				if($dsatz["klasse"] == "Widergänger") 	{	$ausgabe .= "'gwwidergaenger'";		}
+				if($dsatz[$i]->klasse == "Krieger") 		{	$ausgabe .= "'gwkrieger'";			}
+				if($dsatz[$i]->klasse == "Wächter") 		{	$ausgabe .= "'gwwaechter'";			}
+				if($dsatz[$i]->klasse == "Dieb")			{ 	$ausgabe .= "'gwdieb'"; 			}
+				if($dsatz[$i]->klasse == "Waldläufer") 		{	$ausgabe .= "'gwwaldlaeufer'";		}
+				if($dsatz[$i]->klasse == "Ingenieur") 		{	$ausgabe .= "'gwengineer'";			}
+				if($dsatz[$i]->klasse == "Elementarmagier") {	$ausgabe .= "'gwelementarmagier'";	}
+				if($dsatz[$i]->klasse == "Nekromant") 		{	$ausgabe .= "'gwnekromant'";		}
+				if($dsatz[$i]->klasse == "Mesmer") 			{	$ausgabe .= "'gwmesmer'";			}
+				if($dsatz[$i]->klasse == "Widergänger") 	{	$ausgabe .= "'gwwidergaenger'";		}
 				$ausgabe .= ">";
 	
 				$ausgabe .= "<h3><a href='charakter.php?charID=" . $id . "'>" . substr($name, 0, 19) . " <br>[" . $stufe . "]</a></h3>";
@@ -565,21 +568,21 @@ class gw_charakter extends guildwars {
 	
 				$ausgabe .= "
 				<div class='IconRasse'>
-				<img height=30px width=30px src='../images/Icons/rassen/" . $dsatz["rasse"] . "Ras.png'></img>
+				<img height=30px width=30px src='../images/Icons/rassen/" . $dsatz[$i]->rasse. "Ras.png'></img>
 				</div>";
 	
-				if($dsatz["geboren"] != "0000-00-00") {
-					$nextBday = $dsatz["jahre"] + 1;
-					$ausgabe .= "<p>". $nextBday . " 'er Geburtstag in " . /* $tmp[$days]	.=	*/ $tage . " Tagen </p>";
+				if($dsatz[$i]->geboren != "0000-00-00") {
+					$nextBday = $dsatz[$i]->jahre + 1;
+					$ausgabe .= "<p>". $nextBday . " 'er Geburtstag in " . $tage . " Tagen </p>";
 				}
 	
-				if($dsatz["jahre"] < 100) {
-					$ausgabe .= "<p>Alter: " . $dsatz["jahre"]. " Jahre.</p>";
+				if($dsatz[$i]->jahre < 100) {
+					$ausgabe .= "<p>Alter: " . $dsatz[$i]->jahre. " Jahre.</p>";
 				}
 	
 				# Erkundungsbalken anzeigen:
-				$erkundungsGroesse = $dsatz["erkundung"] / 100 * 270;
-				if($dsatz["erkundung"] == 100) {
+				$erkundungsGroesse = $dsatz[$i]->erkundung / 100 * 270;
+				if($dsatz[$i]->erkundung == 100) {
 					$stern = "&#10039;";
 					$ausgabe .= "
 					<style>
@@ -600,7 +603,7 @@ class gw_charakter extends guildwars {
 				} else {
 					$ausgabe .= "
 					<style>
-					.StyleGW" . $dsatz["id"] . " {
+					.StyleGW" . $dsatz[$i]->id . " {
 							background-color: orange;
 							width: " . $erkundungsGroesse . "px;
 							position: relative;
@@ -619,10 +622,10 @@ class gw_charakter extends guildwars {
 				# Style für Erkundung: Ende
 	
 				# Ausgabe für Erkundung:
-				$ausgabe .= "<div id='erkundungAussen'>" . $dsatz["erkundung"] . " % Erkundet <strong>$stern</strong>" . "</div><p class='StyleGW". $dsatz["id"] ."'></p>";
+				$ausgabe .= "<div id='erkundungAussen'>" . $dsatz[$i]->erkundung . " % Erkundet <strong>$stern</strong>" . "</div><p class='StyleGW". $dsatz[$i]->id ."'></p>";
 	
 				# Bearbeitet am:
-				$ausgabe .= "<p id='lowerInfo'>Bearbeitet " . $dsatz["tag"] . "." . $dsatz["monat"] . "." . $dsatz["jahr"] . "</p>";
+				$ausgabe .= "<p id='lowerInfo'>Bearbeitet " . $dsatz[$i]->tag . "." . $dsatz[$i]->monat . "." . $dsatz[$i]->jahr . "</p>";
 	
 				# Close tags
 				$ausgabe .= "</div>";
@@ -631,10 +634,12 @@ class gw_charakter extends guildwars {
 			}
 				
 			# Seite erweitern, je nachdem wie viele Chars der Account / Benutzer hat.
-			$getAnzahlGwChars = $this->getAmount("SELECT id FROM gw_chars WHERE besitzer = '$user' AND account = '$account' ");
-			$getAnzahlGwChars = $getAnzahlGwChars / 3;
+			
+			$getAnzahlGwCharsGrund = $this->getObjektInfo("SELECT count(*) as anzahl FROM gw_chars WHERE besitzer = '$user' AND account = '$account' ");
+			$getAnzahlAnzahl = $getAnzahlGwCharsGrund[0]->anzahl;
+			$getAnzahlAnzahl = $getAnzahlAnzahl / 3;
 				
-			for ($i = 0; $i < $getAnzahlGwChars ; $i++) {
+			for ($i = 0; $i < $getAnzahlAnzahl ; $i++) {
 				$ausgabe .= "<br><br><br><br><br><br><br><br><br><br>";
 			}
 				
@@ -660,11 +665,11 @@ class gw_charakter extends guildwars {
 			handwerk1stufe, handwerk2stufe, erkundung, spielstunden, account
 			FROM gw_chars
 			WHERE besitzer = '$user' AND account = '$account' ORDER BY geboren";
-	
-			$ergebnis = mysql_query($getchars);
+			
+			$row = $this->getObjektInfo($getchars);
 			$ausgabe .= "<ul>";
-			while($row = mysql_fetch_object($ergebnis)) {
-				$ausgabe .= "<li><a href='?charID=$row->id'>$row->name</a></li>";
+			for($i = 0 ; $i < sizeof($row); $i++ ) {
+				$ausgabe .= "<li><a href='?charID=".$row[$i]->id."'>".$row[$i]->name."</a></li>";
 			}
 			$ausgabe .= "</ul>";
 	
@@ -682,18 +687,17 @@ class gw_charakter extends guildwars {
 		$user = $_SESSION['selectGWUser'];
 		$getFirstCharInfo = "SELECT id, name, besitzer, geboren, rasse, klasse, stufe, handwerk1, handwerk2,
 		handwerk1stufe, handwerk2stufe, erkundung, spielstunden, notizen FROM gw_chars WHERE id = '$id'";
-		$resultCharInfo = mysql_query($getFirstCharInfo);
-		$row = mysql_fetch_object($resultCharInfo);
+		$row = $this->getObjektInfo($getFirstCharInfo);
 	
 		# CURRENT USER:
 		$currentUser = $this->getUserID($_SESSION['username']);
 	
 		# Abfangen, wenn kein Charakter gefunden wurde und die Variable leer ist.
-		if(!isset($row->besitzer)) {
+		if(!isset($row[0]->besitzer)) {
 			echo "<p class='meldung'>Hör auf in der Adressleiste rumzuspielen!!!</p>";
 			exit;
 		}
-		$charOwner = $row->besitzer;
+		$charOwner = $row[0]->besitzer;
 		if($this->userHasRight("9", 0) == false AND $currentUser != $charOwner) {
 			echo "<p class='meldung'>Du darfst dir diesen Charakter nicht ansehen.</p>";
 			exit;
@@ -754,16 +758,16 @@ class gw_charakter extends guildwars {
 	
 					# Accounts ermitteln
 					$getAccounts = "SELECT * FROM gw_accounts WHERE besitzer = '$userID'";
-					$ergebnis2 = mysql_query($getAccounts);
+					$row2 = $this->getObjektInfo($getAccounts);
 	
-					while($row2 = mysql_fetch_object($ergebnis2)) {
+					for ($i = 0; $i < sizeof($row2) ; $i++) {
 							
 						$ausgabe.="<option ";
 							
-						if($_SESSION['gw_account'] == $row2->account) {
+						if($_SESSION['gw_account'] == $row2[$i]->account) {
 							$ausgabe.= " selected ";
 						}
-						$ausgabe.= " value='$row2->account'>" . $row2->mail . "</option>";
+						$ausgabe.= " value='".$row2[$i]->account."'>" . $row2[$i]->mail . "</option>";
 					}
 	
 					$ausgabe.= "</select></td>";
@@ -860,12 +864,7 @@ class gw_charakter extends guildwars {
 					$ausgabe.= "<td>Erkundung</td>";
 					$ausgabe.= "<td><input type=number name='newerkundung' value='' placeholder='z. B. 76 ohne %' /></td>";
 					$ausgabe.= "</tr>";
-	
-					#$ausgabe.= "<tr><td>Notizen</td></tr>";
-	
-					#$ausgabe.= "<tr>";
-					#$ausgabe.= "<td colspan='4'><textarea name='newnotizen' class='ckeditor' id='newNotizen'> </textarea></td>";
-					#$ausgabe.= "</tr>";
+
 					$ausgabe.= "<tr></tr>";
 					$ausgabe.= "<tr><td><input type='submit' name='charerstellen' value='Speichern' /></td></tr>";
 					$ausgabe.= "</table>";
@@ -893,10 +892,9 @@ class gw_charakter extends guildwars {
 						$charname = $_POST['newCharName'];
 						# check ob name bereits existiert.
 						$check = "SELECT name FROM gw_chars WHERE name = '$charname'";
-						$checkergebnis = mysql_query($check);
-						$row = mysql_fetch_object($checkergebnis);
-						if(isset($row->name)) {
-							if($row->name == $charname) {
+						$row = $this->getObjektInfo($check);
+						if(isset($row[0]->name)) {
+							if($row[0]->name == $charname) {
 								$fehlermeldung .= "<p class='meldung'>Der Charakter existiert bereits.</p>";
 							}
 						} else {
@@ -944,8 +942,8 @@ class gw_charakter extends guildwars {
 							('$charname','$besitzer','$geboren','$rasse','$klasse','$stufe',
 							'$handwerk1','$handwerk2','$handwerk1stufe','$handwerk2stufe',
 							'$erkundung','$spielstunden','$account')";
-							$ergebnis = mysql_query($insert);
-							if($ergebnis == true) {
+							
+							if($this->sql_insert_update_delete($insert) == true) {
 								$fehlermeldung .= '<p class="erfolg">Charakter angelegt.</p>';
 							} else {
 								$fehlermeldung .= "<p class='meldung'>Fehler</p>";
@@ -1009,11 +1007,8 @@ class gw_charakter extends guildwars {
 					notizen='$notizen', spielstunden='$stunden', geboren='$geboren',
 					erkundung='$erkundung', name='$name', rasse='$rasse', klasse='$klasse'
 					WHERE id='$charID'";
-	
-					$update = mysql_query($charUpdate) OR die("Error: $charUpdate <br>".mysql_error());
-	
-	
-					if($update == true) {
+					
+					if($this->sql_insert_update_delete($charUpdate) == true) {
 						echo "<p class='erfolg'>Der Charakter wurde geändert!</p>";
 					}
 				} else {
@@ -1072,13 +1067,12 @@ class gw_charakter extends guildwars {
 				$this->saveCharakterStunden($loeschid);
 	
 				$loeschQuery = "DELETE FROM `$tabelle` WHERE `id` = $loeschid";
-				$ergebnis = mysql_query($loeschQuery) OR die("Error: $loeschQuery <br>".mysql_error());
 	
-				if($ergebnis == true) {
+				if($this->sql_insert_update_delete($loeschQuery) == true) {
 					echo "<p class='erfolg'>Der Charakter wurde gelöscht!</p>";
 					exit;
 				} else {
-					echo "<p id='meldung'>Es gab einen Fehler.</p>";
+					echo "<p id='meldung'>Es gab einen Fehler. <a href='start.php'>Zurück</a></p>";
 				}
 			}
 		}
@@ -1094,14 +1088,14 @@ class gw_charakter extends guildwars {
 	
 		# Charakterstunden bekommen
 		$charInfos = $this->getObjektInfo("SELECT * FROM gw_chars WHERE besitzer = '$userID' AND id = '$id' LIMIT 1");
-		$charAccount = $charInfos->account;
+		$charAccount = $charInfos[0]->account;
 		# bisherige gelöschte Stunden bekommen:
 		$bisherigeStunden = $this->getObjektInfo("SELECT * FROM account_infos WHERE besitzer = '$userID' AND attribut = 'gw_geloschte_stunden' AND account = '$charAccount' LIMIT 1");
 		# Neuen Wert ausrechnen
-		$neuerWert = $bisherigeStunden->wert + $charInfos->spielstunden;
+		$neuerWert = $bisherigeStunden[0]->wert + $charInfos[0]->spielstunden;
 	
 		# Update oder Insert durchführen.
-		if(!isset($bisherigeStunden->wert) OR $bisherigeStunden->wert == "") {
+		if(!isset($bisherigeStunden[0]->wert) OR $bisherigeStunden[0]->wert == "") {
 			$this->sql_insert_update_delete("INSERT INTO account_infos (besitzer, attribut, wert, account) VALUES ('$userID','gw_geloschte_stunden','0','$charAccount')");
 			# jetzt updaten
 			$this->sql_insert_update_delete("UPDATE account_infos SET wert='$neuerWert' WHERE besitzer = '$userID' AND attribut = 'gw_geloschte_stunden' AND account='$charAccount'");
@@ -1113,7 +1107,7 @@ class gw_charakter extends guildwars {
 	/**
 	 * Erzeugt eine Kachel an der rechten Seite des Bildschirms.
 	 * Hier tauchen Informationen zum Account auf, darunter fällt:
-	 * Spieldtunden,
+	 * Spielstunden,
 	 * davon gelöscht,
 	 * Welt erkundet,
 	 * Anzahl der Chars,
@@ -1136,8 +1130,8 @@ class gw_charakter extends guildwars {
 			# Erkundung
 			$eigeneWeltErkundet = $this->getObjektInfo("SELECT sum(erkundung) as summe FROM gw_chars WHERE besitzer = '$userID' AND account = '$aktuellerAccount'");
 			$alleWeltErkundet = $this->getObjektInfo("SELECT sum(erkundung) as summe FROM gw_chars");
-			$eigeneErkundung = $eigeneWeltErkundet->summe / 100;
-			$alleErkundung = $alleWeltErkundet->summe / 100;
+			$eigeneErkundung = $eigeneWeltErkundet[0]->summe / 100;
+			$alleErkundung = $alleWeltErkundet[0]->summe / 100;
 				
 			# Anzahl Charakter
 			$summeChars = $this->getObjektInfo("SELECT count(*) as anzahl FROM gw_chars WHERE besitzer = '$userID' AND account = '$aktuellerAccount'");
@@ -1148,21 +1142,21 @@ class gw_charakter extends guildwars {
 				
 			$gelöschteStundenGesamt = $this->getObjektInfo("SELECT sum(wert) as summe FROM account_infos WHERE attribut = 'gw_geloschte_stunden'");
 			$EigeneGelöschteStunden = $this->getObjektInfo("SELECT sum(wert) as summe FROM account_infos WHERE besitzer = '$userID' AND attribut = 'gw_geloschte_stunden' AND account = '$aktuellerAccount'");
-			$eigeneStundenGesamt = $EigeneGelöschteStunden->summe + $alleEigenenStunden->summe;
-			$allePlusGelöschte = $alleSpielstunden->summe + $gelöschteStundenGesamt->summe;
+			$eigeneStundenGesamt = $EigeneGelöschteStunden[0]->summe + $alleEigenenStunden[0]->summe;
+			$allePlusGelöschte = $alleSpielstunden[0]->summe + $gelöschteStundenGesamt[0]->summe;
 				
-			$prozent = round($alleEigenenStunden->summe / $alleSpielstunden->summe * 100, 2);
+			$prozent = round($alleEigenenStunden[0]->summe / $alleSpielstunden[0]->summe * 100, 2);
 				
 			echo "<h2>$username</h2>";
 				
 			echo "<table id='table'>";
 				
 			echo "<tr><td>Spielstunden:<br> <strong>" . $eigeneStundenGesamt . " [$prozent %] </strong><br>
-			davon gelöscht:<br> <strong>" . $EigeneGelöschteStunden->summe  . "</strong> <br>
+			davon gelöscht:<br> <strong>" . $EigeneGelöschteStunden[0]->summe  . "</strong> <br>
 			von insgesamt <strong><br> " . $allePlusGelöschte . "</strong> Stunden</td></tr>";
 				
 			echo "<tr><td>Welt erkundet:<br> " . $eigeneErkundung . "x von " . $alleErkundung . "x</td></tr>";
-			echo "<tr><td>Anzahl Chars: " . $summeChars->anzahl . " Stk.</td></tr>";
+			echo "<tr><td>Anzahl Chars: " . $summeChars[0]->anzahl . " Stk.</td></tr>";
 				
 			# Der Nächste Geburtstag:
 				
@@ -1197,7 +1191,7 @@ class gw_handwerk extends guildwars {
 			# Maximale matID bekommen:
 			$query = "SELECT max(matID) as max FROM gwmatlist";
 			$max = $this->getObjektInfo($query);
-			$neueGesamtZahlMitErweiterung = $max->max;
+			$neueGesamtZahlMitErweiterung = $max[0]->max;
 				
 			$this->saveAllMats($neueGesamtZahlMitErweiterung);
 		
@@ -1231,7 +1225,7 @@ class gw_handwerk extends guildwars {
 				
 				# Materialien dieser Kategorie rausfiltern:
 				$kat = $i +1;
-				$matsDieserKat = $this->getObjectsToArray("SELECT * FROM gwmatlist WHERE kategorie = '$kat' ORDER BY matID");
+				$matsDieserKat = $this->getObjektInfo("SELECT * FROM gwmatlist WHERE kategorie = '$kat' ORDER BY matID");
 				$zähler = 0;
 				echo "<tbody>";
 				for ($j = 0 ; $j < sizeof($matsDieserKat); $j++) {
@@ -1394,7 +1388,7 @@ class gw_handwerk extends guildwars {
 			# Maximale matID bekommen:
 			$query = "SELECT max(matID) as max FROM gwmatlist";
 			$max = $this->getObjektInfo($query);
-			$nextUsefulID = $max->max + 1;
+			$nextUsefulID = $max[0]->max + 1;
 			
 			if(isset($_POST['saveNewMats'])) {
 				
@@ -1442,7 +1436,7 @@ class gw_handwerk extends guildwars {
 			
 			# Infos:
 			echo "<h3>Informationen</h3>";
-			echo "<p>Es gibt derzeit " . $max->max . " Materialien. </p>";
+			echo "<p>Es gibt derzeit " . $max[0]->max . " Materialien. </p>";
 			
 			echo "<table class='flatnetTable'>";
 			echo "<thead><td>Name</td><td>Kategorie</td><td>Preis in Kupfer beim Kaufmann</td></thead>";
@@ -1478,10 +1472,10 @@ class gw_handwerk extends guildwars {
 	 */
 	function getMatName($id) {
 		$select = "SELECT * FROM gwmatlist WHERE matID = '$id' LIMIT 1";
-		$ergebnis = mysql_query($select);
-		$row = mysql_fetch_object($ergebnis);
-		if(isset($row->matName)) {
-			$name = $row->matName;
+		
+		$info = $this->getObjektInfo($select);
+		if(isset($info[0]->matName)) {
+			$name = $info[0]->matName;
 		} else {
 			$name = "none";
 		}
@@ -1502,12 +1496,10 @@ class gw_handwerk extends guildwars {
 			$account = 1;
 		}
 		$select = "SELECT * FROM gwusersmats WHERE matID = '$mat' AND besitzer = '$user' AND account = '$account' LIMIT 1";
+		$row = $this->getObjektInfo($select);
 	
-		$ergebnis = mysql_query($select);
-		$row = mysql_fetch_object($ergebnis);
-	
-		if(isset($row->matAnzahl)) {
-			$anzahl = $row->matAnzahl;
+		if(isset($row[0]->matAnzahl)) {
+			$anzahl = $row[0]->matAnzahl;
 		} else {
 			$anzahl = 0;
 		}
@@ -1560,9 +1552,8 @@ class gw_handwerk extends guildwars {
 							VALUES ('$user','$matID','$matAnzahl','$account')";
 						}
 	
-						$ergebnis = mysql_query($query);
 	
-						if($ergebnis == true) {
+						if($this->sql_insert_update_delete($query) == true) {
 							$erfolg = $erfolg + 1;
 						} else {
 							$fehler = $fehler + 1;
@@ -1570,8 +1561,8 @@ class gw_handwerk extends guildwars {
 					}
 				}
 				if($fehler > 0) {
-					echo "<p class='meldung'>Fehler: " . $fehler;
-					echo "<br>Erfolgreich: " . $erfolg . "</p>";
+					echo "<p class='meldung'>Übersprungen, da keine Änderung: " . $fehler . " Materialien</p>";
+					echo "<p class='erfolg'>Erfolgreich gespeicherte Änderungen: " . $erfolg . "</p>";
 				} else {
 					echo "<p class='erfolg'>Deine Materialien wurden gespeichert. <br>Fehler: " . $fehler;
 					echo "<br>Erfolgreich: " . $erfolg . "</p>";
@@ -1600,24 +1591,15 @@ class gw_handwerk extends guildwars {
 		WHERE matID = '$id'
 		AND besitzer = '$user'
 		AND account='$account'";
-		$ergebnis = mysql_query($select);
-		$menge = mysql_num_rows($ergebnis);
+		
+		$row = $this->getObjektInfo($select);
 	
-		if($menge > 0) {
+		if(isset($row[0]->id) AND $row[0]->id > 0) {
 			return true;
 		} else {
 			return false;
 		}
 	
-	}
-	
-	/**
-	 * Zeigt den Knopf zum Namenspeichern
-	 */
-	function showSaveAllNamesButton() {
-		if($this->userHasRight("16", 0) == true) {
-			echo "<input type=submit name=saveMatNames value='Namen speichern' />";
-		}
 	}
 	
 	/**
@@ -1678,13 +1660,12 @@ class gw_handwerk extends guildwars {
 	function getMatID($name) {
 		$user = $this->getUserID($_SESSION['username']);
 		$select = "SELECT * FROM gwmatlist WHERE matName = '$name' LIMIT 1";
-		$ergebnis = mysql_query($select);
-		$row = mysql_fetch_object($ergebnis);
+		$row = $this->getObjektInfo($select);
 	
-		if(!isset($row->matID)) {
+		if(!isset($row[0]->matID)) {
 			$matid = 0;
 		} else {
-			$matid = $row->matID;
+			$matid = $row[0]->matID;
 		}
 	
 		return $matid;
@@ -1700,13 +1681,12 @@ class gw_handwerk extends guildwars {
 		$matID = $this->getMatID($matName);
 		$account = $_SESSION['gw_account'];
 		$select = "SELECT * FROM gwusersmats WHERE besitzer = '$user' AND matID = '$matID' AND account = '$account' LIMIT 1";
-		$ergebnis = mysql_query($select);
-		$row = mysql_fetch_object($ergebnis);
+		$row = $this->getObjektInfo($select);
 	
-		if(!isset($row->matAnzahl)) {
+		if(!isset($row[0]->matAnzahl)) {
 			$matAnzahl = 0;
 		} else {
-			$matAnzahl = $row->matAnzahl;
+			$matAnzahl = $row[0]->matAnzahl;
 		}
 	
 		return $matAnzahl;
@@ -1726,13 +1706,16 @@ class gw_handwerk extends guildwars {
 		# Select
 		$select1 = "SELECT * FROM gw_chars WHERE handwerk1stufe >= 400 AND besitzer = $user AND handwerk1 = '$beruf' AND account = $account";
 		$select2 = "SELECT * FROM gw_chars WHERE handwerk2stufe >= 400 AND besitzer = $user AND handwerk2 = '$beruf' AND account = $account";
-		$summe = $this->getAmount($select1) + $this->getAmount($select2);
-	
-		if($summe > 0) {
+		$info1 = $this->getObjektInfo($select1);
+		$info2 = $this->getObjektInfo($select2);
+		
+		# Check ob der Nutzer einen Charakter hat.
+		if(isset($info1[0]->id) OR isset($info2[0]->id)) {
 			return true;
 		} else {
 			return false;
 		}
+
 	}
 	
 	/**
@@ -1861,26 +1844,27 @@ class gw_handwerk extends guildwars {
 			$besitzer = $this->getUserID($_SESSION['username']);
 				
 			$select = "SELECT * FROM gw_chars WHERE handwerk1 = '$beruf' AND besitzer = '$besitzer' OR handwerk2 = '$beruf' AND besitzer = '$besitzer'";
-				
-			$ergebnis = mysql_query($select);
-			while($row = mysql_fetch_object($ergebnis)) {
-				if($row->handwerk1 == $beruf) {
-					if($row->handwerk1stufe == 500 OR $row->handwerk1stufe >= 400) {
+			
+			$row = $this->getObjektInfo($select);
+			
+			for ($i = 0 ; $i < sizeof($row) ; $i++) {
+				if($row[$i]->handwerk1 == $beruf) {
+					if($row[$i]->handwerk1stufe == 500 OR $row[$i]->handwerk1stufe >= 400) {
 						$class = "bereichLinkMaster"; $mark = "&checkmark;";
 					} else { $class = "bereichLink2"; $mark = "";
 					}
 				} else {
-					if($row->handwerk2stufe == 500 OR $row->handwerk2stufe >= 400) {
+					if($row[$i]->handwerk2stufe == 500 OR $row[$i]->handwerk2stufe >= 400) {
 						$class = "bereichLinkMaster"; $mark = "&checkmark;";
 					} else { $class = "bereichLink2"; $mark = "";
 					}
 				}
 					
-				$ausgabe .= "<div class='$class'><a href='charakter.php?charID=$row->id' class=''>" . $row->name . " ";
-				if($row->handwerk1 == $beruf) {
-					$ausgabe .= "(" . $row->handwerk1stufe . ") $mark</a></div>";
+				$ausgabe .= "<div class='$class'><a href='charakter.php?charID=".$row[$i]->id."' class=''>" . $row[$i]->name . " ";
+				if($row[$i]->handwerk1 == $beruf) {
+					$ausgabe .= "(" . $row[$i]->handwerk1stufe . ") $mark</a></div>";
 				} else {
-					$ausgabe .= "(" . $row->handwerk2stufe . ") $mark</a></div>";
+					$ausgabe .= "(" . $row[$i]->handwerk2stufe . ") $mark</a></div>";
 				}
 			}
 				
@@ -2316,12 +2300,17 @@ class gw_handwerk extends guildwars {
 		echo "<h2>Handwerks-Ranking</h2>";
 	
 		$currentUserID = $this->getUserID($_SESSION['username']);
-		$UserRanking = $this->getObjectsToArray("SELECT *, sum(matAnzahl) as summe FROM gwusersmats WHERE besitzer = '$currentUserID'");
-		$UserRanking2 = $this->getObjectsToArray("SELECT *, sum(matAnzahl) as summe FROM gwusersmats GROUP BY besitzer ORDER BY summe DESC");
+		$UserRanking = $this->getObjektInfo("SELECT *, sum(matAnzahl) as summe FROM gwusersmats WHERE besitzer = '$currentUserID'");
+		$UserRanking2 = $this->getObjektInfo("SELECT *, sum(matAnzahl) as summe FROM gwusersmats GROUP BY besitzer ORDER BY summe DESC");
 	
 	
 		echo "Du hast insgesamt ";
-		echo $UserRanking[0]->summe . " eingelagerte Materialien in deiner Truhe!<br> ";
+		if(!isset($UserRanking[0]->summe)) {
+			$summeDerMats = 0;
+		} else {
+			$summeDerMats = $UserRanking[0]->summe;
+		}
+		echo "<strong>" . $summeDerMats . "</strong> eingelagerte Materialien in deiner Truhe!<br> ";
 	
 		echo "<ul class='classicUl'>";
 		$counter = 1;
@@ -2336,7 +2325,7 @@ class gw_handwerk extends guildwars {
 					, hour(timestamp) as stunde
 					FROM gwusersmats WHERE besitzer = '$userID' ORDER BY timestamp DESC");
 			echo "<li><strong>$counter</strong> - " . $UserRanking2[$i]->summe . " Materialien von <strong>" . $currentUser . "</strong> zuletzt aktualisiert am ";
-			echo $letzterEintrag->tag . ".". $letzterEintrag->monat .".". $letzterEintrag->jahr ." / ". $letzterEintrag->stunde .":". $letzterEintrag->minute;
+			echo $letzterEintrag[$i]->tag . ".". $letzterEintrag[$i]->monat .".". $letzterEintrag[$i]->jahr ." / ". $letzterEintrag[$i]->stunde .":". $letzterEintrag[$i]->minute;
 			echo "</li>";
 			$counter += 1;
 		}

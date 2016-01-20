@@ -16,22 +16,25 @@ class forum extends functions {
 		echo "<table class='forum'>";
 		echo "<thead><td>Steven.NET Forum</td><td>Themen</td></thead>";
 		$selectCategories = "SELECT * FROM blogkategorien ORDER BY sortierung, kategorie ASC";
-		$ergebnis = mysql_query($selectCategories);
+		$row = $this->getObjektInfo($selectCategories);
 		$userID = $this->getUserID($_SESSION['username']);
-		while($row = mysql_fetch_object($ergebnis)) {
+		for ($i = 0 ; $i < sizeof($row) ; $i++) {
 			
 			# Prüfen ob der Benutzer die Rechte hat, das aktuelle Forum zu betrachten.
 			$benutzerliste="SELECT id, Name, forumRights FROM benutzer WHERE id = '$userID' LIMIT 1";
-			$ergebnis2 = mysql_query($benutzerliste);
 			
-			while($row2 = mysql_fetch_object($ergebnis2)) {
+			$row2 = $this->getObjektInfo($benutzerliste);
+			
+			for ($j = 0 ; $j < sizeof($row2) ; $j++) {
 				# Check
-				if($this->check($row->rightWert, $row2->forumRights) == true) {
-					$kategorie = $row->id;
-					$anzahlPosts = $this->getAmount("SELECT id FROM blogtexte WHERE kategorie = $kategorie");
+				if($this->check($row[$i]->rightWert, $row2[$j]->forumRights) == true) {
+					$kategorie = $row[$i]->id;
+					$query = "SELECT count(*) as anzahl FROM blogtexte WHERE kategorie = $kategorie";
+					$anzahlPosts = $this->getObjektInfo($query);
+					$anzahlPosts = $anzahlPosts[0]->anzahl;
 					# Wenn der Check bestanden ist, dann anzeigen.
-					echo "<tbody><td><a href='?blogcategory=$row->id'><strong>$row->kategorie</strong></a>
-					<br>$row->beschreibung</td><td>$anzahlPosts</td></tbody>";
+					echo "<tbody><td><a href='?blogcategory=".$row[$i]->id."'><strong>".$row[$i]->kategorie."</strong></a>
+					<br>".$row[$i]->beschreibung."</td><td>$anzahlPosts</td></tbody>";
 				}
 			}
 		}
@@ -46,20 +49,21 @@ class forum extends functions {
 			
 			# Check ob der Benutzer das aktuelle Forum anzeigen darf.
 			$selectCategories = "SELECT * FROM blogkategorien WHERE id = '$kategorie'";
-			$ergebnis = mysql_query($selectCategories);
-			while($row = mysql_fetch_object($ergebnis)) {
+			$row = $this->getObjektInfo($selectCategories);
+			
+			for ($i = 0 ; $i < sizeof($row) ; $i++) {
 				# Prüfen ob der Benutzer die Rechte hat, das aktuelle Forum zu betrachten.
 				$userID = $this->getUserID($_SESSION['username']);
 				$benutzerliste="SELECT id, Name, forumRights FROM benutzer WHERE id = '$userID' LIMIT 1";
-				$ergebnis2 = mysql_query($benutzerliste);
-				while($row2 = mysql_fetch_object($ergebnis2)) {
+				$row2 = $this->getObjektInfo($benutzerliste);
+				for ($j = 0 ; $j < sizeof($row2) ; $j++) {
 					# Check
-					if($row2->forumRights == 0) {
+					if($row2[$j]->forumRights == 0) {
 						$benutzerrechteVorher = 1;
 					} else {
-						$benutzerrechteVorher =$row2->forumRights;
+						$benutzerrechteVorher = $row2[$j]->forumRights;
 					} 
-					if($this->check($row->rightWert, $benutzerrechteVorher) == false) {
+					if($this->check($row[$i]->rightWert, $benutzerrechteVorher) == false) {
 						echo "<p class='meldung'>Du darfst dir dieses Forum nicht ansehen.</p>";
 						exit;
 					}
@@ -78,7 +82,8 @@ class forum extends functions {
 			FROM blogtexte 
 			WHERE kategorie = '$kategorie' 
 			ORDER BY timestamp DESC";
-			$ergebnis = mysql_query($selectBlogEintraege);
+			
+			$row = $this->getObjektInfo($selectBlogEintraege);
 			
 			echo "<a href='?' class='highlightedLink'>Zurück</a> ";
 			if(isset($_GET['blogcategory'])) {
@@ -96,12 +101,12 @@ class forum extends functions {
 					<td></td>
 					
 				</thead>";
-			while($row = mysql_fetch_object($ergebnis)) {
+			for ($i = 0 ; $i < sizeof($row) ; $i++) {
 				
-				$lockedInfo = $this->getObjektInfo("SELECT * FROM blogtexte WHERE id = '" . $row->id . "'");
-				if(!isset($lockedInfo->locked)) {
+				$lockedInfo = $this->getObjektInfo("SELECT * FROM blogtexte WHERE id = '" . $row[$i]->id . "'");
+				if(!isset($lockedInfo[0]->locked)) {
 					$locked = "";
-				} else if ($lockedInfo->locked == 1)  {
+				} else if ($lockedInfo[0]->locked == 1)  {
 					$locked = "&#128274;";
 				} else {
 					$locked = "";
@@ -110,19 +115,18 @@ class forum extends functions {
 				# Benutzer finden:
 				$autor = $this->getUserName($row->autor);
 				
-				if($row->status == 1 OR $_SESSION['username'] == $autor OR $this->userHasRight("10", 0) == true) {
+				if($row[$i]->status == 1 OR $_SESSION['username'] == $autor OR $this->userHasRight("10", 0) == true) {
 					
 					# Anzahl der Kommentare herausfinden
-					$countList = "SELECT COUNT(blogid) FROM blog_kommentare WHERE blogid = '$row->id'";
-					$countErgebList = mysql_query($countList);
-					$menge = mysql_fetch_row($countErgebList);
-					$menge = $menge[0];
+					$countList = "SELECT COUNT(blogid) as anzahl FROM blog_kommentare WHERE blogid = '".$row[$i]->id."'";
+					$menge = $this->getObjektInfo($countList);
+					$menge = $menge[0]->anzahl;
 					
 					echo "<tbody>
-					<td><a href='/flatnet2/blog/blogentry.php?showblogid=$row->id&ursprungKategorie=$row->kategorie'>$row->titel</a></td>
+					<td><a href='/flatnet2/blog/blogentry.php?showblogid=".$row[$i]->id."&ursprungKategorie=".$row[$i]->kategorie."'>".$row[$i]->titel."</a></td>
 					<td><a href='/flatnet2/usermanager/usermanager.php'>$autor</a></td>
 					<td> $menge </td>";
-					echo "<td>" . $row->tag . "." . $row->monat . "." . $row->jahr . " " . $row->stunde . ":" . $row->minute . " Uhr" . "</td>";
+					echo "<td>" . $row[$i]->tag . "." . $row[$i]->monat . "." . $row[$i]->jahr . " " . $row[$i]->stunde . ":" . $row[$i]->minute . " Uhr" . "</td>";
 					if($row->status == 1) {
 						$offen = "&#10004;";
 					} else {

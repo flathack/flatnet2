@@ -27,11 +27,11 @@ class publicThings extends functions {
 				$beitrag = $this->getObjektInfo($query);
 				
 				# Prüfen ob ID existiert,
-				if(isset($beitrag->titel)) {
+				if(isset($beitrag[0]->titel)) {
 					echo "<div class=''>";
 					
-						echo "<h2>" . $beitrag->titel . "</h2>";
-						echo $beitrag->text;
+						echo "<h2>" . $beitrag[0]->titel . "</h2>";
+						echo $beitrag[0]->text;
 					
 					echo "</div>"; 
 				} 

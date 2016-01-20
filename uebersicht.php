@@ -12,7 +12,6 @@
 		$uebersicht = NEW uebersicht;
 		
 		# STELLT DEN HEADER ZUR VERFÜGUNG
-		$uebersicht->connectToDB();
 		$uebersicht->header();
 		
 		$uebersicht->logged_in("redirect", "index.php");

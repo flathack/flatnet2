@@ -46,11 +46,11 @@ $guildwars->getInfoCharID($id);
 
 <style>
 <?php 
-$breite = 640 / 100 * $row->erkundung;
+$breite = 640 / 100 * $row[0]->erkundung;
 
 ?>
 
-.gwShowChar<?php echo $row->klasse; ?> #erkundungInfo{
+.gwShowChar<?php echo $row[0]->klasse; ?> #erkundungInfo{
 	position: absolute;
 	width: <?php echo $breite; ?>px;
 	margin-left: 65px;
@@ -85,92 +85,92 @@ $breite = 640 / 100 * $row->erkundung;
 				echo $guildwars->bearbChar();
 				
 				?>
-				<form action='?saveActions=yes&charID=<?php echo $row->id;?>' method=post>
+				<form action='?saveActions=yes&charID=<?php echo $row[0]->id;?>' method=post>
 				<?php # SPEICHERN ?>
 				<input type="submit" name="action" value="speichern" />
 				<?php # LÖSCHEN ?>
 				<input type="submit" name="action" value="löschen" class='highlightedLink' />
-					<div class='gwShowChar<?php echo $row->klasse ?>'>
+					<div class='gwShowChar<?php echo $row[0]->klasse ?>'>
 						
 						<?php
 						# PRÜFUNG OB CHAR STUFEN RICHTIG SIND
-						if($row->stufe > 80) {
+						if($row[0]->stufe > 80) {
 							echo "<p class='info'>Der Charakter hat eine höhere Stufe als 80!</p>";
 						}
-						if($row->handwerk1stufe > 500) {
+						if($row[0]->handwerk1stufe > 500) {
 							echo "<p class='info'>Die Handwerksstufe des ersten Berufs ist größer als 500.</p>";
 						}
-						if($row->handwerk2stufe > 500) {
+						if($row[0]->handwerk2stufe > 500) {
 							echo "<p class='info'>Die Handwerksstufe des zweiten Berufs ist größer als 500.</p>";
 						}
 						
-						if($row->erkundung > 100) {
+						if($row[0]->erkundung > 100) {
 							echo "<p class='info'>Der Explorator kann nicht mehr als 100 % erkunden.</p>";
 						}
 							
 						?>
 						<h2>
-							<?php echo $row->name . ", " . $row->klasse .", " . $row->rasse ?>
+							<?php echo $row[0]->name . ", " . $row[0]->klasse .", " . $row[0]->rasse ?>
 						</h2>
 						
-						<input type="hidden" name="besitzer" value="<?php echo $row->besitzer; ?>" />
+						<input type="hidden" name="besitzer" value="<?php echo $row[0]->besitzer; ?>" />
 						
 						<p>
-							Stufe <input type="number" value="<?php echo $row->stufe; ?>"
+							Stufe <input type="number" value="<?php echo $row[0]->stufe; ?>"
 								name="stufeChar" />
 						</p>
 						<h3>Geburtstag</h3>
 						<input type=date (yyyy-mm-dd) name="geboren"
-							value="<?php echo $row->geboren; ?>" />
+							value="<?php echo $row[0]->geboren; ?>" />
 						<h3>Handwerksberufe:</h3>
 						<select name="handwerk1" value="">
 							<option></option>
 							<option
-							<?php if($row->handwerk1 == "Lederer") {echo "selected='selected'"; }?>>Lederer</option>
+							<?php if($row[0]->handwerk1 == "Lederer") {echo "selected='selected'"; }?>>Lederer</option>
 							<option
-							<?php if($row->handwerk1 == "Schneider") {echo "selected='selected'"; }?>>Schneider</option>
+							<?php if($row[0]->handwerk1 == "Schneider") {echo "selected='selected'"; }?>>Schneider</option>
 							<option
-							<?php if($row->handwerk1 == "Koch") {echo "selected='selected'"; }?>>Koch</option>
+							<?php if($row[0]->handwerk1 == "Koch") {echo "selected='selected'"; }?>>Koch</option>
 							<option
-							<?php if($row->handwerk1 == "Rüstungsschmied") {echo "selected='selected'"; }?>>Rüstungsschmied</option>
+							<?php if($row[0]->handwerk1 == "Rüstungsschmied") {echo "selected='selected'"; }?>>Rüstungsschmied</option>
 							<option
-							<?php if($row->handwerk1 == "Waffenschmied") {echo "selected='selected'"; }?>>Waffenschmied</option>
+							<?php if($row[0]->handwerk1 == "Waffenschmied") {echo "selected='selected'"; }?>>Waffenschmied</option>
 							<option
-							<?php if($row->handwerk1 == "Waidmann") {echo "selected='selected'"; }?>>Waidmann</option>
+							<?php if($row[0]->handwerk1 == "Waidmann") {echo "selected='selected'"; }?>>Waidmann</option>
 							<option
-							<?php if($row->handwerk1 == "Konstrukteur") {echo "selected='selected'"; }?>>Konstrukteur</option>
+							<?php if($row[0]->handwerk1 == "Konstrukteur") {echo "selected='selected'"; }?>>Konstrukteur</option>
 							<option
-							<?php if($row->handwerk1 == "Juwelier") {echo "selected='selected'"; }?>>Juwelier</option>
+							<?php if($row[0]->handwerk1 == "Juwelier") {echo "selected='selected'"; }?>>Juwelier</option>
 						</select> Stufe <input type="number"
-							value="<?php echo $row->handwerk1stufe;?>" name="handwerk1stufe" />
+							value="<?php echo $row[0]->handwerk1stufe;?>" name="handwerk1stufe" />
 						<br> <select name="handwerk2" value="">
 							<option></option>
 							<option
-							<?php if($row->handwerk2 == "Lederer") {echo "selected='selected'"; }?>>Lederer</option>
+							<?php if($row[0]->handwerk2 == "Lederer") {echo "selected='selected'"; }?>>Lederer</option>
 							<option
-							<?php if($row->handwerk2 == "Schneider") {echo "selected='selected'"; }?>>Schneider</option>
+							<?php if($row[0]->handwerk2 == "Schneider") {echo "selected='selected'"; }?>>Schneider</option>
 							<option
-							<?php if($row->handwerk2 == "Koch") {echo "selected='selected'"; }?>>Koch</option>
+							<?php if($row[0]->handwerk2 == "Koch") {echo "selected='selected'"; }?>>Koch</option>
 							<option
-							<?php if($row->handwerk2 == "Rüstungsschmied") {echo "selected='selected'"; }?>>Rüstungsschmied</option>
+							<?php if($row[0]->handwerk2 == "Rüstungsschmied") {echo "selected='selected'"; }?>>Rüstungsschmied</option>
 							<option
-							<?php if($row->handwerk2 == "Waffenschmied") {echo "selected='selected'"; }?>>Waffenschmied</option>
+							<?php if($row[0]->handwerk2 == "Waffenschmied") {echo "selected='selected'"; }?>>Waffenschmied</option>
 							<option
-							<?php if($row->handwerk2 == "Waidmann") {echo "selected='selected'"; }?>>Waidmann</option>
+							<?php if($row[0]->handwerk2 == "Waidmann") {echo "selected='selected'"; }?>>Waidmann</option>
 							<option
-							<?php if($row->handwerk2 == "Konstrukteur") {echo "selected='selected'"; }?>>Konstrukteur</option>
+							<?php if($row[0]->handwerk2 == "Konstrukteur") {echo "selected='selected'"; }?>>Konstrukteur</option>
 							<option
-							<?php if($row->handwerk2 == "Juwelier") {echo "selected='selected'"; }?>>Juwelier</option>
+							<?php if($row[0]->handwerk2 == "Juwelier") {echo "selected='selected'"; }?>>Juwelier</option>
 						</select> Stufe <input type=number
-							value="<?php echo $row->handwerk2stufe;?>" name="handwerk2stufe" />
+							value="<?php echo $row[0]->handwerk2stufe;?>" name="handwerk2stufe" />
 
 						<h3>Spielzeit</h3>
 						<input type="number" name="stunden"
-							value="<?php echo $row->spielstunden; ?>" />
+							value="<?php echo $row[0]->spielstunden; ?>" />
 						<?php echo " (in Stunden)"; ?>
 						<br>
 						<h3>Erkundung in Prozent</h3>
-						<input type=number name=erkundung value="<?php echo $row->erkundung; ?>" placeholder="z. B. 76" />
+						<input type=number name=erkundung value="<?php echo $row[0]->erkundung; ?>" placeholder="z. B. 76" />
 						
 						<div id="erkundungInfo">
 							
@@ -179,28 +179,28 @@ $breite = 640 / 100 * $row->erkundung;
 						<div class='innerBody'>
 						
 							<h2>Namensänderung</h2>
-							<input type=text name=charName id='long' value='<?php echo $row->name ?>' />
+							<input type=text name=charName id='long' value='<?php echo $row[0]->name ?>' />
 							
 							<h2>Klassenänderung</h2>
 							Rasse
 								<select name='rasse' value='' />
-								<option <?php if($row->rasse == "Menschen") { echo "selected='selected'"; }?> >Menschen</option>
-								<option <?php if($row->rasse == "Asura") { echo "selected='selected'"; }?> >Asura</option>
-								<option <?php if($row->rasse == "Sylvari") { echo "selected='selected'"; }?> >Sylvari</option>
-								<option <?php if($row->rasse == "Norn") { echo "selected='selected'"; }?> >Norn</option>
-								<option <?php if($row->rasse == "Charr") { echo "selected='selected'"; }?> >Charr</option>
+								<option <?php if($row[0]->rasse == "Menschen") { echo "selected='selected'"; }?> >Menschen</option>
+								<option <?php if($row[0]->rasse == "Asura") { echo "selected='selected'"; }?> >Asura</option>
+								<option <?php if($row[0]->rasse == "Sylvari") { echo "selected='selected'"; }?> >Sylvari</option>
+								<option <?php if($row[0]->rasse == "Norn") { echo "selected='selected'"; }?> >Norn</option>
+								<option <?php if($row[0]->rasse == "Charr") { echo "selected='selected'"; }?> >Charr</option>
 								</select>
 							Klasse
 								<select name='klasse' value='' />
-								<option <?php if($row->klasse == "Krieger") { echo "selected='selected'"; }?> >Krieger</option>
-								<option <?php if($row->klasse == "Wächter") { echo "selected='selected'"; }?> >Wächter</option>
-								<option <?php if($row->klasse == "Dieb") { echo "selected='selected'"; }?> >Dieb</option>
-								<option <?php if($row->klasse == "Waldläufer") { echo "selected='selected'"; }?> >Waldläufer</option>
-								<option <?php if($row->klasse == "Ingenieur") { echo "selected='selected'"; }?> >Ingenieur</option>
-								<option <?php if($row->klasse == "Elementarmagier") { echo "selected='selected'"; }?> >Elementarmagier</option>
-								<option <?php if($row->klasse == "Nekromant") { echo "selected='selected'"; }?> >Nekromant</option>
-								<option <?php if($row->klasse == "Mesmer") { echo "selected='selected'"; }?> >Mesmer</option>
-								<option <?php if($row->klasse == "Widergänger") { echo "selected='selected'"; }?> >Widergänger</option>
+								<option <?php if($row[0]->klasse == "Krieger") { echo "selected='selected'"; }?> >Krieger</option>
+								<option <?php if($row[0]->klasse == "Wächter") { echo "selected='selected'"; }?> >Wächter</option>
+								<option <?php if($row[0]->klasse == "Dieb") { echo "selected='selected'"; }?> >Dieb</option>
+								<option <?php if($row[0]->klasse == "Waldläufer") { echo "selected='selected'"; }?> >Waldläufer</option>
+								<option <?php if($row[0]->klasse == "Ingenieur") { echo "selected='selected'"; }?> >Ingenieur</option>
+								<option <?php if($row[0]->klasse == "Elementarmagier") { echo "selected='selected'"; }?> >Elementarmagier</option>
+								<option <?php if($row[0]->klasse == "Nekromant") { echo "selected='selected'"; }?> >Nekromant</option>
+								<option <?php if($row[0]->klasse == "Mesmer") { echo "selected='selected'"; }?> >Mesmer</option>
+								<option <?php if($row[0]->klasse == "Widergänger") { echo "selected='selected'"; }?> >Widergänger</option>
 							</select>
 						
 						</div>
@@ -209,7 +209,7 @@ $breite = 640 / 100 * $row->erkundung;
 						<br> <br> <br><br> <br> <br><br> <br>
 						
 							<h3>Notizen</h3>
-							<textarea class='ckeditor' id='charNotizen' name='charNotizen'><?php echo $row->notizen; ?></textarea>	
+							<textarea class='ckeditor' id='charNotizen' name='charNotizen'><?php echo $row[0]->notizen; ?></textarea>	
 						
 						
 					</div>

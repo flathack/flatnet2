@@ -103,31 +103,32 @@ class control extends functions {
 					, year(timestamp) AS jahr
 					FROM benutzer
 					ORDER BY id";
-			$ergebnis = mysql_query ( $benutzerliste );
-			while ( $row = mysql_fetch_object ( $ergebnis ) ) {
+			
+			$row = $this->getObjektInfo($benutzerliste);
+			for ($i = 0 ; $i < sizeof($row) ; $i++) {
 				
 				echo "<tbody";
 				
 				if (isset ( $_GET ['bearb'] )) {
-					if ($_GET ['bearb'] == $row->id) {
+					if ($_GET ['bearb'] == $row[$i]->id) {
 						echo " id='offen' ";
 					}
 				}
 				echo ">";
-				echo "<td>$row->id</td>";
-				echo "<td><a href='?bearb=$row->id&userverw=1#bearbeiten'>$row->Name</a></td>";
-				echo "<td>$row->titel</td>";
-				echo "<td>$row->rights</td>";
-				echo "<td>$row->forumRights</td>";
-				if ($row->versuche == 3) {
+				echo "<td>".$row[$i]->id."</td>";
+				echo "<td><a href='?bearb=". $row[$i]->id."&userverw=1#bearbeiten'>".$row[$i]->Name."</a></td>";
+				echo "<td>".$row[$i]->titel."</td>";
+				echo "<td>".$row[$i]->rights."</td>";
+				echo "<td>".$row[$i]->forumRights."</td>";
+				if ($row[$i]->versuche == 3) {
 					echo "<td>gesperrt</td>";
 				} else {
-					echo "<td>$row->versuche</td>";
+					echo "<td>".$row[$i]->versuche."</td>";
 				}
 				echo "<td>
-				<a href='?bearb=$row->id&userverw=1' class='rightBlueLink'>Edit</a>
-				<a href='?statusID=$row->id&status=entsperren&userverw=1&action=1' class='rightGreenLink'>entsperren</a>
-				<a href='?statusID=$row->id&status=sperren&userverw=1&action=1' class='rightRedLink'>sperren</a>
+				<a href='?bearb=".$row[$i]->id."&userverw=1' class='rightBlueLink'>Edit</a>
+				<a href='?statusID=".$row[$i]->id."&status=entsperren&userverw=1&action=1' class='rightGreenLink'>entsperren</a>
+				<a href='?statusID=".$row[$i]->id."&status=sperren&userverw=1&action=1' class='rightRedLink'>sperren</a>
 				</td>";
 				echo "</tbody>";
 			}
@@ -180,21 +181,20 @@ class control extends functions {
 						echo "<p class='meldung'>Fehler, es wurden nicht alle Felder ausgefüllt.</p>";
 					} else {
 						$check = "SELECT * FROM benutzer WHERE Name LIKE '$username' LIMIT 1";
-						$checkergebnis = mysql_query ( $check );
-						$row = mysql_fetch_object ( $checkergebnis );
+						$row = $this->getObjektInfo($check);
 						
 						/*
 						 * Hier tritt ein Notice Fehler auf, ist aber normal,
 						 * da im Normalfall kein Benutzer gefunden wird.
 						 */
-						if (isset ( $row->Name )) {
+						if (isset ( $row[0]->Name )) {
 							echo "<p class='meldung'>Fehler, der Benutzer <strong>$username</strong> existiert bereits.</p>";
 						} else {
 							if ($passwort1 == $passwort2) {
 								$passwortneu = md5 ( $passwort1 );
 								$query = "INSERT INTO benutzer (Name, Passwort, rights, versuche, forumRights) VALUES ('$username','$passwortneu','1','3','1')";
-								$ergebnis = mysql_query ( $query );
-								if ($ergebnis == true) {
+								
+								if ($this->sql_insert_update_delete($query) == true) {
 									echo "<p class='erfolg'>Benutzer angelegt</p>";
 								} else {
 									echo "<p class='meldung'>Fehler.</p>";
@@ -221,116 +221,103 @@ class control extends functions {
 					echo "<div class='newChar'>";
 					echo "<h2><a name='bearbeiten'>Benutzerbearbeitung</a> <a href='?userverw=1' class='highlightedLink'>X</a></h2>";
 					$userinfo = "SELECT timestamp, id, Name, Passwort, rights FROM benutzer WHERE id LIKE $bearb";
-					$userergebnis = mysql_query ( $userinfo );
+					$row = $this->getObjektInfo($userinfo);
 					echo "<table>";
-					while ( $row = mysql_fetch_object ( $userergebnis ) ) {
+					for ($i = 0 ; $i < sizeof($row) ; $i++) {
 						echo "<form action='?' method=post>";
-						echo "<tr><td>Neuer Benutzername: </td><td><input type=text value='$row->Name' name=newname autofocus></td></tr>";
+						echo "<tr><td>Neuer Benutzername: </td><td><input type=text value='".$row[$i]->Name."' name=newname autofocus></td></tr>";
 						echo "<tr><td>Neues Passwort: </td><td><input type=password value='' name=newpass ></td></tr>";
-						echo "<tr><td><input type=hidden value='$row->id' name=id readonly></td></tr>";
-						echo "<tr><td><input type=hidden value='$row->Name' name=name readonly></td></tr>";
-						echo "<tr><td>Rechte:</td><td><input type=text value='$row->rights' name=rights required></td></tr>";
+						echo "<tr><td><input type=hidden value='".$row[$i]->id."' name=id readonly></td></tr>";
+						echo "<tr><td><input type=hidden value='".$row[$i]->Name."' name=name readonly></td></tr>";
+						echo "<tr><td>Rechte:</td><td><input type=text value='".$row[$i]->rights."' name=rights required></td></tr>";
 						echo "<tr><td>
 								<input type=submit name='bearbuser' value='Ausführen'></td>
 								<td><input type=submit name='bearbuser' value='Benutzer Informationen anzeigen' />";
-						echo "<a class='highlightedLink' href='?action=3&table=benutzer&id=$row->id#angezeigteID'>Löschen</a></td></tr>";
+						echo "<a class='highlightedLink' href='?action=3&table=benutzer&id=".$row[$i]->id."#angezeigteID'>Löschen</a></td></tr>";
 						echo "</form>";
 					}
 					echo "</table>";
 					echo "</div>";
 					
 					// # Guildwars
-					$selectGuildwars = "SELECT * FROM gw_chars WHERE besitzer = '$bearb'";
-					$ergebnisGuildwars = mysql_query ( $selectGuildwars );
-					$mengeGuildwars = mysql_num_rows ( $ergebnisGuildwars );
-					if (! isset ( $mengeGuildwars )) {
+					$selectGuildwars = "SELECT count(*) as anzahl FROM gw_chars WHERE besitzer = '$bearb'";
+					$mengeGuildwars = $this->getObjektInfo($selectGuildwars);
+					if (! isset ( $mengeGuildwars[0]->anzahl )) {
 						$mengeGuildwars = 0;
 					}
 					
 					// # Guildwars Kost calc
-					$selectGuildwars2 = "SELECT * FROM gwcosts WHERE besitzer = '$bearb'";
-					$ergebnisGuildwars2 = mysql_query ( $selectGuildwars2 );
-					$mengeGuildwars2 = mysql_num_rows ( $ergebnisGuildwars2 );
-					if (! isset ( $mengeGuildwars2 )) {
+					$selectGuildwars2 = "SELECT count(*) as anzahl FROM gwcosts WHERE besitzer = '$bearb'";
+					$mengeGuildwars2 = $this->getObjektInfo($selectGuildwars2);
+					if (! isset ( $mengeGuildwars2[0]->anzahl )) {
 						$mengeGuildwars2 = 0;
 					}
 					
 					// # Dokumentareinträge
-					$selectDocu = "SELECT * FROM docu WHERE autor = '$bearb'";
-					$ergebnisDocu = mysql_query ( $selectDocu );
-					$mengeDocu = mysql_num_rows ( $ergebnisDocu );
-					if (! isset ( $mengeDocu )) {
+					$selectDocu = "SELECT count(*) as anzahl FROM docu WHERE autor = '$bearb'";
+					$mengeDocu = $this->getObjektInfo($selectDocu);
+					if (! isset ( $mengeDocu[0]->anzahl )) {
 						$mengeDocu = 0;
 					}
 					
 					// # BlogKommentare
-					$selectBlogKommentare = "SELECT * FROM blog_kommentare WHERE autor = '$bearb'";
-					$ergebnisBlogKommentare = mysql_query ( $selectBlogKommentare );
-					$mengeBlogKommentare = mysql_num_rows ( $ergebnisBlogKommentare );
-					if (! isset ( $mengeBlogKommentare )) {
+					$selectBlogKommentare = "SELECT count(*) as anzahl FROM blog_kommentare WHERE autor = '$bearb'";
+					$mengeBlogKommentare = $this->getObjektInfo($selectBlogKommentare);
+					if (! isset ( $mengeBlogKommentare[0]->anzahl )) {
 						$mengeBlogKommentare = 0;
 					}
 					
 					// # Vorschläge
-					$selectVorschlaege = "SELECT * FROM vorschlaege WHERE autor = '$bearb'";
-					$ergebnisVorschlaege = mysql_query ( $selectVorschlaege );
-					$mengeVorschlaege = mysql_num_rows ( $ergebnisVorschlaege );
-					if (! isset ( $mengeVorschlaege )) {
+					$selectVorschlaege = "SELECT count(*) as anzahl FROM vorschlaege WHERE autor = '$bearb'";
+					$mengeVorschlaege = $this->getObjektInfo($selectVorschlaege);
+					if (! isset ( $mengeVorschlaege[0]->anzahl )) {
 						$mengeVorschlaege = 0;
 					}
 					
 					// # Blogtexte
-					$selectBlogTexte = "SELECT * FROM blogtexte WHERE autor = '$bearb'";
-					$ergebnisBlogTexte = mysql_query ( $selectBlogTexte );
-					$mengeBlogTexte = mysql_num_rows ( $ergebnisBlogTexte );
-					if (! isset ( $mengeBlogTexte )) {
+					$selectBlogTexte = "SELECT count(*) as anzahl FROM blogtexte WHERE autor = '$bearb'";
+					$mengeBlogTexte = $this->getObjektInfo($selectBlogTexte);
+					if (! isset ( $mengeBlogTexte[0]->anzahl )) {
 						$mengeBlogTexte = 0;
 					}
 					
 					// # Konten
-					$selectKonten = "SELECT * FROM finanzen_konten WHERE besitzer = '$bearb'";
-					$ergebnisKonten = mysql_query ( $selectKonten );
-					$mengeKonten = mysql_num_rows ( $ergebnisKonten );
-					if (! isset ( $mengeKonten )) {
+					$selectKonten = "SELECT count(*) as anzahl FROM finanzen_konten WHERE besitzer = '$bearb'";
+					$mengeKonten = $this->getObjektInfo($selectKonten);
+					if (! isset ( $mengeKonten[0]->anzahl )) {
 						$mengeKonten = 0;
 					}
 					
 					// # Umsätze
-					$selectUmsaetze = "SELECT * FROM finanzen_umsaetze WHERE besitzer = '$bearb'";
-					$ergebnisUmsaetze = mysql_query ( $selectUmsaetze );
-					$mengeUmsaetze = mysql_num_rows ( $ergebnisUmsaetze );
-					if (! isset ( $mengeUmsaetze )) {
+					$selectUmsaetze = "SELECT count(*) as anzahl FROM finanzen_umsaetze WHERE besitzer = '$bearb'";
+					$mengeUmsaetze = $this->getObjektInfo($selectUmsaetze);
+					if (! isset ( $mengeUmsaetze[0]->anzahl )) {
 						$mengeUmsaetze = 0;
 					}
 					
-					// if($this->getUserName($loeschid) == "steven") {
-					// echo "<p class='meldung'><strong>STEVEN kann nicht gelöscht werden, da er der Administrator auf dieser Seite ist.</strong></p>";
-					// return false;
-					// }
-					
 					// Ausgabe der Meldungen:
-					if ($mengeBlogKommentare + $mengeBlogTexte + $mengeVorschlaege + $mengeDocu + $mengeGuildwars > 0) {
+					if ($mengeBlogKommentare[0]->anzahl + $mengeBlogTexte[0]->anzahl + $mengeVorschlaege[0]->anzahl + $mengeDocu[0]->anzahl + $mengeGuildwars[0]->anzahl > 0) {
 						echo "<p class=''><h2>Dieser Benutzer hat folgende Objekte: </h2>";
-						if ($mengeGuildwars > 0) {
-							echo $mengeGuildwars . " Guildwars-Charakter, <br>";
+						if ($mengeGuildwars[0]->anzahl > 0) {
+							echo $mengeGuildwars[0]->anzahl . " Guildwars-Charakter, <br>";
 						}
-						if ($mengeGuildwars2 > 0) {
-							echo $mengeGuildwars2 . " Einträge in Kosten, <br>";
+						if ($mengeGuildwars2[0]->anzahl > 0) {
+							echo $mengeGuildwars2[0]->anzahl . " Einträge in Kosten, <br>";
 						}
-						if ($mengeBlogKommentare > 0) {
-							echo $mengeBlogKommentare . " Kommentare, <br>";
-						}
-						
-						if ($mengeBlogTexte > 0) {
-							echo $mengeBlogTexte . " Foreneinträge, <br>";
+						if ($mengeBlogKommentare[0]->anzahl > 0) {
+							echo $mengeBlogKommentare[0]->anzahl . " Kommentare, <br>";
 						}
 						
-						if ($mengeVorschlaege > 0) {
-							echo $mengeVorschlaege . " Vorschläge, ";
+						if ($mengeBlogTexte[0]->anzahl > 0) {
+							echo $mengeBlogTexte[0]->anzahl . " Foreneinträge, <br>";
 						}
 						
-						if ($mengeDocu > 0) {
-							echo $mengeDocu . " Doku Einträge, <br>";
+						if ($mengeVorschlaege[0]->anzahl > 0) {
+							echo $mengeVorschlaege[0]->anzahl . " Vorschläge, ";
+						}
+						
+						if ($mengeDocu[0]->anzahl > 0) {
+							echo $mengeDocu[0]->anzahl . " Doku Einträge, <br>";
 						}
 						
 						echo "<br><br><br><br><br><br><br><br><br><br><br><br>";
@@ -371,10 +358,9 @@ class control extends functions {
 					
 					// Prüfen, ob die Daten überhaupt geändert wurden:
 					$checkRights = "SELECT id, Name, rights FROM benutzer WHERE id = '$selectedid' LIMIT 1";
-					$ergebnisRights = mysql_query ( $checkRights );
-					$rightsCheck = mysql_fetch_object ( $ergebnisRights );
+					$rightsCheck = $this->getObjektInfo($checkRights);
 					
-					if ($rights == $rightsCheck->rights and $updatepass == "" and $newUserName == $rightsCheck->Name) {
+					if ($rights == $rightsCheck[0]->rights and $updatepass == "" and $newUserName == $rightsCheck[0]->Name) {
 						echo "<p class='info'>Es gab keine Änderung</p>";
 						return false;
 					}
@@ -386,8 +372,7 @@ class control extends functions {
 						$sqlupdate = "UPDATE benutzer SET Passwort='$updatepassmd5', rights='$rights', Name='$newUserName' WHERE id='$selectedid'";
 					}
 					
-					$sqlupdategesamt = mysql_query ( $sqlupdate );
-					if ($sqlupdategesamt == true) {
+					if ($this->sql_insert_update_delete($sqlupdate) == true) {
 						echo "<p class='erfolg'>Der Datensatz wurde aktualisiert!";
 					} else {
 						echo "<p class='meldung'>Fehler beim speichern der Daten.";
@@ -423,8 +408,7 @@ class control extends functions {
 						exit ();
 					}
 					$sql = "DELETE FROM benutzer WHERE id='$loeschid'";
-					$del = mysql_query ( $sql );
-					if ($del == true) {
+					if ($this->sql_insert_update_delete($sql) == true) {
 						echo "<p class='erfolg'>Datensatz wurde gelöscht.";
 						echo "<a href='?action=1' class='buttonlink'>Zurück</a></p>";
 					} else {
@@ -464,16 +448,22 @@ class control extends functions {
 			echo "<h2>Aktuelle Benutzerinformationen</h2>";
 			
 			// Alle Tables bekommen:
-			$allTables = $this->getObjectsToArray ( "SHOW TABLES FROM flathacksql1" );
+			$allTables = $this->getObjektInfo ( "SHOW TABLES FROM flathacksql1" );
 			
+			// Tabellen: account_infos, adressbuch, benutzer, blogkategorien, blogtexte, blog_kommentare, docu,
+			// fahrkosten, fahrkostenziele, fahrzeuge, finanzen_jahresabschluss, finanzen_konten, finanzen_monatsabschluss,
+			// finanzen_umsaetze, gwcosts, gwmatlist, gwusersmats, gw_accounts, gw_chars, learnkategorie, learnlernkarte, 
+			// registercode, rights, uebersicht_kacheln, userrights, vorschlaege,
 			$columnNamesForBesitzer = array (
 					'besitzer',
 					'xxx',
 					'xxx',
-					'autor',
 					'xxx',
 					'autor',
-					'autor',
+					'autor', 
+					'autor', 
+					'besitzer',
+					'besitzer',
 					'besitzer',
 					'besitzer',
 					'besitzer',
@@ -483,15 +473,15 @@ class control extends functions {
 					'xxx',
 					'besitzer',
 					'besitzer',
-					'xxx',
 					'besitzer',
-					'ersteller',
-					'xxx',
-					'xxx',
-					'xxx',
+					'besitzer',
 					'besitzer',
 					'xxx',
-					'xxx' 
+					'xxx',
+					'besitzer',
+					'xxx',
+					'xxx',
+					'xxx'
 			);
 			
 			$userID = $_POST ['id'];
@@ -509,7 +499,7 @@ class control extends functions {
 					$columns = $this->getColumns ( $table );
 					
 					// Informationen des aktuellen Tables auslesen
-					$currentTableInfo = $this->getObjectsToArray ( "SELECT * FROM $table WHERE $columnNamesForBesitzer[$i] = '$userID'" );
+					$currentTableInfo = $this->getObjektInfo ( "SELECT * FROM $table WHERE $columnNamesForBesitzer[$i] = '$userID'" );
 					
 					// Table nur anzeigen, wenn etwas vom Benutzer da ist:
 					// if(isset($currentTableInfo[$i])) {
@@ -562,12 +552,11 @@ class control extends functions {
 			
 			echo "<div class='neuerBlog'>";
 			echo "<h2>Logeinträge</h2>";
-			// ANZAHL ###################################################
-			$select = "SELECT count(*) as anzahl FROM `vorschlaege`"; // #
-			$ergebnis = mysql_query ( $select ); // #
-			$row = mysql_fetch_object ( $ergebnis ); // #
-			                                      // ###########################################################
-			echo "Es gibt " . $row->anzahl . " Einträge im LOG!";
+			
+			$select = "SELECT count(*) as anzahl FROM `vorschlaege`";
+			$row = $this->getObjektInfo($select);
+			
+			echo "Es gibt " . $row[0]->anzahl . " Einträge im LOG!";
 			echo "</div>";
 			
 			// Select from Database
@@ -587,67 +576,67 @@ class control extends functions {
 					FROM vorschlaege
 					WHERE status = 'illegal'
 					ORDER BY timestamp DESC";
-			$ergebnis = mysql_query ( $vorschlaege );
-			while ( $row = mysql_fetch_object ( $ergebnis ) ) {
+			$row = $this->getObjektInfo($vorschlaege);
+			for($i = 0; $i < sizeof($row) ; $i++) {
 				echo "<thead id='illegal'><td colspan = '6' >WARNUNG</td></thead>";
 				echo "<form method=get>";
 				echo "<input type=hidden name='action' value='2' />";
 				echo "<tbody";
 				
-				if ($row->status == "offen") {
+				if ($row[$i]->status == "offen") {
 					echo " id='offen' ";
-				} else if ($row->status == "illegal") {
+				} else if ($row[$i]->status == "illegal") {
 					echo " id='illegal' ";
-				} else if ($row->status == "Error") {
+				} else if ($row[$i]->status == "Error") {
 					echo " id='error' ";
-				} else if ($row->status == "login") {
+				} else if ($row[$i]->status == "login") {
 					echo " id='login' ";
 				}
 				
 				echo ">
-				<td>$row->id <input type=hidden value='$row->id' name='hiddenID' /></td>
-				<td>$row->tage.$row->monat.$row->jahr</td>";
-				if ($row->autor == 0) {
+				<td>". $row[$i]->id." <input type=hidden value='".$row[$i]->id."' name='hiddenID' /></td>
+				<td>".$row[$i]->tage.".".$row[$i]->monat.".".$row[$i]->jahr."</td>";
+				if ($row[$i]->autor == 0) {
 					echo "<td>System</td>";
 				} else {
-					echo "<td>" . $this->getUserName ( $row->autor ) . "</td>";
+					echo "<td>" . $this->getUserName ( $row[$i]->autor ) . "</td>";
 				}
-				echo "<td>$row->text</td>
+				echo "<td>$row[$i]->text</td>
 				<td>
 				<select name='status' value='' size='1'>";
 				
 				echo "<option";
-				if ($row->status == "offen") {
+				if ($row[$i]->status == "offen") {
 					echo " selected='selected' ";
 				}
 				echo "> offen </option>";
 				
 				echo "<option";
-				if ($row->status == "erledigt") {
+				if ($row[$i]->status == "erledigt") {
 					echo " selected='selected' ";
 				}
 				echo "> erledigt </option>";
 				
 				echo "<option";
-				if ($row->status == "verworfen") {
+				if ($row[$i]->status == "verworfen") {
 					echo " selected='selected' ";
 				}
 				echo "> verworfen </option>";
 				
 				echo "<option";
-				if ($row->status == "illegal") {
+				if ($row[$i]->status == "illegal") {
 					echo " selected='selected' ";
 				}
 				echo "> illegal </option>";
 				
 				echo "<option";
-				if ($row->status == "login") {
+				if ($row[$i]->status == "login") {
 					echo " selected='selected' ";
 				}
 				echo "> login </option>";
 				
 				echo "<option";
-				if ($row->status == "Error") {
+				if ($row[$i]->status == "Error") {
 					echo " selected='selected' ";
 				}
 				echo "> Error </option>";
@@ -670,66 +659,66 @@ class control extends functions {
 					OR status = 'verworfen'
 					OR status = 'erledigt'
 					ORDER BY id ASC";
-			$ergebnis = mysql_query ( $vorschlaege );
-			while ( $row = mysql_fetch_object ( $ergebnis ) ) {
+			$row = $this->getObjektInfo($vorschlaege);
+			for($i = 0 ;  $i < sizeof($row) ; $i++) {
 				echo "<form method=get>";
 				echo "<input type=hidden name='action' value='2' />";
 				echo "<tbody";
 				
-				if ($row->status == "offen") {
+				if ($row[$i]->status == "offen") {
 					echo " id='offen' ";
-				} else if ($row->status == "illegal") {
+				} else if ($row[$i]->status == "illegal") {
 					echo " id='illegal' ";
-				} else if ($row->status == "Error") {
+				} else if ($row[$i]->status == "Error") {
 					echo " id='error' ";
-				} else if ($row->status == "login") {
+				} else if ($row[$i]->status == "login") {
 					echo " id='login' ";
 				}
 				
 				echo ">
-				<td>$row->id <input type=hidden value='$row->id' name='hiddenID' /></td>
-				<td>$row->tage.$row->monat.$row->jahr</td>";
-				if ($row->autor == 0) {
+				<td>".$row[$i]->id."<input type=hidden value='".$row->id."' name='hiddenID' /></td>
+				<td>".$row[$i]->tage.".".$row[$i]->monat.".".$row[$i]->jahr."</td>";
+				if ($row[$i]->autor == 0) {
 					echo "<td>System</td>";
 				} else {
-					echo "<td>" . $this->getUserName ( $row->autor ) . "</td>";
+					echo "<td>" . $this->getUserName ( $row[$i]->autor ) . "</td>";
 				}
-				echo "<td>$row->text</td>
+				echo "<td>".$row[$i]->text."</td>
 				<td>
 				<select name='status' value='' size='1'>";
 				
 				echo "<option";
-				if ($row->status == "offen") {
+				if ($row[$i]->status == "offen") {
 					echo " selected='selected' ";
 				}
 				echo "> offen </option>";
 				
 				echo "<option";
-				if ($row->status == "erledigt") {
+				if ($row[$i]->status == "erledigt") {
 					echo " selected='selected' ";
 				}
 				echo "> erledigt </option>";
 				
 				echo "<option";
-				if ($row->status == "verworfen") {
+				if ($row[$i]->status == "verworfen") {
 					echo " selected='selected' ";
 				}
 				echo "> verworfen </option>";
 				
 				echo "<option";
-				if ($row->status == "illegal") {
+				if ($row[$i]->status == "illegal") {
 					echo " selected='selected' ";
 				}
 				echo "> illegal </option>";
 				
 				echo "<option";
-				if ($row->status == "login") {
+				if ($row[$i]->status == "login") {
 					echo " selected='selected' ";
 				}
 				echo "> login </option>";
 				
 				echo "<option";
-				if ($row->status == "Error") {
+				if ($row[$i]->status == "Error") {
 					echo " selected='selected' ";
 				}
 				echo "> Error </option>";
@@ -750,21 +739,21 @@ class control extends functions {
 					FROM vorschlaege
 					WHERE status = 'login'
 					GROUP BY autor ORDER BY timestamp ASC";
-			$ergebnisNEW = mysql_query ( $vorschlaegeNEW );
+			$rowNEW = $this->getObjektInfo($vorschlaegeNEW);
 			
 			echo "<table class='flatnetTable'>";
 			echo "<thead><td>Autor</td><td>Text</td><td>Anzahl dieser Einträge</td><td>Letzter Eintrag</td><td>Optionen</td></thead>";
 			
-			while ( $rowNEW = mysql_fetch_object ( $ergebnisNEW ) ) {
+			for($i = 0 ; $i < sizeof($rowNEW) ; $i++) {
 				
 				// letzter Eintag:
-				$letzterEintrag = $this->getObjektInfo ( "SELECT * FROM vorschlaege WHERE text = '$rowNEW->text' ORDER BY timestamp DESC" );
+				$letzterEintrag = $this->getObjektInfo ( "SELECT * FROM vorschlaege WHERE text = '".$rowNEW[$i]->text."' ORDER BY timestamp DESC" );
 				
 				echo "<tbody>";
-				echo "<td>" . $this->getUserName ( $rowNEW->autor ) . "</td>";
-				echo "		<td>" . $rowNEW->text . "</td><td>$rowNEW->anzahl</td>
-						<td>" . $letzterEintrag->timestamp . "</td>
-						<td><a href='?action=2&kategorieLoeschen=$rowNEW->id&loeschen=ja&loeschid=$rowNEW->id' class='highlightedLink'>X</a></td>
+				echo "<td>" . $this->getUserName ( $rowNEW[$i]->autor ) . "</td>";
+				echo "		<td>" . $rowNEW[$i]->text . "</td><td>".$rowNEW[$i]->anzahl."</td>
+						<td>" . $letzterEintrag[0]->timestamp . "</td>
+						<td><a href='?action=2&kategorieLoeschen=".$rowNEW[$i]->id."&loeschen=ja&loeschid=".$rowNEW[$i]->id."' class='highlightedLink'>X</a></td>
 						</tbody>";
 			}
 			// ##########################################################################################################################################################
@@ -773,19 +762,19 @@ class control extends functions {
 					FROM vorschlaege
 					WHERE status = 'Error'
 					GROUP BY text ORDER BY timestamp DESC";
-			$ergebnisNEW = mysql_query ( $vorschlaegeNEW );
+			$rowNEW = $this->getObjektInfo($vorschlaegeNEW);
 			
 			echo "<thead><td></td><td>Login Error:</td><td>Anzahl dieser Einträge</td><td>Letzter Eintrag</td><td>Optionen</td></thead>";
 			
-			while ( $rowNEW = mysql_fetch_object ( $ergebnisNEW ) ) {
+			for($i = 0 ; $i < sizeof($rowNEW) ; $i++) {
 				
 				// letzter Eintag:
-				$letzterEintrag = $this->getObjektInfo ( "SELECT * FROM vorschlaege WHERE text = '$rowNEW->text' ORDER BY timestamp DESC" );
+				$letzterEintrag = $this->getObjektInfo ( "SELECT * FROM vorschlaege WHERE text = '".$rowNEW[$i]->text."' ORDER BY timestamp DESC" );
 				
 				echo "<tbody><td></td>
-						<td>" . $rowNEW->text . "</td><td>$rowNEW->anzahl</td>
-						<td>" . $letzterEintrag->timestamp . "</td>
-						<td><a href='?action=2&kategorieLoeschen=$rowNEW->id&loeschen=ja&loeschid=$rowNEW->id' class='highlightedLink'>X</a></td>
+						<td>" . $rowNEW[$i]->text . "</td><td>".$rowNEW[$i]->anzahl."</td>
+						<td>" . $letzterEintrag[0]->timestamp . "</td>
+						<td><a href='?action=2&kategorieLoeschen=".$rowNEW[$i]->id."&loeschen=ja&loeschid=".$rowNEW[$i]->id."' class='highlightedLink'>X</a></td>
 						</tbody>";
 			}
 			
@@ -806,7 +795,7 @@ class control extends functions {
 					
 					// Text der zu löschenden ID bekommen:
 					$deleteObjectWithThisText = $this->getObjektInfo ( "SELECT * FROM vorschlaege WHERE id = '$id' LIMIT 1" );
-					$text = $deleteObjectWithThisText->text;
+					$text = $deleteObjectWithThisText[0]->text;
 					// JETZT wird $text gelöscht!
 					$this->sqlDeleteCustom ( "DELETE FROM vorschlaege WHERE text = '$text'" );
 				}
@@ -829,21 +818,21 @@ class control extends functions {
 			
 			// Select from Database
 			$vorschlaege = "SELECT id, timestamp, autor, text, status FROM vorschlaege WHERE status = 'offen' ORDER BY status DESC";
-			$ergebnis = mysql_query ( $vorschlaege );
+			$row = $this->getObjektInfo($vorschlaege);
 			echo "<table class='flatnetTable'>";
 			echo "<thead>";
 			echo "<td>Text</td><td>Status</td>";
 			echo "</thead>";
-			while ( $row = mysql_fetch_object ( $ergebnis ) ) {
+			for($i = 0 ; $i < sizeof($row) ; $i++) {
 				echo "<form method=get>";
 				echo "<input type=hidden name='action' value='2' />";
 				echo "<tbody";
-				if ($row->status == "offen") {
+				if ($row[$i]->status == "offen") {
 					echo " id='offen' ";
 				}
 				echo ">
-				<td>$row->text</td>
-				<td>$row->status</td></tbody>";
+				<td>".$row[$i]->text."</td>
+				<td>".$row[$i]->status."</td></tbody>";
 				echo "</form>";
 			}
 			echo "</table>";
@@ -862,8 +851,7 @@ class control extends functions {
 			if ($submit == "OK") {
 				// Vars zuweisen
 				$sqlupdate = "UPDATE vorschlaege SET status='$status' WHERE id='$id'";
-				$update = mysql_query ( $sqlupdate );
-				if ($update == true) {
+				if ($this->sql_insert_update_delete($sqlupdate) == true) {
 					return true;
 				} else {
 					return false;
@@ -871,8 +859,7 @@ class control extends functions {
 			} else if ($submit == "X") {
 				// @todo Rechtesystem einbauen
 				$loeschen = "DELETE FROM vorschlaege WHERE id = '$id'";
-				$loeschErgeb = mysql_query ( $loeschen );
-				if ($loeschErgeb == true) {
+				if ($this->sql_insert_update_delete($loeschen) == true) {
 					return true;
 				} else {
 					return false;
@@ -893,14 +880,13 @@ class control extends functions {
 	function getRightKategorieName($id) {
 		$this->connectToDB ();
 		$selectUsername = "SELECT id, name FROM rightkategorien WHERE id = '$id' LIMIT 1";
-		$ergebnisUsername = mysql_query ( $selectUsername );
-		while ( $rowUsername = mysql_fetch_object ( $ergebnisUsername ) ) {
-			$username = $rowUsername->name;
+		$rowUsername = $this->getObjektInfo($selectUsername);
+		if(isset($rowUsername[0]->name)) {
+			$username = $rowUsername[0]->name;
+		} else {
+			$username = "Unbekannt";
 		}
-		// DB CLOSE
-		if (! isset ( $username )) {
-			$username = "Kein Name";
-		}
+
 		return $username;
 	}
 	
@@ -918,8 +904,7 @@ class control extends functions {
 					
 					// SQL
 					$query = "INSERT INTO userrights (recht, kategorie) VALUES ('$newRightName','$kategorie')";
-					$ergebnis = mysql_query ( $query );
-					if ($ergebnis == true) {
+					if ($this->sql_insert_update_delete($query) == true) {
 						echo "<p class='erfolg'>Das Recht wurde erstellt.</p>";
 					} else {
 						echo "<p class='meldung'>Es ist ein Fehler aufgetreten.</p>";
@@ -943,7 +928,7 @@ class control extends functions {
 					echo "<form method=post>";
 					echo "<input type='text' value='' name='newRightName' placeholder='Infotext des Rechts' required autofocus /> <br> ";
 					# Select für Kategorien
-					$getKats = $this->getObjectsToArray("SELECT * FROM rightkategorien ORDER BY name");
+					$getKats = $this->getObjektInfo("SELECT * FROM rightkategorien ORDER BY name");
 					echo "<select name='kategorie'>";
 					for ($i = 0 ; $i < sizeof($getKats) ; $i++) {
 						echo "<option value='".$getKats[$i]->id."'>" . $getKats[$i]->name . "</option>";
@@ -969,16 +954,18 @@ class control extends functions {
 			if (isset ( $id ) and isset ( $status )) {
 				if ($status == "entsperren") {
 					$updateVersuche = "UPDATE benutzer SET versuche='0' WHERE id = '$id'";
-					$updateErgeb2 = mysql_query ( $updateVersuche );
-					if ($updateErgeb2 == "true") {
+					
+					if ($this->sql_insert_update_delete($updateVersuche) == true) {
 						echo "<p class='erfolg'>Benutzer entsperrt</p>";
 					}
+					
 				} else if ($status == "sperren") {
 					$updateVersuche = "UPDATE benutzer SET versuche='3' WHERE id = '$id'";
-					$updateErgeb2 = mysql_query ( $updateVersuche );
-					if ($updateErgeb2 == "true") {
+					
+					if ($this->sql_insert_update_delete($updateVersuche) == true) {
 						echo "<p class='meldung'>Benutzer gesperrt</p>";
 					}
+					
 				}
 			}
 		} else {
@@ -996,11 +983,10 @@ class control extends functions {
 			echo "<div>";
 			echo "<h3><a name='forumRechte'>Forum - Rechte verteilen</a></h3>";
 			$benutzerlisteUser = "SELECT id, Name FROM benutzer ORDER BY name";
-			$ergebnisUser = mysql_query ( $benutzerlisteUser );
+			$rowUser = $this->getObjektInfo($benutzerlisteUser);
 			
-			while ( $rowUser = mysql_fetch_object ( $ergebnisUser ) ) {
-				echo "<a href='?action=5&user=$rowUser->id#forumRechte' class='buttonlink'>$rowUser->Name</a>";
-			}
+			echo "<a href='?action=5&user=".$rowUser[0]->id."#forumRechte' class='buttonlink'>".$rowUser[0]->Name."</a>";
+			
 			echo "</table>" . "</div>";
 			
 			// Status der Rechte Änderung:
@@ -1009,9 +995,8 @@ class control extends functions {
 					// ALTE BENUTZERRECHTE BEKOMMEN:
 					$userid = $_GET ['user'];
 					$rightFromCurrentUser = "SELECT forumRights FROM benutzer WHERE id = '$userid'";
-					$ergebnisGetRights = mysql_query ( $rightFromCurrentUser );
-					$rowGetRights = mysql_fetch_object ( $ergebnisGetRights );
-					$benutzerrechte = $rowGetRights->forumRights;
+					$rowGetRights = $this->getObjektInfo($rightFromCurrentUser);
+					$benutzerrechte = $rowGetRights[0]->forumRights;
 					if ($benutzerrechte == 0) {
 						$benutzerrechte = 1;
 					}
@@ -1019,9 +1004,8 @@ class control extends functions {
 					// Dezimalwert der RechteID bekommen:
 					$rightID = $_GET ['right'];
 					$getRightValue = "SELECT id, rightWert FROM blogkategorien WHERE id = '$rightID'";
-					$ergebnisGetValues = mysql_query ( $getRightValue );
-					$rowGetValue = mysql_fetch_object ( $ergebnisGetValues );
-					$rightValue = $rowGetValue->rightWert;
+					$rowGetValue = $this->getObjektInfo($getRightValue);
+					$rightValue = $rowGetValue[0]->rightWert;
 					
 					// Status der Änderung:
 					if ($_GET ['status'] == "nein") {
@@ -1038,8 +1022,7 @@ class control extends functions {
 					
 					$sqlRightUpdate = "UPDATE benutzer SET forumRights='$neueBenutzerRechte' WHERE id='$userid'";
 					
-					$sqlupdategesamt = mysql_query ( $sqlRightUpdate );
-					if ($sqlupdategesamt == true) {
+					if ($this->sql_insert_update_delete($sqlRightUpdate) == true) {
 						echo "<p class='erfolg'>Das Recht wurde aktualisiert</p>";
 					} else {
 						echo "<p class='meldung'>Es ist ein Fehler aufgetreten</p>";
@@ -1052,34 +1035,34 @@ class control extends functions {
 				$id = $_GET ['user'];
 				
 				$benutzerliste = "SELECT id, Name, forumRights FROM benutzer WHERE id = '$id' ORDER BY name";
-				$ergebnis = mysql_query ( $benutzerliste );
+				$row = $this->getObjektInfo($benutzerliste);
 				
 				echo "<div id=''>";
 				
-				while ( $row = mysql_fetch_object ( $ergebnis ) ) {
+				for($i = 0 ; $i < sizeof($row) ; $i++) {
 					echo "<div class=''>";
-					echo "<h2>$row->Name</h2>";
-					if ($row->forumRights == 0) {
+					echo "<h2>".$row[$i]->Name."</h2>";
+					if ($row[$i]->forumRights == 0) {
 						$benutzerrechteVorher = 1;
 					} else {
-						$benutzerrechteVorher = $row->forumRights;
+						$benutzerrechteVorher = $row[$i]->forumRights;
 					}
 					echo "hat die Rechte: $benutzerrechteVorher";
 					echo "</div>";
 					
 					// Rechteliste des Benutzer erstellen
 					$rightListe = "SELECT * FROM blogkategorien ORDER BY rightPotenz DESC";
-					$ergebnis2 = mysql_query ( $rightListe );
+					$row2 = $this->getObjektInfo($rightListe);
 					
 					echo "<h3>Rechteliste</h3>";
 					echo "<table class='flatnetTable'>";
 					echo "<thead><td id='text'>Recht</td><td>vorhanden</td><td>Ändern</td></thead>";
-					while ( $row2 = mysql_fetch_object ( $ergebnis2 ) ) {
-						if ($this->check ( $row2->rightWert, $benutzerrechteVorher ) == true) {
+					for($j = 0 ; $i < sizeof($row2) ; $j++) {
+						if ($this->check($row2[$j]->rightWert, $benutzerrechteVorher ) == true) {
 							
-							echo "<tbody id='offen'>" . "<td>$row2->kategorie</td>" . "<td>Ja</td> " . "<td><a href='?action=5&user=$id&status=ja&right=$row2->id#forumRechte'>verweigern</a></td>" . "<tbody>";
+							echo "<tbody id='offen'>" . "<td>".$row2[$j]->kategorie."</td>" . "<td>Ja</td> " . "<td><a href='?action=5&user=$id&status=ja&right=".$row2[$j]->id."#forumRechte'>verweigern</a></td>" . "<tbody>";
 						} else {
-							echo "<tbody>" . "<td>$row2->kategorie</td>" . "<td>Nein</td> " . "<td><a href='?action=5&user=$id&status=nein&right=$row2->id#forumRechte'>gewähren</a></td>" . "<tbody>";
+							echo "<tbody>" . "<td>".$row2[$j]->kategorie."</td>" . "<td>Nein</td> " . "<td><a href='?action=5&user=$id&status=nein&right=".$row2[$j]->id."#forumRechte'>gewähren</a></td>" . "<tbody>";
 						}
 					}
 					echo "</table>";
@@ -1108,14 +1091,15 @@ class control extends functions {
 					, minute(timestamp) AS minute
 					FROM blogkategorien
 					ORDER BY kategorie";
-			$ergebnis = mysql_query ( $selectCategories );
-			while ( $row = mysql_fetch_object ( $ergebnis ) ) {
+			
+			$row = $this->getObjektInfo($selectCategories);
+			for ($i = 0 ; $i < sizeof($row) ; $i++) {
 				echo "<tbody><td>";
-				echo "<a href='/flatnet2/forum/index.php?blogcategory=$row->id'>" . $row->kategorie . "</a></td>";
-				echo "<td><a href='?action=5'>" . $row->tag . "." . $row->monat . "." . $row->jahr . "</a></td>";
-				echo "<td><a href='?action=5'>" . $row->rightPotenz . " / " . $row->rightWert . "</a></td>";
-				echo "<td><a href='?action=5&editid=$row->id' class='buttonlink'>Edit</a>";
-				echo "<a href='?action=5&loeschid=$row->id' class='buttonlink'>X</a></td></tbody>";
+				echo "<a href='/flatnet2/forum/index.php?blogcategory=".$row[$i]->id."'>" . $row[$i]->kategorie . "</a></td>";
+				echo "<td><a href='?action=5'>" . $row[$i]->tag . "." . $row[$i]->monat . "." . $row[$i]->jahr . "</a></td>";
+				echo "<td><a href='?action=5'>" . $row[$i]->rightPotenz . " / " . $row[$i]->rightWert . "</a></td>";
+				echo "<td><a href='?action=5&editid=".$row[$i]->id."' class='buttonlink'>Edit</a>";
+				echo "<a href='?action=5&loeschid=".$row[$i]->id."' class='buttonlink'>X</a></td></tbody>";
 			}
 			
 			echo "</table>";
@@ -1135,11 +1119,11 @@ class control extends functions {
 				# Höchste Potenz bekommen:
 				
 				$getMaxPotenz = $this->getObjektInfo("SELECT max(rightPotenz) as max FROM blogkategorien");
-				if(!isset($getMaxPotenz->max)) {
+				if(!isset($getMaxPotenz[0]->max)) {
 					# Wenn es noch keine Kategorien gibt: 
 					$max = 0;
 				} else {
-					$max = $getMaxPotenz->max + 1;
+					$max = $getMaxPotenz[0]->max + 1;
 				}
 				
 				echo "<h2>Neue Kategorie:</h2>";
@@ -1181,22 +1165,19 @@ class control extends functions {
 					
 					// Püfen ob es diesen Namen schon gibt:
 					$check = "SELECT * FROM blogkategorien WHERE kategorie = '$kategorie'";
-					$checkergebnis = mysql_query ( $check );
-					$row = mysql_fetch_object ( $checkergebnis );
-					if (isset ( $row->kategorie )) {
+					$row = $this->getObjektInfo($check);
+					if (isset ( $row[0]->kategorie )) {
 						echo "<p class='meldung'>Diese Kategorie existiert bereits.</p>";
 						return false;
 						exit ();
 					}
 					
 					$insert = "INSERT INTO blogkategorien (kategorie, beschreibung, rightPotenz, rightWert, sortierung) VALUES('$kategorie', '$description', '$potenz', '$wert', '$sortierung')";
-					$ergebnis = mysql_query ( $insert );
-					if ($ergebnis == true) {
-						
+					
+					if ($this->sql_insert_update_delete($insert) == true) {
 						echo "<p class='erfolg'>Kategorie wurde erfolgreich angelegt.</p>";
 						return true;
 					} else {
-						
 						echo "<p class='meldung'>Fehler beim speichern</p>";
 						return false;
 					}
@@ -1226,12 +1207,12 @@ class control extends functions {
 					
 					// nicht zugeordnet Kategorie finden:
 					$select = "SELECT id, kategorie FROM blogkategorien WHERE kategorie = 'nicht zugeordnet' LIMIT 1";
-					$ergebnis = mysql_query ( $select );
-					while ( $row = mysql_fetch_object ( $ergebnis ) ) {
+					$row = $this->getObjektInfo($select);
+					if(isset($row[0]->id)) {
 						$notAssigned = $row->id;
-					}
+					}					
 					
-					if (! isset ( $notAssigned )) {
+					if (!isset($notAssigned)) {
 						echo "<p class='meldung'>Es gibt keine Kategorie mit dem Namen <strong>nicht zugeordnet</strong>!
 								bestehende Foreneinträge können somit verloren gehen, wenn diezu löschende Kategorie entfernt wird.
 								</p><p class='meldung'>Kategorie mit Namen: nicht zugeordnet erstellen!</p><p class='meldung'>Vorgang abgebrochen.</p>";
@@ -1239,7 +1220,7 @@ class control extends functions {
 					} else {
 						// prüfen, ob die kategorie "nicht zugeordnet" gelöscht werden soll,
 						// wenn ja, dann return false
-						if ($this->getCatName ( $loeschid ) == "nicht zugeordnet") {
+						if ($this->getCatName ($loeschid) == "nicht zugeordnet") {
 							echo "<p class='meldung'>Die Kategorie nicht zugeordnet darf nicht gelöscht werden.</p>";
 							return false;
 						} else {
@@ -1293,14 +1274,14 @@ class control extends functions {
 					// ##########################
 					$editid = $_GET ['editid'];
 					$select = "SELECT * FROM blogkategorien WHERE id = '$editid'";
-					$ergebnis = mysql_query ( $select );
-					while ( $row = mysql_fetch_object ( $ergebnis ) ) {
+					$row = $this->getObjektInfo($select);
+					for($i = 0 ; $i < sizeof($row) ; $i++) {
 						echo "<div class='innerBody'>";
 						echo "<form method=post>";
-						echo "<input type=text name=newCatName value='$row->kategorie' placeholder='Kategoriename' /><br>";
-						echo "<input type=text id='long' name=newCatDescription value='$row->beschreibung' placeholder='Beschreibung' /><br>";
-						echo "<input type=number name=newPotenz value='$row->rightPotenz' placeholder='Potenz von 2 eingeben' /><br>";
-						echo "<input type=number name=newSortierung value='$row->sortierung' placeholder='Sortierung eingeben' /><br>";
+						echo "<input type=text name=newCatName value='".$row[$i]->kategorie."' placeholder='Kategoriename' /><br>";
+						echo "<input type=text id='long' name=newCatDescription value='".$row[$i]->beschreibung."' placeholder='Beschreibung' /><br>";
+						echo "<input type=number name=newPotenz value='".$row[$i]->rightPotenz."' placeholder='Potenz von 2 eingeben' /><br>";
+						echo "<input type=number name=newSortierung value='".$row[$i]->sortierung."' placeholder='Sortierung eingeben' /><br>";
 						echo "<input type=submit name=submit value='OK' />";
 						echo "</form>";
 						echo "</div>";
@@ -1414,7 +1395,7 @@ class control extends functions {
 		
 		// COLUMNS SPEICHERN;
 		mysql_close ();
-		$this->connectToSpecialDB ( "information_schema", "flathacksql1", "f12245f8@sql" );
+		$this->connectToSpecialDB ( "information_schema", "devUser", "" );
 		$select1 = "SELECT column_name, column_comment FROM columns WHERE TABLE_SCHEMA = 'flathacksql1' AND TABLE_NAME='$table'";
 		$ergebnis1 = mysql_query ( $select1 );
 		$i = 0;
@@ -1457,9 +1438,8 @@ class control extends functions {
 						}
 					}
 					$query .= " WHERE id='$id'";
-					$ergebnis = mysql_query ( $query ) or die ( mysql_error () );
 					
-					if ($ergebnis == true) {
+					if ($this->sql_insert_update_delete($query) == true) {
 						$this->insertQuery ( $query );
 						echo "<p class='erfolg'>Update erfolgt</p>";
 					} else {
@@ -1476,8 +1456,7 @@ class control extends functions {
 					$table = $_GET ['table'];
 					$id = $_GET ['id'];
 					$sql = "DELETE FROM $table WHERE id='$id'";
-					$del = mysql_query ( $sql );
-					if ($del == true) {
+					if ($this->sql_insert_update_delete($sql) == true) {
 						$this->insertQuery ( $sql );
 						echo "<p class='erfolg'>Datensatz wurde gelöscht.";
 						echo "<a href='?action=3' class='buttonlink'>Zurück</a></p>";
@@ -1499,8 +1478,9 @@ class control extends functions {
 					$columns = $this->getColumns ( $table );
 					
 					// Menge bekommen
-					$query = "SHOW COLUMNS FROM $table";
-					$menge = $this->getAmount ( $query );
+					$query = "SELECT COUNT(*) as anzahl FROM information_schema.columns WHERE table_schema = 'flathacksql1' and table_name = '$table'";
+					$mengeGrund = $this->getObjektInfo($query);
+					$menge = $mengeGrund[0]->anzahl;
 					
 					// Query bauen
 					$query = "INSERT INTO $table (";
@@ -1523,14 +1503,11 @@ class control extends functions {
 					}
 					
 					$this->insertQuery ( $query );
-					
-					$ergebnis = mysql_query ( $query ) or die ( mysql_error () );
-					
-					if ($ergebnis == true) {
+										
+					if ($this->sql_insert_update_delete($query) == true) {
 						echo "<p class='erfolg'>Datensatz eingefügt</p>";
 					} else {
 						echo "<p class='meldung'>Fehler</p>";
-						echo mysql_error ();
 					}
 				} else {
 					echo "<p class='meldung'>Keine Berechtigung in der Objektverwaltung Einträge zu erstellen!</p>";
@@ -1555,7 +1532,7 @@ class control extends functions {
 				$menge = $this->getAmount ( $query );
 				
 				$select = "SELECT * FROM $table WHERE id = '$id'";
-				$ergebnis = mysql_query ( $select );
+				$row = $this->getObjektInfo($select);
 				
 				// Kommentar der Spalte auslesen:
 				$comments = $this->getColumnComments ( $table );
@@ -1572,15 +1549,16 @@ class control extends functions {
 				}
 				echo "<table class='flatnetTable'><form method=post>";
 				echo "<thead>" . "<td>Table: $table</td>" . "<td><a name='angezeigteID'>Angezeigte ID</a>: $id <a href='?action=3$von&table=$table' class='highlightedLink'>X</a></td>" . "</thead>";
-				while ( $row = mysql_fetch_object ( $ergebnis ) ) {
+				
+				for ($i = 0 ; $i < sizeof($row) ; $i++) {
 					for($i = 0; $i < $menge; $i ++) {
-						if (strlen ( $row->$columns [$i] ) > 50) {
+						if (strlen ( $row[$i]->$columns [$i] ) > 50) {
 							echo "<tbody><td>" . $columns [$i] . "</td>
 							<td><textarea rows=10 cols=100 name=currentObject[$i]";
-							echo ">" . $row->$columns [$i] . "</textarea>$comments[$i]</td></tbody>";
+							echo ">" . $row[$i]->$columns [$i] . "</textarea>$comments[$i]</td></tbody>";
 						} else {
 							echo "<tbody><td>" . $columns [$i] . "</td><td><input type=text class='' name=currentObject[$i] value='";
-							echo $row->$columns [$i];
+							echo $row[$i]->$columns [$i];
 							
 							echo "' placeholder='$columns[$i]'/> $comments[$i]</td></tbody>";
 						}
@@ -1603,9 +1581,10 @@ class control extends functions {
 			mysql_close ();
 			
 			// Neue DB öffnen
-			$this->connectToSpecialDB ( "information_schema", "flathacksql1", "f12245f8@sql" );
+			$this->connectToSpecialDB ( "information_schema", "devUser", "" );
 			
 			// Columns bekommen:
+			
 			$select1 = "SHOW COLUMNS FROM columns";
 			$ergebnis1 = mysql_query ( $select1 );
 			$i = 0;
@@ -1751,18 +1730,18 @@ class control extends functions {
 			
 			// Ausgabe aller Tables
 			$select = "SHOW TABLES FROM flathacksql1";
-			$ergebnis = mysql_query ( $select );
+			$row = $this->getObjektInfo($select);
 			echo "<form method=get action='?action=3'>";
 			echo "<input type=hidden name=action value=3 />";
 			echo "<select class='bigSelect' name='table'>";
-			while ( $row = mysql_fetch_object ( $ergebnis ) ) {
+			for($i = 0 ; $i < sizeof($row) ; $i++) {
 				echo "<option ";
-				if (isset ( $_GET ['table'] ) and $_GET ['table'] == $row->Tables_in_flathacksql1) {
+				if (isset ( $_GET ['table'] ) and $_GET ['table'] == $row[$i]->Tables_in_flathacksql1) {
 					echo " selected ";
 				} else {
 					echo "";
 				}
-				echo " value='$row->Tables_in_flathacksql1' >$row->Tables_in_flathacksql1</option>";
+				echo " value='".$row[$i]->Tables_in_flathacksql1."' >".$row[$i]->Tables_in_flathacksql1."</option>";
 			}
 			echo "</select><input type=submit name='submit' value='Table wechseln'/></form>";
 			// Table Variable zuweisen
@@ -1995,8 +1974,7 @@ class control extends functions {
 					$code = $_POST ['newCode'];
 					$usageTimes = $_POST ['usageTimes'];
 					$query = "INSERT INTO registercode (code, used, usageTimes) VALUES ('$code','0','$usageTimes')";
-					$ergebnis = mysql_query ( $query );
-					if ($ergebnis == true) {
+					if ($this->sql_insert_update_delete($query) == true) {
 						echo "<p class='erfolg'>Code eingefügt</p>";
 					} else {
 						echo "<p class='meldung'>Fehler</p>";
@@ -2110,7 +2088,7 @@ class control extends functions {
 			
 				# Liste von allen Benutzern anzeigen:
 				#####################################################################################################################
-				$allusers = $this->getObjectsToArray("SELECT * FROM benutzer");														#
+				$allusers = $this->getObjektInfo("SELECT * FROM benutzer");														#
 																																	#
 				for ($i = 0 ; $i < sizeof($allusers) ; $i++) {																		#
 					echo "<a class='buttonlink' href='?action=6&userid=".$allusers[$i]->id."'>".$allusers[$i]->Name."</a>";			#
@@ -2121,22 +2099,22 @@ class control extends functions {
 				if(isset($_GET['userid'])) {
 					$id = $_GET['userid'];
 					$userInformation = $this->getObjektInfo("SELECT * FROM benutzer WHERE id = '$id'");
-					if(!isset($userInformation->Name)) {
+					if(!isset($userInformation[0]->Name)) {
 						echo "<p class='meldung'>Diesen Benutzer gibt es nicht</p>";
 					} else {
-						echo "<h2>Benutzer: $userInformation->Name</h2>";
+						echo "<h2>Benutzer: ".$userInformation[0]->Name."</h2>";
 					}
 					
 					# Liste erstellen, aber mit Kategorien:
 					
-					$getAllKategorien = $this->getObjectsToArray("SELECT * FROM rightkategorien");
+					$getAllKategorien = $this->getObjektInfo("SELECT * FROM rightkategorien");
 					
 					echo "<table class='flatnetTable'>";
 					
 					for ($i = 0; $i < sizeof($getAllKategorien); $i++) {
 						
 						# Jetzt alle Einträge die zu dieser Kategorie gehören selektieren:
-						$getEintraegeVonDieserKategorie = $this->getObjectsToArray("SELECT * FROM userrights WHERE kategorie = '".$getAllKategorien[$i]->id."' ORDER BY recht");
+						$getEintraegeVonDieserKategorie = $this->getObjektInfo("SELECT * FROM userrights WHERE kategorie = '".$getAllKategorien[$i]->id."' ORDER BY recht");
 						
 						echo "<thead>";
 							echo "<td>" . $getAllKategorien[$i]->name . "</td>";
@@ -2147,7 +2125,7 @@ class control extends functions {
 						# Jetzt Einträge ausgeben:
 						for($j = 0; $j < sizeof($getEintraegeVonDieserKategorie);$j++) {
 								echo "<tbody";
-								if($this->userHasRight($getEintraegeVonDieserKategorie[$j]->id, $userInformation->id) == true) {
+								if($this->userHasRight($getEintraegeVonDieserKategorie[$j]->id, $userInformation[0]->id) == true) {
 									echo " id = 'offen' ";
 								} else {
 									echo " id = '' ";
@@ -2156,10 +2134,10 @@ class control extends functions {
 								echo "<td>" .$getEintraegeVonDieserKategorie[$j]->recht. "</td>";
 								
 								echo "<td>";
-								if($this->userHasRight($getEintraegeVonDieserKategorie[$j]->id, $userInformation->id) == true) {
-									echo "<a class='' href='?action=6&userid=".$userInformation->id."&verweigern=".$getEintraegeVonDieserKategorie[$j]->id."'>verweigern</a>";
+								if($this->userHasRight($getEintraegeVonDieserKategorie[$j]->id, $userInformation[0]->id) == true) {
+									echo "<a class='' href='?action=6&userid=".$userInformation[0]->id."&verweigern=".$getEintraegeVonDieserKategorie[$j]->id."'>verweigern</a>";
 								} else {
-									echo "<a class='' href='?action=6&userid=".$userInformation->id."&gewaehren=".$getEintraegeVonDieserKategorie[$j]->id."'>gewähren</a><br>";
+									echo "<a class='' href='?action=6&userid=".$userInformation[0]->id."&gewaehren=".$getEintraegeVonDieserKategorie[$j]->id."'>gewähren</a><br>";
 								}
 								
 								echo "</td>";
@@ -2192,8 +2170,8 @@ class control extends functions {
 				
 				# Check ob es Benutzer gibt..
 				$userid = $_GET['userid'];
-				$userInformation = $this->getObjektInfo("SELECT * FROM benutzer WHERE id = '$userid'");
-				if(!isset($userInformation->Name)) {
+				$userInformation = $this->getObjektInfo("SELECT * FROM benutzer WHERE id = $userid");
+				if(!isset($userInformation[0]->Name)) {
 					echo "<p class='meldung'>Diesen Benutzer gibt es nicht</p>";
 					exit;
 				}
@@ -2201,7 +2179,7 @@ class control extends functions {
 				# Check ob es Recht gibt...
 				$rechteID = $_GET['gewaehren'];
 				$rightInformation = $this->getObjektInfo("SELECT * FROM userrights WHERE id = '$rechteID'");
-				if(!isset($rightInformation->id)) {
+				if(!isset($rightInformation[0]->id)) {
 					echo "<p class='meldung'>Dieses Recht gibt es nicht!</p>";
 					exit;
 				}
@@ -2209,7 +2187,7 @@ class control extends functions {
 				# Check ob der Benutzer das Recht schon hat
 				$getAllRights = $this->getObjektInfo("SELECT * FROM userrights WHERE id = '$rechteID'");
 				$userInformation = $this->getObjektInfo("SELECT * FROM benutzer WHERE id = '$userid'");
-				if($this->userHasRight($getAllRights->id, $userInformation->id) == true) {
+				if($this->userHasRight($getAllRights[0]->id, $userInformation[0]->id) == true) {
 					echo "<p class='meldung'>Der Benutzer hat das Recht bereits!</p>";
 					exit;
 				}
@@ -2229,7 +2207,7 @@ class control extends functions {
 				# Check ob es Benutzer gibt..
 				$userid = $_GET['userid'];
 				$userInformation = $this->getObjektInfo("SELECT * FROM benutzer WHERE id = '$userid'");
-				if(!isset($userInformation->Name)) {
+				if(!isset($userInformation[0]->Name)) {
 					echo "<p class='meldung'>Diesen Benutzer gibt es nicht</p>";
 					exit;
 				}
@@ -2237,7 +2215,7 @@ class control extends functions {
 				# Check ob es Recht gibt...
 				$rechteID = $_GET['verweigern'];
 				$rightInformation = $this->getObjektInfo("SELECT * FROM userrights WHERE id = '$rechteID'");
-				if(!isset($rightInformation->id)) {
+				if(!isset($rightInformation[0]->id)) {
 					echo "<p class='meldung'>Dieses Recht gibt es nicht!</p>";
 					exit;
 				}
@@ -2245,7 +2223,7 @@ class control extends functions {
 				# Check ob der Benutzer das Recht schon hat
 				$getAllRights = $this->getObjektInfo("SELECT * FROM userrights WHERE id = '$rechteID'");
 				$userInformation = $this->getObjektInfo("SELECT * FROM benutzer WHERE id = '$userid'");
-				if($this->userHasRight($getAllRights->id, $userInformation->id) == false) {
+				if($this->userHasRight($getAllRights[0]->id, $userInformation[0]->id) == false) {
 					echo "<p class='meldung'>Der Benutzer hat das Recht nicht, also kann es ihn auch nicht verweigert werden!</p>";
 					exit;
 				}
@@ -2272,7 +2250,7 @@ class control extends functions {
 		if($this->userHasRight("68", 0) == true) {
 		
 			# Alle Kategorien bekommen:
-			$getallcategories = $this->getObjectsToArray("SELECT * FROM rightkategorien");
+			$getallcategories = $this->getObjektInfo("SELECT * FROM rightkategorien");
 			echo "<p class='spacer'>Rechtekategorien</p>";
 			echo "<table class='flatnetTable'>";
 			for ($i = 0 ; $i < sizeof($getallcategories) ; $i++) {

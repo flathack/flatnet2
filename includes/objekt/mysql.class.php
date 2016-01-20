@@ -6,12 +6,16 @@
  * Führt die Aktionen zwischen der Site und dem SQL Server durch.
  */
 class sql {
+	
+	function connectToDB() {
+		$this->connectToDBNewWay();
+	}
 
 	/**
 	 * Stellt die Verbindung zum SQL Server her, dafür werden die Daten direkt in die Class
 	 * geschrieben.
 	 */
-	function connectToDB() {
+	function connectToDBOldWay() {
 
 	#	error_reporting(0);
 
@@ -28,9 +32,9 @@ class sql {
 
 		if($mode == "phpfriends") {
 			# PHP Friends
-			$host = "127.0.0.1";
-			$sqlusername = "devUser";
-			$sqluserpassword = "";
+			$host = "localhost";
+			$sqlusername = "root";
+			$sqluserpassword = "12141214";
 			$sqldatabase = "flathacksql1";
 			$errorsqlconnect .= "<p class=''>Quaggan kann Seite nicht finden. Nur 404. Quaggan traurig.</p>";
 			$errorsqlconnect .= "<img src='/flatnet2/images/fehler/404.png' name='' alt='404 Fehler'>";
@@ -47,6 +51,19 @@ class sql {
 		mysql_select_db($sqldatabase) or die ("<body id='wrapper'>" . $errordbconnect . "<div class='mainbody'><p class='meldung'>Grund für den Fehler: " . mysql_error() . "</p></div></body>");
 	}
 
+	
+	/**
+	 * New Connect
+	 * @todo
+	 */
+	function connectToDBNewWay() {
+		
+		$db = new PDO('mysql:host=localhost;dbname=flathacksql1;charset=utf8', 'root', '12141214');
+		
+		return $db;
+		
+	}
+	
 	/**
 	 * Stellt die Verbindung zu einer anderen Datenbank her.
 	 * @param unknown $db
@@ -112,12 +129,11 @@ class sql {
 
 				# Durchführung der Löschung.
 				$loeschQuery = "DELETE FROM `$tabelle` WHERE `id` = $loeschid";
-				$ergebnis = mysql_query($loeschQuery);
 					
-				if($ergebnis == true) {
+				if($this->sql_insert_update_delete($loeschQuery) == true) {
 					echo "<p class='erfolg'>Eintrag gelöscht.</p>";
 				} else {
-					echo "<p class='meldung'>", mysql_error(), "</p>";
+					echo "<p class='meldung'>Fehler beim löschen!</p>";
 				}
 
 			}
@@ -151,13 +167,11 @@ class sql {
 			$loeschid = isset($_POST['id']) ? $_POST['id'] : '';
 			if($loeschid) {
 
-				# Durchführung der Löschung.
-				$ergebnis = mysql_query($query);
 					
-				if($ergebnis == true) {
-					echo "<p class='erfolg'>Erfolgreich gelöscht!</p>";
+				if($this->sql_insert_update_delete($query) == true) {
+					echo "<p class='erfolg'>Erfolgreich gelöscht</p>";
 				} else {
-					echo "<p class='meldung'>", mysql_error(), "</p>";
+					echo "<p class='meldung'>Fehler beim löschen!</p>";
 				}
 
 			}
@@ -170,13 +184,30 @@ class sql {
 	 * Gibt true oder false zurück.
 	 */
 	function sql_insert_update_delete($query) {
-
+		/*
 		$ergebnis = mysql_query($query);
 		if($ergebnis == true) {
 			return true;
 		} else {
 			return false;
 		}
+		*/
+		
+		/* NEW WAY mit PDO */
+		
+		$db = $this->connectToDBNewWay();
+		
+		$affected_rows = $db->exec($query);
+		
+		if($affected_rows > 0) {
+		#	echo "<br>$query ist true<br>";
+			return true;
+		} else {
+		#	echo "<br>$query ist false<br>";
+			return false;
+		}
+		
+		
 	}
 
 	/**
@@ -185,9 +216,13 @@ class sql {
 	 * @return unknown
 	 */
 	function getAmount($query) {
-		$ergebnis = mysql_query($query);
-		$menge = mysql_num_rows($ergebnis);
-		return $menge;
+		
+		$db = $this->connectToDBNewWay();
+		
+		$stmt = $db->query($query);
+		$count = $stmt->rowCount();
+		
+		return $count;
 	}
 
 	/**
@@ -196,10 +231,16 @@ class sql {
 	 * @return unknown
 	 */
 	function getObjektInfo($query) {
-		$ergebnis = mysql_query($query);
-		$row = mysql_fetch_object($ergebnis);
 		
-		return $row;
+		// $ergebnis = mysql_query($query);
+		// $row = mysql_fetch_object($ergebnis);
+		
+		$db = $this->connectToDBNewWay();
+		
+		$stmt = $db->query($query);
+		$results = $stmt->fetchAll(PDO::FETCH_OBJ);
+						
+		return $results;
 	}
 	
 	/**
@@ -208,17 +249,7 @@ class sql {
 	 * @return unknown
 	 */
 	function getObjectsToArray($query) {
-		$ergebnis = mysql_query($query);
-		$i = 0;
-		while($row = mysql_fetch_object($ergebnis)) {
-			$objects[$i] = $row;
-			$i = $i + 1;
-		}
-
-		if(isset($objects)) {
-			return $objects;
-		}
-
+		 $this->getObjektInfo($query);
 	}
 	
 	/**
@@ -227,13 +258,11 @@ class sql {
 	 */
 	function objectExists($table, $column, $object) {
 		$check = "SELECT * FROM $table WHERE $column LIKE '$object' LIMIT 1";
-		$checkergebnis = mysql_query($check);
-		$row = mysql_fetch_object($checkergebnis);
-	
-		if($row == "") {
-			return false;
-		} else {
+		$row = $this->getObjektInfo($check);	
+		if(isset($row[0]->$column)) {
 			return true;
+		} else {
+			return false;
 		}
 	}
 

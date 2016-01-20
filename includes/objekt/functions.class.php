@@ -28,29 +28,29 @@ class functions extends sql {
 				$suchWort = "%" . $suchWort . "%";
 	
 				# Spalten der Tabelle selektieren:
-				$colums  = "SHOW COLUMNS FROM `$tabelle`";
-				$getColums = mysql_query($colums);
+				$colums  = "SHOW COLUMNS FROM $tabelle";
+				
+				$rowSpalten = $this->getObjektInfo($colums);
 	
 				# SuchQuery bauen:
 				# Start String:
 				$querySuche = "SELECT * FROM $tabelle WHERE (id LIKE '$suchWort' ";
 	
 				# OR + Spaltenname LIKE Suchwort
-				while($rowSpalten = mysql_fetch_object($getColums)) {
-					$querySuche .= " OR $rowSpalten->Field LIKE '$suchWort'";
+				for ($i = 0 ; $i < sizeof($rowSpalten) ; $i++) {
+					$querySuche .= " OR " . $rowSpalten[$i]->Field . " LIKE '$suchWort'";
 				}
 				# Klammer am Ende schließen-
 				$querySuche .= ")";
 	
 				# Query für die Suche
-				$suchfeld = mysql_query($querySuche);
-	
+				$suchfeld = $this->getObjektInfo($querySuche);
+				
 				# Ausgabe der Suche
 				$ergebnis_der_suche .= "<h2>Suchergebnis (= $ursprünglicheSuche)</h2>";
-				while($rowsuch = mysql_fetch_object($suchfeld))
-				{
+				for ($i = 0; $i < sizeof($suchfeld); $i++) {
 					$ergebnis_der_suche .= "<div class='invSuchErgeb'>";
-					$ergebnis_der_suche .= "<a href='$pfad=$rowsuch->id'>" . substr($rowsuch->$name, 0, 20) . "..</a>";
+					$ergebnis_der_suche .= "<a href='$pfad=$suchfeld[$i]->id'>" . substr($suchfeld[$i]->$name, 0, 20) . "..</a>";
 					$ergebnis_der_suche .= "</div>";
 				}
 				$close = "<a href='?' class='closeSumme'>X</a>";
@@ -69,7 +69,7 @@ class functions extends sql {
 	 */
 	function SeitenZahlen($query, $proSeite) {
 		$anzahl = $this->getAmount($query);
-		$anzahlSeiten = $anzahl / $proSeite;
+		$anzahlSeiten = $anzahl / $proSeite + 1; # plus eins, weil ansosnten eine Seite fehlt!
 	
 		for ($i = 1 ; $i <= $anzahlSeiten ; $i++) {
 			echo "<a";
@@ -114,16 +114,13 @@ class functions extends sql {
 	 */
 	function getUserID($username) {
 		# namen des Benutzers auswählen:
-		$this->connectToDB();
-		$selectUsername = "SELECT id, Name FROM benutzer WHERE Name = '$username' LIMIT 1";
-		$ergebnisUsername = mysql_query($selectUsername);
-		while ($rowUsername = mysql_fetch_object($ergebnisUsername)) {
-			
-			if(!isset($rowUsername->id)) {
-				$userID = 0;
-			} else {
-				$userID = $rowUsername->id;
-			}
+	
+		$userInfo = $this->getObjektInfo("SELECT id, Name FROM benutzer WHERE Name = '$username' LIMIT 1");
+		
+		if(isset($userInfo[0]->id)) {
+			$userID = $userInfo[0]->id;
+		} else {
+			$userID = 0;
 		}
 		
 		return $userID;
@@ -137,17 +134,13 @@ class functions extends sql {
 	 */
 	function getUserName($userid) {
 		# namen des Benutzers auswählen:
-		$this->connectToDB();
 		$selectUsername = "SELECT id, Name FROM benutzer WHERE id = '$userid' LIMIT 1";
-		$ergebnisUsername = mysql_query($selectUsername);
-		while ($rowUsername = mysql_fetch_object($ergebnisUsername)) {
-			$username = $rowUsername->Name;
+		$rowUsername = $this->getObjektInfo($selectUsername);
+		if(isset($rowUsername[0]->Name)) {
+			$username = $rowUsername[0]->Name;
+		} else {
+			$username = "gelöschter User";
 		}
-		
-		if(!isset($username) OR $username == "") {
-			$username = "Gelöschter Nutzer";
-		}
-		# 
 		return $username;
 
 	}
@@ -160,11 +153,13 @@ class functions extends sql {
 	function getCatID($kategorieName) {
 
 		$selectKat = "SELECT id, kategorie FROM blogkategorien WHERE kategorie = '$kategorieName' LIMIT 1";
-		$katergeb = mysql_query($selectKat);
-		while($row = mysql_fetch_object($katergeb)) {
-			$catID = $row->id;
+		
+		$row = $this->getObjektInfo($selectKat);
+		if(isset($row[0]->id)) {
+			$catID = $row[0]->id;
+		} else {
+			$catID = 0;
 		}
-
 		return $catID;
 	}
 
@@ -176,9 +171,11 @@ class functions extends sql {
 	function getCatName($kategorieID) {
 
 		$selectKat = "SELECT id, kategorie FROM blogkategorien WHERE id = '$kategorieID' LIMIT 1";
-		$katergeb = mysql_query($selectKat);
-		while($row = mysql_fetch_object($katergeb)) {
-			$catName = $row->kategorie;
+		$row = $this->getObjektInfo($selectKat);
+		if(isset($row[0]->kategorie)) {
+			$catName = $row[0]->kategorie;
+		} else {
+			$catName = "Unbekannt";
 		}
 
 		return $catName;
@@ -186,23 +183,23 @@ class functions extends sql {
 
 	/** Quelle: http://www.webmasterpro.de/coding/article/php-ein-einfaches-flexibles-rechtesystem.html
 	 * Einstieg
+	 * VERALTET
 	 */
 	function pruefung($benoetigt) {
 
 		$user = $_SESSION['username'];
-		$rightFromCurrentUser="SELECT rights, titel FROM benutzer WHERE Name = '$user'";
-		$ergebnis = mysql_query($rightFromCurrentUser);
-		$row = mysql_fetch_object($ergebnis);
-		$benutzerrechte = $row->rights;
+		$rightFromCurrentUser="SELECT rights, titel FROM benutzer WHERE Name = '$user'";		
+		$row = $this->getObjektInfo($rightFromCurrentUser);
+		
+		$benutzerrechte = $row[0]->rights;
 		$rechte = array();
 		
 		# Menge der Rechte prüfen:
-		$selectAnzahl = "SELECT id FROM userrights";
-		$ergebnisAnzahl = mysql_query($selectAnzahl);
-		$menge = mysql_num_rows($ergebnisAnzahl);
+		$selectAnzahl = "SELECT count(*) as anzahl FROM userrights";
+		$menge = $this->getObjektInfo($selectAnzahl);
 		# Anzahl prüfen Ende
 
-		for($i = $menge; $i >= 0; $i--) {
+		for($i = $menge[0]->anzahl; $i >= 0; $i--) {
 			$wert = pow(2, $i);
 			if($benutzerrechte >= $wert) {
 				$rechte[] = $wert;
@@ -212,7 +209,7 @@ class functions extends sql {
 		if(in_array($benoetigt, $rechte)) {
 			return true;
 		} else {
-			if(isset($row->titel) AND $row->titel == "Super User") {
+			if(isset($row[0]->titel) AND $row[0]->titel == "Super User") {
 				return true;
 			} else {
 				echo "<p class='meldung'>Du bist nicht berechtigt, diese Seite zu sehen.</p>";
@@ -236,8 +233,8 @@ class functions extends sql {
 		
 		$userHasRight = $this->getObjektInfo($query);
 		
-		if(isset($userHasRight->besitzer) AND isset($userHasRight->right_id)) {
-			if($userHasRight->besitzer == $user AND $userHasRight->right_id == $rightID) {
+		if(isset($userHasRight[0]->besitzer) AND isset($userHasRight[0]->right_id)) {
+			if($userHasRight[0]->besitzer == $user AND $userHasRight[0]->right_id == $rightID) {
 				return true;
 			} else {
 				echo "<p class='meldung'>Du bist nicht berechtigt, diese Seite zu sehen.</p>";
@@ -268,8 +265,8 @@ class functions extends sql {
 	
 		$userHasRight = $this->getObjektInfo($query);
 	
-		if(isset($userHasRight->besitzer) AND isset($userHasRight->right_id)) {
-			if($userHasRight->besitzer == $user AND $userHasRight->right_id == $id) {
+		if(isset($userHasRight[0]->besitzer) AND isset($userHasRight[0]->right_id)) {
+			if($userHasRight[0]->besitzer == $user AND $userHasRight[0]->right_id == $id) {
 				return true;
 			} else {
 				return false;
@@ -291,17 +288,16 @@ class functions extends sql {
 		if($benutzerrechte == 0) {
 			$user = $_SESSION['username'];
 			$rightFromCurrentUser="SELECT id, Name, rights, titel FROM benutzer WHERE Name = '$user'";
-			$ergebnis = mysql_query($rightFromCurrentUser);
-			$row = mysql_fetch_object($ergebnis);
-			$benutzerrechte = $row->rights;
+			$row = $this->getObjektInfo($rightFromCurrentUser);
+			$benutzerrechte = $row[0]->rights;
 		}
 
 		$rechte = array();
 
 		# Anzahl der Rechte prüfen
-		$selectAnzahl = "SELECT id FROM userrights";
-		$ergebnisAnzahl = mysql_query($selectAnzahl);
-		$menge = mysql_num_rows($ergebnisAnzahl);
+		$selectAnzahl = "SELECT count(*) as anzahl FROM userrights";
+		$menge = $this->getObjektInfo($selectAnzahl);
+		$menge = $menge[0]->anzahl;
 		# Anzahl prüfen Ende
 
 		for($i = $menge; $i >= 0; $i--) {
@@ -314,7 +310,7 @@ class functions extends sql {
 		if(in_array($benoetigt, $rechte)) {
 			return true;
 		} else {
-			if(isset($row->titel) AND $row->titel == "Super User") {
+			if(isset($row[0]->titel) AND $row[0]->titel == "Super User") {
 				return true;
 			} else {
 				return false;
@@ -360,21 +356,23 @@ class functions extends sql {
 			
 			$userID = $this->getUserID($username);
 			$insert="INSERT INTO vorschlaege (text, autor, status, ipadress) VALUES ('$username $art','$userID','$status','$ip')";
-			$ergebnis = mysql_query($insert);
-			if($ergebnis == true) {
+
+			if($this->sql_insert_update_delete($insert) == true) {
 				return true;
 			} else {
 				return false;
 			}
+			
 		} else {
 			# Log Eintrag erstellen.
 			$insert="INSERT INTO vorschlaege (text, autor, status, ipadress) VALUES ('Ein Login ist fehlgeschlagen: $art ($ip).','0','Error','$ip')";
-			$ergebnis = mysql_query($insert);
-			if($ergebnis == true) {
+			
+			if($this->sql_insert_update_delete($insert) == true) {
 				return true;
 			} else {
 				return false;
 			}
+
 		}
 	}
 
@@ -694,8 +692,8 @@ class functions extends sql {
 					AND datediff(curdate(), timestamp) < 5
 					ORDER BY timestamp DESC");
 			
-			if($anzahlBenachrichtigungen->anzahl > 0) {
-				$linkname = "Du hast " . $anzahlBenachrichtigungen->anzahl . " Nachrichten";
+			if($anzahlBenachrichtigungen[0]->anzahl > 0) {
+				$linkname = "Du hast " . $anzahlBenachrichtigungen[0]->anzahl . " Nachrichten";
 				$class = "highlightedLink";
 			}
 			

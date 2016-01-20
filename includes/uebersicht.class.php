@@ -117,7 +117,7 @@ class uebersicht extends functions {
 	 * 
 	 */
 	function showUebersicht() {
-		$kacheln = $this->getObjectsToArray("SELECT * FROM uebersicht_kacheln WHERE active=1 ORDER BY sortierung, name, id");
+		$kacheln = $this->getObjektInfo("SELECT * FROM uebersicht_kacheln WHERE active=1 ORDER BY sortierung, name, id");
 		
 		for($i = 0; $i < sizeof($kacheln); $i++) {
 			if($this->userHasRight($kacheln[$i]->rightID, 0) == true) {
