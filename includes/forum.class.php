@@ -113,7 +113,7 @@ class forum extends functions {
 				}
 				
 				# Benutzer finden:
-				$autor = $this->getUserName($row->autor);
+				$autor = $this->getUserName($row[$i]->autor);
 				
 				if($row[$i]->status == 1 OR $_SESSION['username'] == $autor OR $this->userHasRight("10", 0) == true) {
 					
@@ -127,7 +127,7 @@ class forum extends functions {
 					<td><a href='/flatnet2/usermanager/usermanager.php'>$autor</a></td>
 					<td> $menge </td>";
 					echo "<td>" . $row[$i]->tag . "." . $row[$i]->monat . "." . $row[$i]->jahr . " " . $row[$i]->stunde . ":" . $row[$i]->minute . " Uhr" . "</td>";
-					if($row->status == 1) {
+					if($row[$i]->status == 1) {
 						$offen = "&#10004;";
 					} else {
 						$offen = "&#10008;";

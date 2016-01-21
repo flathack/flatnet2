@@ -19,16 +19,16 @@ class usermanager extends functions {
 			
 		} else {
 			$select = "SELECT * FROM benutzer WHERE Name = '$user' LIMIT 1";
-			$ergebnis = mysql_query($select);
-			while($row = mysql_fetch_object($ergebnis)) {
-				if(!isset($row->Name) OR $row->Name == "") {
+			$row = $this->getObjektInfo($select);
+			for ($i = 0 ; $i < sizeof($row) ; $i++) {
+				if(!isset($row[$i]->Name) OR $row[$i]->Name == "") {
 					echo "<p class='info'>Der Benutzer existiert nicht</p>";
 				} else {
 					echo "<div class='spacer'>";
-					echo "<p class='buttonlink'>Name: $row->Name</p>";
-					if(isset($row->titel)) { echo "<p class='highlightedLink'>Titel: $row->titel</p>"; }
-					echo "<p class='erfolg'>" . $row->Name . " ist Mitglied seit dem " . $row->timestamp . " </p>";
-					echo "<h2>Beiträge von $row->Name</h2>";
+					echo "<p class='buttonlink'>Name: ".$row[$i]->Name."</p>";
+					if(isset($row[$i]->titel)) { echo "<p class='highlightedLink'>Titel: ".$row[$i]->titel."</p>"; }
+					echo "<p class='erfolg'>" . $row[$i]->Name . " ist Mitglied seit dem " . $row[$i]->timestamp . " </p>";
+					echo "<h2>Beiträge von ".$row[$i]->Name."</h2>";
 					echo "<table class='flatnetTable'>";
 					echo "<thead><td colspan='2'>Titel</td></thead>";
 					
@@ -44,21 +44,21 @@ class usermanager extends functions {
 						
 					}
 					
-					$ergebnis2 = mysql_query($selectBlog);
-					while($row2 = mysql_fetch_object($ergebnis2)) {
+					$row2 = $this->getObjektInfo($selectBlog);
+					for ($j = 0 ; $j < sizeof($row2) ; $j++) {
 						
 						echo "<tbody ";
 						# Wenn der Eintrag gelocked it
-						if($row2->locked == 1) {
+						if($row2[$j]->locked == 1) {
 							echo "id = 'illegal' ";
 						}
 						# Wenn der Eintrag für andere Benutzer gesperrt ist
-						if($row2->status != 1) {
+						if($row2[$j]->status != 1) {
 							echo "id = 'login'";
 						}
 						echo " >";
 						
-						echo "<td><a href='/flatnet2/blog/blogentry.php?showblogid=$row2->id'>$row2->titel</a></td><td>vom $row2->timestamp</td></tbody>";
+						echo "<td><a href='/flatnet2/blog/blogentry.php?showblogid=".$row2[$j]->id."'>".$row2[$j]->titel."</a></td><td>vom ".$row2[$j]->timestamp."</td></tbody>";
 						
 					}
 					
@@ -77,11 +77,11 @@ class usermanager extends functions {
 		if(isset($_GET['userlist']) OR isset($_GET['user'])) {
 			# Benutzerauswahl
 			$benutzerlisteUser="SELECT id, Name FROM benutzer ORDER BY name";
-			$ergebnisUser = mysql_query($benutzerlisteUser);
+			$rowUser = $this->getObjektInfo($benutzerlisteUser);
 			
-			while($rowUser = mysql_fetch_object($ergebnisUser))
+			for ($i = 0 ; $i < sizeof($rowUser) ; $i++)
 			{
-				echo "<div class='gwstart1'><div id='gwnekromant'><h2><a href='?user=$rowUser->Name'>$rowUser->Name</a></h2></div></div>";
+				echo "<div class='gwstart1'><div id='gwnekromant'><h2><a href='?user=".$rowUser[$i]->Name."'>".$rowUser[$i]->Name."</a></h2></div></div>";
 			}
 			echo "<br><br><br><br><br><br><br><br><br><br><br>";
 			echo "<br><br><br><br><br><br><br><br>";
@@ -99,29 +99,28 @@ class usermanager extends functions {
 
 		# General Account Information
 		$select = "SELECT * FROM benutzer WHERE Name = '$user'";
-		$ergebnis = mysql_query($select);
-		while($row = mysql_fetch_object($ergebnis)) {
+		$row = $this->getObjektInfo($select);
+		
 			echo "<div id='left'>";
 			echo "<h2>Allgemein</h2>";
-			echo "<br>Realname: " . $row->realName;
-			echo "<br>Dein Account existiert seit dem: " . $row->timestamp . "";
-			echo "<br>Du hast die ID: " . $row->id . "";
-			echo "<br>und die Rechte " . $row->rights . "";
+			echo "<br>Realname: " . $row[0]->realName;
+			echo "<br>Dein Account existiert seit dem: " . $row[0]->timestamp . "";
+			echo "<br>Du hast die ID: " . $row[0]->id . "";
+			echo "<br>und die Rechte " . $row[0]->rights . "";
 			echo "</div>";
-		}
 
 		# Guildwars Account Information
-		$select = "SELECT * FROM gw_chars WHERE besitzer = '$user'";
-		$ergebnis = mysql_query($select);
-		$menge = mysql_num_rows($ergebnis);
+		$select = "SELECT count(*) as anzahl FROM gw_chars WHERE besitzer = '$user'";
+		$mengeGrund = $this->getObjektInfo($select);
+		$menge = $mengeGrund[0]->anzahl;
 		echo "<div id=''>";	
 		echo "<h2>Guildwars</h2>";
 		echo "<p>Du hast " . $menge . " Charakter</p></div>";
 
 		# Dokumentation Account Information
 		$select = "SELECT * FROM docu WHERE autor = '$user'";
-		$ergebnis = mysql_query($select);
-		$menge = mysql_num_rows($ergebnis);
+		$mengeGrund = $this->getObjektInfo($select);
+		$menge = $mengeGrund[0]->anzahl;
 		echo "<div id=''>";
 		echo "<h2>Dokumentation</h2>";
 		echo "<p>Anzahl der Einträge in der Dokumentation: " . $menge;
@@ -129,15 +128,15 @@ class usermanager extends functions {
 
 		# Vorschläge Account Information
 		$select = "SELECT * FROM vorschlaege WHERE autor = '$user'";
-		$ergebnis = mysql_query($select);
-		$menge = mysql_num_rows($ergebnis);
+		$mengeGrund = $this->getObjektInfo($select);
+		$menge = $mengeGrund[0]->anzahl;
 		echo "<div id=''>";
 		echo "</div>";
 		
 		# Vorschläge Account Information
 		$select = "SELECT * FROM blogtexte WHERE autor = '$user'";
-		$ergebnis = mysql_query($select);
-		$menge = mysql_num_rows($ergebnis);
+		$mengeGrund = $this->getObjektInfo($select);
+		$menge = $mengeGrund[0]->anzahl;
 		echo "<div id=''>";
 		echo "<h2>Foreneinträge</h2>";
 		echo "<p>Anzahl: " . $menge;

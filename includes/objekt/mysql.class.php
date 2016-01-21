@@ -57,9 +57,11 @@ class sql {
 	 * @todo
 	 */
 	function connectToDBNewWay() {
-		
-		$db = new PDO('mysql:host=localhost;dbname=flathacksql1;charset=utf8', 'root', '12141214');
-		
+		try {
+		$db = new PDO('mysql:host=localhost;dbname=62_flathacksql1', '62_flathacksql2', '');
+		} catch (Exception $e) {
+			die ("<div class='info'>Oh Noes! Es gibt ein Problem mit der Datenbank! Ich arbeite dran ... </div><div class='info'>Der Fehler lautet: <br><br>$e</div>");
+		}
 		return $db;
 		
 	}

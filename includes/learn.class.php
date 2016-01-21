@@ -59,10 +59,10 @@ class learn extends functions {
 				
 				$getKategorieInfos = $this->getObjektInfo("SELECT * FROM learnkategorie WHERE id = '$kategorie' ");
 				
-				if($getKategorieInfos->public == 1) {
-					$getEintraege = $this->getObjectsToArray("SELECT * FROM learnlernkarte WHERE kategorie = $kategorie");
+				if($getKategorieInfos[0]->public == 1) {
+					$getEintraege = $this->getObjektInfo("SELECT * FROM learnlernkarte WHERE kategorie = $kategorie");
 				} else {
-					$getEintraege = $this->getObjectsToArray("SELECT * FROM learnlernkarte WHERE besitzer = $userid AND kategorie = $kategorie");
+					$getEintraege = $this->getObjektInfo("SELECT * FROM learnlernkarte WHERE besitzer = $userid AND kategorie = $kategorie");
 				}
 				
 				$this->editEintrag();
@@ -257,10 +257,10 @@ class learn extends functions {
 	
 				$getKategorieInfos = $this->getObjektInfo("SELECT * FROM learnkategorie");
 	
-				if($getKategorieInfos->public == 1) {
-					$getEintraege = $this->getObjectsToArray("SELECT * FROM learnlernkarte WHERE kategorie = $kategorie");
+				if($getKategorieInfos[0]->public == 1) {
+					$getEintraege = $this->getObjektInfo("SELECT * FROM learnlernkarte WHERE kategorie = $kategorie");
 				} else {
-					$getEintraege = $this->getObjectsToArray("SELECT * FROM learnlernkarte WHERE besitzer = $userid AND kategorie = $kategorie");
+					$getEintraege = $this->getObjektInfo("SELECT * FROM learnlernkarte WHERE besitzer = $userid AND kategorie = $kategorie");
 				}
 	
 				echo "<ul>";
@@ -284,7 +284,7 @@ class learn extends functions {
 	 */
 	function showKategorien() {
 		$userid = $this->getUserID($_SESSION['username']);
-		$getkategories = $this->getObjectsToArray("SELECT * FROM learnkategorie WHERE besitzer = $userid");
+		$getkategories = $this->getObjektInfo("SELECT * FROM learnkategorie WHERE besitzer = $userid");
 	
 		if(isset($_GET['kategorie'])) {
 			$kategorieBereitsVorhanden = $_GET['kategorie'];
@@ -386,7 +386,7 @@ class learn extends functions {
 		
 		$check = $this->getObjektInfo($query);
 		
-		if(isset($check->id)) {
+		if(isset($check[0]->id)) {
 			return $check;
 		} else {
 			return false;
@@ -650,7 +650,7 @@ class learn extends functions {
 				AND $this->checkIfUserIsAllowedToSeeKategorie($besitzer, $kategorie) == true) {
 			
 			$query = "SELECT * FROM learnlernkarte WHERE kategorie = '$kategorie'";
-			$eintraege = $this->getObjectsToArray($query);
+			$eintraege = $this->getObjektInfo($query);
 			
 			return $eintraege;
 		} else {
@@ -668,9 +668,9 @@ class learn extends functions {
 		
 		$kategorieInfo = $this->getKategorieInfo($kategorie);
 				
-		if($userID == $kategorieInfo->besitzer){
+		if($userID == $kategorieInfo[0]->besitzer){
 			return true;
-		} else if($kategorieInfo->public == 1) {
+		} else if($kategorieInfo[0]->public == 1) {
 			return true;
 		} else {
 			return false;
@@ -678,12 +678,17 @@ class learn extends functions {
 		
 	}
 	
+	/**
+	 * Prüft, ob die Kategorie bereits existiert.
+	 * @param unknown $kategorie
+	 * @return boolean
+	 */
 	function checkIfKategorieExists($kategorie) {
 		$query = "SELECT count(*) as anzahl FROM learnkategorie WHERE id = '$kategorie'";
 		
 		$check = $this->getObjektInfo($query);
 		
-		if($check->anzahl > 0) {
+		if($check[0]->anzahl > 0) {
 			return true;
 		} else {
 			return false;

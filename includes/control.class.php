@@ -220,18 +220,18 @@ class control extends functions {
 				if ($bearb) {
 					echo "<div class='newChar'>";
 					echo "<h2><a name='bearbeiten'>Benutzerbearbeitung</a> <a href='?userverw=1' class='highlightedLink'>X</a></h2>";
-					$userinfo = "SELECT timestamp, id, Name, Passwort, rights FROM benutzer WHERE id LIKE $bearb";
+					$userinfo = "SELECT timestamp, id, Name, Passwort, titel, forumRights FROM benutzer WHERE id LIKE $bearb";
 					$row = $this->getObjektInfo($userinfo);
 					echo "<table>";
 					for ($i = 0 ; $i < sizeof($row) ; $i++) {
 						echo "<form action='?' method=post>";
-						echo "<tr><td>Neuer Benutzername: </td><td><input type=text value='".$row[$i]->Name."' name=newname autofocus></td></tr>";
+						echo "<tr><td>Neuer Benutzername: </td><td><input type=text value='".$row[$i]->Name."' name=newname autofocus required></td></tr>";
 						echo "<tr><td>Neues Passwort: </td><td><input type=password value='' name=newpass ></td></tr>";
 						echo "<tr><td><input type=hidden value='".$row[$i]->id."' name=id readonly></td></tr>";
 						echo "<tr><td><input type=hidden value='".$row[$i]->Name."' name=name readonly></td></tr>";
-						echo "<tr><td>Rechte:</td><td><input type=text value='".$row[$i]->rights."' name=rights required></td></tr>";
-						echo "<tr><td>
-								<input type=submit name='bearbuser' value='Ausführen'></td>
+						echo "<tr><td>Titel: </td><td><input type=text value='".$row[$i]->titel."' name=titel></td></tr>";
+						echo "<tr><td>Forum Rechte: </td><td><input type=text value='".$row[$i]->forumRights."' name=forumRights></td></tr>";
+						echo "<tr><td><input type=submit name='bearbuser' value='Ausführen'></td>
 								<td><input type=submit name='bearbuser' value='Benutzer Informationen anzeigen' />";
 						echo "<a class='highlightedLink' href='?action=3&table=benutzer&id=".$row[$i]->id."#angezeigteID'>Löschen</a></td></tr>";
 						echo "</form>";
@@ -350,26 +350,28 @@ class control extends functions {
 					if ($updatepass == "") {
 						$noPassChange = 1;
 					} else {
+						$noPassChange = 0;
 						$updatepassmd5 = md5 ( $updatepass );
 					}
-					$rights = $_POST ['rights'];
+					$forumRights = $_POST ['forumRights'];
 					$newUserName = $_POST ['newname'];
 					$selectedid = $_POST ['id'];
+					$titel = $_POST ['titel'];
 					
 					// Prüfen, ob die Daten überhaupt geändert wurden:
-					$checkRights = "SELECT id, Name, rights FROM benutzer WHERE id = '$selectedid' LIMIT 1";
+					$checkRights = "SELECT id, Name, forumRights FROM benutzer WHERE id = '$selectedid' LIMIT 1";
 					$rightsCheck = $this->getObjektInfo($checkRights);
 					
-					if ($rights == $rightsCheck[0]->rights and $updatepass == "" and $newUserName == $rightsCheck[0]->Name) {
+					if ($forumRights == $rightsCheck[0]->forumRights and $updatepass == "" and $newUserName == $rightsCheck[0]->Name) {
 						echo "<p class='info'>Es gab keine Änderung</p>";
 						return false;
 					}
 					
 					// SQL Befehle
 					if ($noPassChange == 1) {
-						$sqlupdate = "UPDATE benutzer SET rights='$rights', Name='$newUserName' WHERE id='$selectedid'";
+						$sqlupdate = "UPDATE benutzer SET forumRights='$forumRights', Name='$newUserName', titel='$titel' WHERE id='$selectedid'";
 					} else {
-						$sqlupdate = "UPDATE benutzer SET Passwort='$updatepassmd5', rights='$rights', Name='$newUserName' WHERE id='$selectedid'";
+						$sqlupdate = "UPDATE benutzer SET Passwort='$updatepassmd5', forumRights='$forumRights', Name='$newUserName', titel='$titel' WHERE id='$selectedid'";
 					}
 					
 					if ($this->sql_insert_update_delete($sqlupdate) == true) {

@@ -16,7 +16,7 @@ class blog extends functions {
 			
 			$getBlogEintragInfos = $this->getObjektInfo("SELECT * FROM blogtexte WHERE id = '$blogid'");
 			
-			$category = $getBlogEintragInfos->kategorie;
+			$category = $getBlogEintragInfos[0]->kategorie;
 			
 		} else {
 			$category = "";
@@ -27,7 +27,7 @@ class blog extends functions {
 			echo "<a href=\"/flatnet2/forum/index.php?blogcategory=$category\" class=\"highlightedLink\">Zurück </a>";
 			echo "<a href='/flatnet2/blog/addBlogEntry.php?blogcategory=$category' class='buttonlink'>Neues Thema</a>";
 			
-			if($getBlogEintragInfos->locked != 1) {
+			if($getBlogEintragInfos[0]->locked != 1) {
 				echo "<a href='/flatnet2/blog/blogentry.php?showblogid=$blogid&newComment=$blogid#antwort' class='greenLink'>Antwort erstellen</a>"; 
 			}
 		} else {
@@ -58,10 +58,10 @@ class blog extends functions {
 				# CurrentBlogID Info
 				$id = $_GET['showblogid'];
 				$getbloginfo = $this->getObjektInfo("SELECT * FROM blogtexte WHERE id = '$id'");
-				$kategorie = $getbloginfo->kategorie;
+				$kategorie = $getbloginfo[0]->kategorie;
 				
-				if(isset($getbloginfo->kategorie)) {
-					if($getbloginfo->locked == 0) {
+				if(isset($getbloginfo[0]->kategorie)) {
+					if($getbloginfo[0]->locked == 0) {
 						echo "<a class='rightRedLink' href='?showblogid=$id&ursprungKategorie=$kategorie&lockthread=$id'> &#128274; LOCK </a>";
 					} else {
 						echo "<a class='rightRedLink' name='thisThreadLocked'>Dieses Thema ist gesperrt</a>";
@@ -173,22 +173,21 @@ class blog extends functions {
 					# ID des Benutzers auswählen:
 					$autor = $_SESSION['username'];
 					$selectUserID = "SELECT id, Name FROM benutzer WHERE Name = '$autor' LIMIT 1";
-					$ergebnisUserID = mysql_query($selectUserID);
-					while($row = mysql_fetch_object($ergebnisUserID)) {
-						$autor = $row->id;
-					}
+					$row = $this->getObjektInfo($selectUserID);
+					if(isset($row[0]->id)) { $autor = $row[0]->id; } else { $autor = 0; }
 					
 					$text = $_POST['blogtext'];
 					$kategorie = $_POST['blogkategorie'];
+					
+					# ID der Kategorie:
 					$selectKategorieID = "SELECT id, kategorie FROM blogkategorien WHERE kategorie = '$kategorie' LIMIT 1";
-					$ergebnisKategorieID = mysql_query($selectKategorieID);
-					while($row2 = mysql_fetch_object($ergebnisKategorieID)) {
-						$kategorie = $row2->id;
-					}
+					$row2 = $this->getObjektInfo($selectKategorieID);
+					if(isset($row2[0]->id)) { $kategorie = $row2[0]->id; } else { $kategorie = 0; }
+					
 					$status = $_POST['status'];
 					$insertNewBlog="INSERT INTO blogtexte (autor, titel, text, kategorie, status) VALUES ('$autor','$titel','$text','$kategorie','$status')";
-					$ergebnis = mysql_query($insertNewBlog);
-					if($ergebnis == true) {
+					
+					if($this->sql_insert_update_delete($insertNewBlog) == true) {
 						echo '<p class="erfolg">Der Foreneintrag mit dem Titel <strong>' . $titel . ' </strong>wurde erstellt.';
 					} else {
 						echo '<p class="meldung">Das speichern ist fehlgeschlagen! 
@@ -209,22 +208,18 @@ class blog extends functions {
 
 			# Check ob eine ID angegeben wurde.
 			if($id != "" AND is_numeric($id) == true) {
-						
-				$selectCheck = "SELECT id, autor, status, kategorie FROM blogtexte WHERE id=$id";
-				$ergebnisCheck = mysql_query($selectCheck);
-				$rowCheck = mysql_fetch_object($ergebnisCheck);
 				
 				$currentUser = $this->getUserID($_SESSION['username']);
-	
+						
+				$selectCheck = "SELECT id, autor, status, kategorie FROM blogtexte WHERE id=$id";
+				$rowCheck = $this->getObjektInfo($selectCheck);
+				
 				# Check, ob User den Artikel sehen darf:
-				if(
-				
-				!isset($rowCheck->autor) 
-				
-				OR $rowCheck->autor != $currentUser 
-					AND $rowCheck->status == '0' 
+				if(!isset($rowCheck[0]->autor) 			
+				OR $rowCheck[0]->autor != $currentUser 
+					AND $rowCheck[0]->status == '0' 
 					AND $this->userHasRight("10", 0) == false
-							
+
 				OR $this->userIsAllowedToSeeCategory($currentUser, $id) == false
 				) {
 					
@@ -240,9 +235,8 @@ class blog extends functions {
 						, minute(timestamp) AS minute
 						FROM blogtexte WHERE id=$id";
 			
-					
-					$ergebnis = mysql_query($select);
-					while($row = mysql_fetch_object($ergebnis)) {
+					$row = $this->getObjektInfo($select);
+					for ($i = 0 ; $i < sizeof($row) ; $i++) {
 						
 						if(isset($_GET['editComment'])) {
 							$this->editKommentar($_GET['editComment']);
@@ -262,7 +256,7 @@ class blog extends functions {
 						echo "<table class='forumPost'>";
 						
 						# Wenn der Benutzer einen Titel hat:
-						$autorTitel = $this->getObjektInfo("SELECT id, titel FROM benutzer WHERE id = '" . $row->autor . "'");
+						$autorTitel = $this->getObjektInfo("SELECT id, titel FROM benutzer WHERE id = '" . $row[$i]->autor . "'");
 						if(isset($autorTitel->titel) AND $autorTitel->titel != "") {
 							$titel = "<p id='smallLink' class='rightRedLink'>" . $autorTitel->titel . "</p>";
 						} else {
@@ -270,29 +264,29 @@ class blog extends functions {
 						}
 						
 						# KOPFZEILE
-							echo "<thead><td colspan = '3'>Titel des Beitrags: " . $row->titel . "</td></thead>";
+							echo "<thead><td colspan = '3'>Titel des Beitrags: " . $row[$i]->titel . "</td></thead>";
 							echo "<thead id='small'>";
 							echo "<td><img id='id' src='../images/avatar_122.png' style='width:30px; height: 30px;' />
-									<a id='id' class='rightBlueLink' href='#ThreadID".$row->id."' name='#ThreadID".$row->id."'>ID: ".$row->id."</a>
-									<p id='smallLink' class='rightBlueLink'>Autor: " . $this->getUserName($row->autor) . "</p>
+									<a id='id' class='rightBlueLink' href='#ThreadID".$row[$i]->id."' name='#ThreadID".$row[$i]->id."'>ID: ".$row[$i]->id."</a>
+									<p id='smallLink' class='rightBlueLink'>Autor: " . $this->getUserName($row[$i]->autor) . "</p>
 							$titel</td>
 							
-							<td>Erstellt: " .$row->tag . "." . $row->monat . "." . $row->jahr . " | " . $row->stunde . ":" . $row->minute . " Uhr</td>"; 
+							<td>Erstellt: " .$row[$i]->tag . "." . $row[$i]->monat . "." . $row[$i]->jahr . " | " . $row[$i]->stunde . ":" . $row[$i]->minute . " Uhr</td>"; 
 							
 							# Buttons
 							echo "<td>";
 							
 							# EDIT KNOPF
-							if($row->locked != 1) {
-								if($this->userHasRight("32", 0) == "true" OR $_SESSION['username'] == $this->getUserName($row->autor)) {
-									echo "<a class='rightRedLink' href='?bearbid=$row->id' >edit</a>";
+							if($row[$i]->locked != 1) {
+								if($this->userHasRight("32", 0) == "true" OR $_SESSION['username'] == $this->getUserName($row[$i]->autor)) {
+									echo "<a class='rightRedLink' href='?bearbid=$row[$i]->id' >edit</a>";
 								}
 							}
 							
 							# ANTWORT ERSTELLEN KNOPF
 							if($row->locked != 1) {
-								echo "<a class='rightBlueLink' href='?showblogid=$row->id&newComment=$row->id&quote=$row->id#antwort'> Zitat </a>";
-								echo "<a class='rightGreenLink' href='?showblogid=$row->id&newComment=$row->id#antwort'> Antwort erstellen </a>";
+								echo "<a class='rightBlueLink' href='?showblogid=".$row[$i]->id."&newComment=".$row[$i]->id."&quote=".$row[$i]->id."#antwort'> Zitat </a>";
+								echo "<a class='rightGreenLink' href='?showblogid=".$row[$i]->id."&newComment=".$row[$i]->id."#antwort'> Antwort erstellen </a>";
 							}
 							
 							
@@ -303,17 +297,16 @@ class blog extends functions {
 							
 							# TEXT ANZEIGE: 
 							echo "<tbody>"; 
-								echo "<td colspan='3'>" . $row->text . "</td>";
+								echo "<td colspan='3'>" . $row[$i]->text . "</td>";
 							echo "</tbody>";						
 						echo "</table>";
 						
 						# KommentarFunktion aufrufen
 						echo "<table class='forumPost'>";
-						$this->kommentare($row->id);
-					#	echo "<tfoot id='small'><td colspan='3'><a class='greenLink' href='?showblogid=$row->id&newComment=$row->id'> Antwort erstellen </a></td></tfoot>";
+						$this->kommentare($row[$i]->id);
 						echo "</table>";
 	
-					} # While Ende
+					} # FOR Ende
 				} # Check, ob der User den Post sehen darf.
 			} else { # ID != 0 Ende
 				echo "<p class='meldung'>Du kannst diesen Beitrag nicht anzeigen</p>";
