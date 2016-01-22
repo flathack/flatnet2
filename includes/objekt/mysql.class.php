@@ -58,7 +58,7 @@ class sql {
 	 */
 	function connectToDBNewWay() {
 		try {
-		$db = new PDO('mysql:host=localhost;dbname=flathacksql1', 'root', '12141214');
+		$db = new PDO('mysql:host=localhost;dbname=62_flathacksql1', '62_flathacksql1', '12141214');
 		} catch (Exception $e) {
 			die ("<div class='info'>Oh Noes! Es gibt ein Problem mit der Datenbank! Ich arbeite dran ... </div><div class='info'>Der Fehler lautet: <br><br>$e</div>" . $this->connectToDBOldWay());
 		}
@@ -258,10 +258,9 @@ class sql {
 	 * Ermöglicht das Abfragen, ob ein Objekt in einer Datenbank bereits existiert.
 	 * und gibt True oder False zurück.
 	 */
-	function objectExists($table, $column, $object) {
-		$check = "SELECT * FROM $table WHERE $column LIKE '$object' LIMIT 1";
-		$row = $this->getObjektInfo($check);	
-		if(isset($row[0]->$column)) {
+	function objectExists($query) {
+		$row = $this->getObjektInfo($query);	
+		if(isset($row)) {
 			return true;
 		} else {
 			return false;

@@ -215,7 +215,8 @@ class blog extends functions {
 				$rowCheck = $this->getObjektInfo($selectCheck);
 				
 				# Check, ob User den Artikel sehen darf:
-				if(!isset($rowCheck[0]->autor) 			
+				if(!isset($rowCheck[0]->autor) 	
+				
 				OR $rowCheck[0]->autor != $currentUser 
 					AND $rowCheck[0]->status == '0' 
 					AND $this->userHasRight("10", 0) == false
@@ -279,12 +280,12 @@ class blog extends functions {
 							# EDIT KNOPF
 							if($row[$i]->locked != 1) {
 								if($this->userHasRight("32", 0) == "true" OR $_SESSION['username'] == $this->getUserName($row[$i]->autor)) {
-									echo "<a class='rightRedLink' href='?bearbid=$row[$i]->id' >edit</a>";
+									echo "<a class='rightRedLink' href='?bearbid=".$row[$i]->id."' >edit</a>";
 								}
 							}
 							
 							# ANTWORT ERSTELLEN KNOPF
-							if($row->locked != 1) {
+							if($row[$i]->locked != 1) {
 								echo "<a class='rightBlueLink' href='?showblogid=".$row[$i]->id."&newComment=".$row[$i]->id."&quote=".$row[$i]->id."#antwort'> Zitat </a>";
 								echo "<a class='rightGreenLink' href='?showblogid=".$row[$i]->id."&newComment=".$row[$i]->id."#antwort'> Antwort erstellen </a>";
 							}
@@ -525,7 +526,7 @@ class blog extends functions {
 		if($this->userHasRight("30", 0) == true) {
 		
 			$blogIDInfos = $this->getObjektInfo("SELECT id, locked FROM blogtexte WHERE id = '$blogid'");
-			if($blogIDInfos->locked != 1) {
+			if($blogIDInfos[0]->locked != 1) {
 			
 				if(!isset($_POST['absenden'])) {
 					if($this->userHasRight("20", 0) == true) {
@@ -544,7 +545,7 @@ class blog extends functions {
 							, minute(timestamp) as minute
 							, hour(timestamp) as stunde
 							FROM blogtexte WHERE id = '$quoteID'");
-							$quote = "<blockquote><strong>" . $this->getUserName($getQuoteInfo->autor) . "</strong> schrieb am " . $getQuoteInfo->tag . "." . $getQuoteInfo->monat . "." . $getQuoteInfo->jahr . " um " . $getQuoteInfo->stunde . ":" .$getQuoteInfo->minute. " Uhr zu <q>".$getQuoteInfo->titel."</q>:<br>" . strip_tags($getQuoteInfo->text, '<p></p><br><br/><br />') . "</blockquote><p>text...</p>";
+							$quote = "<blockquote><strong>" . $this->getUserName($getQuoteInfo[0]->autor) . "</strong> schrieb am " . $getQuoteInfo[0]->tag . "." . $getQuoteInfo[0]->monat . "." . $getQuoteInfo[0]->jahr . " um " . $getQuoteInfo[0]->stunde . ":" .$getQuoteInfo[0]->minute. " Uhr zu <q>".$getQuoteInfo[0]->titel."</q>:<br>" . strip_tags($getQuoteInfo[0]->text, '<p></p><br><br/><br />') . "</blockquote><p>text...</p>";
 						}
 						
 						# Wenn ein Kommentar gequotet wurde:
@@ -558,7 +559,7 @@ class blog extends functions {
 							, hour(timestamp) as stunde
 							FROM blog_kommentare WHERE id = '$quoteID'");
 							
-							$quote = "<blockquote><strong>" . $this->getUserName($getQuoteInfo->autor) . "</strong> schrieb am " . $getQuoteInfo->tag . "." . $getQuoteInfo->monat . "." . $getQuoteInfo->jahr . " um " . $getQuoteInfo->stunde . ":" .$getQuoteInfo->minute. " Uhr:<br> " . strip_tags($getQuoteInfo->text, '<p></p><br><br/><br />') . "</blockquote><p>text...</p>";
+							$quote = "<blockquote><strong>" . $this->getUserName($getQuoteInfo[0]->autor) . "</strong> schrieb am " . $getQuoteInfo[0]->tag . "." . $getQuoteInfo[0]->monat . "." . $getQuoteInfo[0]->jahr . " um " . $getQuoteInfo[0]->stunde . ":" .$getQuoteInfo[0]->minute. " Uhr:<br> " . strip_tags($getQuoteInfo[0]->text, '<p></p><br><br/><br />') . "</blockquote><p>text...</p>";
 						}
 						
 						
@@ -585,15 +586,14 @@ class blog extends functions {
 						# ID vom aktuellen Benutzer holen
 						$autor = $_SESSION['username'];
 						$selectBenutzer = "SELECT id, Name FROM benutzer WHERE Name = '$autor'";
-						$ergebnisBenutzer = mysql_query($selectBenutzer);
-						$rowAutor = mysql_fetch_object($ergebnisBenutzer);
+						$rowAutor = $this->getObjektInfo($selectBenutzer);
 						# ID geholt:
-						$autorID = $rowAutor->id;
+						$autorID = $rowAutor[0]->id;
 						# $blogid
 							
 						$insertKommentar="INSERT INTO blog_kommentare (autor, text, blogid) VALUES ('$autorID','$text','$blogid')";
-						$ergebnis = mysql_query($insertKommentar);
-						if($ergebnis == true) {
+						
+						if($this->sql_insert_update_delete($insertKommentar) == true) {
 							echo "<p class='erfolg'>Antwort erstellt</p>";
 						} else {
 							echo "<p class='meldung'>Fehler</p>";
@@ -628,18 +628,17 @@ class blog extends functions {
 						, blogid
 						FROM blog_kommentare 
 						WHERE blogid=$blogid ORDER BY id";
-			$ergebnis = mysql_query($select);
-			
+			$row = $this->getObjektInfo($select);			
 			$getLockedInfo = $this->getObjektInfo("SELECT * FROM blogtexte WHERE id = '$blogid'");
 	
 			# Ausgabe aller Kommentare
-			while( $row = mysql_fetch_object($ergebnis) ) {
+			for ($i = 0 ; $i < sizeof($row) ; $i++) {
 				
 				# KOPFZEILE
 				echo "<thead id='small'>";
 				
 					# Wenn der Benutzer einen Titel hat:
-					$autorTitel = $this->getObjektInfo("SELECT id, titel FROM benutzer WHERE id = '" . $row->autor . "'");
+					$autorTitel = $this->getObjektInfo("SELECT id, titel FROM benutzer WHERE id = '" . $row[$i]->autor . "'");
 					if(isset($autorTitel->titel) AND $autorTitel->titel != "") {
 						$titel = "<p id='smallLink' class='rightRedLink'>" . $autorTitel->titel . "</p>";
 					} else {
@@ -647,26 +646,26 @@ class blog extends functions {
 					}
 				
 					echo "<td><img id='id' src='../images/avatar_122.png' style='width:30px; height: 30px;' />
-							<a id='id' class='rightBlueLink' href='#KommID".$row->id."' name='#KommID".$row->id."'>ID: ".$row->id."</a><p id='smallLink' class='rightBlueLink'>Autor: " . $this->getUserName($row->autor) . "</p> $titel</td>";
-					echo "<td>Erstellt: " .$row->tag . "." . $row->monat . "." . $row->jahr . " | " . $row->stunde . ":" . $row->minute . " Uhr</td>";
+							<a id='id' class='rightBlueLink' href='#KommID".$row[$i]->id."' name='#KommID".$row[$i]->id."'>ID: ".$row[$i]->id."</a><p id='smallLink' class='rightBlueLink'>Autor: " . $this->getUserName($row[$i]->autor) . "</p> $titel</td>";
+					echo "<td>Erstellt: " .$row[$i]->tag . "." . $row[$i]->monat . "." . $row[$i]->jahr . " | " . $row[$i]->stunde . ":" . $row[$i]->minute . " Uhr</td>";
 					
 					# EDIT
 					echo "<td>";
-					if($getLockedInfo->locked != 1) {
-						if($this->userHasRight("32", 0) == "true" OR $_SESSION['username'] == $this->getUserName($row->autor)) {
-							echo "<a href='?showblogid=$blogid&editComment=$row->id' class='rightRedLink'>edit</a>";
+					if($getLockedInfo[0]->locked != 1) {
+						if($this->userHasRight("32", 0) == "true" OR $_SESSION['username'] == $this->getUserName($row[$i]->autor)) {
+							echo "<a href='?showblogid=$blogid&editComment=".$row[$i]->id."' class='rightRedLink'>edit</a>";
 						}
 					}
 					
 					# Löschen
-					if($getLockedInfo->locked != 1) {
+					if($getLockedInfo[0]->locked != 1) {
 						if($this->userHasRight("35", 0) == true OR $this->userHasRight("34", 0) == true) {
-							echo "<a href='?showblogid=$blogid&del=$row->id' class='rightRedLink'>Löschen</a>";
+							echo "<a href='?showblogid=$blogid&del=".$row[$i]->id."' class='rightRedLink'>Löschen</a>";
 						}
 					}
 					
-					if($getLockedInfo->locked != 1) {
-						echo "<a class='rightBlueLink' href='?showblogid=$row->blogid&newComment=$row->blogid&quoteKomment=$row->id#antwort'> Zitat </a>";
+					if($getLockedInfo[0]->locked != 1) {
+						echo "<a class='rightBlueLink' href='?showblogid=".$row[$i]->blogid."&newComment=".$row[$i]->blogid."&quoteKomment=".$row[$i]->id."#antwort'> Zitat </a>";
 					}
 					# Zitat
 					
@@ -678,7 +677,7 @@ class blog extends functions {
 				
 				
 				echo "<tbody>";
-					echo "<td colspan='3'>" . $row->text . "</td>";
+					echo "<td colspan='3'>" . $row[$i]->text . "</td>";
 				echo "</tbody>";
 			}
 		}
@@ -701,7 +700,7 @@ class blog extends functions {
 			# Autor des Kommentars bekommen:
 			$kommentarAutor = $this->getObjektInfo("SELECT * FROM blog_kommentare WHERE id = '$kommentarID' LIMIT 1");
 			
-			$autorID = $kommentarAutor->autor;
+			$autorID = $kommentarAutor[0]->autor;
 			$angemeldeterUserID = $this->getUserID($_SESSION['username']);
 			
 			if($this->userHasRight("32", 0) == true OR $this->userHasRight("33", 0) == true) {
@@ -723,12 +722,12 @@ class blog extends functions {
 							
 						echo "<tbody>
 						<td>";
-						echo "<div class='editForumEintrag'><textarea class='ckeditor' name='kommentarText'>" . $kommentar->text . "</textarea></div>"; # Text Output #
+						echo "<div class='editForumEintrag'><textarea class='ckeditor' name='kommentarText'>" . $kommentar[0]->text . "</textarea></div>"; # Text Output #
 					#	echo"<script> CKEDITOR.inline( 'kommentarText' ); </script>";
 						echo "</td>
 					</tbody>";
 				
-						echo "<tfoot><td><input type=submit name=saveKomment value=Speichern /><a class='highlightedLink' href='?showblogid=$kommentar->blogid'>Abbrechen</a></td></tfoot>";
+						echo "<tfoot><td><input type=submit name=saveKomment value=Speichern /><a class='highlightedLink' href='?showblogid=".$kommentar[0]->blogid."'>Abbrechen</a></td></tfoot>";
 						echo "</table>";
 						echo "</form>";
 							
@@ -745,10 +744,10 @@ class blog extends functions {
 							# TEXT MODIFIZIEREN UND EDITIERT VON HINZUFÜGEN
 							$text = $_POST['kommentarText'] . "<p><span style=\"font-size:10px; padding:3px; background-Color: #e0e0e0;\">Editiert am $editiertAm von $userDerGeaendertHat</span></p>";
 							
-							$query = "UPDATE blog_kommentare SET text = '$text' WHERE id = '$kommentar->id' AND autor = '$autorID'";
+							$query = "UPDATE blog_kommentare SET text = '$text' WHERE id = '".$kommentar[0]->id."' AND autor = '$autorID'";
 							if($this->sql_insert_update_delete($query) == true) {
 								echo "<p class='erfolg'>Erfolgreich gespeichert</p>";
-								echo "<a href='/flatnet2/blog/blogentry.php?showblogid=$kommentar->blogid' class='greenLink' > Zurück </a>";
+								echo "<a href='/flatnet2/blog/blogentry.php?showblogid=".$kommentar[0]->blogid."' class='greenLink' > Zurück </a>";
 							} else {
 								echo "<p class='meldung'>Fehler beim speichern</p>";
 							}
@@ -808,8 +807,8 @@ class blog extends functions {
 	 */
 	function userIsAllowedToSeeCategory($user, $blogID) {
 		$getblogidinfos = $this->getObjektInfo("SELECT id, kategorie FROM blogtexte WHERE id = '$blogID'");
-		if(isset($getblogidinfos->kategorie) AND $getblogidinfos->kategorie != "") {
-			$kategorie = $getblogidinfos->kategorie;
+		if(isset($getblogidinfos[0]->kategorie) AND $getblogidinfos[0]->kategorie != "") {
+			$kategorie = $getblogidinfos[0]->kategorie;
 			
 			# Benötigten Wert der Kategorie bekommen:
 			$getKategorieRechteWert = $this->getObjektInfo("SELECT id, rightWert FROM blogkategorien WHERE id = '$kategorie'");
@@ -818,7 +817,7 @@ class blog extends functions {
 			$getRechteForumAktuellerBenutzer = $this->getObjektInfo("SELECT id, forumRights FROM benutzer WHERE id = '$user' ");
 			
 			# Rechte checken
-			if($this->check($getKategorieRechteWert->rightWert, $getRechteForumAktuellerBenutzer->forumRights) == true) {
+			if($this->check($getKategorieRechteWert[0]->rightWert, $getRechteForumAktuellerBenutzer[0]->forumRights) == true) {
 				return true;
 			} else {
 				return false;

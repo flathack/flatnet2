@@ -60,7 +60,7 @@ echo $datenbank->suche($suche, "adressbuch", "nachname", "eintrag.php?bearbeiten
 			<?php 
 			# zeigt alle DB Einträge im Adressbuch an.
 			if($datenbank->userHasRight("13", 0) == true) {
-				echo $datenbank->datenbankListAllerEintraege("SELECT * FROM adressbuch ORDER BY nachname");
+				echo $datenbank->datenbankListAllerEintraege();
 			}
 			?>
 		</div>

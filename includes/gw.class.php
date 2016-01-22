@@ -296,7 +296,7 @@ class gw_kalender extends guildwars {
 	
 						$monat = $row[$k]->monat;
 	
-						echo "<a href='charakter.php?charID=$row[0]->id'><strong>". $row[$k]->tag . ".</strong> "
+						echo "<a href='charakter.php?charID=".$row[$k]->id."'><strong>". $row[$k]->tag . ".</strong> "
 								. $row[$k]->name . " (" . $this->getUserName($row[$k]->besitzer) . ") </a><br>";
 						$j++;
 	
@@ -586,7 +586,7 @@ class gw_charakter extends guildwars {
 					$stern = "&#10039;";
 					$ausgabe .= "
 					<style>
-					.StyleGW" . $dsatz["id"] . " {
+					.StyleGW" . $dsatz[$i]->id . " {
 							background-color: green;
 							width: " . $erkundungsGroesse . "px;
 							position: relative;

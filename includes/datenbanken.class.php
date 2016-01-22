@@ -406,9 +406,11 @@ class datenbanken extends functions {
 	 * $query z. B.: "SELECT id, vorname, nachname FROM adressbuch ORDER BY nachname"
 	 * Gibt aus: $row->tabellenspalte
 	 */
-	function datenbankListAllerEintraege($query) {
+	function datenbankListAllerEintraege() {
 		if($this->userHasRight("13", 0) == true) {
 			$ausgabe = "";
+			
+			$query = "SELECT * FROM adressbuch ORDER BY nachname";
 			
 			# Daten beschaffen
 			$row = $this->getObjektInfo($query);
@@ -418,18 +420,18 @@ class datenbanken extends functions {
 				$ausgabe .= "<div class='adresseintrag'>";
 				$ausgabe .= "<table>";
 				$ausgabe .= "<tr>";
-				$ausgabe .= "<td colspan='2'>	<a href='eintrag.php?bearbeiten=" . $row[0]->id. "'> ".$row[0]->vorname." ";
-				$ausgabe .= $row[0]->nachname;
-				if ($row[0]->gruppe != "") {
-					$ausgabe .= "(".$row[0]->gruppe.")</a>";
+				$ausgabe .= "<td colspan='2'>	<a href='eintrag.php?bearbeiten=" . $row[$i]->id. "'> ".$row[$i]->vorname." ";
+				$ausgabe .= $row[$i]->nachname;
+				if ($row[$i]->gruppe != "") {
+					$ausgabe .= "(".$row[$i]->gruppe.")</a>";
 				}
 				$ausgabe .= "</td>";
-				$ausgabe .= "<td>	<a href='eintrag.php?bearbeiten=".$row[0]->id."' class='adressbuchlink'>&#10150;</a>	</td>";
+				$ausgabe .= "<td>	<a href='eintrag.php?bearbeiten=".$row[$i]->id."' class='adressbuchlink'>&#10150;</a>	</td>";
 				$ausgabe .= "</tr>";
-				if ($row[0]->telefon1 != "") {
-					$ausgabe .= "<tr><td><strong>".$row[0]->telefon1art.": </strong> </td><td><strong>".$row[0]->telefon1." </strong> </td></tr>";
-				} else if ($row[0]->email != "") {
-					$ausgabe .= "<tr><td colspan='3'><strong>".$row[0]->email."</td></tr>";
+				if ($row[$i]->telefon1 != "") {
+					$ausgabe .= "<tr><td><strong>".$row[$i]->telefon1art.": </strong> </td><td><strong>".$row[$i]->telefon1." </strong> </td></tr>";
+				} else if ($row[$i]->email != "") {
+					$ausgabe .= "<tr><td colspan='3'><strong>".$row[$i]->email."</td></tr>";
 				} else {
 					$ausgabe .= "<tr><td colspan = '2' class='grey'>Füge eine Nummer hinzu!</td><td></td></tr>";
 				}
@@ -458,7 +460,7 @@ class datenbanken extends functions {
 					echo "<a href='?#gebs' class='closeSumme'>X</a>";
 					echo "<h2>Detailansicht Monat</h2>";
 					for ($i = 0 ; $i < sizeof($row) ; $i++) {
-						echo "<a href='eintrag.php?bearbeiten=".$row[0]->id."'><strong>" . $row[0]->tag . ".</strong> " . $row[0]->vorname . " " . $row[0]->nachname . "</a><br>";
+						echo "<a href='eintrag.php?bearbeiten=".$row[$i]->id."'><strong>" . $row[$i]->tag . ".</strong> " . $row[$i]->vorname . " " . $row[$i]->nachname . "</a><br>";
 					}
 					
 					echo "</div>";
@@ -481,7 +483,7 @@ class datenbanken extends functions {
 	}
 	
 	function arrayAusgeben($array) {
-		for ($i = 0 ; $i < sizeof($allgroups) ; $i++) {
+		for ($i = 0 ; $i < sizeof($array) ; $i++) {
 			echo "<p>" . $array[$i] . "</p>";
 		}
 	}
@@ -525,11 +527,7 @@ class datenbanken extends functions {
 			
 			$order = " ORDER BY tag";
 			
-			if (isset ( $_POST ['checkedGroups'] )) {
-				$selectedGroups = $_POST ['checkedGroups'];
-			} else {
-				$selectedGroups = "";
-			}
+			if (isset ( $_POST ['checkedGroups'] )) { $selectedGroups = $_POST ['checkedGroups']; } else { $selectedGroups = ""; }
 			
 			$counterFürOR = 0;
 			

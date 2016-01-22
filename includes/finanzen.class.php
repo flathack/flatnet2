@@ -393,6 +393,8 @@ class finanzenNEW extends finanzen {
 	function mainKontoFunction() {
 		$besitzer = $this->getUserID($_SESSION['username']);
 		$this->showCreateNewKonto($besitzer);
+		$this->showEditKonto($besitzer);
+		$this->showDeleteKonto($besitzer);
 		$this->showKontoUebersicht($besitzer);
 	}
 	
@@ -1128,7 +1130,8 @@ class finanzenNEW extends finanzen {
 			echo "<table class='flatnetTable'>";
 			echo "<thead>" . "<td>ID</td>" . "<td>Name</td>"."<td>Optionen</td>"."</thead>";
 			for($i = 0; $i < sizeof($konten); $i++) {
-				echo "<tbody><td>" .$konten[$i]->id. "</td><td>" .$konten[$i]->konto. "</td><td><a href='?'>edit</a> <a href='?'>X</a></td></tbody>";
+				echo "<tbody><td>" .$konten[$i]->id. "</td><td>" .$konten[$i]->konto. "</td><td><a href='?editKonto=".$konten[$i]->id."'>Edit</a>
+						<a href='?deleteKonto=".$konten[$i]->id."'>Löschen</a></td></tbody>";
 			}
 			echo "</table>";
 		}
@@ -1150,7 +1153,7 @@ class finanzenNEW extends finanzen {
 	}
 	
 	/**
-	 * Ernöglicht die Erstellung eines neuen Kontos.
+	 * Ermöglicht die Erstellung eines neuen Kontos.
 	 */
 	function showCreateNewKonto($besitzer) {
 		echo "<a href='?neuesKonto' class='buttonlink'>Neues Konto</a>";
@@ -1185,6 +1188,29 @@ class finanzenNEW extends finanzen {
 			return true;
 		} else {
 			return false;
+		}
+	}
+	
+	/**
+	 * Ermöglicht das editieren von Konten
+	 * @param unknown $besitzer
+	 */
+	function showEditKonto($besitzer) {
+		if(isset($_GET['editKonto'])) {
+			echo "<h2>Konto bearbeiten</h2>";
+			
+			echo "<div class='mainbody'>";
+			echo "</div>";
+		}
+	}
+	
+	/**
+	 * Ermöglicht das löschen von Konten. 
+	 * @param unknown $besitzer
+	 */
+	function showDeleteKonto($besitzer) {
+		if(isset($_GET['deleteKonto'])) {
+				
 		}
 	}
 	
@@ -1470,13 +1496,13 @@ class finanzenNEW extends finanzen {
 			echo "<p class='info'>Du hast noch keine Konten, du brauchst mindestens zwei Konten. Klicke <a href='?createStandardConfig'>hier</a> um eine Standardkonfiguration zu erstellen</p>";
 			
 			if(isset($_GET['createStandardConfig'])) {
-				if($this->objectExists("finanzen_konten", "konto", "Hauptkonto") == false) {
+				if($this->objectExists("SELECT * FROM finanzen_konten WHERE besitzer = $besitzer AND konto = 'Hauptkonto'") == false) {
 					if($this->sql_insert_update_delete("INSERT INTO finanzen_konten (konto, besitzer) VALUES ('Hauptkonto','$besitzer')") == true) {
 						echo "<p class='erfolg'>Ein Hauptkonto wurde erstellt.</p>";
 					}
 				}
 				
-				if($this->objectExists("finanzen_konten", "konto", "Ausgaben") == false) {
+				if($this->objectExists("SELECT * FROM finanzen_konten WHERE besitzer = $besitzer AND konto = 'Hauptkonto'") == false) {
 					if($this->sql_insert_update_delete("INSERT INTO finanzen_konten (konto, besitzer) VALUES ('Ausgaben','$besitzer')") == true){
 						echo "<p class='erfolg'>Ein Ausgabenkonto wurde erstellt.</p>";
 					}

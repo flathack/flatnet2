@@ -119,7 +119,6 @@ class learn extends functions {
 	 * Bietet eine Druckübersicht an:
 	 */
 	function export() {
-		
 		if(isset($_GET['kategorie'])) {
 			$kategorie = $_GET['kategorie'];
 			$besitzer = $this->getUserID($_SESSION['username']);
@@ -131,9 +130,7 @@ class learn extends functions {
 					echo "<p>" . $kategorieEintraege[$i]->loesung . "</p>";
 				echo "</div>";
 			}
-			
 		}
-		
 	}
 	
 	/**

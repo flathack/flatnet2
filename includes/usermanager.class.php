@@ -98,16 +98,22 @@ class usermanager extends functions {
 		$user = $this->getUserID($_SESSION['username']);
 
 		# General Account Information
-		$select = "SELECT * FROM benutzer WHERE Name = '$user'";
+		$select = "SELECT * FROM benutzer WHERE id = '$user'";
 		$row = $this->getObjektInfo($select);
 		
-			echo "<div id='left'>";
-			echo "<h2>Allgemein</h2>";
-			echo "<br>Realname: " . $row[0]->realName;
-			echo "<br>Dein Account existiert seit dem: " . $row[0]->timestamp . "";
-			echo "<br>Du hast die ID: " . $row[0]->id . "";
-			echo "<br>und die Rechte " . $row[0]->rights . "";
-			echo "</div>";
+		if(isset($row[0]->realName)) {
+			$name =  $row[0]->realName;
+		} else {
+			$name = "Kein Realname";
+		}
+		
+		echo "<div id='left'>";
+		echo "<h2>Allgemein</h2>";
+		echo "<br>Realname: " . $name;
+		echo "<br>Dein Account existiert seit dem: " . $row[0]->timestamp . " ";
+		echo "<br>Du hast die ID: " . $row[0]->id . "";
+		echo "<br>und die Rechte " . $row[0]->rights . "";
+		echo "</div>";
 
 		# Guildwars Account Information
 		$select = "SELECT count(*) as anzahl FROM gw_chars WHERE besitzer = '$user'";
@@ -118,7 +124,7 @@ class usermanager extends functions {
 		echo "<p>Du hast " . $menge . " Charakter</p></div>";
 
 		# Dokumentation Account Information
-		$select = "SELECT * FROM docu WHERE autor = '$user'";
+		$select = "SELECT count(*) as anzahl FROM docu WHERE autor = '$user'";
 		$mengeGrund = $this->getObjektInfo($select);
 		$menge = $mengeGrund[0]->anzahl;
 		echo "<div id=''>";
@@ -127,14 +133,14 @@ class usermanager extends functions {
 		echo "</div>";
 
 		# Vorschläge Account Information
-		$select = "SELECT * FROM vorschlaege WHERE autor = '$user'";
+		$select = "SELECT count(*) as anzahl FROM vorschlaege WHERE autor = '$user'";
 		$mengeGrund = $this->getObjektInfo($select);
 		$menge = $mengeGrund[0]->anzahl;
 		echo "<div id=''>";
 		echo "</div>";
 		
 		# Vorschläge Account Information
-		$select = "SELECT * FROM blogtexte WHERE autor = '$user'";
+		$select = "SELECT count(*) as anzahl FROM blogtexte WHERE autor = '$user'";
 		$mengeGrund = $this->getObjektInfo($select);
 		$menge = $mengeGrund[0]->anzahl;
 		echo "<div id=''>";
@@ -161,14 +167,18 @@ class usermanager extends functions {
 		FROM blogtexte 
 		WHERE autor = '$user' 
 		ORDER BY timestamp DESC";
-		$ergebnis2 = mysql_query($selectBlog);
-		$menge = mysql_num_rows($ergebnis2);
-		while($row2 = mysql_fetch_object($ergebnis2)) {
-			echo "<div class='adresseintrag'><a href='/flatnet2/blog/blogentry.php?showblogid=$row2->id'>$row2->titel</a><br>";
-			echo $row2->tag . "." . $row2->monat . "." . $row2->jahr . " / " . $row2->stunde . ":" . $row2->minute . " Uhr";
+		$row2 = $this->getObjektInfo($selectBlog);
+		
+		# Menge abfragen:
+		$mengeGrund = $this->getObjektInfo("SELECT count(*) as anzahl FROM blogtexte WHERE autor = '$user' ");
+		$menge = $mengeGrund[0]->anzahl;
+		
+		for($i = 0 ; $i < sizeof($row2) ; $i++) {
+			echo "<div class='adresseintrag'><a href='/flatnet2/blog/blogentry.php?showblogid=".$row2[$i]->id."'>".$row2[$i]->titel."</a><br>";
+			echo $row2[$i]->tag . "." . $row2[$i]->monat . "." . $row2[$i]->jahr . " / " . $row2[$i]->stunde . ":" . $row2[$i]->minute . " Uhr";
 					
 			echo "<br>";
-			echo $this->getCatName($row2->kategorie);
+			echo $this->getCatName($row2[$i]->kategorie);
 			echo " / ";
 			echo "</div>";
 		}
@@ -420,9 +430,11 @@ class usermanager extends functions {
 			
 			echo "<h2><a name='gwAccs'>Guildwars Accounts</a></h2>";
 			$user = $this->getUserID($_SESSION['username']);
-			$select = "SELECT * FROM gw_accounts WHERE besitzer = '$user'";
-			$ergebnis = mysql_query($select);
-			$menge = mysql_num_rows($ergebnis);
+			$select = "SELECT count(*) as anzahl FROM gw_accounts WHERE besitzer = '$user'";
+			$select2 = "SELECT * FROM gw_accounts WHERE besitzer = '$user'";
+			$row = $this->getObjektInfo($select2);
+			$mengeGrund = $this->getObjektInfo($select);
+			$menge = $mengeGrund[0]->anzahl;
 			
 			if($menge == 0) {
 				echo "<div>
@@ -431,13 +443,11 @@ class usermanager extends functions {
 				<a href='?passChange&delete=1#gwAccs' class='quadratOption'>X</a> </div>";
 			
 			} else {
-			$i = 0;
-				while($row = mysql_fetch_object($ergebnis)) {
-					$i = $i + 1;
-					echo "<div><a href='?passChange&getInfo=$row->account#gwAccs' class='optionLink'>$i. " 
-						. substr($row->mail, 0, 20) . "</a>
-						<a href='?passChange&edit=$row->account#gwAccs' class='quadratOption'>edit</a>
-						<a href='?passChange&delete=$row->account#gwAccs' class='quadratOption'>X</a> </div>";
+				for ($i = 0 ; $i < sizeof($row) ; $i++) {
+					echo "<div><a href='?passChange&getInfo=".$row[$i]->account."#gwAccs' class='optionLink'>$i. " 
+						. substr($row[$i]->mail, 0, 20) . "</a>
+						<a href='?passChange&edit=".$row[$i]->account."#gwAccs' class='quadratOption'>edit</a>
+						<a href='?passChange&delete=".$row[$i]->account."#gwAccs' class='quadratOption'>X</a> </div>";
 				}
 			}
 				
@@ -498,22 +508,20 @@ class usermanager extends functions {
 				$user = $this->getUserID($_SESSION['username']);
 				
 				$query = "SELECT * FROM gw_accounts WHERE besitzer = '$user' AND account = '$nummer' LIMIT 1";
-				$ergebnis = mysql_query($query);
-				$row = mysql_fetch_object($ergebnis);
+				$row = $this->getObjektInfo($query);
 				
 				# Gelöschte Stunden bekommen:
 				$stunden = $this->getObjektInfo("SELECT * FROM account_infos WHERE besitzer = '$user' AND account = '$nummer' AND attribut = 'gw_geloschte_stunden' LIMIT 1");
 				
-				if(!isset($stunden->wert)) {
+				if(!isset($stunden[0]->wert)) {
 					$stundenWert = 0;
 				} else {
-					$stundenWert = $stunden->wert;
+					$stundenWert = $stunden[0]->wert;
 				}
 				
-				if(!isset($row->mail)) {
+				if(!isset($row[0]->mail)) {
 						$insert = "INSERT INTO gw_accounts (besitzer, account, mail) VALUES ('$user','1','Standard Account')";
-						$ergebnis = mysql_query($insert);
-						if($ergebnis == true) {
+						if($this->sql_insert_update_delete($insert) == true) {
 							echo "<div class='gwEinstellungen'>";
 								
 								echo "<p class='erfolg'>Dein Account wurde einmalig konfiguriert. Du kannst hier jetzt mehrere Accounts
@@ -524,9 +532,9 @@ class usermanager extends functions {
 						}
 				} else {
 					echo "<div class='rightSpacer'>";
-					echo "<h2>" .$row->mail . "</h2>";
+					echo "<h2>" .$row[0]->mail . "</h2>";
 					echo "<form action='?passChange' method=post>";
-					echo "<strong>Accountname</strong><br> <input type=text name='newAccName' value='$row->mail' />";
+					echo "<strong>Accountname</strong><br> <input type=text name='newAccName' value='".$row[0]->mail."' />";
 					echo "<p class=''>Hier kannst du die gespeicherten gelöschten Spielstunden selbst anpassen: </p>";
 					echo "<strong>Gelöschte Stunden</strong><br> <input type=text name='newStunden' value='$stundenWert' />";
 					echo "<input type=hidden name='nummer' value='$nummer' />";
@@ -548,21 +556,19 @@ class usermanager extends functions {
 			}
 			
 			$query = "SELECT * FROM gw_accounts WHERE besitzer = '$user' AND account = '$nummer' LIMIT 1";
-			$ergebnis = mysql_query($query);
-			$row = mysql_fetch_object($ergebnis);
+	//		$row = $this->getObjektInfo($query); // ?????
 			
 			$sqlupdate= "UPDATE gw_accounts SET mail='$mail' WHERE besitzer='$user' AND account='$nummer'";
-			$sqlupdategesamt = mysql_query($sqlupdate);
-			
+						
 			# Gelöschte Stunden bekommen:
 			$stundenOld = $this->getObjektInfo("SELECT * FROM account_infos WHERE besitzer = '$user' AND account = '$nummer' AND attribut = 'gw_geloschte_stunden' LIMIT 1");
 			
 			
-			if($sqlupdategesamt == true) {
+			if($this->sql_insert_update_delete($sqlupdate) == true) {
 				
 				# Stunden speichern: 
 				
-				if(!isset($stundenOld->wert)) {
+				if(!isset($stundenOld[0]->wert)) {
 					# Neuen Eintrag erstellen:
 					$this->sql_insert_update_delete("INSERT INTO account_infos (besitzer, attribut, wert, account) VALUES ('$user','gw_geloschte_stunden','$stunden','$nummer')");
 				} else {
