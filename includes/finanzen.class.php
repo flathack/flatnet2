@@ -381,6 +381,7 @@ class finanzenNEW extends finanzen {
 		
 		# Hauptansicht Monat
 		$this->showCurrentMonthInKonto($besitzer);
+		$this->diagrammOptionen($besitzer);
 		
 		# automatische Jahresabschluss-Generation.
 		$this->erstelleJahresabschluesseFromOldEintraegen();
@@ -463,6 +464,9 @@ class finanzenNEW extends finanzen {
 				for ($i = 0 ; $i < sizeof($umsaetze); $i++) {
 					$zwischensumme = $zwischensumme + $umsaetze[$i]->umsatzWert;
 					
+					# Daten in Array laden:
+					$zahlen[$i] = $zwischensumme;
+					
 					if($zwischensumme < 0) {
 						$spaltenFarbe = "rot";
 					} else {
@@ -498,6 +502,110 @@ class finanzenNEW extends finanzen {
 	
 			echo "</table>";
 			echo "<p class='info'>Kontostandveränderung: $differenz €</p>";
+			
+			# Zeigt das Diagramm an
+			if(isset($zahlen)) {
+				$this->showDiagramme($zahlen);
+			}
+			
+		}
+	}
+	
+	/**
+	 * Zeigt Optionen für das Diagramm an.
+	 */
+	function diagrammOptionen($besitzer) {
+		if(isset($_GET['konto']) AND isset($_GET['jahr'])) {
+			echo "<div>";
+			$konto = $_GET['konto'];
+			
+			$jahr = $_GET['jahr'];
+			echo "<a class='buttonlink' href='?kontoOpt=$konto&jahr=$jahr&gesamtesJahr'>Jahr anzeigen</a>";
+			echo "<a class='buttonlink' href='?kontoOpt=$konto&alles'>Alles anzeigen</a>";
+			echo "</div>";
+		}
+	
+		if(isset($_GET['gesamtesJahr']) AND isset($_GET['kontoOpt']) AND isset($_GET['jahr'])) {
+			
+			$konto = $_GET['kontoOpt'];
+				
+			$jahr = $_GET['jahr'];
+			
+			$query = "SELECT * FROM finanzen_umsaetze WHERE besitzer = $besitzer AND konto = $konto AND year(datum) = $jahr";
+			$zahlen = $this->getObjektInfo($query);
+			$zwischensumme = 0;
+			
+			# Zwischensummen bilden und in Var schreiben
+			
+			for ($i = 0 ; $i < sizeof($zahlen) ; $i++) {
+				$zwischensumme = $zahlen[$i]->umsatzWert + $zwischensumme;
+				$arrayFuerDiagramm[$i] = $zwischensumme;
+			}
+			
+			if(isset($arrayFuerDiagramm)) {
+				$this->showDiagramme($arrayFuerDiagramm);
+			}
+			
+		}
+		
+		if(isset($_GET['alles']) AND isset($_GET['kontoOpt'])) {
+			$konto = $_GET['kontoOpt'];
+			$query = "SELECT * FROM finanzen_umsaetze WHERE besitzer = $besitzer AND konto = $konto";
+			$zahlen = $this->getObjektInfo($query);
+			$zwischensumme = 0;
+			
+			for ($i = 0 ; $i < sizeof($zahlen) ; $i++) {
+				$zwischensumme = $zahlen[$i]->umsatzWert + $zwischensumme;
+				$arrayFuerDiagramm[$i] = $zwischensumme;
+			}
+			
+			if(isset($arrayFuerDiagramm)) {
+				$this->showDiagramme($arrayFuerDiagramm);
+			}
+		}
+		
+	}
+	
+	/**
+	 * Zeigt Diagramme mit JQUERY an.
+	 */
+	function showDiagramme($zahlen) {
+		
+		if(isset($zahlen[0])) {
+			# Erstellung der Labels
+			$labels = "[";
+			for ($l = 0 ; $l < sizeof($zahlen) ; $l++) {
+				$labels .= $l . ",";
+			}
+			$labels .= "]";
+				
+			# Erstellung der Daten
+			$data = "[";
+			for ($k = 0 ; $k < sizeof($zahlen) ; $k++) {
+				$data .= $zahlen[$k] . ",";
+			}
+			$data .= "]";
+		
+					echo '<canvas id="buyers" width=100% height="200"></canvas>';
+					echo '
+			    <script>
+			    var buyerData = {
+			    		labels : ' .$labels. ',
+			    		datasets : [
+			    			{
+			    				fillColor : "rgba(172,194,132,0.4)",
+			    				strokeColor : "#ACC26D",
+			    				pointColor : "#fff",
+			    				pointStrokeColor : "#9DB86D",
+			    				data : ' .$data. '
+			    			}
+			    		]
+			    	}
+			    	
+				    var buyers = document.getElementById(\'buyers\').getContext(\'2d\');
+				    new Chart(buyers).Line(buyerData);
+				</script>
+					';
 		}
 	}
 	

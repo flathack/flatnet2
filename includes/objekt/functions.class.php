@@ -578,6 +578,7 @@ class functions extends sql {
 		# Quellen für JQUERY Scripte
 		echo "<script src='//code.jquery.com/jquery-1.10.2.js'></script>
 				<script src='//code.jquery.com/ui/1.11.4/jquery-ui.js'></script>";
+		echo "<script src='/flatnet2/Chart.min.js'></script>";
 		
 		# Verschiebbare Fenster
 		echo '<script> $(function() { $( "#draggable" ).draggable(); }); </script>';
@@ -723,15 +724,14 @@ class functions extends sql {
 					$blogidInfos = $this->getObjektInfo("SELECT * FROM blogtexte WHERE id = '". $gefundeneForeneintraege[$i]->blogid ."' LIMIT 1 ");
 					
 					echo "<a href='/flatnet2/blog/blogentry.php?showblogid=" 
-							. $gefundeneForeneintraege[$i]->blogid 
-							. "#KommID". $gefundeneForeneintraege[$i]->id 
-							. "' id='benachrichtigung'>
-							". $gefundeneForeneintraege[$i]->tag
-					.".". $gefundeneForeneintraege[$i]->monat
-					.".". $gefundeneForeneintraege[$i]->jahr
-					." von " . $this->getUserName($gefundeneForeneintraege[$i]->autor)
-					. " zum Thema <strong>".$blogidInfos->titel ."</strong></a><br>";
-					
+						. $gefundeneForeneintraege[$i]->blogid 
+						. "#KommID". $gefundeneForeneintraege[$i]->id 
+						. "' id='benachrichtigung'>
+						". $gefundeneForeneintraege[$i]->tag
+						.".". $gefundeneForeneintraege[$i]->monat
+						.".". $gefundeneForeneintraege[$i]->jahr
+						." von " . $this->getUserName($gefundeneForeneintraege[$i]->autor)
+						. " zum Thema <strong>".$blogidInfos->titel ."</strong></a><br>";
 				}
 				
 			}
@@ -747,8 +747,8 @@ class functions extends sql {
 		# Titel anzeigen:
 		$userID = $this->getUserID($_SESSION['username']);
 		$userTitel = $this->getObjektInfo("SELECT id, titel FROM benutzer WHERE id = '$userID' LIMIT 1");
-		if(isset($userTitel) AND $userTitel->titel != "") {
-			echo "<div class='spacer'><a class='rightGreenLink' href='/flatnet2/forum/index.php?blogcategory=5'>Titel: $userTitel->titel</a></div>";
+		if(isset($userTitel) AND $userTitel[0]->titel != "") {
+			echo "<div class='spacer'><a class='rightGreenLink' href='/flatnet2/forum/index.php?blogcategory=5'>Titel: ".$userTitel[0]->titel."</a></div>";
 		}
 	}
 	

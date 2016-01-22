@@ -58,7 +58,7 @@ class sql {
 	 */
 	function connectToDBNewWay() {
 		try {
-		$db = new PDO('mysql:host=localhost;dbname=62_flathacksql1', '62_flathacksql1', '12141214');
+		$db = new PDO('mysql:host=localhost;dbname=flathacksql1', 'root', '12141214');
 		} catch (Exception $e) {
 			die ("<div class='info'>Oh Noes! Es gibt ein Problem mit der Datenbank! Ich arbeite dran ... </div><div class='info'>Der Fehler lautet: <br><br>$e</div>" . $this->connectToDBOldWay());
 		}

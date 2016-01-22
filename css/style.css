@@ -113,8 +113,8 @@ blockquote {
 .header {
 	padding: 10px;
 	border-bottom: 5px solid white;
-	background-color: #373737;
-	color: white;
+	background-color: #373737; /* #373737 */
+	color: black;
 }
 
 /*
@@ -201,11 +201,15 @@ blockquote {
 	margin: 0px;
 }
 
+.header #navigation {
+	margin-top: -10px;
+}
+
 .header #navigation li a:link, 
 .header #navigation li a:visited {
 	padding: 5px 10px 5px 10px;
+	margin-top: 0px;
 	display: inline-block;
-	border-radius: 10px;
 	border: 2px solid transparent;
 	text-align: center;
 	color: white;
@@ -219,10 +223,13 @@ blockquote {
 
 .header #navigation li a:link:hover, 
 .header #navigation li a:visited:hover {
-	background: white;
-	color: black;
-	text-shadow: 0px 0px 10px blue;
-	border-radius: 2px;
+	background: grey;
+	color: white;
+	-webkit-transition: all 0.4s ease-in-out;
+	-moz-transition: all 0.4s ease-in-out;
+	-ms-transition: all 0.4s ease-in-out;
+	-o-transition: all 0.4s ease-in-out;
+	transition: all 0.4s ease-in-out;
 }
 
 /* NavigationsHightlights */ 
@@ -243,11 +250,12 @@ blockquote {
 #quellen #quellen,
 #finanzen #finanzen,
 #impressum #impressum {
-	background: none;
 	border-bottom: 2px solid white;
-	border-radius: 100px;
-	color: white;
-	font-weight: bolder;
+	-webkit-transition: all 0.4s ease-in-out;
+	-moz-transition: all 0.4s ease-in-out;
+	-ms-transition: all 0.4s ease-in-out;
+	-o-transition: all 0.4s ease-in-out;
+	transition: all 0.4s ease-in-out;
 }
 
 /* Highlights Ende */
