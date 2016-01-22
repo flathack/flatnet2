@@ -107,14 +107,14 @@ class guildwars extends functions {
 				$_SESSION['gw_account'] = 1;
 			}
 
-			echo "<input onChange='this.form.submit();' type=radio value='$row2[0]->account' name='gw_account' id='$row2[0]->mail' onclick=''";
+			echo "<input onChange='this.form.submit();' type=radio value='".$row2[0]->account."' name='gw_account' id='".$row2[0]->mail."' onclick=''";
 			if($_SESSION['gw_account'] == $row2[0]->account){
 				echo "checked";
 			} else {
 				echo "unchecked";
 			}
 			echo " />";
-			echo "<label for='$row2[0]->mail'>$row2[0]->mail</label>";
+			echo "<label for='".$row2[0]->mail."'>".$row2[0]->mail."</label>";
 
 		}
 		if($menge != 0) {
