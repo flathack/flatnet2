@@ -474,17 +474,15 @@ class usermanager extends functions {
 					
 					# nächste Acc Nr bekommen:
 					$accnummer = "SELECT MAX(account) AS max FROM gw_accounts WHERE besitzer = '$user'";
-					$ergebnis = mysql_query($accnummer);
-					$row = mysql_fetch_object($ergebnis);
-					$nextAccNo = $row->max + 1;
+					$row = $this->getObjektInfo($accnummer);
+					$nextAccNo = $row[0]->max + 1;
 					
 					if($mail == "" OR $nextAccNo == "") {
 						echo "<p class='meldung'>Bitte alle Felder ausfüllen</p>";
 						return false;
 					} else {
 						$query="INSERT INTO gw_accounts (besitzer, account, mail) VALUES ('$user','$nextAccNo','$mail')";
-						$ergebnis = mysql_query($query);
-						if($ergebnis == true) {
+						if($this->sql_insert_update_delete($query) == true) {
 							echo "<div class='gwEinstellungen'><p class='erfolg'>Account angelegt</p></div>";
 						} else {
 							echo "<div class='gwEinstellungen'><p class='meldung'>Fehler</p></div>";
