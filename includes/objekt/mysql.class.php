@@ -48,7 +48,7 @@ class sql {
 		
 		mysql_connect($host, $sqlusername, $sqluserpassword);
 		
-		mysql_select_db($sqldatabase) or die ("<body id='wrapper'>" . $errordbconnect . "<div class='mainbody'><p class='meldung'>Grund für den Fehler: " . mysql_error() . "</p></div></body>");
+		mysql_select_db($sqldatabase) or die ("<body id='wrapper'>" . $errordbconnect . "<div class='mainbody'><img src='/flatnet2/images/fehler/dbError.png' name='' alt='Fehler'></div></body>");
 	}
 
 	
@@ -60,7 +60,13 @@ class sql {
 		try {
 		$db = new PDO('mysql:host=localhost;dbname=flathacksql1', 'root', '12141214');
 		} catch (Exception $e) {
-			die ("<div class='info'>Oh Noes! Es gibt ein Problem mit der Datenbank! Ich arbeite dran ... </div><div class='info'>Der Fehler lautet: <br><br>$e</div>" . $this->connectToDBOldWay());
+			$css = '<link href="/flatnet2/css/error.css" type="text/css" rel="stylesheet" />';
+			$errorText = "<p class='info'>Datenbank Error</p>";
+			$bild = "<img src='/flatnet2/images/fehler/grund.PNG' name='' alt='DatenbankError'>";
+			$errorBeschreibung = "<p>Quggan traurig, Quaggan kann die Datenbank nicht finden, nur Errors.</p>";
+			die ("<body><div><div class='wrapper'>" 
+					.$css. $errorText . $bild . $errorBeschreibung 
+					."</div></div></body></html>");
 		}
 		return $db;
 		

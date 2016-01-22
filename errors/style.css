@@ -1,0 +1,61 @@
+body {
+    font-family: Geneva, Arial, Helvetica, sans-serif;
+    margin: 0;
+    background-color: grey;
+}
+
+h1 {
+    color: #910000;
+    margin: 0;
+    padding: 0;
+}
+
+p {
+    font-size: 16px;
+    color: black;
+}
+
+a {
+    font-weight: bold;
+    color: rgb(102,102,102);
+    text-decoration: none;
+    font-size: 14px;
+    letter-spacing: normal;
+}
+
+#outer {
+    height: 1px;
+    left: 0;
+    overflow: visible;
+    position: absolute;
+    text-align: center;
+    width: 100%;
+}
+
+#inner {
+	background-color: white;
+    border-radius: 20px;
+    box-shadow: 0px 0px 10px #910000;
+    padding-top: 50px;
+    margin-top: 10px;
+    width: 450px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.info {
+	position: absolute;
+	border: 1px solid transparent;
+	width: 180px;
+	margin-top: 55px;
+	font-size: 30px;
+	margin-left: 190px;
+	font-family: serif;
+	font-variant: small-caps;
+	transform: rotate(33deg);
+}
+
+#backlink {
+    text-align: right;
+    padding: 0 15px;
+}/* Error CSS File */ 
