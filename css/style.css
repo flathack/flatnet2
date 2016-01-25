@@ -703,42 +703,58 @@ blockquote {
 	transition: all 0.3s ease-in-out;
 }
 
+.scrollContainer {
+	overflow: scroll;
+	max-height: 300px;
+	padding: 10px;
+	font-family: cursive;
+}
+
 /* Adressbuch */
 .adresseintrag {
-	padding: 3px;
-	border: 1px solid grey;
+	border: 1px solid #a03235;
+	margin-bottom: 10px;
 	float: left;
-	color: black;
-	background: white; /* #464646; */
-	margin: 1px;
-	width: 23%;
+	margin-right: 10px;
+	box-shadow: 0px 0px 5px black;
+	width: 210px;
 	overflow: hidden;
-	height: 50px;
-	border-radius: 0px;
-	-webkit-transition: all 0.3s ease-in-out;
-	-moz-transition: all 0.3s ease-in-out;
-	-ms-transition: all 0.3s ease-in-out;
-	-o-transition: all 0.3s ease-in-out;
-	transition: all 0.3s ease-in-out;
+	height: 40px;
+	padding: 10px;
+	background: white;
+	color: black;
+	position: relative;
+}
+
+.adresseintragGrey {
+	border: 1px solid transparent;
+	margin-bottom: 10px;
+	float: right;
+	margin-right: 10px;
+	box-shadow: 0px 0px 5px grey;
+	width: 210px;
+	padding: 10px;
+	background: white;
+	color: grey;
+	position: relative;
 }
 
 .adresseintrag a {
 	color: black;
 }
 
-.adresseintrag:hover a {
-	color: #b97800;
+.adresseintragGrey a {
+	color: grey;
 }
 
-.adresseintrag:hover {
-	border: 1px solid red;
-	background-color: #e9e9e9;
-	color: #b97800;
-	-webkit-transition: all 0.3s ease-in-out;
-	-moz-transition: all 0.3s ease-in-out;
-	-ms-transition: all 0.3s ease-in-out;
-	-o-transition: all 0.3s ease-in-out;
-	transition: all 0.3s ease-in-out;
+.adresseintrag:hover a {
+	color: #dd2226;
+	text-decoration: none;
+}
+
+.adresseintragGrey:hover a {
+	color: #c0c0c0;
+	text-decoration: none;
 }
 
 .grey {
@@ -1044,6 +1060,16 @@ blockquote {
 	border: 1px solid #c5c5c5;
 }
 
+.newCharWIDE {
+	border: 1px solid #a03235;
+	margin-bottom: 10px;
+	box-shadow: 0px 0px 5px black;
+	padding: 10px;
+	background: white;
+	color: black;
+	position: relative;
+}
+
 .newChar {
 	border: 1px solid #a03235;
 	margin-left: auto;
@@ -1057,7 +1083,7 @@ blockquote {
 	position: relative;
 }
 
-.newChar select {
+.newChar select, .newCharWIDE select {
 	padding: 3px;
 	width: 211px;
 	background: #ebebeb;
@@ -1069,7 +1095,11 @@ blockquote {
 .newChar input[type=text]
 , .newChar input[type=number]
 , .newChar input[type=date]
-, .newChar input[type=password] {
+, .newChar input[type=password],
+.newCharWIDE input[type=text]
+, .newCharWIDE input[type=number]
+, .newCharWIDE input[type=date]
+, .newCharWIDE input[type=password] {
 	background: #ebebeb;
 	color: black;
 	border: 1px solid #808080;
@@ -1077,11 +1107,14 @@ blockquote {
 	font-family: cursive;
 }
 
-.newChar textarea {
-	padding: 5px; 
+.newChar textarea, .newCharWIDE textarea {
+	padding: 10px; 
+	margin-top: 15px;
+	margin-bottom: 15px;
 	border: 1px solid grey; 
 	background-color: #ebebeb;
 	font-family: cursive;
+	width: 95%;
 }
 
 .showUsers {
@@ -1787,12 +1820,12 @@ input[type=password]:focus {
 }
 
 .FinanzenMonate #selected {
-	background-color: #ffcecf;
-	color: black;
+	background-color: #747474;
+	color: white;
 }
 
 .FinanzenMonate #selected a {
-	color: black;
+	color: white;
 }
 
 .FinanzenMonate li {
@@ -1805,8 +1838,8 @@ input[type=password]:focus {
 
 .FinanzenMonate li:hover,
 .FinanzenKonten li:hover {
-	background-color: #fed3d5;
-	border: 1px solid red;
+	background-color: #cdcdcd;
+	border: 1px solid grey;
 }
 
 .FinanzenKonten {
@@ -1818,12 +1851,15 @@ input[type=password]:focus {
 }
 
 .FinanzenKonten #selected {
-	background-color: #ffcecf;
-	color: black;
+	background-color: #747474;
+	color: white;
 }
 
 .FinanzenKonten #selected a {
-	color: black;
+	color: white;
+}
+.FinanzenKonten #selected a:hover, .FinanzenKonten a:hover {
+	text-decoration: none;
 }
 
 .FinanzenKonten li {
@@ -1908,7 +1944,7 @@ input[type=password]:focus {
 	-o-transition: all 0.3s ease-in-out;
 	transition: all 0.3s ease-in-out;
 	font-weight: normal;
-	font-family: serif;
+	font-family: cursive;
 	border: 1px solid #c0c0c0;
 	background-color: #f5f5f5;
 	color: black;
@@ -2277,10 +2313,11 @@ input[type=password]:focus {
 
 .InfoCenter {
 	position: absolute;
-	top: 80px;
+	top: 70px;
 	margin-left: 150px;
 	width: 50%;
 	overflow: hidden;
+	background-color: #373737;
 }
 
 .rightOuterBody {

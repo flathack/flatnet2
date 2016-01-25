@@ -638,10 +638,7 @@ class functions extends sql {
 		}
 		
 		if($this->userHasRight("65", 0) == true) {
-		#	echo "<li>	<a href='/flatnet2/admin/control.php' id='admin'>Administration</a></li>";
 			echo "<li>	<a href='/flatnet2/starcitizen/index.php' id='starcitizen'>Starcitizen </a></li>";
-		#	echo "<li>	<a href='/flatnetOld/index.php' id=''>	Zeitreise 2013</a></li>";
-		#	echo "<li>	<a href='/flatnetOld2/index.php' id=''>	Zeitreise nach 2013</a></li>";
 		}
 		if($this->userHasRight("11", 0) == "true") {
 			echo "<li>	<a href='/flatnet2/fahrten/index.php' id='fahrten'>	Fahrkosten </a></li>";
@@ -656,7 +653,6 @@ class functions extends sql {
 				<div id='ueberschrift'>
 				<h1><a href='/flatnet2/uebersicht.php'>Steven.NET</a></h1>
 				</div>";
-		
 		$this->ankuendigung();
 		echo "</header>";
 	}
@@ -669,7 +665,7 @@ class functions extends sql {
 			echo "<div class='InfoCenter'>";
 			$docuInfo = $this->getObjektInfo("SELECT *, month(timestamp) AS monat, day(timestamp) AS tag, year(timestamp) AS jahr FROM docu ORDER BY timestamp DESC LIMIT 1");
 			if(isset($docuInfo[0]->text)) {
-				echo $docuInfo[0]->tag . "." . $docuInfo[0]->monat . "." . $docuInfo[0]->jahr . ": " . $docuInfo[0]->text . "";
+				echo "<a href='/flatnet2/informationen/hilfe.php'>". $docuInfo[0]->tag . "." . $docuInfo[0]->monat . "." . $docuInfo[0]->jahr . "</a>: " . substr($docuInfo[0]->text, 0, 80);
 			}
 			echo "</div>";
 		}

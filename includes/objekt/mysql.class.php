@@ -208,10 +208,8 @@ class sql {
 		$affected_rows = $db->exec($query);
 		
 		if($affected_rows > 0) {
-		#	echo "<br>$query ist true<br>";
 			return true;
 		} else {
-		#	echo "<br>$query ist false<br>";
 			return false;
 		}
 		
@@ -266,7 +264,7 @@ class sql {
 	 */
 	function objectExists($query) {
 		$row = $this->getObjektInfo($query);	
-		if(isset($row)) {
+		if(isset($row[0])) {
 			return true;
 		} else {
 			return false;

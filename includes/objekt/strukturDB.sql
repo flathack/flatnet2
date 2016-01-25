@@ -152,7 +152,7 @@ CREATE TABLE `docu` (
   `timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'Erstellungsdatum des Eintrags',
   `text` text NOT NULL COMMENT 'Text des Eintrags',
   `autor` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='hilfe.php';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci COMMENT='hilfe.php';
 
 -- --------------------------------------------------------
 
@@ -170,7 +170,7 @@ CREATE TABLE `fahrkosten` (
   `notizen` mediumtext NOT NULL,
   `spritpreis` decimal(10,3) NOT NULL COMMENT 'Spritpreis am Tag der Eintragung',
   `fahrrichtung` int(11) NOT NULL COMMENT 'Hin und Rückfahrt?'
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- --------------------------------------------------------
 
@@ -184,7 +184,7 @@ CREATE TABLE `fahrkostenziele` (
   `besitzer` int(11) NOT NULL,
   `name` varchar(250) NOT NULL,
   `entfernung` decimal(10,0) NOT NULL COMMENT 'in Kilometer'
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- --------------------------------------------------------
 
@@ -199,7 +199,7 @@ CREATE TABLE `fahrzeuge` (
   `name` varchar(250) NOT NULL COMMENT 'Vollständiger Name des Fahrzeugs',
   `verbrauch` decimal(10,2) NOT NULL COMMENT 'auf 100 km',
   `name_tag` varchar(250) NOT NULL COMMENT 'Name in der Tabelle Fahrkosten'
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- --------------------------------------------------------
 
@@ -213,7 +213,7 @@ CREATE TABLE `finanzen_jahresabschluss` (
   `jahr` int(11) NOT NULL,
   `wert` decimal(10,2) NOT NULL,
   `konto` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- --------------------------------------------------------
 
@@ -225,8 +225,11 @@ CREATE TABLE `finanzen_konten` (
   `id` int(11) NOT NULL,
   `timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `konto` varchar(250) NOT NULL,
+  `notizen` mediumtext NOT NULL,
   `besitzer` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+ALTER TABLE `finanzen_konten` ADD `aktiv` TINYINT NOT NULL AFTER `besitzer`; 
 
 -- --------------------------------------------------------
 
@@ -242,7 +245,7 @@ CREATE TABLE `finanzen_monatsabschluss` (
   `year` int(11) NOT NULL,
   `wert` decimal(10,2) NOT NULL,
   `konto` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- --------------------------------------------------------
 
@@ -260,7 +263,7 @@ CREATE TABLE `finanzen_umsaetze` (
   `umsatzName` varchar(250) NOT NULL,
   `umsatzWert` decimal(10,2) NOT NULL,
   `datum` date NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- --------------------------------------------------------
 
@@ -275,7 +278,7 @@ CREATE TABLE `gwcosts` (
   `text` varchar(250) NOT NULL,
   `wert` decimal(10,2) NOT NULL,
   `kaufdat` date NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- --------------------------------------------------------
 
@@ -290,7 +293,7 @@ CREATE TABLE `gwmatlist` (
   `matName` varchar(254) NOT NULL,
   `matPrice` decimal(10,0) DEFAULT NULL,
   `kategorie` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
 -- Daten für Tabelle `gwmatlist`
@@ -721,7 +724,7 @@ CREATE TABLE `gwusersmats` (
   `matID` int(11) NOT NULL,
   `matAnzahl` int(11) NOT NULL,
   `account` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- --------------------------------------------------------
 
@@ -735,7 +738,7 @@ CREATE TABLE `gw_accounts` (
   `besitzer` int(11) NOT NULL,
   `account` int(11) NOT NULL,
   `mail` varchar(250) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- --------------------------------------------------------
 
@@ -774,7 +777,7 @@ CREATE TABLE `learnkategorie` (
   `kategorie` varchar(250) NOT NULL,
   `besitzer` int(11) NOT NULL,
   `public` tinyint(1) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- --------------------------------------------------------
 
@@ -789,7 +792,7 @@ CREATE TABLE `learnlernkarte` (
   `kategorie` int(11) NOT NULL,
   `frage` varchar(250) NOT NULL,
   `loesung` text NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- --------------------------------------------------------
 
@@ -806,7 +809,7 @@ CREATE TABLE `registercode` (
   `usedBy` varchar(250) NOT NULL COMMENT 'Welcher Benutzer hat ihn eingelöst.',
   `ipadress` varchar(15) NOT NULL COMMENT 'Ipadress des Benutzers',
   `rights` bigint(20) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- --------------------------------------------------------
 
@@ -817,7 +820,7 @@ CREATE TABLE `registercode` (
 CREATE TABLE `rightkategorien` (
   `id` int(11) NOT NULL,
   `name` varchar(254) NOT NULL COMMENT 'Name der Kategorie'
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
 -- Daten für Tabelle `rightkategorien`
@@ -999,7 +1002,7 @@ CREATE TABLE `uebersicht_kacheln` (
   `active` tinyint(4) DEFAULT NULL COMMENT 'Kachel aktiviert',
   `cssID` varchar(250) NOT NULL,
   `rightID` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
 -- Daten für Tabelle `uebersicht_kacheln`
