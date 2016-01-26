@@ -2362,9 +2362,10 @@ input[type=password]:focus {
 
 .InfoCenter {
 	position: absolute;
+	border: 1px solid black;
 	top: 70px;
 	margin-left: 150px;
-	width: 50%;
+	max-width: 500px
 	overflow: hidden;
 }
 
