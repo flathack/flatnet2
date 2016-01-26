@@ -170,9 +170,11 @@ blockquote {
  */
 .userInfo {
 	text-align: right;
-	width: 220px;
+	max-width: 260px;
 	float: right;
 	margin-top: -17px;
+	max-height: 100px;
+	overflow: hidden;
 	padding: 10px;
 	color: white;
 }
@@ -2362,20 +2364,23 @@ input[type=password]:focus {
 
 .InfoCenter {
 	position: absolute;
-	border: 1px solid black;
 	top: 70px;
 	margin-left: 150px;
 	max-width: 500px
 	overflow: hidden;
 }
 
+.InfoCenter:hover {
+	background-color: grey;
+}
+
 .rightOuterBody {
 	position: absolute;
-	padding: 2px;
 	overflow: hidden;
+	border: 1px solid grey;
 	min-width: 400px;
 	max-width: 600px;
-	height: 75px;
+	max-height: 75px;
 	margin-left: 170px;
 	margin-top: -94px;
 }
