@@ -1163,26 +1163,39 @@ blockquote {
 	width: 870px;
 }
 
+.gwShowCharWächter h3, .gwShowCharWächter h2 {
+	color: #000037;
+	text-shadow: 0px 0px 5px white;
+}
+
 .gwShowCharWächter {
 	background-image: url(../images/gw/waechter2.jpg);
 	background-position: 0% 0%;
 	background-repeat: no-repeat;
 	border: 2px solid blue;
-	text-shadow: 0px 0px 10px white;
 	padding: 10px;
 	color: #000037;
 	margin-top: 10px;
+}
+
+.gwShowCharWaldläufer h3, .gwShowCharWaldläufer h2 {
+	color: #004800;
+	text-shadow: 0px 0px 5px white;
 }
 
 .gwShowCharWaldläufer {
 	background-image: url(../images/gw/ranger.jpg);
 	background-position: 0% 0%;
 	background-repeat: no-repeat;
-	border: 2px solid green;
-	text-shadow: 0px 0px 10px white;
+	border: 2px solid #004800;
 	padding: 10px;
 	color: black;
 	margin-top: 10px;
+}
+
+.gwShowCharIngenieur h3, .gwShowCharIngenieur h2 {
+	color: white;
+	text-shadow: 0px 0px 5px black;
 }
 
 .gwShowCharIngenieur {
@@ -1190,10 +1203,14 @@ blockquote {
 	background-position: 0% 0%;
 	background-repeat: no-repeat;
 	border: 2px solid black;
-	text-shadow: 0px 0px 10px black;
 	padding: 10px;
 	color: white;
 	margin-top: 10px;
+}
+
+.gwShowCharElementarmagier h3, .gwShowCharElementarmagier h2 {
+	color: #800000;
+	text-shadow: 0px 0px 5px white;
 }
 
 .gwShowCharElementarmagier {
@@ -1204,6 +1221,11 @@ blockquote {
 	padding: 10px;
 	color: #800000;
 	margin-top: 10px;
+}
+
+.gwShowCharMesmer h3, .gwShowCharMesmer h2 {
+	color: #4a004a;
+	text-shadow: 0px 0px 5px white;
 }
 
 .gwShowCharMesmer {
@@ -1217,15 +1239,25 @@ blockquote {
 	margin-top: 10px;
 }
 
+.gwShowCharNekromant h3, .gwShowCharNekromant h2 {
+	color: #004040;
+	text-shadow: 0px 0px 5px white;
+}
+
 .gwShowCharNekromant {
 	background-image: url(../images/gw/nekro.jpg);
 	background-position: 0% 0%;
 	background-repeat: no-repeat;
-	border: 2px solid green;
+	border: 2px solid #004040;
 	text-shadow: 2px 0px 2px white;
 	padding: 10px;
 	color: #004040;
 	margin-top: 10px;
+}
+
+.gwShowCharKrieger h3, .gwShowCharKrieger h2 {
+	color: white;
+	text-shadow: 0px 0px 5px black;
 }
 
 .gwShowCharKrieger {
@@ -1239,15 +1271,24 @@ blockquote {
 	margin-top: 10px;
 }
 
+.gwShowCharDieb h3, .gwShowCharDieb h2 {
+	color: black;
+	text-shadow: 0px 0px 5px white;
+}
+
 .gwShowCharDieb {
 	background-image: url(../images/gw/dieb.jpg);
 	background-position: 0% 0%;
 	background-repeat: no-repeat;
 	border: 2px solid black;
-	text-shadow: 0px 0px 10px white;
 	padding: 10px;
 	color: black;
 	margin-top: 10px;
+}
+
+.gwShowCharWidergänger h3, .gwShowCharWidergänger h2 {
+	color: white;
+	text-shadow: 0px 0px 5px black;
 }
 
 .gwShowCharWidergänger {
