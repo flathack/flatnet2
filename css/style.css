@@ -36,16 +36,25 @@ h1 {
 	padding-bottom: 15px;
 }
 
-h2, h3, h4, h5, h6 {
+h2 {
 	padding-top: 2px;
 	padding-bottom: 2px;
 	font-size: 18px;
 	margin: none;
+	color: #000095;
+}
+
+h3, h4, h5, h6 {
+	font-size: 15px;
+	margin-top: 5px;
+	margin-bottom: 5px;
+	font-weight: 600;
+	color: #000095;
 }
 
 /* Standard-Links */
 a {
-	color: #0000d5;
+	color: #000095;
 	text-decoration: none;
 }
 
@@ -1811,6 +1820,21 @@ input[type=password]:focus {
 	background-color: #e0ffd2;
 }
 
+.finanzNAV li {
+	display: inline-block;
+	margin: 0px 0px 0px 0px;
+	border-bottom: 1px solid #000079;
+	padding: 5px;
+}
+
+.finanzNAV li:hover {
+	background-color: #d5d8ff;
+}
+
+.finanzNAV li a:hover {
+	text-decoration: none;
+}
+
 .FinanzenMonate {
 	margin: 5px 0px 5px 0px;
 }
@@ -1867,6 +1891,31 @@ input[type=password]:focus {
 	margin: 0px 2px 2px 0px;
 	border: 1px solid grey;
 	padding: 5px;
+}
+
+.Guthabenkonto {
+	padding: 5px;
+	border: 1px solid green;
+	margin: 5px;
+	display: inline-block;
+	box-shadow: 0px 0px 5px green;
+}
+
+.Konto {
+	padding: 5px;
+	border: 1px solid #8c0000;
+	margin: 5px;
+	display: inline-block;
+	box-shadow: 0px 0px 3px grey;
+}
+
+.Guthabenkonto:hover {
+	box-shadow: 0px 0px 5px grey;
+	border: 1px solid grey;
+}
+
+.Guthabenkonto a, .Konto a {
+	color: black;
 }
 
 .kontoTable {
@@ -2317,7 +2366,6 @@ input[type=password]:focus {
 	margin-left: 150px;
 	width: 50%;
 	overflow: hidden;
-	background-color: #373737;
 }
 
 .rightOuterBody {

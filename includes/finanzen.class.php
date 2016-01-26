@@ -249,6 +249,10 @@ class finanzenNEW extends functions {
 				$this->showDiagramme($zahlen, "970", "200");
 			}
 			
+		} else {
+			echo "<div class='newCharWIDE'><h3>Um Fortzufahren musst du ein Konto auswählen</h3>";
+			#echo "<img width=950px height=150px src='/flatnet2/images/waiting.gif' />";
+			echo "</div>";
 		}
 	}
 	
@@ -316,9 +320,9 @@ class finanzenNEW extends functions {
 		$monat = $this->getMonatFromGet();
 		$jahr = $this->getJahrFromGet();
 		
-		echo "<div class='rightOuterBody'>
+		echo "<div class='finanzNAV'>
 				<ul>
-					<li><a href='index.php' >Start</a></li>
+					<li><a href='index.php' >Finanzverwaltung - Startseite</a></li>
 					<li><a href='konten.php' >Konten</a></li>
 					<li><a href='?konto=$kontoID&monat=$monat&jahr=$jahr&newUeberweisung' >Neue Buchung</a></li>
 					<li><a href='?konto=$kontoID&monat=$monat&jahr=$jahr&checkJahresabschluesse' >Jahresabschlusscheck</a></li>
@@ -938,40 +942,47 @@ class finanzenNEW extends functions {
 		
 		# Wenn es Konten gibt:
 		if(isset($konten[0]->id)) {
-			
+			# Aktive Konten
 			echo "<div class='innerBody'>";
-			
-		#1	echo "<table class='flatnetTable'>";
-		#1	echo "<thead>" . "<td>ID</td>" . "<td>Name</td>"."<td>Optionen</td>"."</thead>";
+			echo "<h3>Aktive Konten</h3>";
 			for($i = 0; $i < sizeof($konten); $i++) {
 				if($konten[$i]->aktiv == 1) {
 					$select2 = "SELECT sum(umsatzWert) as summe FROM finanzen_umsaetze WHERE konto=".$konten[$i]->id . " AND datum <= CURDATE()";
 					$umsaetze = $this->getObjektInfo($select2);
-					echo "<div class='adresseintrag'>";
-						echo "<p><a href='?editKonto=".$konten[$i]->id."'>" .$konten[$i]->id." | ". $konten[$i]->konto . "</a> | ";
+					if($konten[$i]->art == 1) {
+						$mark = "Guthabenkonto";
+					} else {
+						$mark = "Konto";
+					}
+					echo "<div class='$mark'>";
+						echo "<p><a href='?editKonto=".$konten[$i]->id."'>". $konten[$i]->konto . "</a><br>Saldo: ";
 						echo $umsaetze[0]->summe. " €</p>";
 					echo "</div>";
-				#1	echo "<tbody><td>" .$konten[$i]->id. "</td><td>" .$konten[$i]->konto. "</td><td><a class='rightBlueLink' href='?editKonto=".$konten[$i]->id."'>Edit</a></td></tbody>";
 				}
 			}
 			
 			echo "</div>";
 			$i = 0;
-		#1	echo "<thead><td colspan = 3>Deaktiverte Konten</td></thead>";
-		echo "<div class='rightBody'>";
+		
+			# Inaktive Konten
+			echo "<div class='innerBody'>";
+			echo "<h3>Nicht sichtbare Konten</h3>";
 			for ($i = 0 ; $i < sizeof($konten) ; $i++) {
 				$select2 = "SELECT sum(umsatzWert) as summe FROM finanzen_umsaetze WHERE konto=".$konten[$i]->id . " AND datum <= CURDATE()";
 				$umsaetze = $this->getObjektInfo($select2);
 				if($konten[$i]->aktiv == 0) {
-					echo "<div class='adresseintragGrey'>";
-						echo "<p><a href='?editKonto=".$konten[$i]->id."'>".$konten[$i]->id." | ". $konten[$i]->konto . "</a> | ";
+					if($konten[$i]->art == 1) {
+						$mark = "Guthabenkonto";
+					} else {
+						$mark = "Konto";
+					}
+					echo "<div class='$mark'>";
+						echo "<p><a href='?editKonto=".$konten[$i]->id."'>". $konten[$i]->konto . "</a><br>Saldo: ";
 						echo $umsaetze[0]->summe. " €</p>";
 					echo "</div>";
-		#1			echo "<tbody><td>" .$konten[$i]->id. "</td><td>" .$konten[$i]->konto. "</td><td><a class='rightBlueLink' href='?editKonto=".$konten[$i]->id."'>Edit</a></td></tbody>";
 				}
 			}
 			echo "</div>";
-		#1	echo "</table>";
 		}
 	}
 	
@@ -1035,10 +1046,11 @@ class finanzenNEW extends functions {
 	 */
 	function showEditKonto($besitzer) {
 		
-		if(isset($_POST['absenden']) AND isset($_GET['editKonto']) AND isset($_POST['kontoname']) AND isset($_POST['notizen'])) {
+		if(isset($_POST['absenden']) AND isset($_GET['editKonto']) AND isset($_POST['kontoname']) AND isset($_POST['notizen']) AND isset($_POST['art'])) {
 			if($_POST['kontoname'] != "") {
 				$name = $_POST['kontoname'];
 				$id = $_GET['editKonto'];
+				$art = $_POST['art'];
 				$notizen = strip_tags( stripslashes($_POST['notizen']));
 				if(isset($_POST['aktiv'])) {
 					$aktiv = 1;
@@ -1046,7 +1058,7 @@ class finanzenNEW extends functions {
 					$aktiv = 0;
 				}
 				
-				$update = "UPDATE finanzen_konten SET konto='$name', aktiv=$aktiv, notizen='$notizen' WHERE besitzer = $besitzer AND id = $id";
+				$update = "UPDATE finanzen_konten SET art=$art, konto='$name', aktiv=$aktiv, notizen='$notizen' WHERE besitzer = $besitzer AND id = $id";
 				
 				if($this->sql_insert_update_delete($update)) {
 					echo "<p class='erfolg'>Konto gespeichert.</p>";
@@ -1061,6 +1073,12 @@ class finanzenNEW extends functions {
 			$select = "SELECT * FROM finanzen_konten WHERE besitzer = $besitzer AND id = $id";
 			$kontoInfo = $this->getObjektInfo($select);
 			
+			if(isset($kontoInfo[0]->aktiv) AND $kontoInfo[0]->aktiv == 0) {
+				$checked = "";
+			} else {
+				$checked = "checked";
+			}
+			
 			if(!isset($kontoInfo[0]->id)) {
 				echo "<p class='meldung'>Dieses Konto gibt es nicht, oder du hast keinen Zugriff darauf.</p>";
 				exit;
@@ -1072,13 +1090,10 @@ class finanzenNEW extends functions {
 			
 			echo "<form method=post>";
 			echo "<table>";
-			echo "<tr><td>Name: </td><td><input type=text value='" . $kontoInfo[0]->konto . "' name=kontoname /></td></tr>";
-			if(isset($kontoInfo[0]->aktiv) AND $kontoInfo[0]->aktiv == 0) {
-				$checked = "";
-			} else {
-				$checked = "checked";
-			}
-			echo "<tr><td>Aktiv: </td>" . "<td><input value=1 type=checkbox " .$checked. " name=aktiv />" . "</td></tr>";
+			echo "<tr><td>Name: </td><td><input type=text value='" . $kontoInfo[0]->konto . "' name=kontoname /></td>";
+			echo "<td><input value=1 type=checkbox " .$checked. " name=aktiv /><label for=aktiv>Aktiv</label>" . "</td>";
+			
+			echo "<td>"."<input type=number value=".$kontoInfo[0]->art." name=art placeholder=Kontoart /><td>Kontoart</td>"."</tr>";
 			
 			echo "<tr><td><input type=submit name=absenden value=Speichern /></td></tr>";
 			$select2 = "SELECT *
