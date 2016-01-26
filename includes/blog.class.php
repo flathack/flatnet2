@@ -180,9 +180,13 @@ class blog extends functions {
 					$kategorie = $_POST['blogkategorie'];
 					
 					# ID der Kategorie:
-					$selectKategorieID = "SELECT id, kategorie FROM blogkategorien WHERE kategorie = '$kategorie' LIMIT 1";
+					$selectKategorieID = "SELECT * FROM blogkategorien WHERE id = $kategorie";
 					$row2 = $this->getObjektInfo($selectKategorieID);
-					if(isset($row2[0]->id)) { $kategorie = $row2[0]->id; } else { $kategorie = 0; }
+					if(isset($row2[0]->id)) { 
+						$kategorie = $row2[0]->id; 
+					} else { 
+						$kategorie = 0; 
+					}
 					
 					$status = $_POST['status'];
 					$insertNewBlog="INSERT INTO blogtexte (autor, titel, text, kategorie, status) VALUES ('$autor','$titel','$text','$kategorie','$status')";

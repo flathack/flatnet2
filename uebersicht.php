@@ -16,7 +16,7 @@
 		
 		$uebersicht->logged_in("redirect", "index.php");
 		$uebersicht->userHasRightPruefung("7");
-		
+			
 		#
 		# ANZAHL DER TILES
 		#

@@ -1059,7 +1059,7 @@ class control extends functions {
 					echo "<h3>Rechteliste</h3>";
 					echo "<table class='flatnetTable'>";
 					echo "<thead><td id='text'>Recht</td><td>vorhanden</td><td>Ändern</td></thead>";
-					for($j = 0 ; $i < sizeof($row2) ; $j++) {
+					for($j = 0 ; $j < sizeof($row2) ; $j++) {
 						if ($this->check($row2[$j]->rightWert, $benutzerrechteVorher ) == true) {
 							
 							echo "<tbody id='offen'>" . "<td>".$row2[$j]->kategorie."</td>" . "<td>Ja</td> " . "<td><a href='?action=5&user=$id&status=ja&right=".$row2[$j]->id."#forumRechte'>verweigern</a></td>" . "<tbody>";
@@ -1205,13 +1205,13 @@ class control extends functions {
 					// ##########################
 					$loeschid = $_GET ['loeschid'];
 					
-					$query = "DELETE FROM blogkategorien WHERE id = '$loeschid'";
+					$query = "DELETE FROM blogkategorien WHERE id = $loeschid";
 					
 					// nicht zugeordnet Kategorie finden:
 					$select = "SELECT id, kategorie FROM blogkategorien WHERE kategorie = 'nicht zugeordnet' LIMIT 1";
 					$row = $this->getObjektInfo($select);
 					if(isset($row[0]->id)) {
-						$notAssigned = $row->id;
+						$notAssigned = $row[0]->id;
 					}					
 					
 					if (!isset($notAssigned)) {

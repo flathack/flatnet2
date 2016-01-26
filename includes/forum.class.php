@@ -9,15 +9,19 @@ class forum extends functions {
 	
 	
 	/**
-	 * AB HIER WIRD DER BLOG BEREICH DARGESTELLT
+	 * Zeigt das gesamte Forum an.
 	 */
 	function showBlogCategories() {
-		# BLOG DARSTELLEN
-		echo "<table class='forum'>";
-		echo "<thead><td>Steven.NET Forum</td><td>Themen</td></thead>";
+		
+		# get info
 		$selectCategories = "SELECT * FROM blogkategorien ORDER BY sortierung, kategorie ASC";
-		$row = $this->getObjektInfo($selectCategories);
 		$userID = $this->getUserID($_SESSION['username']);
+		$row = $this->getObjektInfo($selectCategories);
+		
+		echo "<table class='forum'>";
+		
+		echo "<thead><td>Steven.NET Forum</td><td>Themen</td></thead>";
+		
 		for ($i = 0 ; $i < sizeof($row) ; $i++) {
 			
 			# Prüfen ob der Benutzer die Rechte hat, das aktuelle Forum zu betrachten.
@@ -37,6 +41,12 @@ class forum extends functions {
 					<br>".$row[$i]->beschreibung."</td><td>$anzahlPosts</td></tbody>";
 				}
 			}
+			
+		}
+		
+		if(!isset($row[0])) {
+			echo "<tbody><td><strong>Es gibt leider noch kein Forum</strong>
+					<br>Der Administrator muss das Forum zunächst einrichten. Als Administrator klicke <a href='/flatnet2/admin/control.php?action=5'>HIER</a></td><td>x</td></tbody>";
 		}
 		
 		echo "</table>";

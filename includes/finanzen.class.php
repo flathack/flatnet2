@@ -40,11 +40,12 @@ class finanzenNEW extends functions {
 		# Buttons
 		echo "<a href='?neuesKonto' class='rightBlueLink'>Neues Konto</a>";
 		echo "<a href='?Salden' class='rightBlueLink'>Salden</a>";
-		
+				
 		# Saldenübersicht:
 		$this->saldenUebersicht($besitzer);
 		
 		# Kontomanipulationen
+		$this->showCreateNewUeberweisung();
 		$this->UmbuchungUmsatz($besitzer);
 		$this->showCreateNewKonto($besitzer);
 		$this->showDeleteKonto($besitzer);
@@ -52,6 +53,63 @@ class finanzenNEW extends functions {
 		
 		# Kontoübersicht:
 		$this->showKontoUebersicht($besitzer);
+	}
+	
+	private $suche;
+	
+	function FinanzSuche($suchWort) {
+		if($this->userHasRight("23", 0) == true) {
+			if(isset($suchWort) AND $suchWort != "") {
+				
+				$besitzer = $this->getUserID($_SESSION['username']);
+				
+				$ursprünglicheSuche = $suchWort;
+				# Suche mit Wildcards bestücken
+				$suchWort = "%" . $suchWort . "%";
+				
+				# Spalten der Tabelle selektieren:
+				$colums  = "SHOW COLUMNS FROM finanzen_umsaetze";
+				
+				$rowSpalten = $this->getObjektInfo($colums);
+				
+				# SuchQuery bauen:
+				# Start String:
+				$querySuche = "SELECT *
+				, month(datum) as monat
+				, year(datum) as jahr 
+				FROM finanzen_umsaetze 
+				WHERE (besitzer=$besitzer AND id LIKE '$suchWort' ";
+				
+				# OR + Spaltenname LIKE Suchwort
+				for ($i = 0 ; $i < sizeof($rowSpalten) ; $i++) {
+					$querySuche .= " OR besitzer = $besitzer AND " . $rowSpalten[$i]->Field . " LIKE '$suchWort'";
+				}
+				# Klammer am Ende schließen-
+				$querySuche .= ")";
+				
+				# Query für die Suche
+				$suchfeld = $this->getObjektInfo($querySuche);
+				
+				echo "<div id='draggable' class='summe'>";
+					echo "Die Suche nach <strong>($suchWort)</strong> ergab folgendes Ergebnis:";
+					echo "<div class='mainbody'>";
+					echo "<table class='flatnetTable'>";
+					echo "<thead><td>Konto</td><td>Umsatzname</td><td>Wert</td><td>Datum</td></thead>";
+					for ($i = 0; $i < sizeof($suchfeld); $i++) {
+						
+						$kontoname = $this->getObjektInfo("SELECT * FROM finanzen_konten WHERE id=".$suchfeld[$i]->konto." LIMIT 1");
+						$kontoname = $kontoname[0]->konto;
+						
+						echo "<tr><td>".$kontoname."</td><td> " . "<a href='?konto=".$suchfeld[$i]->konto."&jahr=".$suchfeld[$i]->jahr."&monat=".$suchfeld[$i]->monat."&selected=".$suchfeld[$i]->buchungsnr."'>" . substr($suchfeld[$i]->umsatzName, 0, 20) . "</a></td>" ."<td>".$suchfeld[$i]->umsatzWert."</td>"."<td>".$suchfeld[$i]->datum."</td>". "</td></tr>";
+						
+					}
+					echo "</table>";
+					echo "</div>";
+					
+				echo "</div>";
+			}
+		}
+		
 	}
 	
 	private $shows;
@@ -129,8 +187,22 @@ class finanzenNEW extends functions {
 					}
 					
 					if($zwischensumme < 0) { $zeile = " id='minus' "; } else { $zeile = ""; }
+					
 					if($umsaetze[$i]->umsatzWert < 0) { $zelle = " id='minus' "; } else { $zelle = " id='plus' "; }
-					echo "<tbody>";
+					
+					# Wenn der Umsatz ausgewählt wurde, dann wird er rot markiert.
+					if(isset($_GET['selected'])) { 
+						if($_GET['selected'] == $umsaetze[$i]->buchungsnr) {
+							$selected = "id='rot'";
+						} else {
+							$selected = "";
+						}
+					} else { 
+						$selected = ""; 
+					}
+					
+					
+					echo "<tbody $selected>";
 					echo "<td>" . $umsaetze[$i]->buchungsnr . "</td>";
 					# Name des Gegenkontos bekommen
 					$nameGegenkonto = $this->getObjektInfo("SELECT * FROM finanzen_konten WHERE besitzer = $besitzer AND id = ".$umsaetze[$i]->gegenkonto." LIMIT 1");
@@ -150,7 +222,21 @@ class finanzenNEW extends functions {
 					}
 				}
 			} else {
-				echo "<tbody><td colspan=6>In diesem Monat gibt es keine Umsätze.</td></tbody>";
+				
+				# Wenn kein Umsatz gefunden wird, den nächsten anzeigen: 
+				
+				# CURDATE zusammenbauen.
+				if($monat < 10) { $monat = "0" . $monat; } $curdate = $currentYear . "-" . $monat . "-01";
+				
+				$naechsterUmsatz = $this->getObjektInfo("SELECT *, month(datum) as monat, year(datum) as jahr FROM finanzen_umsaetze WHERE besitzer=$besitzer AND konto=$kontoID AND datum > '$curdate' ORDER BY datum ASC LIMIT 1");
+				
+				echo "<tbody id='plus'><td colspan=7>$curdate In diesem Monat gibt es keine Umsätze, der nächste Umsatz lautet: </td></tbody>";
+				
+				for ($k = 0 ; $k < sizeof($naechsterUmsatz) ; $k++) {
+					$naechsterMonat = $naechsterUmsatz[$k]->monat;
+					echo "<tbody id=''>" ."<td>".$naechsterUmsatz[$k]->datum."</td>"."<td colspan=6>".$naechsterUmsatz[$k]->umsatzName.",  <a href='?konto=$kontoID&monat=$naechsterMonat&jahr=".$naechsterUmsatz[$k]->jahr."'>springe zu Monat</a></td>". "</tbody>";
+				}
+				
 			}
 			$differenz = $zwischensumme - $startsaldo;
 			echo "<tfoot><td colspan=5 id='rightAlign'>Endsaldo: </td><td id='rightAlign'>$zwischensumme</td><td></td></tfoot>";
@@ -305,6 +391,7 @@ class finanzenNEW extends functions {
 		echo "<li "; if($jahr == 2016) { echo " id='selected' "; } echo "><a href='?konto=$konto&monat=$monat&jahr=2016'>2016</a></li>";
 		echo "<li "; if($jahr == 2017) { echo " id='selected' "; } echo "><a href='?konto=$konto&monat=$monat&jahr=2017'>2017</a></li>";
 		echo "<li "; if($jahr == 2018) { echo " id='selected' "; } echo "><a href='?konto=$konto&monat=$monat&jahr=2018'>2018</a></li>";
+		echo "<li "; if($jahr == 2019) { echo " id='selected' "; } echo "><a href='?konto=$konto&monat=$monat&jahr=2019'>2019</a></li>";
 		echo "</ul>";
 	}
 	
@@ -994,7 +1081,14 @@ class finanzenNEW extends functions {
 			echo "<tr><td>Aktiv: </td>" . "<td><input value=1 type=checkbox " .$checked. " name=aktiv />" . "</td></tr>";
 			
 			echo "<tr><td><input type=submit name=absenden value=Speichern /></td></tr>";
-			$select2 = "SELECT * FROM finanzen_umsaetze WHERE besitzer = $besitzer AND konto = $id ORDER BY datum";
+			$select2 = "SELECT *
+			, year(datum) as jahr
+			, month(datum) as monat
+			, day(datum) as tag 
+			FROM finanzen_umsaetze 
+			WHERE besitzer = $besitzer 
+			AND konto = $id 
+			ORDER BY datum";
 			$getKontoBuchungen = $this->getObjektInfo($select2);
 			echo "</table>";
 			
@@ -1004,7 +1098,12 @@ class finanzenNEW extends functions {
 			for ($i = 0 ; $i < sizeof($getKontoBuchungen) ; $i++) {
 				echo "<tbody>";
 				$gegenkonto = $this->getObjektInfo("SELECT * FROM finanzen_konten WHERE id = '".$getKontoBuchungen[$i]->gegenkonto."'");
-					echo "<td>" .$getKontoBuchungen[$i]->buchungsnr. "</td><td>" . $getKontoBuchungen[$i]->umsatzName . "</td><td>" .$getKontoBuchungen[$i]->umsatzWert. "</td><td>AN <a href='?editKonto=".$gegenkonto[0]->id."'>" .$gegenkonto[0]->konto. "</a></td><td>" .$getKontoBuchungen[$i]->datum. "</td><td>" ."<a href='?umbuchungBuchNr=".$getKontoBuchungen[$i]->buchungsnr."&editKonto=$id'>Umbuchen</a>"."</td>";
+					echo "<td><a href='index.php?konto=".$getKontoBuchungen[$i]->konto."&jahr=".$getKontoBuchungen[$i]->jahr."&monat=".$getKontoBuchungen[$i]->monat."&selected=".$getKontoBuchungen[$i]->buchungsnr."'>" .$getKontoBuchungen[$i]->buchungsnr. "</a></td>
+						<td>" . $getKontoBuchungen[$i]->umsatzName . "</td>
+						<td>" .$getKontoBuchungen[$i]->umsatzWert. "</td>
+						<td>AN <a href='?editKonto=".$gegenkonto[0]->id."'>" .$gegenkonto[0]->konto. "</a></td>
+						<td>" .$getKontoBuchungen[$i]->datum. "</td>
+						<td>" ."<a href='?umbuchungBuchNr=".$getKontoBuchungen[$i]->buchungsnr."&editKonto=$id'>Umbuchen</a>"."</td>";
 				echo "</tbody>";
 			}
 			

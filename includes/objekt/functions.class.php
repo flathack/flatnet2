@@ -50,7 +50,7 @@ class functions extends sql {
 				$ergebnis_der_suche .= "<h2>Suchergebnis (= $ursprünglicheSuche)</h2>";
 				for ($i = 0; $i < sizeof($suchfeld); $i++) {
 					$ergebnis_der_suche .= "<div class='invSuchErgeb'>";
-					$ergebnis_der_suche .= "<a href='$pfad=$suchfeld[$i]->id'>" . substr($suchfeld[$i]->$name, 0, 20) . "..</a>";
+					$ergebnis_der_suche .= "<a href='".$pfad=$suchfeld[$i]->id."'>" . substr($suchfeld[$i]->$name, 0, 20) . "..</a>";
 					$ergebnis_der_suche .= "</div>";
 				}
 				$close = "<a href='?' class='closeSumme'>X</a>";
@@ -287,7 +287,7 @@ class functions extends sql {
 
 		if($benutzerrechte == 0) {
 			$user = $_SESSION['username'];
-			$rightFromCurrentUser="SELECT id, Name, rights, titel FROM benutzer WHERE Name = '$user'";
+			$rightFromCurrentUser="SELECT * FROM benutzer WHERE Name = '$user' LIMIT 1";
 			$row = $this->getObjektInfo($rightFromCurrentUser);
 			$benutzerrechte = $row[0]->rights;
 		}
