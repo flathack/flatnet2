@@ -6,30 +6,34 @@ class finanzenNEW extends functions {
 	function mainFinanzFunction() {
 		$besitzer = $this->getUserID($_SESSION['username']);
 		
-		# Navigationslinks
-		$this->showKontenInSelect($besitzer);
-		$this->showJahreLinks();
-		$this->showMonateLinks();
-		
-		# Informationsmeldungen
-		$this->showErrors();
-		$this->showFuturePastJahr();
-		$this->showFuturePastMonat();
-		$this->checkJahresabschluss();
-		
-		# Umsatzveränderungen
 		$this->showCreateNewUeberweisung();
-		$this->alterUmsatz();
 		
-		# Hauptansicht Monat
-		$this->showCurrentMonthInKonto($besitzer);
-		$this->diagrammOptionen($besitzer);
-		
-		# automatische Jahresabschluss-Generation.
-		$this->erstelleJahresabschluesseFromOldEintraegen();
-		
-		# automatische Monatsabschlussgeneration
-		$this->erstelleMonatsabschluesseFromOldEintraegen();
+		if(!isset($_GET['newUeberweisung'])) {
+			# Navigationslinks
+			$this->showKontenInSelect($besitzer);
+			$this->showJahreLinks();
+			$this->showMonateLinks();
+			
+			# Informationsmeldungen
+			$this->showErrors();
+			$this->showFuturePastJahr();
+			$this->showFuturePastMonat();
+			$this->checkJahresabschluss();
+			
+			# Umsatzveränderungen
+			
+			$this->alterUmsatz();
+			
+			# Hauptansicht Monat
+			$this->showCurrentMonthInKonto($besitzer);
+			$this->diagrammOptionen($besitzer);
+			
+			# automatische Jahresabschluss-Generation.
+			$this->erstelleJahresabschluesseFromOldEintraegen();
+			
+			# automatische Monatsabschlussgeneration
+			$this->erstelleMonatsabschluesseFromOldEintraegen();
+		}
 		
 	}
 	
@@ -782,32 +786,46 @@ class finanzenNEW extends functions {
 				$kontoID = $this->getKontoIDFromGet();
 				$monat = $this->getMonatFromGet();				
 				$jahr = $this->getJahrFromGet();
+				echo "<div class='newChar'>";
 					
 				echo "<a href='?konto=$kontoID&monat=$monat&jahr=$jahr' class='highlightedLink'>Zurück</a>";
 	
+				
+				
 				echo "<h2>Eine Buchung durchführen</h2>";
-				echo "<div><form method=post>";
+				
+				echo "<form method=post>";
 				echo "<table class='kontoTable'>";
-				echo "<tbody><td>Beschreibung</td><td><input type=text value='' placeholder='Text' name='textUeberweisung'/></td></tbody>";
+				if(isset($_POST['textUeberweisung'])) { $textInput = $_POST['textUeberweisung']; } else { $textInput = ""; }
+				echo "<tbody><td>Beschreibung</td><td><input type=text value='$textInput' placeholder='Text' name='textUeberweisung'/></td></tbody>";
 					
 				$besitzer = $this->getUserID($_SESSION['username']);
-				$select = "SELECT * FROM finanzen_konten WHERE besitzer = '$besitzer'";
+				$select = "SELECT * FROM finanzen_konten WHERE besitzer = '$besitzer' ORDER BY konto";
 				$absenderKonten = $this->getObjektInfo($select);
 					
 				echo "<tbody><td>Gutschrift hier</td><td><select name='zielKonto'>";
 				$i = 0;
 				for ($i = 0 ; $i < sizeof($absenderKonten) ; $i++) {
-					echo "<option value='". $absenderKonten[$i]->id . "'>" . $absenderKonten[$i]->konto . "</option>";
+					echo "<option"; 
+					if(isset($_POST['zielKonto']) AND $absenderKonten[$i]->id == $_POST['zielKonto']) { echo " selected "; } else { echo ""; }
+					echo " value='". $absenderKonten[$i]->id . "'>" . $absenderKonten[$i]->konto . "</option>";
 				}
 				echo "</select></td></tbody>";
 					
 				echo "<tbody><td>Absender: </td><td><select name='absenderKonto'>";
 				$i = 0;
 				for ($i = 0 ; $i < sizeof($absenderKonten) ; $i++) {
-					echo "<option value='". $absenderKonten[$i]->id . "'>" . $absenderKonten[$i]->konto . "</option>";
+					
+					echo "<option ";
+					if(isset($_POST['absenderKonto']) AND $absenderKonten[$i]->id == $_POST['absenderKonto']) { echo " selected "; } else { echo ""; } 
+					echo "value='". $absenderKonten[$i]->id . "'>" . $absenderKonten[$i]->konto . "</option>";
 				}
 				echo "</select></td></tbody>";
-				$timestamp = time(); $date = date("Y-m-d", $timestamp);
+				
+				# Date Variable füllen:
+				$timestamp = time();
+				if(isset($_POST['dateUeberweisung'])) { $date = $_POST['dateUeberweisung']; } else { $date = date("Y-m-d", $timestamp); }
+				
 				echo "<tbody><td>Betrag</td><td><input type=text value='' placeholder='Betrag' name='valueUeberweisung'/></td></tbody>";
 				echo "<tbody><td>Datum</td><td><input type=date value='$date' placeholder='Datum' name='dateUeberweisung'/></td></tbody>";
 				echo "<tbody><td colspan='2'><input type=submit name=sendnewUeberweisung value='Absenden' /></td></tbody>";
@@ -822,8 +840,9 @@ class finanzenNEW extends functions {
 				for ($j = 0 ; $j < 12 ; $j++) {
 					echo "<tbody><td colspan='2'><input type=date name=dates[$j] value='' placeholder='weiteres Datum' /></td></tbody>";
 				}
-	
-				echo "</form></div>";
+				echo "</table>";
+				echo "</form>";
+				echo "</div>";
 	
 				if(isset($_POST['sendnewUeberweisung'])
 						AND isset($_POST['valueUeberweisung'])
