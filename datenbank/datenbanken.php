@@ -19,7 +19,6 @@ include '../includes/datenbanken.class.php';
 $datenbank = NEW datenbanken;
 
 # STELLT DEN HEADER ZUR VERFÜGUNG
-$datenbank->connectToDB();
 $datenbank->header();
 
 $datenbank->logged_in("redirect", "index.php");

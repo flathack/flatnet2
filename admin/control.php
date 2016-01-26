@@ -20,7 +20,6 @@
 		$admin = NEW control;
 		
 		# STELLT DEN HEADER ZUR VERFÜGUNG
-		$admin->connectToDB();
 		$admin->header();
 		
 		$admin->logged_in("redirect", "index.php");

@@ -16,6 +16,8 @@ class sql {
 	 * geschrieben.
 	 */
 	function connectToDBOldWay() {
+		
+		echo "<p class='meldung'>connectToDBOldWay. Diese Funktion ist veraltet!</p>";
 
 	#	error_reporting(0);
 
@@ -79,6 +81,7 @@ class sql {
 	 * @param unknown $password
 	 */
 	function connectToSpecialDB($db, $username, $password) {
+		echo "<p class='meldung'>connectToSpecialDB. Diese Funktion ist veraltet!</p>";
 		$mode = "phpfriends";
 
 		# Bauen der ErrorMessages:
@@ -237,12 +240,7 @@ class sql {
 	 * @return unknown
 	 */
 	function getObjektInfo($query) {
-		
-		// $ergebnis = mysql_query($query);
-		// $row = mysql_fetch_object($ergebnis);
-		
 		$db = $this->connectToDBNewWay();
-		
 		$stmt = $db->query($query);
 		$results = $stmt->fetchAll(PDO::FETCH_OBJ);
 						

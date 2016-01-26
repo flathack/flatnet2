@@ -19,7 +19,6 @@ include '../includes/gw.class.php';
 $guildwars = NEW guildwars;
 
 # STELLT DEN HEADER ZUR VERFÜGUNG
-$guildwars->connectToDB();
 $guildwars->header();
 
 $guildwars->logged_in("redirect", "index.php");

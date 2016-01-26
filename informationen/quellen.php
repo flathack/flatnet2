@@ -17,7 +17,6 @@ include '../includes/objekt/functions.class.php';
 
 # STELLT DEN HEADER ZUR VERFÜGUNG
 $quellen = NEW functions;
-$quellen->connectToDB();
 $quellen->header();
 ?>
 <title>Quellen</title>

@@ -16,7 +16,6 @@ include '../includes/forum.class.php';
 $forum = NEW forum;
 
 # STELLT DEN HEADER ZUR VERFÜGUNG
-$forum->connectToDB();
 $forum->header();
 
 $forum->logged_in("redirect", "index.php");

@@ -527,10 +527,8 @@ class functions extends sql {
 			}
 			
 			if($this->userHasRight("67", 0) == true) {
-				echo "<li><a href='http://localhost:9090/phpmyadmin/' target='_blank' class='extern'>PMA Local</a></li>
-				<li><a href='https://pf-control.de/pma/' target='_blank' class='extern'>PMA Extern</a></li>
-				<li><a href='https://pf-control.de/froxlor/customer_index.php?s=b7d502cd3d343f7bffbd493a1be553df' target='_blank' class='extern'>Froxlor</a></li>
-				<li><a href='https://mail1.php-friends.de/' class='extern' target='_blank'>E-Mail</a></li>";
+				echo "<li><a href='http://localhost/phpmyadmin/' target='_blank' class='extern'>PMA Local</a></li>
+				<li><a href='https://bernd.php-friends.de:4443/' target='_blank' class='extern'>Verwaltungskonsole</a></li>";
 				
 			}
 			

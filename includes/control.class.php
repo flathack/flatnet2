@@ -1343,11 +1343,9 @@ class control extends functions {
 	function getColumns($table) {
 		// COLUMNS SPEICHERN;
 		$select1 = "SHOW COLUMNS FROM $table";
-		$ergebnis1 = mysql_query ( $select1 );
-		$i = 0;
-		while ( $row = mysql_fetch_object ( $ergebnis1 ) ) {
-			$columns [$i] = $row->Field;
-			$i ++;
+		$row = $this->getObjektInfo($select1);
+		for ($i = 0 ; $i < sizeof($row) ; $i++) {
+			$columns [$i] = $row[$i]->Field;
 		}
 		
 		return $columns;
@@ -1359,55 +1357,45 @@ class control extends functions {
 	 * @param unknown $query        	
 	 */
 	function getColumnsFromQuery($query) {
-		$createTempTable = "
-		CREATE TEMPORARY TABLE
-		IF NOT EXISTS tempTable AS ($query);";
-		mysql_query ( $createTempTable );
+		$createTempTable = "CREATE TEMPORARY TABLE IF NOT EXISTS tempTable AS ($query);";
+		$this->sql_insert_update_delete($createTempTable);
 		
 		$select1 = "SHOW COLUMNS FROM tempTable";
-		$ergebnis1 = mysql_query ( $select1 );
-		$i = 0;
-		while ( $row = mysql_fetch_object ( $ergebnis1 ) ) {
-			$columns [$i] = $row->Field;
-			$i ++;
+		$row = $this->getObjektInfo($select1);
+		for ($i = 0 ; $i < sizeof($row) ; $i++) {
+			$columns[$i]=$row[$i]->Field;
 		}
 		
 		return $columns;
 	}
+	
+	
 	function getColumnAnzahl($query) {
 		$createTempTable = "
 		CREATE TEMPORARY TABLE
 		IF NOT EXISTS tempTable AS ($query);";
-		mysql_query ( $createTempTable );
+		$this->sql_insert_update_delete($createTempTable);
 		
 		$select1 = "SHOW COLUMNS FROM tempTable";
 		
-		$ergebnis = mysql_query ( $select1 );
-		$menge = mysql_num_rows ( $ergebnis );
-		return $menge;
+		$row = $this->getAmount($select1);
+		return $row;
 	}
 	
 	/**
-	 * gibt die Kommentare der Spalten einer Tabelle wieder und speichert diese in einem Array.
+	 * Gibt die Kommentare der Spalten einer Tabelle wieder und speichert diese in einem Array.
 	 * 
 	 * @param unknown $table        	
 	 * @return unknown
 	 */
 	function getColumnComments($table) {
 		
-		// COLUMNS SPEICHERN;
-		mysql_close ();
-		$this->connectToSpecialDB ( "information_schema", "devUser", "" );
+	#	$this->connectToSpecialDB ( "information_schema", "info_user", "GCbzZFw2ppBwJp7Q" );
 		$select1 = "SELECT column_name, column_comment FROM columns WHERE TABLE_SCHEMA = 'flathacksql1' AND TABLE_NAME='$table'";
-		$ergebnis1 = mysql_query ( $select1 );
-		$i = 0;
-		while ( $row = mysql_fetch_object ( $ergebnis1 ) ) {
-			$comments [$i] = $row->column_comment;
-			$i ++;
-		}
-		
-		$this->connectToDB ();
-		
+		$row = $this->getObjektInfo($select1);
+		for ($i = 0 ; $i < sizeof($row); $i++) {
+			$comments[$i] = $row[$i]->column_comment;
+		}		
 		return $comments;
 	}
 	
@@ -1537,11 +1525,10 @@ class control extends functions {
 				$row = $this->getObjektInfo($select);
 				
 				// Kommentar der Spalte auslesen:
-				$comments = $this->getColumnComments ( $table );
+			#	$comments = $this->getColumnComments ( $table );
 				
 				// Columns bekommen:
 				$columns = $this->getColumns ( $table );
-				$i = 0;
 				$this->insertQuery ( $select );
 				
 				if(isset($_GET['von'])) {
@@ -1553,16 +1540,16 @@ class control extends functions {
 				echo "<thead>" . "<td>Table: $table</td>" . "<td><a name='angezeigteID'>Angezeigte ID</a>: $id <a href='?action=3$von&table=$table' class='highlightedLink'>X</a></td>" . "</thead>";
 				
 				for ($i = 0 ; $i < sizeof($row) ; $i++) {
-					for($i = 0; $i < $menge; $i ++) {
-						if (strlen ( $row[$i]->$columns [$i] ) > 50) {
-							echo "<tbody><td>" . $columns [$i] . "</td>
+					for($j = 0; $j < $menge; $j ++) {
+						if (strlen ( $row[$i]->$columns [$j] ) > 50) {
+							echo "<tbody><td>" . $columns [$j] . "</td>
 							<td><textarea rows=10 cols=100 name=currentObject[$i]";
-							echo ">" . $row[$i]->$columns [$i] . "</textarea>$comments[$i]</td></tbody>";
+							echo ">" . $row[$i]->$columns [$j] . "</textarea></td></tbody>";
 						} else {
-							echo "<tbody><td>" . $columns [$i] . "</td><td><input type=text class='' name=currentObject[$i] value='";
-							echo $row[$i]->$columns [$i];
+							echo "<tbody><td>" . $columns [$j] . "</td><td><input type=text class='' name=currentObject[$j] value='";
+							echo $row[$i]->$columns [$j];
 							
-							echo "' placeholder='$columns[$i]'/> $comments[$i]</td></tbody>";
+							echo "' placeholder='$columns[$j]'/> </td></tbody>";
 						}
 					}
 				}
@@ -1578,21 +1565,16 @@ class control extends functions {
 	}
 	
 	function tableStructure($table) {
-		if (isset ( $_GET ['table'] ) and isset ( $_GET ['showStructure'] )) {
-			// Aktuelle DB schließen
-			mysql_close ();
-			
+		if (isset ( $_GET ['table'] ) and isset ( $_GET ['showStructure'] )) {			
 			// Neue DB öffnen
-			$this->connectToSpecialDB ( "information_schema", "devUser", "" );
+		#	$this->connectToSpecialDB ( "information_schema", "info_user", "GCbzZFw2ppBwJp7Q" );
 			
 			// Columns bekommen:
 			
 			$select1 = "SHOW COLUMNS FROM columns";
-			$ergebnis1 = mysql_query ( $select1 );
-			$i = 0;
-			while ( $row = mysql_fetch_object ( $ergebnis1 ) ) {
-				$columns [$i] = $row->Field;
-				$i ++;
+			$row = $this->getObjektInfo($select1);
+			for ($i = 0 ; $i < sizeof($row) ; $i++) {
+				$columns [$i] = $row[$i]->Field;
 			}
 			
 			if (sizeof ( $columns ) > 5) {
@@ -1607,7 +1589,6 @@ class control extends functions {
 			// Table erstellen
 			echo "<table class='flatnetTable'>";
 			echo "<thead>";
-			$i = 0;
 			for($i = 0; $i < sizeof ( $columns ); $i ++) {
 				echo "<td>";
 				echo $columns [$i];
@@ -1617,20 +1598,16 @@ class control extends functions {
 			
 			// Select des Inhalts
 			$select1 = "SELECT * FROM columns WHERE TABLE_SCHEMA = 'flathacksql1' AND TABLE_NAME='$table'";
-			$ergebnis1 = mysql_query ( $select1 );
-			while ( $row = mysql_fetch_object ( $ergebnis1 ) ) {
+			$row = $this->getObjektInfo($select1);
+			for($i = 0; $i < sizeof ($row); $i ++) {
 				echo "<tbody>";
-				$j = 0;
-				for($j = 0; $j < sizeof ( $columns ); $j ++) {
+				for($j = 0; $j < sizeof ($columns); $j ++) {
 					echo "<td>";
-					echo substr ( $row->$columns [$j], 0, 30 );
+					echo substr ( $row[$i]->$columns[$j], 0, 30 );
 					echo "</td>";
 				}
 				echo "</tbody>";
 			}
-			
-			// Normale Datenbank wieder öffnen.
-			$this->connectToDB ();
 		}
 	}
 	
@@ -1659,10 +1636,8 @@ class control extends functions {
 			$query = "SHOW COLUMNS FROM $table";
 			$menge = $this->getAmount ( $query );
 			
-			$ergebnis = mysql_query ( $query );
 			// Columns bekommen:
 			$columns = $this->getColumns ( $table );
-			$i = 0;
 			
 			if(isset($_GET['von'])) {
 				$von = "&von=" . $_GET['von'];
@@ -1706,13 +1681,10 @@ class control extends functions {
 			if (isset ( $_POST ['globalqueryok'] )) {
 				$query = $_POST ['sqlbox'];
 				
-				$sqlquery = mysql_query ( $query ) or die ( mysql_error () );
-				if ($sqlquery == true) {
+				if ($this->sql_insert_update_delete($query) == true) {
 					echo "<p class='erfolg'>SQL Query wurde erfolgreich durchgeführt.</p>";
 				} else {
-					echo "<p class='meldung'>Es ist ein Fehler aufgetreten: <br>";
-					echo mysql_error ();
-					echo "</p>";
+					echo "<p class='meldung'>Es ist ein Fehler aufgetreten</p>";
 				}
 				
 				// Abstandshalter nach unten:
@@ -1904,7 +1876,7 @@ class control extends functions {
 				}
 				
 				// Ergebnis der SQL Abfrage
-				$ergebnis = mysql_query ( $select );
+				$row = $this->getObjektInfo($select);
 				$abfrageMenge = $this->getAmount ( $pageSelect );
 				$currentSelect = $this->getAmount ( $select );
 				
@@ -1937,12 +1909,12 @@ class control extends functions {
 				echo "</thead> ";
 				
 				// Gibt den Tabellen Inhalt zeilenweise aus.
-				while ( $row = mysql_fetch_object ( $ergebnis ) ) {
+				for ($i = 0 ; $i < sizeof($row) ; $i++){
 					echo "<tbody>";
-					echo "<td><a href='?action=3$von&table=$table&id=$row->id#angezeigteID' class='buttonlink'>EDIT</a></td>";
+					echo "<td><a href='?action=3$von&table=$table&id=".$row[$i]->id."#angezeigteID' class='buttonlink'>EDIT</a></td>";
 					for($j = 0; $j < $menge; $j ++) {
 						echo "<td>";
-						echo substr ( strip_tags($row->$columns [$j]), 0, 30 );
+						echo substr ( strip_tags($row[$i]->$columns [$j]), 0, 30 );
 						echo "</td>";
 					}
 					if ($changedColumns == true) {

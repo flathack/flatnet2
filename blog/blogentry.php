@@ -18,7 +18,6 @@
 include '../includes/blog.class.php';
 $blog = NEW blog;
 # STELLT DEN HEADER ZUR VERFÜGUNG
-$blog->connectToDB();
 $blog->header();
 $blog->logged_in("redirect", "index.php");
 

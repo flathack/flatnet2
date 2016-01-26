@@ -32,7 +32,6 @@ if(!isset($_GET['charID'])) {
 $guildwars = NEW gw_charakter;
 
 # STELLT DEN HEADER ZUR VERFÜGUNG
-$guildwars->connectToDB();
 $guildwars->header();
 
 $guildwars->logged_in("redirect", "index.php");

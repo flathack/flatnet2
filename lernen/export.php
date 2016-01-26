@@ -15,8 +15,7 @@ include '../includes/learn.class.php';
 #Forum Function
 $learn = NEW learn;
 
-# STELLT DEN HEADER ZUR VERFÃœGUNG
-$learn->connectToDB();
+# STELLT DEN HEADER ZUR VERFÜGUNG
 $learn->header();
 
 $learn->logged_in("redirect", "index.php");
