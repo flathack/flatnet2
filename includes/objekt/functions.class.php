@@ -612,47 +612,40 @@ class functions extends sql {
 		$this->benachrichtigungsCenter();
 		
 		echo "</div></div>";
-			
-		echo "<ul id='navigation'>";
 		
-		# ÜBERSICHT
-		if($this->userHasRight("7", 0) == "true") {
-			echo "<li>	<a href='/flatnet2/uebersicht.php' id='uebersicht'>Übersicht</a></li>";
-		}
-		
-		# ADRESSBUCH
-		if($this->userHasRight("13", 0) == true OR $this->userHasRight("22", 0) == true) {
-			echo "<li>	<a href='/flatnet2/datenbank/datenbanken.php' id='adressbuch'>Adressbuch</a></li>";
-		}
-		
-		# FORUM
-		if($this->userHasRight("2", 0) == true) {
-			echo "<li>	<a href='/flatnet2/forum/index.php' id='forum'>Forum</a></li>";
-		}
-		
-		# GUILDWARS
-		if($this->userHasRight("3", 0) == true) {
-			echo "<li>	<a href='/flatnet2/guildwars/start.php' id='guildwars'>Guildwars</a></li>";
-		}
-		
-		if($this->userHasRight("65", 0) == true) {
-			echo "<li>	<a href='/flatnet2/starcitizen/index.php' id='starcitizen'>Starcitizen </a></li>";
-		}
-		if($this->userHasRight("11", 0) == "true") {
-			echo "<li>	<a href='/flatnet2/fahrten/index.php' id='fahrten'>	Fahrkosten </a></li>";
-		}
+		# Zeigt die Navigation an:
+		$this->showNaviLinks();
 		
 		
-		if($this->userHasRight("17", 0) == "true") {
-			echo "<li>	<a href='/flatnet2/finanzen/index.php' id='finanzen'>	Finanzen </a>	</li>";
-		}
+		echo"<div id='ueberschrift'><h1><a href='/flatnet2/uebersicht.php'>Steven.NET</a></h1></div>";
 		
-		echo "</ul>
-				<div id='ueberschrift'>
-				<h1><a href='/flatnet2/uebersicht.php'>Steven.NET</a></h1>
-				</div>";
+		# Zeigt die Ankündigung an:
 		$this->ankuendigung();
 		echo "</header>";
+	}
+	
+	/**
+	 * Zeigt die Navigation an:
+	 */
+	function showNaviLinks() {
+		echo "<ul id='navigation'>";
+				
+		$kacheln = $this->getObjektInfo("SELECT * FROM uebersicht_kacheln WHERE active=1 ORDER BY sortierung");
+		if($this->userHasRight("7", 0) == "true") {
+			echo "<li>	<a href='/flatnet2/uebersicht.php' id='uebersicht'>Startseite</a></li>";
+		}
+		
+		for($i = 0 ; $i < sizeof($kacheln) ; $i++) {
+			
+			if($this->userHasRight($kacheln[$i]->rightID, 0) == true) {
+				echo "<li>";
+					echo "<a id='".$kacheln[$i]->cssID."' href='".$kacheln[$i]->link."'>".$kacheln[$i]->name."</a>";
+				echo "</li>"; 
+			}
+			
+		}
+
+		echo "</ul>";
 	}
 	
 	/**

@@ -298,166 +298,225 @@ blockquote {
 }
 
 /* Übersicht */
-.bereiche {
-	width: 290px;
-	height: 150px;
-	float: left;
-	margin: 5px;
-	border: 1px solid transparent;
-	-webkit-transition: all 0.5s ease-in-out;
-	-moz-transition: all 0.5s ease-in-out;
-	-ms-transition: all 0.5s ease-in-out;
-	-o-transition: all 0.5s ease-in-out;
-	transition: all 0.5s ease-in-out;
-}
 
-.bereiche:hover,
-.bereiche:active,
-.bereiche:focus {
-	-webkit-transition: all 0.5s ease-in-out;
-	-moz-transition: all 0.5s ease-in-out;
-	-ms-transition: all 0.5s ease-in-out;
-	-o-transition: all 0.5s ease-in-out;
-	transition: all 0.5s ease-in-out;
-	box-shadow: 0px 0px 10px grey;
-	border: 1px solid grey;
-}
-
-.bereiche #adressbuch {
-	background-color: white;
-	background-image: url(../images/tiles/adressbuch.png);
-	background-repeat: no-repeat;
-	background-position: right;
-	padding-right: 5px;
-	padding-left: 5px;
-	height: 100%;
-	border: 1px solid grey;
-}
-
-.bereiche #adressbuch #limited {
-	width: 64%;
-}
-
-.bereiche #newEntity {
+.changeStatus input[type=submit] {
+	box-shadow: none;
+	border: none;
+	color: black;
 	padding: 5px;
-	border: 1px solid grey;
-	background-color: #e4dfff;
+	margin: 0px;
 }
 
-.bereiche #newEntity #name {
-	width: 150px;
+
+.bereichNEW {
+	background-color: white;
+	border: 1px solid #bebebe;
+	box-shadow: 0px 0px 10px #bebebe;
+	width: 94%;
+	padding: 5px;
 }
 
-.bereiche #newEntity #link {
-	width: 98px;
+.bereichNEW #name {
+	width: 250px;
+	padding: 10px;
 }
 
-.bereiche #newEntity #desc {
+.bereichNEW #link {
+	width: 600px;
+	margin-left: 10px;
+	padding: 10px;
+}
+
+.bereichNEW #desc {
 	margin-top: 10px;
 	margin-bottom: 10px;
 	padding: 10px;
-	width: 90%;
+	width: 600px;
+	margin-right: 10px;
 }
 
-.bereiche #newEntity #sort,
-.bereiche #newEntity #css,
-.bereiche #newEntity #right {
-	width: 50px;
+.bereichNEW #sort,
+.bereichNEW #css {
+	width: 100px;
+	margin: 5px;
+	padding: 10px;
 }
 
-.bereiche #newEntity #submit {
+.bereichNEW select {
+	padding: 10px;
+}
+
+.bereichNEW #submit {
 	box-shadow: none;
 	padding: none;
 	margin-top: 1px;	
 }
 
-.bereiche #newEntity #checkbox {
+.bereichNEW #checkbox {
 	margin-left: 10px;
 }
 
-.bereiche #guildwars {
+.bereichadressbuch h2,
+.bereichguildwars h2,
+.bereichforum h2,
+.bereichfinanzen h2,
+.bereichfahrten h2,
+.bereichlernen h2,
+.bereichadministration h2,
+.bereichprofil h2,
+.bereichINACTIVE h2 {
+	color: #414141;
+}
+
+.bereichadressbuch p,
+.bereichguildwars p,
+.bereichforum p,
+.bereichfinanzen p,
+.bereichfahrten p,
+.bereichlernen p,
+.bereichadministration p,
+.bereichprofil p,
+.bereichINACTIVE p {
+	color: black;
+	font-size: 12px;
+	font-family: cursive;
+}
+
+.bereichINACTIVE {
+	background-color: #ffffff;
+	border: 1px solid #c0c0c0;
+	box-shadow: 0px 0px 5px #c0c0c0;
+	margin-bottom: 10px;
+	margin-right: 10px;
+	padding: 5px;
+	min-height: 120px;
+	width: 46%;
+	display: inline-block;
+	opacity: 0.6;
+}
+
+.bereichGesperrt {
+	background-color: #ffe8e8;
+	border: 1px solid #4a0000;
+	box-shadow: 0px 0px 5px #ffcccc;
+	margin-bottom: 10px;
+	margin-right: 10px;
+	padding: 5px;
+	min-height: 120px;
+	width: 46%;
+	display: inline-block;
+	opacity: 0.6;
+}
+
+.bereichadressbuch {
+	background-color: white;
+	background-image: url(../images/tiles/adressbuch.png);
+	background-repeat: no-repeat;
+	background-position: right;
+	box-shadow: 0px 0px 5px grey;
+	border: 1px solid grey;
+	margin-bottom: 10px;
+	margin-right: 10px;
+	padding: 5px;
+	min-height: 120px;
+	width: 46%;
+	display: inline-block;
+}
+
+.bereichguildwars {
 	background-color: white;
 	background-image: url(../images/tiles/guildwars2.png);
-	padding-right: 5px;
-	padding-left: 5px;
-	height: 100%;
+	background-repeat: no-repeat;
+	background-position: right;
 	border: 1px solid #930003;
+	box-shadow: 0px 0px 5px #930003;
+	margin-bottom: 10px;
+	margin-right: 10px;
+	padding: 5px;
+	min-height: 120px;
+	width: 46%;
+	display: inline-block;
 }
 
-.bereiche #profil {
+.bereichprofil {
 	background-color: #e4e4e4;
-	padding-right: 5px;
-	padding-left: 5px;
-	height: 100%;
 	border: 1px solid grey;
+	box-shadow: 0px 0px 5px grey;
+	margin-bottom: 10px;
+	margin-right: 10px;
+	padding: 5px;
+	min-height: 120px;
+	width: 46%;
+	display: inline-block;
 }
 
-.bereiche #fahrten {
+.bereichfahrten {
+	background-color: #ffffff;
+	border: 1px solid #c0c0c0;
+	box-shadow: 0px 0px 5px #c0c0c0;
+	margin-bottom: 10px;
+	margin-right: 10px;
+	padding: 5px;
+	min-height: 120px;
+	width: 46%;
+	display: inline-block;
+}
+
+.bereichlernen {
 	background-color: #fffce8;
-	padding-right: 5px;
-	padding-left: 5px;
-	height: 100%;
-	border: 1px solid #ff8040;
-}
-
-.bereiche #lernen {
-	background-color: #fffce8;
-	padding-right: 5px;
-	padding-left: 5px;
-	height: 100%;
-	border: 1px solid #ff8040;
-}
-
-.bereiche #starcitizen {
-	background-color: #eae8ff;
-	padding-right: 5px;
-	padding-left: 5px;
-	height: 100%;
 	border: 1px solid grey;
+	box-shadow: 0px 0px 5px grey;
+	margin-bottom: 10px;
+	margin-right: 10px;
+	padding: 5px;
+	min-height: 120px;
+	width: 46%;
+	display: inline-block;
 }
 
-.bereiche #dokumentation {
-	background-color: #b7b7ff;
-	padding-right: 5px;
-	padding-left: 5px;
-	height: 100%;
+.bereichadministration {
+	background-color: white;
+/*	background-image: url(../images/tiles/administration.png);
+	background-position: right;
+	background-repeat: y-repeat; */
 	border: 1px solid grey;
+	box-shadow: 0px 0px 5px grey;
+	margin-bottom: 10px;
+	margin-right: 10px;
+	padding: 5px;
+	min-height: 120px;
+	width: 46%;
+	display: inline-block;
 }
 
-.bereiche #administration {
-	background-color: #ffe19d;
-	background-image: url(../images/tiles/administration.png);
-	padding-right: 5px;
-	padding-left: 5px;
-	height: 100%;
-	border: 1px solid grey;
-}
-
-.bereiche #finanzen {
+.bereichfinanzen {
 	background-color: #f7f7f7;
 	background-image: url(../images/tiles/finanzen.png);
-	padding-right: 5px;
-	padding-left: 5px;
-	height: 100%;
+	background-position: right;
+	background-repeat: no-repeat;
 	border: 1px solid #8080ff;
+	box-shadow: 0px 0px 5px #8080ff;
+	margin-bottom: 10px;
+	margin-right: 10px;
+	padding: 5px;
+	min-height: 120px;
+	width: 46%;
+	display: inline-block;
 }
 
-.bereiche #administration a,
-.bereiche #guildwars a,
-.bereiche #profil a {
-	text-shadow: 0px 0px 10px white;
-	
-}
-
-.bereiche #forum {
+.bereichforum {
 	background-color: #f0f0ff;
 	background-image: url(../images/tiles/forum.png);
 	background-repeat: no-repeat;
 	background-position: top;
-	padding-right: 5px;
-	padding-left: 5px;
-	height: 100%;
 	border: 1px solid grey;
+	box-shadow: 0px 0px 5px grey;
+	margin-bottom: 10px;
+	margin-right: 10px;
+	padding: 5px;
+	min-height: 120px;
+	width: 46%;
+	display: inline-block;
 }
 
 .hilfe {
@@ -715,8 +774,6 @@ blockquote {
 }
 
 .scrollContainer {
-	overflow: scroll;
-	max-height: 300px;
 	padding: 10px;
 	font-family: cursive;
 }
@@ -1076,6 +1133,7 @@ blockquote {
 	margin-bottom: 10px;
 	box-shadow: 0px 0px 5px black;
 	padding: 10px;
+	margin-top: 10px;
 	background: white;
 	color: black;
 	position: relative;
@@ -2099,6 +2157,7 @@ input[type=password]:focus {
 	text-align: left;
 	color: black;
 	font-weight: bolder;
+	border-bottom: 1px solid #3e3e3e;
 }
 
 .flatnetTable tbody {

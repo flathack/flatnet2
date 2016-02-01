@@ -2105,7 +2105,7 @@ class control extends functions {
 									echo " id = '' ";
 								}
 								echo ">";
-								echo "<td>" .$getEintraegeVonDieserKategorie[$j]->recht. "</td>";
+								echo "<td>" .$getEintraegeVonDieserKategorie[$j]->id." - ".$getEintraegeVonDieserKategorie[$j]->recht. "</td>";
 								
 								echo "<td>";
 								if($this->userHasRight($getEintraegeVonDieserKategorie[$j]->id, $userInformation[0]->id) == true) {
