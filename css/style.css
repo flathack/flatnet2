@@ -298,166 +298,146 @@ blockquote {
 }
 
 /* Übersicht */
-.bereiche {
-	width: 290px;
-	height: 150px;
-	float: left;
-	margin: 5px;
-	border: 1px solid transparent;
-	-webkit-transition: all 0.5s ease-in-out;
-	-moz-transition: all 0.5s ease-in-out;
-	-ms-transition: all 0.5s ease-in-out;
-	-o-transition: all 0.5s ease-in-out;
-	transition: all 0.5s ease-in-out;
-}
 
-.bereiche:hover,
-.bereiche:active,
-.bereiche:focus {
-	-webkit-transition: all 0.5s ease-in-out;
-	-moz-transition: all 0.5s ease-in-out;
-	-ms-transition: all 0.5s ease-in-out;
-	-o-transition: all 0.5s ease-in-out;
-	transition: all 0.5s ease-in-out;
-	box-shadow: 0px 0px 10px grey;
-	border: 1px solid grey;
-}
 
-.bereiche #adressbuch {
+.bereichNEW {
 	background-color: white;
-	background-image: url(../images/tiles/adressbuch.png);
-	background-repeat: no-repeat;
-	background-position: right;
-	padding-right: 5px;
-	padding-left: 5px;
-	height: 100%;
-	border: 1px solid grey;
+	border: 1px solid #930003;
+	margin: 10px;
+	padding: 10px;
+	width: 270px;
 }
 
-.bereiche #adressbuch #limited {
-	width: 64%;
-}
-
-.bereiche #newEntity {
-	padding: 5px;
-	border: 1px solid grey;
-	background-color: #e4dfff;
-}
-
-.bereiche #newEntity #name {
+.bereichNEW #name {
 	width: 150px;
 }
 
-.bereiche #newEntity #link {
+.bereichNEW #link {
 	width: 98px;
 }
 
-.bereiche #newEntity #desc {
+.bereichNEW #desc {
 	margin-top: 10px;
 	margin-bottom: 10px;
 	padding: 10px;
 	width: 90%;
 }
 
-.bereiche #newEntity #sort,
-.bereiche #newEntity #css,
-.bereiche #newEntity #right {
+.bereichNEW #sort,
+.bereichNEW #css,
+.bereichNEW #right {
 	width: 50px;
 }
 
-.bereiche #newEntity #submit {
+.bereichNEW #submit {
 	box-shadow: none;
 	padding: none;
 	margin-top: 1px;	
 }
 
-.bereiche #newEntity #checkbox {
+.bereichNEW #checkbox {
 	margin-left: 10px;
 }
 
-.bereiche #guildwars {
+.bereichadressbuch {
+	background-color: white;
+	background-image: url(../images/tiles/adressbuch.png);
+	background-repeat: no-repeat;
+	background-position: right;
+	border: 1px solid grey;
+	margin-bottom: 10px;
+	margin-right: 10px;
+	padding: 5px;
+	min-height: 120px;
+	width: 45%;
+	display: inline-block;
+}
+
+.bereichguildwars {
 	background-color: white;
 	background-image: url(../images/tiles/guildwars2.png);
-	padding-right: 5px;
-	padding-left: 5px;
-	height: 100%;
+	background-repeat: no-repeat;
+	background-position: right;
 	border: 1px solid #930003;
+	margin-bottom: 10px;
+	margin-right: 10px;
+	padding: 5px;
+	min-height: 120px;
+	width: 45%;
+	display: inline-block;
 }
 
-.bereiche #profil {
+.bereichprofil {
 	background-color: #e4e4e4;
-	padding-right: 5px;
-	padding-left: 5px;
-	height: 100%;
 	border: 1px solid grey;
+	margin-bottom: 10px;
+	margin-right: 10px;
+	padding: 5px;
+	min-height: 120px;
+	width: 45%;
+	display: inline-block;
 }
 
-.bereiche #fahrten {
+.bereichfahrten {
+	background-color: #ffffff;
+	border: 1px solid #c0c0c0;
+	margin-bottom: 10px;
+	margin-right: 10px;
+	padding: 5px;
+	min-height: 120px;
+	width: 45%;
+	display: inline-block;
+}
+
+.bereichlernen {
 	background-color: #fffce8;
-	padding-right: 5px;
-	padding-left: 5px;
-	height: 100%;
 	border: 1px solid #ff8040;
+	margin-bottom: 10px;
+	margin-right: 10px;
+	padding: 5px;
+	min-height: 120px;
+	width: 45%;
+	display: inline-block;
 }
 
-.bereiche #lernen {
-	background-color: #fffce8;
-	padding-right: 5px;
-	padding-left: 5px;
-	height: 100%;
-	border: 1px solid #ff8040;
-}
-
-.bereiche #starcitizen {
-	background-color: #eae8ff;
-	padding-right: 5px;
-	padding-left: 5px;
-	height: 100%;
-	border: 1px solid grey;
-}
-
-.bereiche #dokumentation {
-	background-color: #b7b7ff;
-	padding-right: 5px;
-	padding-left: 5px;
-	height: 100%;
-	border: 1px solid grey;
-}
-
-.bereiche #administration {
+.bereichadministration {
 	background-color: #ffe19d;
 	background-image: url(../images/tiles/administration.png);
-	padding-right: 5px;
-	padding-left: 5px;
-	height: 100%;
 	border: 1px solid grey;
+	margin-bottom: 10px;
+	margin-right: 10px;
+	padding: 5px;
+	min-height: 120px;
+	width: 45%;
+	display: inline-block;
 }
 
-.bereiche #finanzen {
+.bereichfinanzen {
 	background-color: #f7f7f7;
 	background-image: url(../images/tiles/finanzen.png);
-	padding-right: 5px;
-	padding-left: 5px;
-	height: 100%;
+	background-position: right;
+	background-repeat: no-repeat;
 	border: 1px solid #8080ff;
+	margin-bottom: 10px;
+	margin-right: 10px;
+	padding: 5px;
+	min-height: 120px;
+	width: 45%;
+	display: inline-block;
 }
 
-.bereiche #administration a,
-.bereiche #guildwars a,
-.bereiche #profil a {
-	text-shadow: 0px 0px 10px white;
-	
-}
-
-.bereiche #forum {
+.bereichforum {
 	background-color: #f0f0ff;
 	background-image: url(../images/tiles/forum.png);
 	background-repeat: no-repeat;
 	background-position: top;
-	padding-right: 5px;
-	padding-left: 5px;
-	height: 100%;
 	border: 1px solid grey;
+	margin-bottom: 10px;
+	margin-right: 10px;
+	padding: 5px;
+	min-height: 120px;
+	width: 45%;
+	display: inline-block;
 }
 
 .hilfe {
@@ -715,8 +695,6 @@ blockquote {
 }
 
 .scrollContainer {
-	overflow: scroll;
-	max-height: 300px;
 	padding: 10px;
 	font-family: cursive;
 }
@@ -1076,6 +1054,7 @@ blockquote {
 	margin-bottom: 10px;
 	box-shadow: 0px 0px 5px black;
 	padding: 10px;
+	margin-top: 10px;
 	background: white;
 	color: black;
 	position: relative;
@@ -2099,6 +2078,7 @@ input[type=password]:focus {
 	text-align: left;
 	color: black;
 	font-weight: bolder;
+	border-bottom: 1px solid #3e3e3e;
 }
 
 .flatnetTable tbody {

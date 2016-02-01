@@ -66,7 +66,7 @@ class uebersicht extends functions {
 			
 		}
 		
-		echo "<div class='bereiche'><div id='newEntity'><form method=post>";
+		echo "<div class='bereichNEW'><form method=post>";
 		if(isset($_POST['name'])) {
 			$name = $_POST['name'];
 		} else {
@@ -110,7 +110,7 @@ class uebersicht extends functions {
 			echo "<input id='right' type=number name=rightID value='" .$rightID. "' placeholder=Recht />";
 			echo "<input id='checkbox' type=checkbox checked value='" .$active. "' name=active /><label for=active>Aktiv</label>";
 			echo "<input id='submit' type=submit value=speichern />";
-		echo "</form></div></div>";
+		echo "</form></div>";
 	}
 	
 	/**
@@ -121,17 +121,12 @@ class uebersicht extends functions {
 		
 		for($i = 0; $i < sizeof($kacheln); $i++) {
 			if($this->userHasRight($kacheln[$i]->rightID, 0) == true) {
-			
-				echo "<div class='bereiche'>";
-				
-					echo "<div id=".$kacheln[$i]->cssID.">";
-					echo "<a href='".$kacheln[$i]->link."'><h2>".$kacheln[$i]->name."</h2></a>";
+				echo "<div class=bereich".$kacheln[$i]->cssID.">";
+				echo "<a href='".$kacheln[$i]->link."'><h2>".$kacheln[$i]->name."</h2></a>";
 					
-					echo "<p>";
-					echo $kacheln[$i]->beschreibung;
-					echo "</p>";
-					echo "</div>";
-				
+				echo "<p>";
+				echo $kacheln[$i]->beschreibung;
+				echo "</p>";
 				echo "</div>";
 			
 			}

@@ -15,31 +15,15 @@
 		$uebersicht->header();
 		
 		$uebersicht->logged_in("redirect", "index.php");
-		$uebersicht->userHasRightPruefung("7");
-			
-		#
-		# ANZAHL DER TILES
-		#
-		$anzahlanTiles = 3;
-		
+		$uebersicht->userHasRightPruefung("7");		
 		?>
 		
 		<title>Steven.NET - Home</title>
 
 	</head>
 	<body>
-	
-		<div class='mainbody'>
 		
-			<?php $uebersicht->mainUebersichtFunction(); ?>
-			
-			<?php 
-			# Leerzeichen einfügen:
-			for ($i = 0; $i < $anzahlanTiles; $i++) {
-				echo "<br><br><br><br><br><br><br><br>";
-			}
-			?>
-		</div>
+	<?php $uebersicht->mainUebersichtFunction(); ?>
 
 	</body>
 </div>

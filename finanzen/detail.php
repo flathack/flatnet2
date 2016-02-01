@@ -32,7 +32,7 @@ echo $finanzen->suche($suche, "adressbuch", "nachname", "eintrag.php?bearbeiten"
 			<h2>Finanzverwaltung</h2>
 
 			<?php # Zeigt die Finanzen an.
-			$finanzen->mainKontoFunction();	?>
+			$finanzen->mainKontoDetail();	?>
 			
 		</div>
 	</body>
