@@ -48,9 +48,16 @@ class fahrten extends functions {
 				
 				
 				// Berechnung der Kosten:
-				$gesamtKosten = $fahrzeugeInfo[0]->verbrauch / 100 * $infos [$i]->anzahl * $gesamtkilometer; // hier fehlen die Kilometer.
+				if(!isset($fahrzeugeInfo[0]->verbrauch)) {
+					$gesamtKosten = 0;
+				} else {
+					$gesamtKosten = $fahrzeugeInfo[0]->verbrauch / 100 * $infos [$i]->anzahl * $gesamtkilometer; // hier fehlen die Kilometer.
+				}
 				
-				echo "<tbody><td>" . $infos [$i]->fahrart . " (" . $fahrzeugeInfo[0]->name . ")" . "</td><td> " . $infos [$i]->anzahl . "</td><td>$gesamtKosten &#8364;</td></tbody>";
+				# Wenn es den Namen nicht gibt:
+				if(!isset($fahrzeugeInfo[0]->name)) { $name = ""; } else { $name = $fahrzeugeInfo[0]->name; }
+				
+				echo "<tbody><td>" . $infos [$i]->fahrart . " (" . $name . ")" . "</td><td> " . $infos [$i]->anzahl . "</td><td>$gesamtKosten &#8364;</td></tbody>";
 			}
 			
 			echo "</table>";
@@ -100,12 +107,22 @@ class fahrten extends functions {
 				$fahrzeugInfo = $this->getObjektInfo ( "SELECT * FROM fahrzeuge WHERE besitzer = '$userID' AND name_tag = '" . $fahrten [$i]->fahrart . "'" );
 				// Streckeninfos:
 				$zielInfo = $this->getObjektInfo ( "SELECT * FROM fahrkostenZiele WHERE besitzer = '$userID' AND name = '" . $fahrten [$i]->ziel . "'" );
-				$liter = $fahrzeugInfo[0]->verbrauch / 100 * $zielInfo[0]->entfernung * $fahrten [$i]->fahrrichtung;
+				
+				if(!isset($fahrzeugInfo[0])) {
+					$error = "ERROR";
+					$liter = 0 / 100 * $zielInfo[0]->entfernung * $fahrten [$i]->fahrrichtung;
+				} else {
+					$error = "";
+					$liter = $fahrzeugInfo[0]->verbrauch / 100 * $zielInfo[0]->entfernung * $fahrten [$i]->fahrrichtung;
+						
+				}
+				
+				
 				$kosten = round ( $liter * $fahrten [$i]->spritpreis, 2 );
 				echo $kosten . " &#8364;";
 				echo "</td>";
 				// OPTIONEN
-				echo "<td><a href='?edit=" . $fahrten [$i]->id . "' class='rightBlueLink'>edit</a>
+				echo "<td>$error<a href='?edit=" . $fahrten [$i]->id . "' class='rightBlueLink'>edit</a>
 				<a href='?loeschen&loeschid=" . $fahrten [$i]->id . "' class='rightRedLink'>X</a>
 				</td>" . "</tbody>";
 			}
