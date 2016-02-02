@@ -350,8 +350,8 @@ class blog extends functions {
 				}
 	
 				# Durchführung des Updates
-				$update = mysql_query($sqlupdate);
-				if($update == true) {
+				
+				if($this->sql_insert_update_delete($sqlupdate) == true) {
 					echo "<p class='erfolg'>Foreneintrag <strong>$titel</strong> wurde geändert.</p>";
 				} else {
 					echo "<p class='meldung'>Es ist ein Fehler aufgetreten. Kopiere den unteren Text in ein anderes Dokument um den Text nicht zu verlieren und versuche es später nochmal.</p>";
@@ -361,46 +361,45 @@ class blog extends functions {
 			# Es wird sichergestellt, dass ID eine Zahl ist.
 			if($bearbid > 0) {
 				$select = "SELECT id, timestamp, autor, titel, text, kategorie, status FROM blogtexte WHERE id=$bearbid";
-				$ergebnis = mysql_query($select);
+				$row = $this->getObjektInfo($select);
 	
-				while($row = mysql_fetch_object($ergebnis)) {
+				for($i = 0 ; $i < sizeof($row) ; $i++) {
 					
-					$realUsername = $this->getUserName($row->autor);
+					$realUsername = $this->getUserName($row[$i]->autor);
 					
 					if(isset($_GET['bearbid'])) {
 						$category = $_GET['bearbid'];
-						echo "<a href=\"blogentry.php?showblogid=$row->id\"
+						echo "<a href=\"blogentry.php?showblogid=".$row[$i]->id."\"
 						class=\"buttonlink\">&#8634; zurück zum Thema</a>";
 					}
 					
 					echo "<div class='neuerBlog'>";
 					
-					echo "<form action='?bearbid=$row->id&update=update' method=post>";
+					echo "<form action='?bearbid=".$row[$i]->id."&update=update' method=post>";
 					echo "<h2>Eintrag bearbeiten</h2>";
-					echo "<input type='text' value=\"$row->titel\" name='newtitel' id='titel' /><br>"; # Titel
+					echo "<input type='text' value='".$row[$i]->titel."' name='newtitel' id='titel' /><br>"; # Titel
 					
 					# Kategorie Bereich:
 					echo "<select name='newblogkategorie' value='' size='1'>";
 					$selectKat = "SELECT id, kategorie, rightWert FROM blogkategorien";
-					$katergeb = mysql_query($selectKat);
+					$row2 = $this->getObjektInfo($selectKat);
 					echo "<option></option>";
 					
 					# BenutzerRecht selektieren:
 					# Check ob die Kategorie in der Auswahlliste auftauchen soll.
 					$userID = $this->getUserID($_SESSION['username']);
 					$selectBenutzerRecht = "SELECT id, forumRights FROM benutzer WHERE id = '$userID' LIMIT 1";
-					$ergebRecht = mysql_query($selectBenutzerRecht);
-					$rowRecht = mysql_fetch_object($ergebRecht);
+					$rowRecht = $this->getObjektInfo($selectBenutzerRecht);
 					
-					while($row2 = mysql_fetch_object($katergeb)) {
-						$aktuelleBenutzerrechte = $rowRecht->forumRights;
-						$kategorieRechte = $row2->rightWert;
+					for($j = 0 ;$j < sizeof($row2) ; $j++) {
+						$aktuelleBenutzerrechte = $rowRecht[0]->forumRights;
+						$kategorieRechte = $row2[$j]->rightWert;
 						
 						if($this->check($kategorieRechte, $aktuelleBenutzerrechte) == true) {
 							echo "<option";
-							if($row2->id == $row->kategorie) {
+							if($row2[$j]->id == $row[$i]->kategorie) {
 								echo ' selected ';
-							} echo " value='$row2->id'>$row2->kategorie</option>";
+							} echo " value='".$row2[$j]->id."'>".$row2[$j]->kategorie."</option>";
 						}
 						
 					}
@@ -408,7 +407,7 @@ class blog extends functions {
 					
 					# Status #
 					echo "<input type='radio' name='status' value='0' id='statusNull' ";
-					if($row->status == "0" OR $row->status == NULL) {
+					if($row[$i]->status == "0" OR $row[$i]->status == NULL) {
 						echo " checked ";
 					} else {
 						echo " unchecked ";
@@ -416,7 +415,7 @@ class blog extends functions {
 					echo ">" . "<label for='statusNull'>Gesperrt</label>";
 	
 					echo "<input type='radio' name='status' value='1' id='statusEins' ";
-					if($row->status == "1") {
+					if($row[$i]->status == "1") {
 						echo " checked ";
 					} else {
 						echo " unchecked ";
@@ -425,13 +424,12 @@ class blog extends functions {
 					
 					echo "<input type='submit' name='bearbblogid' value='Speichern' />";
 					
-					echo "<div class='editForumEintrag'><textarea class='ckeditor' name='newtext'>$row->text</textarea></div>"; # Text Output #
-				#	echo"	<script> CKEDITOR.inline( 'newtext' ); </script>";
+					echo "<div class='editForumEintrag'><textarea class='ckeditor' name='newtext'>".$row[$i]->text."</textarea></div>"; # Text Output #
 					
 					# Nur ein Administrator oder der Autor darf den Artikel bearbeiten oder löschen
-					if($this->userHasRight("29", 0) == "true" OR $_SESSION['username'] == $realUsername) {
+					if($this->userHasRight("29", 0) == true OR $_SESSION['username'] == $realUsername) {
 						echo "<input type='submit' name='bearbblogid' value='Speichern' />
-						<a href='?loeschid=$row->id' class='highlightedLink'>Beitrag entfernen</a>";
+						<a href='?loeschid=".$row[$i]->id."' class='highlightedLink'>Beitrag entfernen</a>";
 					}
 					echo "</form>";
 					echo "</div>";
