@@ -535,6 +535,10 @@ blockquote {
 }
 
 /* HANDWERK */
+.handwerkField h2 {
+	color: white;
+}
+
 .handwerkField {
 	border: 1px solid #464646;
 	border-collapse: collapse;
@@ -616,80 +620,60 @@ blockquote {
 	color: white;
 }
 
-.bereiche #lederer {
+.bereichlederer {
 	background-color: #c19a7d;
 	border: 1py solid grey;
 	padding-right: 5px;
 	padding-left: 5px;
-	height: 100%;
 }
 
-.bereiche #schneider {
+.bereichschneider {
 	background-color: #ebebeb;
 	border: 1py solid grey;
 	padding-right: 5px;
 	padding-left: 5px;
-	height: 100%;
 }
 
-.bereiche #konstrukteur {
+.bereichkonstrukteur {
 	background-color: #ffc6aa;
 	border: 1py solid grey;
 	padding-right: 5px;
 	padding-left: 5px;
-	height: 100%;
 }
 
-.bereiche #koch {
+.bereichkoch {
 	background-color: #e4dad3;
 	border: 1py solid grey;
 	padding-right: 5px;
 	padding-left: 5px;
-	height: 100%;
 }
 
-.bereiche #waffenschmied {
+.bereichwaffenschmied {
 	background-color: #75a8e6;
 	border: 1py solid grey;
 	padding-right: 5px;
 	padding-left: 5px;
-	height: 100%;
 }
 
-.bereiche #ruestungsschmied {
+.bereichruestungsschmied {
 	background-color: #97bdec;
 	border: 1py solid grey;
 	padding-right: 5px;
 	padding-left: 5px;
-	height: 100%;
 }
 
-.bereiche #juwelier {
+.bereichjuwelier {
 	background-color: #ddcdfc;
 	border: 1py solid grey;
 	padding-right: 5px;
 	padding-left: 5px;
-	height: 100%;
 }
 
-.bereiche #waidmann {
+.bereichwaidmann {
 	background-color: #a0cfcf;
 	border: 1py solid grey;
 	padding-right: 5px;
 	padding-left: 5px;
-	height: 100%;
-}
-
-.bereiche h2 {
-	color: #353535;
-	font-size: 20px;
-}
-
-.bereiche a, 
-.bereiche a:hover, 
-.bereiche a:visited:hover {
-	color: black;
-	text-decoration: none;
 }
 
 .blaetterfunktion {
@@ -1428,15 +1412,16 @@ blockquote {
 .rightLink {
 	background: grey;
 	display: inline-block;
+	padding: 2px 4px 2px 4px;
+	border-radius: 3px;
+	margin-left: 500px;
 	position: absolute;
-	margin-left: 179px;
-	padding: 10px;
-	text-shadow: 0px 0px 3px white;
+	color: white;
 }
 
 .rightLink:hover {
 	background: #c0c0c0;
-	text-shadow: 0px 0px 10px red;
+	text-decoration: none;
 }
 
 .bereichLink2 {
