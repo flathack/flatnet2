@@ -249,6 +249,19 @@ class uebersicht extends functions {
 				echo "</div>";
 			}
 		}
+		
+		if($this->userHasRight("45", 0) == true) {
+			echo "<div class='bereichadministration'>";
+			
+				echo "<h2>Admin Kachel</h2>";
+				$select = "SELECT * FROM benutzer WHERE versuche >= 3";
+				$gesperrteUser = $this->getObjektInfo($select);
+				for($i = 0 ; $i < sizeof($gesperrteUser) ; $i++) {
+					echo "<p class='info'>" . $gesperrteUser[$i]->Name . " ist gesperrt <a href='/flatnet2/admin/control.php?statusID=".$gesperrteUser[$i]->id."&status=entsperren&userverw=1&action=1'>entsperren</a></p>";
+				}
+			
+			echo "</div>";
+		}
 			
 	}
 	

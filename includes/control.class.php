@@ -245,7 +245,7 @@ class control extends functions {
 					$besitzerArray = $this->setBesitzerArray();
 					$dbname = $this->getDBName();
 					$allTables = $this->getObjektInfo ( "SHOW TABLES FROM $dbname" );
-					$columnName = "Tables_in_".$DBName;
+					$columnName = "Tables_in_".$dbname;
 					
 					for($i = 0 ;$i < sizeof($besitzerArray) ;$i++) {
 						
