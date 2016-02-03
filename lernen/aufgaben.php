@@ -6,10 +6,6 @@
 <?php 
 class lotto {
 	
-	function mainMethode() {
-		$nummer = round(5.222222, 2);		
-	}
-	
 	/**
 	 * Führt eine Lottoziehung durch und berechnet, wann diese gewonnen wird.
 	 */
@@ -30,22 +26,19 @@ class lotto {
 			echo "<h2>Erweitertes Lotto</h2>";
 			echo "<p>Grundeinstellungen</p>";
 			echo "<form method=get>";
-			echo "<input type=number name=max value=$max />";
-			echo "<input type=number name=bis value=$bis />";
-			echo "<input type=number name=richtige value=$richtige />";
+			echo "Wie oft willst du spielen? <br><input type=number name=max value=$max /><br>";
+			echo "Aus wie vielen Zahlen soll gezogen werden? <br><input type=number name=bis value=$bis /><br>";
+			echo "Richtige: <br><input type=number name=richtige value=$richtige />";
 			echo "<input type=hidden name=lottoErweitert />";
 			echo "<br>";
-			echo "<br><input type=number name=zahl1 value=$zahl1 />";
-			echo "<br><input type=number name=zahl2 value=$zahl2 />";
-			echo "<br><input type=number name=zahl3 value=$zahl3 />";
-			echo "<br><input type=number name=zahl4 value=$zahl4 />";
-			echo "<br><input type=number name=zahl5 value=$zahl5 />";
-			echo "<br><input type=number name=zahl6 value=$zahl6 />";
+			echo "<br>Zahl 1: <input type=number name=zahl1 value=$zahl1 />";
+			echo "<br>Zahl 2: <input type=number name=zahl2 value=$zahl2 />";
+			echo "<br>Zahl 3: <input type=number name=zahl3 value=$zahl3 />";
+			echo "<br>Zahl 4: <input type=number name=zahl4 value=$zahl4 />";
+			echo "<br>Zahl 5: <input type=number name=zahl5 value=$zahl5 />";
+			echo "<br>Zahl 6: <input type=number name=zahl6 value=$zahl6 />";
 			echo "<br><input type=submit name=erweitertesLottoStart />";
 			echo "</form>";
-			
-			
-			
 			
 			echo "</p>";
 			
@@ -53,10 +46,14 @@ class lotto {
 				$start = time();
 				
 				$eigeneZahlen = [$_GET['zahl1'],$_GET['zahl2'],$_GET['zahl3'],$_GET['zahl4'],$_GET['zahl5'],$_GET['zahl6']];
-				echo "<p>Die eigenen Zahlen sind: ";
-				for ($i = 0 ; $i < sizeof($eigeneZahlen) ; $i++) {
-					echo "" .$eigeneZahlen[$i]. " | ";
+				
+				$result = array_unique($eigeneZahlen);
+				
+				if(sizeof($eigeneZahlen) != sizeof($result)) {
+					echo "<p class='meldung'>Du hast doppelte Zahlen gew&auml;hlt! </p>";
+					exit;
 				}
+
 				$max = $_GET['max'];
 				$bis = $_GET['bis'];
 				$richtige = $_GET['richtige'];
@@ -70,9 +67,9 @@ class lotto {
 				$laufzeit = $end-$start;
 				
 				if($counter == $max) {
-					echo "<p class='info'>Maximalen Counter von $max erreicht! ($laufzeit Sekunden)</p>";
+					echo "<p class='info'>Es wurden $max Ziehungen durchgef&uuml;hrt. ($laufzeit Sekunden)</p>";
 				} else {
-					echo "<p class='erfolg'>Nach " . $counter . " Ziehungen, wurde deine Lottozahl gezogen! ($laufzeit Sekunden)</p>";
+					echo "<p class='erfolg'>Es wurden " . $counter . " Ziehungen durchgeführt.</p>";
 				} 
 				
 			}
@@ -154,12 +151,45 @@ class lotto {
 	 * @return boolean
 	 */
 	function lottoAbfrage($meineLottoZahlen, $bis, $richtige) {
+		
+		$lottoZiehung = [0,0,0,0,0,0];
+		
 		for($i = 0 ; $i < 6 ; $i++) {
-			$lottoZiehung[$i] = rand(1,$bis);
+			
+			$zufallszahl = rand(1,$bis);
+			if(in_array($zufallszahl, $lottoZiehung)) {
+				$i--;
+			} else {
+				$lottoZiehung[$i] = $zufallszahl;
+			}
+			
+			
 		}
 		
-		$result = array_diff($meineLottoZahlen, $lottoZiehung);
-				
+		# Hier wird geprüft, ob eine Zahl in den Lottozahlen ist
+		$counter = 0;
+		
+		for ($i = 0 ; $i < sizeof($lottoZiehung) ; $i++) {
+			if(in_array($meineLottoZahlen[$i], $lottoZiehung)) {
+				$counter++;
+			}
+		}
+		
+		if($counter >= $richtige) {
+			echo "<p class='erfolg'>Du wolltest $richtige Richtige, du hast $counter Richtige in dieser Ziehung erhalten!</p>";
+			echo "<p>Die Lottozahlen sind: </p>";
+			for($i = 0 ; $i < sizeof($lottoZiehung); $i++) {
+				echo " " . $lottoZiehung[$i] . " | ";
+			}
+			echo "<p>Die eigenen Zahlen sind:<br> ";
+			for ($i = 0 ; $i < sizeof($meineLottoZahlen) ; $i++) {
+				echo " " .$meineLottoZahlen[$i]. " | ";
+			}
+			return true;
+		} else {
+			return false;
+		}
+						
 	}
 	
 	/**
