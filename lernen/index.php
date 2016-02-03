@@ -30,9 +30,13 @@ echo $learn->suche($suche, "learnlernkarte", "frage", "?frage");
 	<body>
 		
 		<div class='mainbodyDark'>
-		
+		<div class='rightOuterBody'>
+			<ul>
+				<li><a href='aufgaben.php'>Übungsaufgaben</a></li>
+			</ul>
+		</div>
 		<h2>Lernbereich</h2>
-		
+				
 		<?php 
 		$learn->mainStatusFunction();
 		$learn->showOptionsForAll();

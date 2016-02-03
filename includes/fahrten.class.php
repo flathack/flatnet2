@@ -33,31 +33,33 @@ class fahrten extends functions {
 				echo "<tbody><td>" . $ziele [$i]->ziel . " (" . $entfernungInfo[0]->entfernung . " km)" . " </td><td>" . $ziele [$i]->anzahl . "</td><td>$kmgesamt km</td></tbody>";
 			}
 			
-			$gesamtkilometer = 0;
-			$gesamtKosten = 0;
 			
-			echo "<thead><td>Fahrzeuge</td><td></td><td></td></thead>";
+			
+			echo "<thead><td colspan=4>Fahrzeuge</td></thead>";
 			$infos = $this->getObjektInfo ( "SELECT *, count(fahrart) as anzahl FROM fahrkosten WHERE besitzer = '$userID' GROUP BY fahrart" );
 			
 			for($i = 0; $i < sizeof ( $infos ); $i ++) {
 				
 				$fahrzeugeInfo = $this->getObjektInfo ( "SELECT * FROM fahrzeuge WHERE besitzer = '$userID' AND name_tag = '" . $infos [$i]->fahrart . "' LIMIT 1" );
 				
-				# Berechnung der gefahrenen Kilometer für dieses Fahrzeug:
-				
-				
-				
 				// Berechnung der Kosten:
 				if(!isset($fahrzeugeInfo[0]->verbrauch)) {
 					$gesamtKosten = 0;
 				} else {
-					$gesamtKosten = $fahrzeugeInfo[0]->verbrauch / 100 * $infos [$i]->anzahl * $gesamtkilometer; // hier fehlen die Kilometer.
+					$gesamtkilometer = 0;
+					
+					$zielorteDiesesFahrzeugs = $this->getObjektInfo("SELECT * FROM fahrkosten WHERE besitzer=$userID AND fahrart='".$fahrzeugeInfo[0]->name_tag."' GROUP BY ziel");
+					# Pro Zielort die KM berechnen
+					for($j = 0 ; $j < sizeof($zielorteDiesesFahrzeugs) ;$j++) {
+						# Anzahl der Fahrten bekommen:
+						$getAnzahlDerFahrten = $this->getObjektInfo("SELECT sum(fahrrichtung) as summe FROM fahrkosten WHERE besitzer=$userID AND fahrart='".$fahrzeugeInfo[0]->name_tag."' AND ziel='".$zielorteDiesesFahrzeugs[$j]->ziel."' ");
+						$zielortEntfernung = $this->getObjektInfo("SELECT * FROM fahrkostenziele WHERE besitzer=$userID AND name='".$zielorteDiesesFahrzeugs[$j]->ziel."' ");
+						$kmProZielort = $zielortEntfernung[0]->entfernung * $getAnzahlDerFahrten[0]->summe;
+						echo "<tbody><td>".$fahrzeugeInfo[0]->name_tag . "</td><td>".$zielorteDiesesFahrzeugs[$j]->ziel. "</td><td>" . $kmProZielort . " KM</td></tbody>";
+					}
+					
 				}
-				
-				# Wenn es den Namen nicht gibt:
-				if(!isset($fahrzeugeInfo[0]->name)) { $name = ""; } else { $name = $fahrzeugeInfo[0]->name; }
-				
-				echo "<tbody><td>" . $infos [$i]->fahrart . " (" . $name . ")" . "</td><td> " . $infos [$i]->anzahl . "</td><td>$gesamtKosten &#8364;</td></tbody>";
+
 			}
 			
 			echo "</table>";
