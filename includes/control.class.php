@@ -218,110 +218,54 @@ class control extends functions {
 			if (isset ( $_GET ['bearb'] )) {
 				$bearb = $_GET ['bearb'];
 				if ($bearb) {
-					echo "<div class='newChar'>";
+					echo "<div class='newCharWIDE'>";
 					echo "<h2><a name='bearbeiten'>Benutzerbearbeitung</a> <a href='?userverw=1' class='highlightedLink'>X</a></h2>";
-					$userinfo = "SELECT timestamp, id, Name, Passwort, titel, forumRights FROM benutzer WHERE id LIKE $bearb";
+					$userinfo = "SELECT timestamp, id, Name, Passwort, titel, forumRights FROM benutzer WHERE id = $bearb";
 					$row = $this->getObjektInfo($userinfo);
 					echo "<table>";
-					for ($i = 0 ; $i < sizeof($row) ; $i++) {
-						echo "<form action='?' method=post>";
-						echo "<tr><td>Neuer Benutzername: </td><td><input type=text value='".$row[$i]->Name."' name=newname autofocus required></td></tr>";
-						echo "<tr><td>Neues Passwort: </td><td><input type=password value='' name=newpass ></td></tr>";
-						echo "<tr><td><input type=hidden value='".$row[$i]->id."' name=id readonly></td></tr>";
-						echo "<tr><td><input type=hidden value='".$row[$i]->Name."' name=name readonly></td></tr>";
-						echo "<tr><td>Titel: </td><td><input type=text value='".$row[$i]->titel."' name=titel></td></tr>";
-						echo "<tr><td>Forum Rechte: </td><td><input type=text value='".$row[$i]->forumRights."' name=forumRights></td></tr>";
-						echo "<tr><td><input type=submit name='bearbuser' value='Ausführen'></td>
-								<td><input type=submit name='bearbuser' value='Benutzer Informationen anzeigen' />";
-						echo "<a class='highlightedLink' href='?action=3&table=benutzer&id=".$row[$i]->id."#angezeigteID'>Löschen</a></td></tr>";
-						echo "</form>";
-					}
+					
+					$i = 0;
+					
+					echo "<form action='?' method=post>";
+					echo "<tr><td>Neuer Benutzername: </td><td><input type=text value='".$row[$i]->Name."' name=newname autofocus required></td></tr>";
+					echo "<tr><td>Neues Passwort: </td><td><input type=password value='' name=newpass ></td></tr>";
+					echo "<tr><td><input type=hidden value='".$row[$i]->id."' name=id readonly></td></tr>";
+					echo "<tr><td><input type=hidden value='".$row[$i]->Name."' name=name readonly></td></tr>";
+					echo "<tr><td>Titel: </td><td><input type=text value='".$row[$i]->titel."' name=titel></td></tr>";
+					echo "<tr><td>Forum Rechte: </td><td><input type=text value='".$row[$i]->forumRights."' name=forumRights></td></tr>";
+					echo "<tr><td><input type=submit name='bearbuser' value='Ausführen'></td>
+							<td><input type=submit name='bearbuser' value='Benutzer Informationen anzeigen' />";
+					echo "</td></tr>";
+					echo "</form>";
 					echo "</table>";
+					
+					
+					echo "<h3>Diese Inhalte hat der Benutzer veröffentlicht </h3>";
+					
+					$besitzerArray = $this->setBesitzerArray();
+					$dbname = $this->getDBName();
+					$allTables = $this->getObjektInfo ( "SHOW TABLES FROM $dbname" );
+					$columnName = "Tables_in_".$DBName;
+					
+					for($i = 0 ;$i < sizeof($besitzerArray) ;$i++) {
+						
+						if($besitzerArray[$i] != "xxx") {
+							$query = "SELECT count(*) as anzahl FROM ".$allTables[$i]->$columnName." WHERE ".$besitzerArray[$i]." = $bearb ";
+							$amount = $this->getObjektInfo($query);
+							
+							if($amount[0]->anzahl > 0) {
+								echo "<div class='kleineBox'>";
+								echo "<h3>".$allTables[$i]->$columnName."</h3>";
+								echo "<p>Einträge: " .$amount[0]->anzahl. "</p>";
+								echo "</div>";
+							}
+						}
+						
+					}
+					
+					
+					
 					echo "</div>";
-					
-					// # Guildwars
-					$selectGuildwars = "SELECT count(*) as anzahl FROM gw_chars WHERE besitzer = '$bearb'";
-					$mengeGuildwars = $this->getObjektInfo($selectGuildwars);
-					if (! isset ( $mengeGuildwars[0]->anzahl )) {
-						$mengeGuildwars = 0;
-					}
-					
-					// # Guildwars Kost calc
-					$selectGuildwars2 = "SELECT count(*) as anzahl FROM gwcosts WHERE besitzer = '$bearb'";
-					$mengeGuildwars2 = $this->getObjektInfo($selectGuildwars2);
-					if (! isset ( $mengeGuildwars2[0]->anzahl )) {
-						$mengeGuildwars2 = 0;
-					}
-					
-					// # Dokumentareinträge
-					$selectDocu = "SELECT count(*) as anzahl FROM docu WHERE autor = '$bearb'";
-					$mengeDocu = $this->getObjektInfo($selectDocu);
-					if (! isset ( $mengeDocu[0]->anzahl )) {
-						$mengeDocu = 0;
-					}
-					
-					// # BlogKommentare
-					$selectBlogKommentare = "SELECT count(*) as anzahl FROM blog_kommentare WHERE autor = '$bearb'";
-					$mengeBlogKommentare = $this->getObjektInfo($selectBlogKommentare);
-					if (! isset ( $mengeBlogKommentare[0]->anzahl )) {
-						$mengeBlogKommentare = 0;
-					}
-					
-					// # Vorschläge
-					$selectVorschlaege = "SELECT count(*) as anzahl FROM vorschlaege WHERE autor = '$bearb'";
-					$mengeVorschlaege = $this->getObjektInfo($selectVorschlaege);
-					if (! isset ( $mengeVorschlaege[0]->anzahl )) {
-						$mengeVorschlaege = 0;
-					}
-					
-					// # Blogtexte
-					$selectBlogTexte = "SELECT count(*) as anzahl FROM blogtexte WHERE autor = '$bearb'";
-					$mengeBlogTexte = $this->getObjektInfo($selectBlogTexte);
-					if (! isset ( $mengeBlogTexte[0]->anzahl )) {
-						$mengeBlogTexte = 0;
-					}
-					
-					// # Konten
-					$selectKonten = "SELECT count(*) as anzahl FROM finanzen_konten WHERE besitzer = '$bearb'";
-					$mengeKonten = $this->getObjektInfo($selectKonten);
-					if (! isset ( $mengeKonten[0]->anzahl )) {
-						$mengeKonten = 0;
-					}
-					
-					// # Umsätze
-					$selectUmsaetze = "SELECT count(*) as anzahl FROM finanzen_umsaetze WHERE besitzer = '$bearb'";
-					$mengeUmsaetze = $this->getObjektInfo($selectUmsaetze);
-					if (! isset ( $mengeUmsaetze[0]->anzahl )) {
-						$mengeUmsaetze = 0;
-					}
-					
-					// Ausgabe der Meldungen:
-					if ($mengeBlogKommentare[0]->anzahl + $mengeBlogTexte[0]->anzahl + $mengeVorschlaege[0]->anzahl + $mengeDocu[0]->anzahl + $mengeGuildwars[0]->anzahl > 0) {
-						echo "<p class=''><h2>Dieser Benutzer hat folgende Objekte: </h2>";
-						if ($mengeGuildwars[0]->anzahl > 0) {
-							echo $mengeGuildwars[0]->anzahl . " Guildwars-Charakter, <br>";
-						}
-						if ($mengeGuildwars2[0]->anzahl > 0) {
-							echo $mengeGuildwars2[0]->anzahl . " Einträge in Kosten, <br>";
-						}
-						if ($mengeBlogKommentare[0]->anzahl > 0) {
-							echo $mengeBlogKommentare[0]->anzahl . " Kommentare, <br>";
-						}
-						
-						if ($mengeBlogTexte[0]->anzahl > 0) {
-							echo $mengeBlogTexte[0]->anzahl . " Foreneinträge, <br>";
-						}
-						
-						if ($mengeVorschlaege[0]->anzahl > 0) {
-							echo $mengeVorschlaege[0]->anzahl . " Vorschläge, ";
-						}
-						
-						if ($mengeDocu[0]->anzahl > 0) {
-							echo $mengeDocu[0]->anzahl . " Doku Einträge, <br>";
-						}
-						
-						echo "<br><br><br><br><br><br><br><br><br><br><br><br>";
-					}
 				}
 			}
 		} else {
@@ -424,6 +368,42 @@ class control extends functions {
 	}
 	
 	/**
+	 * Ordnet die Besitzer-Spalte einer Tabelle zu.
+	 * @return string
+	 */
+	function setBesitzerArray() {
+		$columnNamesForBesitzer[0] = "besitzer"; # account_infos
+		$columnNamesForBesitzer[1] = "xxx"; # adressbuch
+		$columnNamesForBesitzer[2] = "xxx"; # benutzer
+		$columnNamesForBesitzer[3] = "autor"; # blogtexte
+		$columnNamesForBesitzer[4] = "xxx"; # blogkategorien
+		$columnNamesForBesitzer[5] = "autor"; #blog_kommentare
+		$columnNamesForBesitzer[6] = "autor"; #docu
+		$columnNamesForBesitzer[7] = "besitzer"; #fahrkosten
+		$columnNamesForBesitzer[8] = "besitzer"; #fahrkostenziele
+		$columnNamesForBesitzer[9] = "besitzer"; #fahrzeuge
+		$columnNamesForBesitzer[10] = "besitzer"; #finanzen_jahresabschluss
+		$columnNamesForBesitzer[11] = "besitzer"; #finanzen_konten
+		$columnNamesForBesitzer[12] = "besitzer"; #finanzen_monatsabschluss
+		$columnNamesForBesitzer[13] = "besitzer"; #finanzen_umsaetze
+		$columnNamesForBesitzer[14] = "besitzer"; #gw_accounts
+		$columnNamesForBesitzer[15] = "besitzer"; #gw_chars
+		$columnNamesForBesitzer[16] = "besitzer"; #gwcosts
+		$columnNamesForBesitzer[17] = "xxx"; #gwmatlist
+		$columnNamesForBesitzer[18] = "besitzer"; #gwusersmats
+		$columnNamesForBesitzer[19] = "besitzer"; #learnkategorie
+		$columnNamesForBesitzer[20] = "besitzer"; #learnlernkarte
+		$columnNamesForBesitzer[21] = "xxx"; #registercode
+		$columnNamesForBesitzer[22] = "xxx"; #rightkategorien
+		$columnNamesForBesitzer[23] = "besitzer"; #rights
+		$columnNamesForBesitzer[24] = "xxx"; #uebersicht_kacheln
+		$columnNamesForBesitzer[25] = "xxx"; #userrights
+		$columnNamesForBesitzer[26] = "xxx"; #vorschlaege
+		
+		return $columnNamesForBesitzer;
+	}
+	
+	/**
 	 * Zeigt alle Informationen eines Benutzers an und ermöglicht die Löschung der bestehenden Informationen.
 	 */
 	function deleteBenutzerFunction() {
@@ -450,41 +430,17 @@ class control extends functions {
 			echo "<h2>Aktuelle Benutzerinformationen</h2>";
 			
 			// Alle Tables bekommen:
-			$allTables = $this->getObjektInfo ( "SHOW TABLES FROM flathacksql1" );
+			$dbname = $this->getDBName();
+			$allTables = $this->getObjektInfo ( "SHOW TABLES FROM $dbname" );
+			$columnName = "Tables_in_".$DBName;
 			
 			// Tabellen: account_infos, adressbuch, benutzer, blogkategorien, blogtexte, blog_kommentare, docu,
 			// fahrkosten, fahrkostenziele, fahrzeuge, finanzen_jahresabschluss, finanzen_konten, finanzen_monatsabschluss,
 			// finanzen_umsaetze, gwcosts, gwmatlist, gwusersmats, gw_accounts, gw_chars, learnkategorie, learnlernkarte, 
 			// registercode, rights, uebersicht_kacheln, userrights, vorschlaege,
-			$columnNamesForBesitzer = array (
-					'besitzer',
-					'xxx',
-					'xxx',
-					'xxx',
-					'autor',
-					'autor', 
-					'autor', 
-					'besitzer',
-					'besitzer',
-					'besitzer',
-					'besitzer',
-					'besitzer',
-					'besitzer',
-					'besitzer',
-					'besitzer',
-					'xxx',
-					'besitzer',
-					'besitzer',
-					'besitzer',
-					'besitzer',
-					'besitzer',
-					'xxx',
-					'xxx',
-					'besitzer',
-					'xxx',
-					'xxx',
-					'xxx'
-			);
+			
+			$columnNamesForBesitzer = $this->setBesitzerArray();
+			
 			
 			$userID = $_POST ['id'];
 			
@@ -495,13 +451,15 @@ class control extends functions {
 				if ($columnNamesForBesitzer [$i] != "xxx") {
 					// Table anzeigen:
 					
-					$table = $allTables [$i]->Tables_in_flathacksql1;
+					echo "<p class='info'>Suche nach Spalte: ".$columnNamesForBesitzer [$i]."</p>";
+					
+					$table = $allTables [$i]->$columnName;
 					
 					// Spalten bekommen
 					$columns = $this->getColumns ( $table );
 					
 					// Informationen des aktuellen Tables auslesen
-					$currentTableInfo = $this->getObjektInfo ( "SELECT * FROM $table WHERE $columnNamesForBesitzer[$i] = '$userID'" );
+					$currentTableInfo = $this->getObjektInfo ( "SELECT * FROM $table WHERE $columnNamesForBesitzer[$i] = $userID" );
 					
 					// Table nur anzeigen, wenn etwas vom Benutzer da ist:
 					// if(isset($currentTableInfo[$i])) {
@@ -510,7 +468,7 @@ class control extends functions {
 					
 					// Überschrift anzeigen
 					$spaltenanzahlMinusEins = sizeof ( $columns ) -1;
-					echo "<thead><td colspan ='" . $spaltenanzahlMinusEins . "'>$i ) " . $allTables [$i]->Tables_in_flathacksql1 . " ($columnNamesForBesitzer[$i])" . "</td><td>
+					echo "<thead><td colspan ='" . $spaltenanzahlMinusEins . "'>$i) " . $allTables [$i]->$columnName . " (".$columnNamesForBesitzer[$i].")" . "</td><td>
 				 				<a class='highlightedLink' href='?action=1&loeschen&loeschid=" . $userID . "&table=" . $table . "&tableNumber=$i'>LÖSCHEN</a>
 				 				</td></thead>";
 					
@@ -523,7 +481,11 @@ class control extends functions {
 					
 					for($j = 0; $j < sizeof ( $currentTableInfo ); $j ++) {
 						echo "<tbody>";
-						echo "<td><a class='rightBlueLink' href='?action=3&table=$table&id=".$currentTableInfo [$j]->id."'>open</a></td>";
+						if(!isset($currentTableInfo[$j]->id)) {
+							echo "<td><a class='rightBlueLink' href='?action=3&table=$table'>open</a></td>";
+						} else {
+							echo "<td><a class='rightBlueLink' href='?action=3&table=$table&id=".$currentTableInfo [$j]->id."'>open</a></td>";
+						}
 						
 						// Gibt die Information der aktuellen Zelle aus:
 						for($k = 0; $k < sizeof ( $columns ); $k ++) {
@@ -1391,7 +1353,8 @@ class control extends functions {
 	function getColumnComments($table) {
 		
 	#	$this->connectToSpecialDB ( "information_schema", "info_user", "GCbzZFw2ppBwJp7Q" );
-		$select1 = "SELECT column_name, column_comment FROM columns WHERE TABLE_SCHEMA = 'flathacksql1' AND TABLE_NAME='$table'";
+		$dbname = $this->getDBName();
+		$select1 = "SELECT column_name, column_comment FROM columns WHERE TABLE_SCHEMA = '$dbname' AND TABLE_NAME='$table'";
 		$row = $this->getObjektInfo($select1);
 		for ($i = 0 ; $i < sizeof($row); $i++) {
 			$comments[$i] = $row[$i]->column_comment;
@@ -1468,7 +1431,8 @@ class control extends functions {
 					$columns = $this->getColumns ( $table );
 					
 					// Menge bekommen
-					$query = "SELECT COUNT(*) as anzahl FROM information_schema.columns WHERE table_schema = 'flathacksql1' and table_name = '$table'";
+					$dbname = $this->getDBName();
+					$query = "SELECT COUNT(*) as anzahl FROM information_schema.columns WHERE table_schema = '$dbname' and table_name = '$table'";
 					$mengeGrund = $this->getObjektInfo($query);
 					$menge = $mengeGrund[0]->anzahl;
 					
@@ -1570,7 +1534,8 @@ class control extends functions {
 		#	$this->connectToSpecialDB ( "information_schema", "info_user", "GCbzZFw2ppBwJp7Q" );
 			
 			// Columns bekommen:
-			
+			echo "<p class='meldung'>Diese Funktion ist außer Betrieb</p>";
+			/*
 			$select1 = "SHOW COLUMNS FROM columns";
 			$row = $this->getObjektInfo($select1);
 			for ($i = 0 ; $i < sizeof($row) ; $i++) {
@@ -1597,7 +1562,8 @@ class control extends functions {
 			echo "</thead>";
 			
 			// Select des Inhalts
-			$select1 = "SELECT * FROM columns WHERE TABLE_SCHEMA = 'flathacksql1' AND TABLE_NAME='$table'";
+			$dbname = $this->getDBName();
+			$select1 = "SELECT * FROM columns WHERE TABLE_SCHEMA = '$dbname' AND TABLE_NAME='$table'";
 			$row = $this->getObjektInfo($select1);
 			for($i = 0; $i < sizeof ($row); $i ++) {
 				echo "<tbody>";
@@ -1607,7 +1573,7 @@ class control extends functions {
 					echo "</td>";
 				}
 				echo "</tbody>";
-			}
+			} */
 		}
 	}
 	
@@ -1703,19 +1669,22 @@ class control extends functions {
 		if($this->userHasRight("51", 0) == true) {
 			
 			// Ausgabe aller Tables
-			$select = "SHOW TABLES FROM flathacksql1";
+			$DBName = $this->getDBName();
+			$select = "SHOW TABLES FROM $DBName";
+			$columnName = "Tables_in_".$DBName;
+
 			$row = $this->getObjektInfo($select);
 			echo "<form method=get action='?action=3'>";
 			echo "<input type=hidden name=action value=3 />";
 			echo "<select class='bigSelect' name='table'>";
 			for($i = 0 ; $i < sizeof($row) ; $i++) {
 				echo "<option ";
-				if (isset ( $_GET ['table'] ) and $_GET ['table'] == $row[$i]->Tables_in_flathacksql1) {
+				if (isset ( $_GET ['table'] ) and $_GET ['table'] == $row[$i]->$columnName) {
 					echo " selected ";
 				} else {
 					echo "";
 				}
-				echo " value='".$row[$i]->Tables_in_flathacksql1."' >".$row[$i]->Tables_in_flathacksql1."</option>";
+				echo " value='".$row[$i]->$columnName."' >".$row[$i]->$columnName."</option>";
 			}
 			echo "</select><input type=submit name='submit' value='Table wechseln'/></form>";
 			// Table Variable zuweisen
@@ -1963,33 +1932,7 @@ class control extends functions {
 	/**
 	 */
 	function getBesitzerColumnName($table, $tableNumber) {
-		$columnNamesForBesitzer = array (
-				'besitzer',
-				'xxx',
-				'xxx',
-				'autor',
-				'xxx',
-				'autor',
-				'autor',
-				'besitzer',
-				'besitzer',
-				'besitzer',
-				'besitzer',
-				'besitzer',
-				'besitzer',
-				'xxx',
-				'besitzer',
-				'besitzer',
-				'xxx',
-				'besitzer',
-				'ersteller',
-				'xxx',
-				'xxx',
-				'xxx',
-				'besitzer',
-				'xxx',
-				'xxx' 
-		);
+		$columnNamesForBesitzer = $this->setBesitzerArray();
 		
 		$column = $columnNamesForBesitzer [$tableNumber];
 		

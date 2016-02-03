@@ -221,8 +221,8 @@ class uebersicht extends functions {
 		for($i = 0; $i < sizeof($kacheln); $i++) {
 			if($this->userHasRight($kacheln[$i]->rightID, 0) == false) {
 				echo "<div class='bereichINACTIVE'>";
-				echo "<h2>".$kacheln[$i]->name."</h2>";
-				echo "<p>Dieser Inhalt ist zur Zeit für dich nicht verfügbar.</p>";
+				echo "<h2></h2>";
+				echo "<p></p>";
 				$this->changeStatus($kacheln[$i]->id);
 				echo "</div>";
 			}

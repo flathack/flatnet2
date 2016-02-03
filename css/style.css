@@ -762,6 +762,13 @@ blockquote {
 	font-family: cursive;
 }
 
+.kleineBox {
+	display: inline-block;
+	padding: 5px 15px 5px 15px;
+	border: 1px solid #e6e6e6;
+	margin: 5px 15px 5px 5px;
+}
+
 /* Adressbuch */
 .adresseintrag {
 	border: 1px solid #a03235;

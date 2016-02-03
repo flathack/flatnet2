@@ -15,7 +15,7 @@
 		$uebersicht->header();
 		
 		$uebersicht->logged_in("redirect", "index.php");
-		$uebersicht->userHasRightPruefung("7");		
+	#	$uebersicht->userHasRightPruefung("7");		
 		?>
 		
 		<title>Steven.NET - Home</title>

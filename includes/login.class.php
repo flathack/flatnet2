@@ -214,23 +214,27 @@ class login extends functions {
 					$check = "SELECT * FROM benutzer WHERE Name LIKE '$username' LIMIT 1";
 					$row = $this->getObjektInfo($check);
 
-					/* Hier tritt ein Notice Fehler auf, ist aber normal,
-					 * da im Normalfall kein Benutzer gefunden wird.
-					*/
 					if(isset($row[0]->Name)) {
-						echo "<p class='meldung'>Fehler, der Benutzer <strong>$username</strong> existiert bereits.</p>";
+						echo "<p class='meldung'>Fehler, der Name $username ist bereits vergeben.</p>";
 					} else {
 						if($passwort1 == $passwort2) {
 							
+						#	echo "<p class='meldung'>Passwörter sind gleich</p>";
+							
 							# Register Code Check
 							
-							if($this->objectExists("registercode", "code", $code) == false) {
+							$codeExists = $this->getObjektInfo("SELECT * FROM registercode WHERE code = '$code' LIMIT 1 ");
+							
+							if(!isset($codeExists[0]->code)) {
+								echo "<p class='meldung'>Code gibts nicht</p>";
 								echo "<p class='meldung'>Es gibt Probleme mit dem Code, kontaktiere den Administrator.</p>";
 								# Logeintrag
 								$this->logEintrag(true, "hat den Code $code benutzt, dieser existiert aber nicht.", "Error");
 								return false;
 								
 							} else {
+								
+							#	echo "<p class='meldung'>Code gibt es</p>";
 								
 								# Den Code überprüfen
 								$select = "SELECT * FROM registercode WHERE code = '$code' LIMIT 1";
@@ -262,7 +266,7 @@ class login extends functions {
 									$update = "UPDATE registercode SET used='$used',usedBy='$username',ipadress='$ip' WHERE code = '$code'";
 									if($this->sql_insert_update_delete($update) == true) {
 										# Logeintrag
-										$this->logEintrag(true, "hat den Code $code benutzt, dieser wurde von $row[0]->used nach $used geupdatet", "Error");
+										$this->logEintrag(true, "hat den Code $code benutzt, dieser wurde von ".$row[0]->used." nach $used geupdatet", "Error");
 									} else {
 										echo "<p class='meldung'>Es gibt Probleme mit dem Code, kontaktiere den Administrtor.</p>";
 										# Logeintrag
@@ -276,9 +280,21 @@ class login extends functions {
 							$passwortneu = md5($passwort1);
 							$query="INSERT INTO benutzer (Name, Passwort, rights, versuche) VALUES ('$username','$passwortneu','0','0')";
 							if($this->sql_insert_update_delete($query) == true) {
-								echo "<p class='erfolg'>Hallo $username! Du hast dich erfolgreich registriert.</p>";
+								echo "<p class='erfolg'>Hallo $username! Du hast dich erfolgreich registriert! <a href='uebersicht.php'>Klicke hier</a></p>";
 								# Logeintrag
 								$this->logEintrag(true, "hat sich registriert", "login");
+								
+								$_SESSION['angemeldet'] = true;
+								$_SESSION['username'] = $username;
+									
+								# Hilfseinstellung für Guildwars
+								$_SESSION['selectUser'] = $username;
+								$_SESSION['selectGWUser'] = $username;
+								
+								# Logeintrag
+								$this->logEintrag(true, "hat sich eingeloggt", "login");
+								
+								
 							} else {
 								echo "<p class='meldung'>Bei der registrierung ist ein Fehler aufgetreten.</p>";
 								# Logeintrag

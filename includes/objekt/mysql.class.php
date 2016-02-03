@@ -60,7 +60,8 @@ class sql {
 	 */
 	function connectToDBNewWay() {
 		try {
-		$db = new PDO('mysql:host=localhost;dbname=flathacksql1', 'root', '12141214');
+		$dbname = $this->getDBName();
+		$db = new PDO("mysql:host=localhost;dbname=$dbname", "root", "12141214");
 		} catch (Exception $e) {
 			$css = '<link href="/flatnet2/css/error.css" type="text/css" rel="stylesheet" />';
 			$errorText = "<p class='info'>Datenbank Error</p>";
@@ -72,6 +73,15 @@ class sql {
 		}
 		return $db;
 		
+	}
+	
+	/**
+	 * Setzt den DB Namen fest.
+	 * @return string
+	 */
+	function getDBName() {
+		$name = "flathacksql1";
+		return $name;
 	}
 	
 	/**
