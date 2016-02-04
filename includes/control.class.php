@@ -247,10 +247,12 @@ class control extends functions {
 					$allTables = $this->getObjektInfo ( "SHOW TABLES FROM $dbname" );
 					$columnName = "Tables_in_".$dbname;
 					
-					for($i = 0 ;$i < sizeof($besitzerArray) ;$i++) {
-						
-						if($besitzerArray[$i] != "xxx") {
-							$query = "SELECT count(*) as anzahl FROM ".$allTables[$i]->$columnName." WHERE ".$besitzerArray[$i]." = $bearb ";
+					
+					
+					for($i = 0 ;$i < sizeof($allTables) ;$i++) {
+						$tableBesitzerSpalte = $this->getBesitzerSpalte($allTables[$i]->$columnName);
+						if($tableBesitzerSpalte != "xxx") {
+							$query = "SELECT count(*) as anzahl FROM ".$allTables[$i]->$columnName." WHERE ".$tableBesitzerSpalte." = $bearb ";
 							$amount = $this->getObjektInfo($query);
 							
 							if($amount[0]->anzahl > 0) {
@@ -372,40 +374,86 @@ class control extends functions {
 	 * @return string
 	 */
 	function setBesitzerArray() {
-		$columnNamesForBesitzer[0] = "besitzer"; # account_infos
-		$columnNamesForBesitzer[1] = "xxx"; # adressbuch
-		$columnNamesForBesitzer[2] = "xxx"; # benutzer
-		$columnNamesForBesitzer[3] = "autor"; # blogtexte
-		$columnNamesForBesitzer[4] = "xxx"; # blogkategorien
-		$columnNamesForBesitzer[5] = "autor"; #blog_kommentare
-		$columnNamesForBesitzer[6] = "autor"; #docu
-		$columnNamesForBesitzer[7] = "besitzer"; #fahrkosten
-		$columnNamesForBesitzer[8] = "besitzer"; #fahrkostenziele
-		$columnNamesForBesitzer[9] = "besitzer"; #fahrzeuge
-		$columnNamesForBesitzer[10] = "besitzer"; #finanzen_jahresabschluss
-		$columnNamesForBesitzer[11] = "besitzer"; #finanzen_konten
-		$columnNamesForBesitzer[12] = "besitzer"; #finanzen_monatsabschluss
-		$columnNamesForBesitzer[13] = "besitzer"; #finanzen_umsaetze
-		$columnNamesForBesitzer[14] = "besitzer"; #gw_accounts
-		$columnNamesForBesitzer[15] = "besitzer"; #gw_chars
-		$columnNamesForBesitzer[16] = "besitzer"; #gwcosts
-		$columnNamesForBesitzer[17] = "xxx"; #gwmatlist
-		$columnNamesForBesitzer[18] = "besitzer"; #gwusersmats
-		$columnNamesForBesitzer[19] = "besitzer"; #learnkategorie
-		$columnNamesForBesitzer[20] = "besitzer"; #learnlernkarte
-		$columnNamesForBesitzer[21] = "besitzer"; #lernstatus
-		$columnNamesForBesitzer[22] = "xxx"; #registercode
-		$columnNamesForBesitzer[23] = "xxx"; #rightkategorien
-		$columnNamesForBesitzer[24] = "besitzer"; #rights
-		$columnNamesForBesitzer[25] = "xxx"; #uebersicht_kacheln
-		$columnNamesForBesitzer[26] = "xxx"; #userrights
-		$columnNamesForBesitzer[27] = "xxx"; #vorschlaege
 		
-		return $columnNamesForBesitzer;
+		$zuordnung = array (
+				"account_infos" => "besitzer",
+				"adressbuch" => "xxx",
+				"benutzer" => "xxx",
+				"blogtexte" => "autor",
+				"blogkategorien" => "xxx",
+				"blog_kommentare" => "autor",
+				"docu" => "autor",
+				"fahrkosten" => "besitzer",
+				"fahrkostenziele" => "besitzer",
+				"fahrzeuge" => "besitzer",
+				"finanzen_jahresabschluss" => "besitzer",
+				"finanzen_konten" => "besitzer",
+				"finanzen_monatsabschluss" => "besitzer",
+				"finanzen_umsaetze" => "besitzer",
+				"gw_accounts" => "besitzer",
+				"gw_chars" => "besitzer",
+				"gwcosts" => "besitzer",
+				"gwmatlist" => "xxx",
+				"gwusersmats" => "besitzer",
+				"learnkategorie" => "besitzer",
+				"learnlernkarte" => "besitzer",
+				"lernstatus" => "besitzer",
+				"registercode" => "xxx",
+				"rightkategorien" => "xxx",
+				"rights" => "besitzer",
+				"uebersicht_kacheln" => "xxx",
+				"userrights" => "xxx",
+				"vorschlaege" => "xxx"
+		);
+		
+		$zuordnung2 = array (
+				"besitzer" => "account_infos",
+				"xxx" => "adressbuch",
+				"xxx" => "benutzer",
+				"autor" => "blogtexte",
+				"xxx" => "blogkategorien",
+				"autor" => "blog_kommentare",
+				"autor" => "docu",
+				"besitzer" => "fahrkosten",
+				"besitzer" => "fahrkostenziele",
+				"besitzer" => "fahrzeuge",
+				"besitzer" => "finanzen_jahresabschluss",
+				"besitzer" => "finanzen_konten",
+				"besitzer" => "finanzen_monatsabschluss",
+				"besitzer" => "finanzen_umsaetze",
+				"besitzer" => "gw_accounts",
+				"besitzer" => "gw_chars",
+				"besitzer" => "gwcosts",
+				"xxx" => "gwmatlist",
+				"besitzer" => "gwusersmats",
+				"besitzer" => "learnkategorie",
+				"besitzer" => "learnlernkarte",
+				"besitzer" => "lernstatus",
+				"xxx" => "registercode",
+				"xxx" => "rightkategorien",
+				"besitzer" => "rights",
+				"xxx" => "uebersicht_kacheln",
+				"xxx" => "userrights",
+				"xxx" => "vorschlaege"
+		);
+				
+		return $zuordnung2;
 	}
 	
+	/**
+	 * Gibt den Namen der Besitzerspalte zurück.
+	 * @param unknown $tabelle
+	 */
 	function getBesitzerSpalte($tabelle) {
 		
+		$columnNames = $this->setBesitzerArray();
+				
+		echo "<p class='meldung'>Ich suche: " . $tabelle  . "</p>";
+		
+		echo "<p class='meldung'>Gefunden habe ich: " .array_search($tabelle, $columnNames) . " </p>";
+		
+		exit;
+
 	}
 	
 	/**
@@ -453,10 +501,11 @@ class control extends functions {
 			for($i = 0; $i < sizeof ( $allTables ); $i ++) {
 				
 				// Nur anzeigen, wenn Table nicht excluded ist.
-				if ($columnNamesForBesitzer [$i] != "xxx") {
+				$spalte = $this->getBesitzerSpalte($allTables [$i]);
+				if ($spalte != "xxx") {
 					// Table anzeigen:
 					
-					echo "<p class='info'>Suche nach Spalte: ".$columnNamesForBesitzer [$i]."</p>";
+					echo "<p class='info'>Suche nach Spalte: ".$spalte."</p>";
 					
 					$table = $allTables [$i]->$columnName;
 					
@@ -464,7 +513,7 @@ class control extends functions {
 					$columns = $this->getColumns ( $table );
 					
 					// Informationen des aktuellen Tables auslesen
-					$currentTableInfo = $this->getObjektInfo ( "SELECT * FROM $table WHERE $columnNamesForBesitzer[$i] = $userID" );
+					$currentTableInfo = $this->getObjektInfo ( "SELECT * FROM $table WHERE $spalte = $userID" );
 					
 					// Table nur anzeigen, wenn etwas vom Benutzer da ist:
 					// if(isset($currentTableInfo[$i])) {
@@ -473,7 +522,7 @@ class control extends functions {
 					
 					// Überschrift anzeigen
 					$spaltenanzahlMinusEins = sizeof ( $columns ) -1;
-					echo "<thead><td colspan ='" . $spaltenanzahlMinusEins . "'>$i) " . $allTables [$i]->$columnName . " (".$columnNamesForBesitzer[$i].")" . "</td><td>
+					echo "<thead><td colspan ='" . $spaltenanzahlMinusEins . "'>$i) " . $allTables [$i]->$columnName . " (".$spalte.")" . "</td><td>
 				 				<a class='highlightedLink' href='?action=1&loeschen&loeschid=" . $userID . "&table=" . $table . "&tableNumber=$i'>LÖSCHEN</a>
 				 				</td></thead>";
 					

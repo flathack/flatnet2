@@ -1144,8 +1144,12 @@ class gw_charakter extends guildwars {
 			$EigeneGelöschteStunden = $this->getObjektInfo("SELECT sum(wert) as summe FROM account_infos WHERE besitzer = '$userID' AND attribut = 'gw_geloschte_stunden' AND account = '$aktuellerAccount'");
 			$eigeneStundenGesamt = $EigeneGelöschteStunden[0]->summe + $alleEigenenStunden[0]->summe;
 			$allePlusGelöschte = $alleSpielstunden[0]->summe + $gelöschteStundenGesamt[0]->summe;
-				
-			$prozent = round($alleEigenenStunden[0]->summe / $alleSpielstunden[0]->summe * 100, 2);
+			if($allePlusGelöschte > 0) {
+				$prozent = round($alleEigenenStunden[0]->summe / $alleSpielstunden[0]->summe * 100, 2);
+			} else {
+				$prozent = 0;
+			}
+			
 				
 			echo "<h2>$username</h2>";
 				
@@ -1169,7 +1173,7 @@ class gw_charakter extends guildwars {
 			if($this->getObjektInfo($query) == true) {
 				echo "<tr><td>Nächster Geb.:</td></tr>";
 				$naechsterGeb = $this->getObjektInfo($query);
-				echo "<tr><td><p class='erfolg'>" . $naechsterGeb->name . " am " .$naechsterGeb->tag.".$currentMonth</p></td></tr>";
+				echo "<tr><td><p class='erfolg'>" . $naechsterGeb[0]->name . " am " .$naechsterGeb[0]->tag.".$currentMonth</p></td></tr>";
 			}
 				
 			echo "</table>";
