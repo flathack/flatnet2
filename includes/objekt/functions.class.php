@@ -440,12 +440,11 @@ class functions extends sql {
 
 	function subNav($site) {
 		if($site == "guildwars") {
-			echo "
-					<div class='rightOuterBody'>
-					<ul>";
+			echo "<div class='rightOuterBody'><ul>";
 
-			echo "<li><a href='start.php' id='home'>Charakter</a> </li>
-					<li><a href='http://gw2cartographers.com/' target='_blank' class='extern'>Maps</a></li>";
+			echo "<li><a href='start.php' id='home'>Charakter</a></li>";
+			echo "<li><a href='http://gw2cartographers.com/' target='_blank' class='extern'>Maps</a></li>";
+			
 			if($this->userHasRight("62", 0) == true) {
 				echo "	<li><a href='kalender.php' id='kalender'>Kalender</a></li>";
 			}
@@ -456,10 +455,10 @@ class functions extends sql {
 			
 			echo "<li><a href='handwerk.php' id='handwerk'>Handwerk</a></li>";
 					
-			echo "<li><a href='api.php' id='api'>API</a></li>
+			echo "<li><a href='api.php' id='api'>API</a></li>";
 
-					</ul>
-					</div>";
+			echo "</ul>";
+			echo "</div>";
 		}
 
 		if($site == "profil") {

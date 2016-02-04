@@ -122,7 +122,7 @@ blockquote {
 .header {
 	padding: 10px;
 	border-bottom: 5px solid white;
-	background-color: #373737; /* #373737 */
+	background-color: #2e2e2e; /* #373737 */
 	color: black;
 }
 
@@ -218,10 +218,11 @@ blockquote {
 
 .header #navigation li a:link, 
 .header #navigation li a:visited {
-	padding: 5px 10px 5px 10px;
+	padding: 13px 5px 13px 5px;
 	margin-top: 0px;
+	margin-right: 3px;
 	display: inline-block;
-	border: 2px solid transparent;
+	border: 1px solid transparent;
 	text-align: center;
 	color: white;
 	-webkit-transition: all 0.4s ease-in-out;
@@ -234,7 +235,7 @@ blockquote {
 
 .header #navigation li a:link:hover, 
 .header #navigation li a:visited:hover {
-	background: grey;
+	border: 1px solid #ffbfbf;
 	color: white;
 	-webkit-transition: all 0.4s ease-in-out;
 	-moz-transition: all 0.4s ease-in-out;
@@ -254,14 +255,17 @@ blockquote {
 #adressbuch #adressbuch,
 #informationen #dokumentation,
 #kontakt #kontakt,
-#admin #admin,
+#administration #administration,
 #learn #learn,
 #kontakt2 #kontakt,
 #doku #doku,
 #quellen #quellen,
 #finanzen #finanzen,
 #impressum #impressum {
-	border-bottom: 2px solid white;
+	border-bottom: 2px solid red;
+	background-color: #b30004;
+	box-shadow: 0px 0px 10px red;
+	color: white;
 	-webkit-transition: all 0.4s ease-in-out;
 	-moz-transition: all 0.4s ease-in-out;
 	-ms-transition: all 0.4s ease-in-out;
@@ -269,33 +273,9 @@ blockquote {
 	transition: all 0.4s ease-in-out;
 }
 
-/* Highlights Ende */
-
 /*
  * Obere Navigation ENDE
  */
-
-/* Grundeinstellungen  */
-.unternav ul {
-	margin-bottom: 10px;
-}
-
-.unternav li {
-	display: inline;
-	margin: 0px;
-	border: 1px solid black;
-	padding: 5px;
-}
-
-.unternav li:hover {
-	border: 1px solid black;
-	background: #808080;
-	color: white;
-}
-
-.unternav li a:hover {
-	color: white;
-}
 
 /* Übersicht */
 
@@ -2439,17 +2419,6 @@ input[type=password]:focus {
 	border: 1px solid green;
 }
 
-#home #home,
-#tiere #tiere,
-#handwerk #handwerk,
-#statistik #statistik,
-#kalender #kalender,
-#calc #calc,
-#marked {
-	color: white; /*  #525252; */
-	background: #7b2020;
-}
-
 .InfoCenter, .InfoCenter a {
 	color: white;
 }
@@ -2466,36 +2435,45 @@ input[type=password]:focus {
 	background-color: grey;
 }
 
+
+#home #home,
+#tiere #tiere,
+#handwerk #handwerk,
+#statistik #statistik,
+#kalender #kalender,
+#calc #calc,
+#marked {
+	color: white; /*  #525252; */
+	background-color: #b30004;
+	box-shadow: 0px 0px 10px red;
+}
+
 .rightOuterBody {
 	position: absolute;
 	overflow: hidden;
-	border: 1px solid grey;
 	min-width: 400px;
 	max-width: 600px;
 	max-height: 75px;
 	margin-left: 170px;
-	margin-top: -94px;
+	margin-top: -98px;
+	background-color: #2e2e2e;
 }
 
 .rightOuterBody li {
 	display: inline-block;
-	padding: 3px 1px 3px 1px;
-	margin-left: 0px;
-}
-
-.rightOuterBody li:hover {
-	background: #c0c0c0;
+	margin-bottom: 5px;
+	margin-left: 5px;
 }
 
 .rightOuterBody li a {
 	color: white;
-	padding: 3px 10px 3px 10px;
-	text-decoration: none;
+	border: 2px solid transparent;
+	padding: 3px 5px 3px 5px;
 }
 
-.rightOuterBody ul {
-	border: 1px solid transparent;
-	background-color: #a6a6a6;
+.rightOuterBody li a:hover {
+	color: white;
+	text-decoration: none;
 }
 
 .rightBody li {

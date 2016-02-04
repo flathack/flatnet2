@@ -15,16 +15,17 @@ class uebersicht extends functions {
 		# Uebersicht anzeigen:
 		$this->showUebersicht();
 		
-		
-		
 		# Administrative-Funktionen
 		if($this->userHasRight("54", 0) == true) {
-			echo "<div class='mainbody'><a class='buttonlink' href='?newEntry'>Neue Kachel</a></div>";
+			echo "<div class='mainbody'><a class='buttonlink' href='?newEntry'>Neue Kachel</a>";
+			echo "<a class='buttonlink' href='?editEntry'>Kacheln bearbeiten</a></div>";
 		}
 		if($this->userHasRight("54", 0) == true AND isset($_GET['newEntry'])) {
 			$this->showCreateEntity();
 		}
-		
+		if($this->userHasRight("54", 0) == true AND isset($_GET['editEntry'])) {
+			$this->showEditEntry();
+		}
 		
 	}
 	
@@ -49,6 +50,30 @@ class uebersicht extends functions {
 			return false;
 		}
 		
+	}
+	
+	function showEditEntry() {
+		$select = "SELECT * FROM uebersicht_kacheln";
+		$kacheln = $this->getObjektInfo($select);
+		
+		echo "<table class='flatnetTable'>";
+		
+		echo "<thead><td>ID</td><td>Name</td><td>Link</td><td>Beschreibung</td><td>Sortierung</td><td>Aktiv</td><td>Css ID</td><td>RightID</td></thead>";
+		for ($i = 0 ; $i < sizeof($kacheln) ; $i++) {
+			
+			echo "<tbody>";
+				echo "<td>" .$kacheln[$i]->id. "</td>";
+				echo "<td>" .$kacheln[$i]->name. "</td>";
+				echo "<td>" .$kacheln[$i]->link. "</td>";
+				echo "<td>" .$kacheln[$i]->beschreibung. "</td>";
+				echo "<td>" .$kacheln[$i]->sortierung. "</td>";
+				echo "<td>" .$kacheln[$i]->active. "</td>";
+				echo "<td>" .$kacheln[$i]->cssID. "</td>";
+				echo "<td>" .$kacheln[$i]->rightID. "</td>";
+			echo "</tbody>";
+			
+		}
+		echo "</table>";
 	}
 	
 	/**
@@ -230,7 +255,7 @@ class uebersicht extends functions {
 		
 		# Gesperrte Bereiche
 		for($i = 0; $i < sizeof($kachelnGesperrt); $i++) {
-			if($this->userHasRight($kachelnGesperrt[$i]->rightID, 0) == true) {
+			if($this->userHasRight($kachelnGesperrt[$i]->rightID, 0) == true OR $this->userHasRight("45", 0) == true) {
 				echo "<div class='bereichGesperrt'>";
 				echo "<h2>".$kachelnGesperrt[$i]->name."</h2>";
 				echo "<p>Der Inhalt wurde kurzfristig aufgrund eines Fehlers gesperrt. Versuche es später erneut.</p>";

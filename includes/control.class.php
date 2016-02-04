@@ -393,14 +393,19 @@ class control extends functions {
 		$columnNamesForBesitzer[18] = "besitzer"; #gwusersmats
 		$columnNamesForBesitzer[19] = "besitzer"; #learnkategorie
 		$columnNamesForBesitzer[20] = "besitzer"; #learnlernkarte
-		$columnNamesForBesitzer[21] = "xxx"; #registercode
-		$columnNamesForBesitzer[22] = "xxx"; #rightkategorien
-		$columnNamesForBesitzer[23] = "besitzer"; #rights
-		$columnNamesForBesitzer[24] = "xxx"; #uebersicht_kacheln
-		$columnNamesForBesitzer[25] = "xxx"; #userrights
-		$columnNamesForBesitzer[26] = "xxx"; #vorschlaege
+		$columnNamesForBesitzer[21] = "besitzer"; #lernstatus
+		$columnNamesForBesitzer[22] = "xxx"; #registercode
+		$columnNamesForBesitzer[23] = "xxx"; #rightkategorien
+		$columnNamesForBesitzer[24] = "besitzer"; #rights
+		$columnNamesForBesitzer[25] = "xxx"; #uebersicht_kacheln
+		$columnNamesForBesitzer[26] = "xxx"; #userrights
+		$columnNamesForBesitzer[27] = "xxx"; #vorschlaege
 		
 		return $columnNamesForBesitzer;
+	}
+	
+	function getBesitzerSpalte($tabelle) {
+		
 	}
 	
 	/**
@@ -432,7 +437,7 @@ class control extends functions {
 			// Alle Tables bekommen:
 			$dbname = $this->getDBName();
 			$allTables = $this->getObjektInfo ( "SHOW TABLES FROM $dbname" );
-			$columnName = "Tables_in_".$DBName;
+			$columnName = "Tables_in_".$dbname;
 			
 			// Tabellen: account_infos, adressbuch, benutzer, blogkategorien, blogtexte, blog_kommentare, docu,
 			// fahrkosten, fahrkostenziele, fahrzeuge, finanzen_jahresabschluss, finanzen_konten, finanzen_monatsabschluss,

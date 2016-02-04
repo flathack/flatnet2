@@ -2218,4 +2218,10 @@ class gw_handwerk extends guildwars {
 	
 }
 
+class api extends guildwars {
+	function apiTest() {
+		echo "<h2>Es gibt noch keine Api Verbindung ...</h2>";
+	}
+}
+
 ?>
