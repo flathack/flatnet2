@@ -43,6 +43,9 @@ class lotto {
 			echo "</p>";
 			
 			if(isset($_GET['erweitertesLottoStart'])) {
+				echo "<h3>OK! Bitte warten, das Skript l&auml;uft, 
+					je nach Anzahl kann die Bearbeitung 0 bis 10 Minuten dauern, 
+					ehe alle Durchg&auml;nge berechnet wurden.</h3>";
 				$start = time();
 				
 				$eigeneZahlen = [$_GET['zahl1'],$_GET['zahl2'],$_GET['zahl3'],$_GET['zahl4'],$_GET['zahl5'],$_GET['zahl6']];
@@ -58,6 +61,9 @@ class lotto {
 				$bis = $_GET['bis'];
 				$richtige = $_GET['richtige'];
 				
+				set_time_limit(800);
+				mt_srand ((double)microtime()*1000000);
+				
 				$counter = 1;
 				while ( $this->lottoAbfrage($eigeneZahlen, $bis, $richtige) == false AND $counter < $max) {
 					$counter += 1;
@@ -67,7 +73,8 @@ class lotto {
 				$laufzeit = $end-$start;
 				
 				if($counter == $max) {
-					echo "<p class='info'>Es wurden $max Ziehungen durchgef&uuml;hrt. ($laufzeit Sekunden)</p>";
+					$zeitProDurchlauf = $laufzeit / $max * 1000000;
+					echo "<p class='info'>Es wurden $max Ziehungen durchgef&uuml;hrt. ($laufzeit Sekunden, $zeitProDurchlauf Sekunden Pro 1 MIO Durchl&auml;ufe)</p> ";
 				} else {
 					echo "<p class='erfolg'>Es wurden " . $counter . " Ziehungen durchgeführt.</p>";
 				} 
@@ -104,9 +111,9 @@ class lotto {
 				}
 		
 				Echo "<p>OK! Es wird $anzahl x mit einem $wuerfelSeiten seitigen W&uuml;rfel gew&uuml;rfelt ... </p>";
-		
+				mt_srand ((double)microtime()*1000000);
 				for($i = 0 ; $i < $anzahl ; $i++) {
-					$zahl = rand(1,$wuerfelSeiten);
+					$zahl = mt_rand(1,$wuerfelSeiten);
 		
 					$wuerfe[$zahl] += 1;
 		
@@ -152,11 +159,12 @@ class lotto {
 	 */
 	function lottoAbfrage($meineLottoZahlen, $bis, $richtige) {
 		
+		# Die Lottozahlen werden generiert.
 		$lottoZiehung = [0,0,0,0,0,0];
 		
 		for($i = 0 ; $i < 6 ; $i++) {
 			
-			$zufallszahl = rand(1,$bis);
+			$zufallszahl = mt_rand(1,$bis);
 			if(in_array($zufallszahl, $lottoZiehung)) {
 				$i--;
 			} else {
@@ -249,7 +257,7 @@ class lotto {
 		$summe = 0;
 		
 		for($i = 1 ; $i <= 100 ; $i++) {
-			$summe = $summe + $i;
+			$summe += $i;
 		}
 		
 		echo "<p class='info'>Die L&ouml;sung ist: " . $summe . "</p>";

@@ -291,7 +291,7 @@ class uebersicht extends functions {
 				$gesperrteUser = $this->getObjektInfo($select);
 				echo "<div id='gesperrt'>";
 				for($i = 0 ; $i < sizeof($gesperrteUser) ; $i++) {
-					echo "<li>" . $gesperrteUser[$i]->Name . " ist gesperrt <a href='/flatnet2/admin/control.php?statusID=".$gesperrteUser[$i]->id."&status=entsperren&userverw=1&action=1'>entsperren</a></li>";
+					echo "<li>" . $gesperrteUser[$i]->Name . " ist gesperrt <a class='redLink' href='/flatnet2/admin/control.php?statusID=".$gesperrteUser[$i]->id."&status=entsperren&userverw=1&action=1'>entsperren</a></li>";
 				}
 				echo "</div>";
 				if($this->userHasRight("54", 0) == true AND isset($_GET['editEntry'])) {
