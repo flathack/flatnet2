@@ -49,6 +49,7 @@ if(!isset($_SESSION['selectGWUser'])) {
 				
 				<div id='right'>
 					<a href='?createNewChar=yes#charErstellen' class='greenLink'>Neuen Charakter</a>
+					<a href='?createNewChar=yes&namen#charErstellen' class='greenLink'>Namegen</a>
 				</div>
 				<div id='home'>
 				<?php $guildwars->SubNav("guildwars"); ?>
@@ -56,6 +57,7 @@ if(!isset($_SESSION['selectGWUser'])) {
 		
 			</div>
 			<?php echo $guildwars->newChar(); ?>
+			<?php if(isset($_GET['namen'])) { $guildwars->nameGen(); } ?>
 			
 			<?php $guildwars->globalCharInfos(); ?>
 			

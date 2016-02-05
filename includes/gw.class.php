@@ -70,8 +70,15 @@ class guildwars extends functions {
 		$anz = count($nachnamen) - 1;
 		$zufallszahl = rand(1, $anz);
 		$nachname2 = $nachnamen[$zufallszahl];
-
-		print("". $f ." ". $nachname1 ."oder ". $m ." ". $nachname2 ."<br>");
+		
+		$m = substr($m, 1, 20);
+		$f = substr($f, 1, 20);
+		$nachname1 = substr($nachname1, 1, 20);
+		$nachname2 = substr($nachname2, 1, 20);
+		echo "<div class='newChar'>";
+			echo "Name 1: $m | $nachname1 <br>";
+			echo "Name 2: $f | $nachname2 <br>";
+		echo "</div>";
 
 	}
 
