@@ -222,8 +222,9 @@ class finanzenNEW extends functions {
 					echo "<td>" . $nameGegenkonto [0]->konto . "</td>";
 					echo "<td>" . $umsaetze [$i]->umsatzName . "</td>";
 					echo "<td>" . $umsaetze [$i]->tag . "</td>";
+					$ausgabeZwischensumme = round($zwischensumme, 2);
 					echo "<td $zelle>" . $umsaetze [$i]->umsatzWert . "</td>";
-					echo "<td id='$spaltenFarbe'>" . $zwischensumme . "</td>";
+					echo "<td id='$spaltenFarbe'>" . $ausgabeZwischensumme . "</td>";
 					echo "<td>" . "<a class='rightBlueLink' href='?konto=$kontoID&monat=$monat&jahr=$currentYear&edit=" . $umsaetze [$i]->id . "'>edit</a>" . "</td>";
 					echo "</tbody>";
 					
