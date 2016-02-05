@@ -16,15 +16,9 @@ class uebersicht extends functions {
 		$this->showUebersicht();
 		
 		# Administrative-Funktionen
-		if($this->userHasRight("54", 0) == true) {
-			echo "<div class='mainbody'><a class='buttonlink' href='?newEntry'>Neue Kachel</a>";
-			echo "<a class='buttonlink' href='?editEntry'>Kacheln bearbeiten</a></div>";
-		}
+		
 		if($this->userHasRight("54", 0) == true AND isset($_GET['newEntry'])) {
 			$this->showCreateEntity();
-		}
-		if($this->userHasRight("54", 0) == true AND isset($_GET['editEntry'])) {
-			$this->showEditEntry();
 		}
 		
 	}
@@ -56,9 +50,18 @@ class uebersicht extends functions {
 		$select = "SELECT * FROM uebersicht_kacheln";
 		$kacheln = $this->getObjektInfo($select);
 		
-		echo "<table class='flatnetTable'>";
+		echo "<table class='kontoTable'>";
 		
-		echo "<thead><td>ID</td><td>Name</td><td>Link</td><td>Beschreibung</td><td>Sortierung</td><td>Aktiv</td><td>Css ID</td><td>RightID</td></thead>";
+		echo "<thead><td>ID</td>
+				<td>Name</td>
+				<td>Link</td>
+				<td>Beschreibung</td>
+				<td>Sortierung</td>
+				<td>Aktiv</td>
+				<td>Css ID</td>
+				<td>RightID</td>
+				<td></td>
+				</thead>";
 		for ($i = 0 ; $i < sizeof($kacheln) ; $i++) {
 			
 			echo "<tbody>";
@@ -70,6 +73,7 @@ class uebersicht extends functions {
 				echo "<td>" .$kacheln[$i]->active. "</td>";
 				echo "<td>" .$kacheln[$i]->cssID. "</td>";
 				echo "<td>" .$kacheln[$i]->rightID. "</td>";
+				echo "<td>" ."<a href='admin/control.php?action=3&table=uebersicht_kacheln'>edit</a>". "</td>";
 			echo "</tbody>";
 			
 		}
@@ -276,13 +280,22 @@ class uebersicht extends functions {
 		}
 		
 		if($this->userHasRight("45", 0) == true) {
-			echo "<div class='bereichadministration'>";
+			echo "<div class='adminKachel'>";
 			
-				echo "<h2>Admin Kachel</h2>";
+				echo "<h2>Administrationsübersicht</h2>";
+				if($this->userHasRight("54", 0) == true) {
+					echo "<a class='buttonlink' href='?newEntry'>Neue Kachel</a>";
+					echo "<a class='buttonlink' href='?editEntry'>Kacheln bearbeiten</a>";
+				}
 				$select = "SELECT * FROM benutzer WHERE versuche >= 3";
 				$gesperrteUser = $this->getObjektInfo($select);
+				echo "<div id='gesperrt'>";
 				for($i = 0 ; $i < sizeof($gesperrteUser) ; $i++) {
-					echo "<p class='info'>" . $gesperrteUser[$i]->Name . " ist gesperrt <a href='/flatnet2/admin/control.php?statusID=".$gesperrteUser[$i]->id."&status=entsperren&userverw=1&action=1'>entsperren</a></p>";
+					echo "<li>" . $gesperrteUser[$i]->Name . " ist gesperrt <a href='/flatnet2/admin/control.php?statusID=".$gesperrteUser[$i]->id."&status=entsperren&userverw=1&action=1'>entsperren</a></li>";
+				}
+				echo "</div>";
+				if($this->userHasRight("54", 0) == true AND isset($_GET['editEntry'])) {
+					$this->showEditEntry();
 				}
 			
 			echo "</div>";

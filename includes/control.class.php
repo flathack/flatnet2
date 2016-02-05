@@ -242,30 +242,23 @@ class control extends functions {
 					
 					echo "<h3>Diese Inhalte hat der Benutzer veröffentlicht </h3>";
 					
-					$besitzerArray = $this->setBesitzerArray();
-					$dbname = $this->getDBName();
-					$allTables = $this->getObjektInfo ( "SHOW TABLES FROM $dbname" );
-					$columnName = "Tables_in_".$dbname;
+					$columnNames = $this->setBesitzerArray();
 					
-					
-					
-					for($i = 0 ;$i < sizeof($allTables) ;$i++) {
-						$tableBesitzerSpalte = $this->getBesitzerSpalte($allTables[$i]->$columnName);
-						if($tableBesitzerSpalte != "xxx") {
-							$query = "SELECT count(*) as anzahl FROM ".$allTables[$i]->$columnName." WHERE ".$tableBesitzerSpalte." = $bearb ";
+					foreach ($columnNames as $tabelle => $spalte) {
+						
+						if($spalte != "xxx") {
+							$query = "SELECT count(*) as anzahl FROM ".$tabelle." WHERE ".$spalte." = $bearb ";
 							$amount = $this->getObjektInfo($query);
-							
+								
 							if($amount[0]->anzahl > 0) {
 								echo "<div class='kleineBox'>";
-								echo "<h3>".$allTables[$i]->$columnName."</h3>";
+								echo "<h3>".$tabelle."</h3>";
 								echo "<p>Einträge: " .$amount[0]->anzahl. "</p>";
 								echo "</div>";
 							}
 						}
-						
+					
 					}
-					
-					
 					
 					echo "</div>";
 				}
@@ -437,7 +430,7 @@ class control extends functions {
 				"xxx" => "vorschlaege"
 		);
 				
-		return $zuordnung2;
+		return $zuordnung;
 	}
 	
 	/**
@@ -446,14 +439,7 @@ class control extends functions {
 	 */
 	function getBesitzerSpalte($tabelle) {
 		
-		$columnNames = $this->setBesitzerArray();
-				
-		echo "<p class='meldung'>Ich suche: " . $tabelle  . "</p>";
 		
-		echo "<p class='meldung'>Gefunden habe ich: " .array_search($tabelle, $columnNames) . " </p>";
-		
-		exit;
-
 	}
 	
 	/**
@@ -482,79 +468,66 @@ class control extends functions {
 			
 			echo "<h2>Aktuelle Benutzerinformationen</h2>";
 			
-			// Alle Tables bekommen:
-			$dbname = $this->getDBName();
-			$allTables = $this->getObjektInfo ( "SHOW TABLES FROM $dbname" );
-			$columnName = "Tables_in_".$dbname;
-			
-			// Tabellen: account_infos, adressbuch, benutzer, blogkategorien, blogtexte, blog_kommentare, docu,
-			// fahrkosten, fahrkostenziele, fahrzeuge, finanzen_jahresabschluss, finanzen_konten, finanzen_monatsabschluss,
-			// finanzen_umsaetze, gwcosts, gwmatlist, gwusersmats, gw_accounts, gw_chars, learnkategorie, learnlernkarte, 
-			// registercode, rights, uebersicht_kacheln, userrights, vorschlaege,
-			
-			$columnNamesForBesitzer = $this->setBesitzerArray();
-			
-			
+			$columnNames = $this->setBesitzerArray();
 			$userID = $_POST ['id'];
 			
-			// Pro Table durchlaufen ...
-			for($i = 0; $i < sizeof ( $allTables ); $i ++) {
+			$i = 0;
 				
-				// Nur anzeigen, wenn Table nicht excluded ist.
-				$spalte = $this->getBesitzerSpalte($allTables [$i]);
+			foreach ($columnNames as $table => $spalte) {
 				if ($spalte != "xxx") {
 					// Table anzeigen:
 					
 					echo "<p class='info'>Suche nach Spalte: ".$spalte."</p>";
-					
-					$table = $allTables [$i]->$columnName;
-					
+				
 					// Spalten bekommen
 					$columns = $this->getColumns ( $table );
-					
+				
 					// Informationen des aktuellen Tables auslesen
 					$currentTableInfo = $this->getObjektInfo ( "SELECT * FROM $table WHERE $spalte = $userID" );
-					
+				
 					// Table nur anzeigen, wenn etwas vom Benutzer da ist:
 					// if(isset($currentTableInfo[$i])) {
-					
+				
 					echo "<table class='flatnetTable'>";
-					
+				
 					// Überschrift anzeigen
-					$spaltenanzahlMinusEins = sizeof ( $columns ) -1;
-					echo "<thead><td colspan ='" . $spaltenanzahlMinusEins . "'>$i) " . $allTables [$i]->$columnName . " (".$spalte.")" . "</td><td>
-				 				<a class='highlightedLink' href='?action=1&loeschen&loeschid=" . $userID . "&table=" . $table . "&tableNumber=$i'>LÖSCHEN</a>
-				 				</td></thead>";
+					$spaltenanzahlMinusEins = sizeof ( $columns );
+					echo "<thead><td colspan ='" . $spaltenanzahlMinusEins . "'>$i) " . $table . " (".$spalte.")" . "</td><td>
+					<a class='highlightedLink' href='?action=1&loeschen&loeschid=" . $userID . "&table=" . $table . "&tableNumber=$i'>LÖSCHEN</a>
+									</td></thead>";
 					
 					// Gibt die aktuelle Kopfzeile der aktuellen Tabelle aus
 					echo "<thead>";
-					for($k = 0; $k < sizeof ( $columns ); $k ++) {
+					echo "<td></td>";
+					for($k = 0; $k < sizeof ( $columns ); $k++) {
 						echo "<td>$columns[$k]</td>";
 					}
 					echo "</thead>";
-					
-					for($j = 0; $j < sizeof ( $currentTableInfo ); $j ++) {
+					for($j = 0; $j < sizeof ( $currentTableInfo ); $j++) {
 						echo "<tbody>";
 						if(!isset($currentTableInfo[$j]->id)) {
 							echo "<td><a class='rightBlueLink' href='?action=3&table=$table'>open</a></td>";
 						} else {
 							echo "<td><a class='rightBlueLink' href='?action=3&table=$table&id=".$currentTableInfo [$j]->id."'>open</a></td>";
 						}
-						
+							
 						// Gibt die Information der aktuellen Zelle aus:
 						for($k = 0; $k < sizeof ( $columns ); $k ++) {
 							echo "<td>";
 							echo substr ( strip_tags($currentTableInfo [$j]->$columns [$k]), 0, 20 );
 							echo "</td>";
 						}
-						
+							
 						echo "</tbody>";
 					}
 					echo "</table>";
 					
-					// }
+					
 				}
+				$i++;
+					
 			}
+
 		}
 	}
 	
@@ -694,7 +667,7 @@ class control extends functions {
 				}
 				
 				echo ">
-				<td>".$row[$i]->id."<input type=hidden value='".$row->id."' name='hiddenID' /></td>
+				<td>".$row[$i]->id."<input type=hidden value='".$row[$i]->id."' name='hiddenID' /></td>
 				<td>".$row[$i]->tage.".".$row[$i]->monat.".".$row[$i]->jahr."</td>";
 				if ($row[$i]->autor == 0) {
 					echo "<td>System</td>";

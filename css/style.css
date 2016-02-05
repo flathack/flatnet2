@@ -469,6 +469,38 @@ blockquote {
 	display: inline-block;
 }
 
+.adminKachel {
+	background-color: white;
+	border: 1px solid grey;
+	box-shadow: 0px 0px 3px grey;
+	margin-bottom: 10px;
+	margin-right: 10px;
+	padding: 5px;
+}
+.adminKachel:hover{
+	box-shadow: 0px 0px 10px black;
+}
+.adminKachel h2 {
+	color: black;
+}
+
+.adminKachel #gesperrt  {
+	padding: 5px;
+	background-color: transparent;
+	list-style-type: circle;
+}
+
+.adminKachel #gesperrt li {
+	margin: 0px 0px 10px 0px;
+	padding: 5px;
+	border-radius: 5px;
+	color: #6a0000;
+}
+
+.adminKachel #gesperrt li:hover {
+	background-color: #e8e8e8;
+}
+
 .bereichfinanzen {
 	background-color: #f7f7f7;
 	background-image: url(../images/tiles/finanzen.png);
