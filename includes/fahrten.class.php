@@ -27,7 +27,7 @@ class fahrten extends functions {
 			
 			for($i = 0; $i < sizeof ( $ziele ); $i ++) {
 				
-				$entfernungInfo = $this->getObjektInfo ( "SELECT * FROM fahrkostenZiele WHERE besitzer = '$userID' AND name = '" . $ziele [$i]->ziel . "' LIMIT 1" );
+				$entfernungInfo = $this->getObjektInfo ( "SELECT * FROM fahrkostenziele WHERE besitzer = '$userID' AND name = '" . $ziele [$i]->ziel . "' LIMIT 1" );
 				
 				$kmgesamt = $entfernungInfo[0]->entfernung * $ziele[$i]->fahrrichtung * $ziele[$i]->anzahl;
 				echo "<tbody><td>" . $ziele [$i]->ziel . " (" . $entfernungInfo[0]->entfernung . " km)" . " </td><td>" . $ziele [$i]->anzahl . "</td><td>$kmgesamt km</td></tbody>";
@@ -108,7 +108,7 @@ class fahrten extends functions {
 				// Fahrzeug Infos:
 				$fahrzeugInfo = $this->getObjektInfo ( "SELECT * FROM fahrzeuge WHERE besitzer = '$userID' AND name_tag = '" . $fahrten [$i]->fahrart . "'" );
 				// Streckeninfos:
-				$zielInfo = $this->getObjektInfo ( "SELECT * FROM fahrkostenZiele WHERE besitzer = '$userID' AND name = '" . $fahrten [$i]->ziel . "'" );
+				$zielInfo = $this->getObjektInfo ( "SELECT * FROM fahrkostenziele WHERE besitzer = '$userID' AND name = '" . $fahrten [$i]->ziel . "'" );
 				
 				if(!isset($fahrzeugInfo[0])) {
 					$error = "ERROR";
@@ -148,7 +148,7 @@ class fahrten extends functions {
 			$userID = $this->getUserID($_SESSION['username']);
 			$fahrzeugInfo = $this->getObjektInfo ( "SELECT * FROM fahrzeuge WHERE besitzer = '$userID' AND name_tag = '" . $fahrten [$i]->fahrart . "'" );
 			
-			$zielInfo = $this->getObjektInfo ( "SELECT * FROM fahrkostenZiele WHERE besitzer = '$userID' AND name = '" . $fahrten [$i]->ziel . "'" );
+			$zielInfo = $this->getObjektInfo ( "SELECT * FROM fahrkostenziele WHERE besitzer = '$userID' AND name = '" . $fahrten [$i]->ziel . "'" );
 			$liter = $fahrzeugInfo[0]->verbrauch / 100 * $zielInfo[0]->entfernung * $fahrten [$i]->fahrrichtung;
 			$kosten = round ( $liter * $fahrten [$i]->spritpreis, 2 );
 			
@@ -207,7 +207,7 @@ class fahrten extends functions {
 			}
 			echo "</select></td></tr>";
 			
-			$ziele = $this->getObjektInfo ( "SELECT * FROM fahrkostenZiele WHERE besitzer = '$userID'" );
+			$ziele = $this->getObjektInfo ( "SELECT * FROM fahrkostenziele WHERE besitzer = '$userID'" );
 			echo "<tr><td>Welches Ziel: </td>";
 			echo "<td><select name='ziel'>";
 			echo "<option></option>";
@@ -366,7 +366,7 @@ class fahrten extends functions {
 				}
 				echo "</select></td></tr>";
 				
-				$ziele = $this->getObjektInfo ( "SELECT * FROM fahrkostenZiele WHERE besitzer = '$userID'" );
+				$ziele = $this->getObjektInfo ( "SELECT * FROM fahrkostenziele WHERE besitzer = '$userID'" );
 				echo "<tr><td>Welches Ziel: </td>";
 				echo "<td><select name='ziel'>";
 				echo "<option></option>";
@@ -507,7 +507,7 @@ class fahrten extends functions {
 			
 		#	if(isset($_GET['listZiele'])) {
 				$userID = $this->getUserID($_SESSION['username']);
-				$zieleInfos = $this->getObjektInfo("SELECT id, name, entfernung FROM fahrkostenZiele WHERE besitzer = '$userID'");
+				$zieleInfos = $this->getObjektInfo("SELECT id, name, entfernung FROM fahrkostenziele WHERE besitzer = '$userID'");
 					
 				# Ausgabe
 				echo "<div class='summe' style=\"display: none;\" id=\"listZiele\">";
@@ -555,7 +555,7 @@ class fahrten extends functions {
 					$entfernung = $_POST ['entfernung'];
 			
 					// Einfügen
-					$query = "INSERT INTO fahrkostenZiele (besitzer, name, entfernung) values ('$userID','$name','$entfernung')";
+					$query = "INSERT INTO fahrkostenziele (besitzer, name, entfernung) values ('$userID','$name','$entfernung')";
 			
 					if ($this->sql_insert_update_delete ( $query ) == true) {
 							
@@ -581,7 +581,7 @@ class fahrten extends functions {
 				
 				$userID = $this->getUserID($_SESSION['username']);
 				
-				$getFahrzeugInfo = $this->getObjektInfo("SELECT * FROM fahrkostenZiele WHERE besitzer = '$userID' AND id = '$id'");
+				$getFahrzeugInfo = $this->getObjektInfo("SELECT * FROM fahrkostenziele WHERE besitzer = '$userID' AND id = '$id'");
 				
 				echo "<div id='draggable' class='summe'><ul>";
 				echo "<a href='?' class='closeSumme'>X</a>";
