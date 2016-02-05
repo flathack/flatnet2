@@ -253,6 +253,7 @@ blockquote {
 #starcitizen #starcitizen,
 #profil #profil,
 #adressbuch #adressbuch,
+#gebkalender #gebkalender,
 #informationen #dokumentation,
 #kontakt #kontakt,
 #administration #administration,
@@ -337,6 +338,7 @@ blockquote {
 }
 
 .bereichadressbuch h2,
+.bereichgebkalender h2,
 .bereichguildwars h2,
 .bereichforum h2,
 .bereichfinanzen h2,
@@ -349,6 +351,7 @@ blockquote {
 }
 
 .bereichadressbuch p,
+.bereichgebkalender p,
 .bereichguildwars p,
 .bereichforum p,
 .bereichfinanzen p,
@@ -393,6 +396,18 @@ blockquote {
 	background-image: url(../images/tiles/adressbuch.png);
 	background-repeat: no-repeat;
 	background-position: right;
+	box-shadow: 0px 0px 5px grey;
+	border: 1px solid grey;
+	margin-bottom: 10px;
+	margin-right: 10px;
+	padding: 5px;
+	min-height: 120px;
+	width: 46%;
+	display: inline-block;
+}
+
+.bereichgebkalender {
+	background-color: white;
 	box-shadow: 0px 0px 5px grey;
 	border: 1px solid grey;
 	margin-bottom: 10px;
