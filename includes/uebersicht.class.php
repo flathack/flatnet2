@@ -17,7 +17,7 @@ class uebersicht extends functions {
 		
 		# Administrative-Funktionen
 		
-		if($this->userHasRight("54", 0) == true AND isset($_GET['newEntry'])) {
+		if($this->userHasRight("73", 0) == true AND isset($_GET['newEntry'])) {
 			$this->showCreateEntity();
 		}
 		
@@ -46,127 +46,136 @@ class uebersicht extends functions {
 		
 	}
 	
+	/**
+	 * Ermöglicht die Detailansicht der Übersichtkacheln.
+	 */
 	function showEditEntry() {
-		$select = "SELECT * FROM uebersicht_kacheln";
-		$kacheln = $this->getObjektInfo($select);
 		
-		echo "<table class='kontoTable'>";
-		
-		echo "<thead><td>ID</td>
-				<td>Name</td>
-				<td>Link</td>
-				<td>Beschreibung</td>
-				<td>Sortierung</td>
-				<td>Aktiv</td>
-				<td>Css ID</td>
-				<td>RightID</td>
-				<td></td>
-				</thead>";
-		for ($i = 0 ; $i < sizeof($kacheln) ; $i++) {
+		if($this->userHasRight(73, 0) == true) {
+	
+			$select = "SELECT * FROM uebersicht_kacheln";
+			$kacheln = $this->getObjektInfo($select);
 			
-			echo "<tbody>";
-				echo "<td>" .$kacheln[$i]->id. "</td>";
-				echo "<td>" .$kacheln[$i]->name. "</td>";
-				echo "<td>" .$kacheln[$i]->link. "</td>";
-				echo "<td>" .$kacheln[$i]->beschreibung. "</td>";
-				echo "<td>" .$kacheln[$i]->sortierung. "</td>";
-				echo "<td>" .$kacheln[$i]->active. "</td>";
-				echo "<td>" .$kacheln[$i]->cssID. "</td>";
-				echo "<td>" .$kacheln[$i]->rightID. "</td>";
-				echo "<td>" ."<a href='admin/control.php?action=3&table=uebersicht_kacheln'>edit</a>". "</td>";
-			echo "</tbody>";
+			echo "<table class='kontoTable'>";
 			
+			echo "<thead><td>ID</td>
+					<td>Name</td>
+					<td>Link</td>
+					<td>Beschreibung</td>
+					<td>Sortierung</td>
+					<td>Aktiv</td>
+					<td>Css ID</td>
+					<td>RightID</td>
+					<td></td>
+					</thead>";
+			for ($i = 0 ; $i < sizeof($kacheln) ; $i++) {
+				
+				echo "<tbody>";
+					echo "<td>" .$kacheln[$i]->id. "</td>";
+					echo "<td>" .$kacheln[$i]->name. "</td>";
+					echo "<td>" .$kacheln[$i]->link. "</td>";
+					echo "<td>" .$kacheln[$i]->beschreibung. "</td>";
+					echo "<td>" .$kacheln[$i]->sortierung. "</td>";
+					echo "<td>" .$kacheln[$i]->active. "</td>";
+					echo "<td>" .$kacheln[$i]->cssID. "</td>";
+					echo "<td>" .$kacheln[$i]->rightID. "</td>";
+					echo "<td>" ."<a href='admin/control.php?action=3&table=uebersicht_kacheln'>edit</a>". "</td>";
+				echo "</tbody>";
+				
+			}
+			echo "</table>";
 		}
-		echo "</table>";
 	}
 	
 	/**
 	 * Zeigt die Kachel zum erstelen einer Kachel
 	 */
 	function showCreateEntity() {
-		
-		if(isset($_POST['name']) AND isset($_POST['link'])) {
-			if($_POST['name'] != "" AND $_POST['link'] != "" AND $_POST['rightID'] != "") {
-				if(!isset($_POST['active'])) {
-					$active = 0;
-				} else {
-					$active = 1;
-				}
-				
-				if($this->createEntity("", "CURRENT_TIMESTAMP", $_POST['name'], $_POST['link'], $_POST['beschreibung'], $_POST['sortierung'], $active, $_POST['css'], $_POST['rightID']) == true) {
-					echo "<p class='erfolg'>Die Übersicht wurde hinzugefügt</p>";
-				} else {
-					echo "<p class='meldung'>Es gab einen Fehler</p>";
+		if($this->userHasRight(73, 0) == true) {
+			
+			if(isset($_POST['name']) AND isset($_POST['link'])) {
+				if($_POST['name'] != "" AND $_POST['link'] != "" AND $_POST['rightID'] != "") {
+					if(!isset($_POST['active'])) {
+						$active = 0;
+					} else {
+						$active = 1;
+					}
+					
+					if($this->createEntity("", "CURRENT_TIMESTAMP", $_POST['name'], $_POST['link'], $_POST['beschreibung'], $_POST['sortierung'], $active, $_POST['css'], $_POST['rightID']) == true) {
+						echo "<p class='erfolg'>Die Übersicht wurde hinzugefügt</p>";
+					} else {
+						echo "<p class='meldung'>Es gab einen Fehler</p>";
+					}
+					
 				}
 				
 			}
 			
+			echo "<div class='bereichNEW'><form method=post>";
+			if(isset($_POST['name'])) {
+				$name = $_POST['name'];
+			} else {
+				$name = "";
+			}
+			if(isset($_POST['link'])) {
+				$link = $_POST['link'];
+			} else {
+				$link = "";
+			}
+			if(isset($_POST['beschreibung'])) {
+				$beschreibung = $_POST['beschreibung'];
+			} else {
+				$beschreibung = "";
+			}
+			if(isset($_POST['sortierung'])) {
+				$sortierung = $_POST['sortierung'];
+			} else {
+				$sortierung = "";
+			}
+			if(isset($_POST['css'])) {
+				$css = $_POST['css'];
+			} else {
+				$css = "";
+			}
+			if(isset($_POST['rightID'])) {
+				$rightID = $_POST['rightID'];
+			} else {
+				$rightID = "";
+			}
+			if(isset($_POST['active'])) {
+				$active = $_POST['active'];
+			} else {
+				$active = "";
+			}
+				echo "<input id='name' type=text name=name value='" .$name. "' placeholder=Name />";
+				echo "<input id='link' type=text name=link value='" .$link. "' placeholder=Link />";
+				echo "<input id='desc' type=text name=beschreibung value='" .$beschreibung. "' placeholder=Beschreibung />";
+				echo "<input id='sort' type=number name=sortierung value='" .$sortierung. "' placeholder=sort />";
+				echo "<input id='css' type=text name=css value='" .$css. "' placeholder=css />";
+				
+				echo "<select name=rightID>";
+					$getAllRights = $this->getObjektInfo("SELECT * FROM userrights ORDER BY kategorie, id");
+					for($i = 0 ; $i < sizeof($getAllRights) ; $i++) {
+						echo "<option value='"; 
+							echo $getAllRights[$i]->id;
+						echo "'>";
+							echo $getAllRights[$i]->kategorie ." - ".$getAllRights[$i]->id ." - ". $getAllRights[$i]->recht;
+						echo "</option>";
+					}
+				echo "</select>";
+				
+			#	echo "<input id='right' type=number name=rightID value='" .$rightID. "' placeholder=Recht />";
+				echo "<input id='checkbox' type=checkbox checked value='" .$active. "' name=active /><label for=active>Aktiv</label>";
+				echo "<input id='submit' type=submit value=speichern />";
+			echo "</form></div>";
 		}
-		
-		echo "<div class='bereichNEW'><form method=post>";
-		if(isset($_POST['name'])) {
-			$name = $_POST['name'];
-		} else {
-			$name = "";
-		}
-		if(isset($_POST['link'])) {
-			$link = $_POST['link'];
-		} else {
-			$link = "";
-		}
-		if(isset($_POST['beschreibung'])) {
-			$beschreibung = $_POST['beschreibung'];
-		} else {
-			$beschreibung = "";
-		}
-		if(isset($_POST['sortierung'])) {
-			$sortierung = $_POST['sortierung'];
-		} else {
-			$sortierung = "";
-		}
-		if(isset($_POST['css'])) {
-			$css = $_POST['css'];
-		} else {
-			$css = "";
-		}
-		if(isset($_POST['rightID'])) {
-			$rightID = $_POST['rightID'];
-		} else {
-			$rightID = "";
-		}
-		if(isset($_POST['active'])) {
-			$active = $_POST['active'];
-		} else {
-			$active = "";
-		}
-			echo "<input id='name' type=text name=name value='" .$name. "' placeholder=Name />";
-			echo "<input id='link' type=text name=link value='" .$link. "' placeholder=Link />";
-			echo "<input id='desc' type=text name=beschreibung value='" .$beschreibung. "' placeholder=Beschreibung />";
-			echo "<input id='sort' type=number name=sortierung value='" .$sortierung. "' placeholder=sort />";
-			echo "<input id='css' type=text name=css value='" .$css. "' placeholder=css />";
-			
-			echo "<select name=rightID>";
-				$getAllRights = $this->getObjektInfo("SELECT * FROM userrights ORDER BY kategorie, id");
-				for($i = 0 ; $i < sizeof($getAllRights) ; $i++) {
-					echo "<option value='"; 
-						echo $getAllRights[$i]->id;
-					echo "'>";
-						echo $getAllRights[$i]->kategorie ." - ".$getAllRights[$i]->id ." - ". $getAllRights[$i]->recht;
-					echo "</option>";
-				}
-			echo "</select>";
-			
-		#	echo "<input id='right' type=number name=rightID value='" .$rightID. "' placeholder=Recht />";
-			echo "<input id='checkbox' type=checkbox checked value='" .$active. "' name=active /><label for=active>Aktiv</label>";
-			echo "<input id='submit' type=submit value=speichern />";
-		echo "</form></div>";
 	}
 	
 	/**
 	 * Führt die Änderung aus.
 	 */
 	function changeStatusFunction() {
-		if($this->userHasRight(52, 0) == true) {
+		if($this->userHasRight(77, 0) == true) {
 			if(isset($_POST['changeStatus'])) {
 			
 				$id = $_POST['id'];
@@ -188,7 +197,7 @@ class uebersicht extends functions {
 	 */
 	function changeStatus($id) {
 		
-		if($this->userHasRight(52, 0) == true) {
+		if($this->userHasRight(77, 0) == true) {
 			$getKachelInfo = $this->getObjektInfo("SELECT * FROM uebersicht_kacheln WHERE id = $id");
 			
 			

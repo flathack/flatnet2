@@ -250,6 +250,7 @@ blockquote {
 #guildwars #guildwars,
 #forum #forum,
 #fahrten #fahrten,
+#gesundheit #gesundheit,
 #starcitizen #starcitizen,
 #profil #profil,
 #adressbuch #adressbuch,
@@ -338,6 +339,7 @@ blockquote {
 }
 
 .bereichadressbuch h2,
+.bereichgesundheit h2,
 .bereichgebkalender h2,
 .bereichguildwars h2,
 .bereichforum h2,
@@ -351,6 +353,7 @@ blockquote {
 }
 
 .bereichadressbuch p,
+.bereichgesundheit p,
 .bereichgebkalender p,
 .bereichguildwars p,
 .bereichforum p,
@@ -407,6 +410,18 @@ blockquote {
 }
 
 .bereichgebkalender {
+	background-color: white;
+	box-shadow: 0px 0px 5px grey;
+	border: 1px solid grey;
+	margin-bottom: 10px;
+	margin-right: 10px;
+	padding: 5px;
+	min-height: 120px;
+	width: 46%;
+	display: inline-block;
+}
+
+.bereichgesundheit {
 	background-color: white;
 	box-shadow: 0px 0px 5px grey;
 	border: 1px solid grey;
