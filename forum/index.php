@@ -38,6 +38,8 @@ echo $forum->suche($suche, "blogtexte", "titel", "/flatnet2/blog/blogentry.php?s
 			$forum->showBlogCategories();
 		}
 		$forum->showBlogPosts();
+		
+		$forum->showPublicArea();
 		?>
 		<div class='spacer'>
 			<a href="public.php" class="buttonlink">Öffentlicher Bereich</a>

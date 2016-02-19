@@ -23,12 +23,12 @@ class publicThings extends functions {
 			
 			# Prüfen ob topicID eine Nummer ist.
 			if(is_numeric($topicID) == true AND $topicID > 0) {
-				$query = "SELECT * FROM blogtexte WHERE id=$topicID AND autor = '0'";
+				$query = "SELECT * FROM blogtexte WHERE id=$topicID AND status=4";
 				$beitrag = $this->getObjektInfo($query);
 				
 				# Prüfen ob ID existiert,
 				if(isset($beitrag[0]->titel)) {
-					echo "<div class=''>";
+					echo "<div class='newCharWIDE'>";
 					
 						echo "<h2>" . $beitrag[0]->titel . "</h2>";
 						echo $beitrag[0]->text;
@@ -47,7 +47,6 @@ class publicThings extends functions {
 
 <?php 
 $public = NEW publicThings();
-$public->connectToDB();
 ?>
 
 <header>

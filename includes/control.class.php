@@ -1534,7 +1534,7 @@ class control extends functions {
 					for($j = 0; $j < $menge; $j ++) {
 						if (strlen ( $row[$i]->$columns [$j] ) > 50) {
 							echo "<tbody><td>" . $columns [$j] . "</td>
-							<td><textarea rows=10 cols=100 name=currentObject[$i]";
+							<td><textarea rows=10 cols=100 name=currentObject[$j]";
 							echo ">" . $row[$i]->$columns [$j] . "</textarea></td></tbody>";
 						} else {
 							echo "<tbody><td>" . $columns [$j] . "</td><td><input type=text class='' name=currentObject[$j] value='";
