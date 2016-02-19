@@ -1172,6 +1172,17 @@ blockquote {
 	position: relative;
 }
 
+.publicInfo {
+	border-left: 1px solid grey;
+	border-right: 1px solid grey;
+	margin-bottom: 10px;
+	padding: 10px;
+	margin-top: 10px;
+	background: white;
+	color: black;
+	position: relative;
+}
+
 .newChar {
 	border: 1px solid #a03235;
 	margin-left: auto;

@@ -28,7 +28,7 @@ class publicThings extends functions {
 				
 				# Prüfen ob ID existiert,
 				if(isset($beitrag[0]->titel)) {
-					echo "<div class='newCharWIDE'>";
+					echo "<div class='publicInfo'>";
 					
 						echo "<h2>" . $beitrag[0]->titel . "</h2>";
 						echo $beitrag[0]->text;
