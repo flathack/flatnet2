@@ -422,6 +422,14 @@ class blog extends functions {
 					}
 					echo ">" . "<label for='statusEins'>Freigegeben</label>";
 					
+					echo "<input type='radio' name='status' value='4' id='statusVier' ";
+					if($row[$i]->status == 4) {
+						echo " checked ";
+					} else {
+						echo " unchecked ";
+					}
+					echo ">" . "<label for='statusVier'>PUBLIC</label>";
+					
 					echo "<input type='submit' name='bearbblogid' value='Speichern' />";
 					
 					echo "<div class='editForumEintrag'><textarea class='ckeditor' name='newtext'>".$row[$i]->text."</textarea></div>"; # Text Output #

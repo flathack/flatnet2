@@ -139,7 +139,7 @@ class functions extends sql {
 		if(isset($rowUsername[0]->Name)) {
 			$username = $rowUsername[0]->Name;
 		} else {
-			$username = "gelöschter User";
+			$username = "anonymus User";
 		}
 		return $username;
 
