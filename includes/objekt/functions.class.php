@@ -50,7 +50,7 @@ class functions extends sql {
 				$ergebnis_der_suche .= "<h2>Suchergebnis (= $ursprünglicheSuche)</h2>";
 				for ($i = 0; $i < sizeof($suchfeld); $i++) {
 					$ergebnis_der_suche .= "<div class='invSuchErgeb'>";
-					$ergebnis_der_suche .= "<a href='$pfad=$suchfeld[$i]->id'>" . substr($suchfeld[$i]->$name, 0, 20) . "..</a>";
+					$ergebnis_der_suche .= "<a href='".$pfad=$suchfeld[$i]->id."'>" . substr($suchfeld[$i]->$name, 0, 20) . "..</a>";
 					$ergebnis_der_suche .= "</div>";
 				}
 				$close = "<a href='?' class='closeSumme'>X</a>";
@@ -139,7 +139,7 @@ class functions extends sql {
 		if(isset($rowUsername[0]->Name)) {
 			$username = $rowUsername[0]->Name;
 		} else {
-			$username = "gelöschter User";
+			$username = "anonymus User";
 		}
 		return $username;
 
@@ -287,7 +287,7 @@ class functions extends sql {
 
 		if($benutzerrechte == 0) {
 			$user = $_SESSION['username'];
-			$rightFromCurrentUser="SELECT id, Name, rights, titel FROM benutzer WHERE Name = '$user'";
+			$rightFromCurrentUser="SELECT * FROM benutzer WHERE Name = '$user' LIMIT 1";
 			$row = $this->getObjektInfo($rightFromCurrentUser);
 			$benutzerrechte = $row[0]->rights;
 		}
@@ -440,12 +440,11 @@ class functions extends sql {
 
 	function subNav($site) {
 		if($site == "guildwars") {
-			echo "
-					<div class='rightOuterBody'>
-					<ul>";
+			echo "<div class='rightOuterBody'><ul>";
 
-			echo "<li><a href='start.php' id='home'>Charakter</a> </li>
-					<li><a href='http://gw2cartographers.com/' target='_blank' class='extern'>Maps</a></li>";
+			echo "<li><a href='start.php' id='home'>Charakter</a></li>";
+			echo "<li><a href='http://gw2cartographers.com/' target='_blank' class='extern'>Maps</a></li>";
+			
 			if($this->userHasRight("62", 0) == true) {
 				echo "	<li><a href='kalender.php' id='kalender'>Kalender</a></li>";
 			}
@@ -456,10 +455,10 @@ class functions extends sql {
 			
 			echo "<li><a href='handwerk.php' id='handwerk'>Handwerk</a></li>";
 					
-			echo "<li><a href='api.php' id='api'>API</a></li>
+			echo "<li><a href='api.php' id='api'>API</a></li>";
 
-					</ul>
-					</div>";
+			echo "</ul>";
+			echo "</div>";
 		}
 
 		if($site == "profil") {
@@ -527,10 +526,8 @@ class functions extends sql {
 			}
 			
 			if($this->userHasRight("67", 0) == true) {
-				echo "<li><a href='http://localhost:9090/phpmyadmin/' target='_blank' class='extern'>PMA Local</a></li>
-				<li><a href='https://pf-control.de/pma/' target='_blank' class='extern'>PMA Extern</a></li>
-				<li><a href='https://pf-control.de/froxlor/customer_index.php?s=b7d502cd3d343f7bffbd493a1be553df' target='_blank' class='extern'>Froxlor</a></li>
-				<li><a href='https://mail1.php-friends.de/' class='extern' target='_blank'>E-Mail</a></li>";
+				echo "<li><a href='http://localhost/phpmyadmin/' target='_blank' class='extern'>PMA Local</a></li>
+				<li><a href='https://bernd.php-friends.de:4443/' target='_blank' class='extern'>Verwaltungskonsole</a></li>";
 				
 			}
 			
@@ -614,47 +611,40 @@ class functions extends sql {
 		$this->benachrichtigungsCenter();
 		
 		echo "</div></div>";
-			
-		echo "<ul id='navigation'>";
 		
-		# ÜBERSICHT
-		if($this->userHasRight("7", 0) == "true") {
-			echo "<li>	<a href='/flatnet2/uebersicht.php' id='uebersicht'>Übersicht</a></li>";
-		}
-		
-		# ADRESSBUCH
-		if($this->userHasRight("13", 0) == true OR $this->userHasRight("22", 0) == true) {
-			echo "<li>	<a href='/flatnet2/datenbank/datenbanken.php' id='adressbuch'>Adressbuch</a></li>";
-		}
-		
-		# FORUM
-		if($this->userHasRight("2", 0) == true) {
-			echo "<li>	<a href='/flatnet2/forum/index.php' id='forum'>Forum</a></li>";
-		}
-		
-		# GUILDWARS
-		if($this->userHasRight("3", 0) == true) {
-			echo "<li>	<a href='/flatnet2/guildwars/start.php' id='guildwars'>Guildwars</a></li>";
-		}
-		
-		if($this->userHasRight("65", 0) == true) {
-			echo "<li>	<a href='/flatnet2/starcitizen/index.php' id='starcitizen'>Starcitizen </a></li>";
-		}
-		if($this->userHasRight("11", 0) == "true") {
-			echo "<li>	<a href='/flatnet2/fahrten/index.php' id='fahrten'>	Fahrkosten </a></li>";
-		}
+		# Zeigt die Navigation an:
+		$this->showNaviLinks();
 		
 		
-		if($this->userHasRight("17", 0) == "true") {
-			echo "<li>	<a href='/flatnet2/finanzen/index.php' id='finanzen'>	Finanzen </a>	</li>";
-		}
+		echo"<div id='ueberschrift'><h1><a href='/flatnet2/uebersicht.php'>Steven.NET</a></h1></div>";
 		
-		echo "</ul>
-				<div id='ueberschrift'>
-				<h1><a href='/flatnet2/uebersicht.php'>Steven.NET</a></h1>
-				</div>";
+		# Zeigt die Ankündigung an:
 		$this->ankuendigung();
 		echo "</header>";
+	}
+	
+	/**
+	 * Zeigt die Navigation an:
+	 */
+	function showNaviLinks() {
+		echo "<ul id='navigation'>";
+				
+		$kacheln = $this->getObjektInfo("SELECT * FROM uebersicht_kacheln WHERE active=1 ORDER BY sortierung");
+		if($this->userHasRight("7", 0) == "true") {
+			echo "<li>	<a href='/flatnet2/uebersicht.php' id='uebersicht'>Startseite</a></li>";
+		}
+		
+		for($i = 0 ; $i < sizeof($kacheln) ; $i++) {
+			
+			if($this->userHasRight($kacheln[$i]->rightID, 0) == true) {
+				echo "<li>";
+					echo "<a id='".$kacheln[$i]->cssID."' href='".$kacheln[$i]->link."'>".$kacheln[$i]->name."</a>";
+				echo "</li>"; 
+			}
+			
+		}
+
+		echo "</ul>";
 	}
 	
 	/**

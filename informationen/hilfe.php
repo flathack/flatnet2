@@ -109,7 +109,6 @@ class docu extends functions {
 $docu = NEW docu();
 
 # STELLT DEN HEADER ZUR VERFÜGUNG
-$docu->connectToDB();
 $docu->header();
 $docu->logged_in();
 

@@ -16,7 +16,6 @@ include '../includes/learn.class.php';
 $learn = NEW learn;
 
 # STELLT DEN HEADER ZUR VERFÜGUNG
-$learn->connectToDB();
 $learn->header();
 
 $learn->logged_in("redirect", "index.php");
@@ -31,9 +30,13 @@ echo $learn->suche($suche, "learnlernkarte", "frage", "?frage");
 	<body>
 		
 		<div class='mainbodyDark'>
-		
+		<div class='rightOuterBody'>
+			<ul>
+				<li><a href='aufgaben.php'>Übungsaufgaben</a></li>
+			</ul>
+		</div>
 		<h2>Lernbereich</h2>
-		
+				
 		<?php 
 		$learn->mainStatusFunction();
 		$learn->showOptionsForAll();

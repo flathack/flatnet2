@@ -9,37 +9,53 @@ class forum extends functions {
 	
 	
 	/**
-	 * AB HIER WIRD DER BLOG BEREICH DARGESTELLT
+	 * Zeigt das gesamte Forum an.
 	 */
 	function showBlogCategories() {
-		# BLOG DARSTELLEN
-		echo "<table class='forum'>";
-		echo "<thead><td>Steven.NET Forum</td><td>Themen</td></thead>";
-		$selectCategories = "SELECT * FROM blogkategorien ORDER BY sortierung, kategorie ASC";
-		$row = $this->getObjektInfo($selectCategories);
-		$userID = $this->getUserID($_SESSION['username']);
-		for ($i = 0 ; $i < sizeof($row) ; $i++) {
-			
-			# Prüfen ob der Benutzer die Rechte hat, das aktuelle Forum zu betrachten.
-			$benutzerliste="SELECT id, Name, forumRights FROM benutzer WHERE id = '$userID' LIMIT 1";
-			
-			$row2 = $this->getObjektInfo($benutzerliste);
-			
-			for ($j = 0 ; $j < sizeof($row2) ; $j++) {
-				# Check
-				if($this->check($row[$i]->rightWert, $row2[$j]->forumRights) == true) {
-					$kategorie = $row[$i]->id;
-					$query = "SELECT count(*) as anzahl FROM blogtexte WHERE kategorie = $kategorie";
-					$anzahlPosts = $this->getObjektInfo($query);
-					$anzahlPosts = $anzahlPosts[0]->anzahl;
-					# Wenn der Check bestanden ist, dann anzeigen.
-					echo "<tbody><td><a href='?blogcategory=".$row[$i]->id."'><strong>".$row[$i]->kategorie."</strong></a>
-					<br>".$row[$i]->beschreibung."</td><td>$anzahlPosts</td></tbody>";
-				}
-			}
-		}
 		
-		echo "</table>";
+		if(!isset($_GET['publicArea'])) {
+		
+			# get info
+			$selectCategories = "SELECT * FROM blogkategorien ORDER BY sortierung, kategorie ASC";
+			$userID = $this->getUserID($_SESSION['username']);
+			$row = $this->getObjektInfo($selectCategories);
+			
+			echo "<table class='forum'>";
+			
+			echo "<thead><td>Steven.NET Forum</td><td>Themen</td></thead>";
+			
+			for ($i = 0 ; $i < sizeof($row) ; $i++) {
+				
+				# Prüfen ob der Benutzer die Rechte hat, das aktuelle Forum zu betrachten.
+				$benutzerliste="SELECT id, Name, forumRights FROM benutzer WHERE id = '$userID' LIMIT 1";
+				
+				$row2 = $this->getObjektInfo($benutzerliste);
+				
+				for ($j = 0 ; $j < sizeof($row2) ; $j++) {
+					# Check
+					if($this->check($row[$i]->rightWert, $row2[$j]->forumRights) == true) {
+						$kategorie = $row[$i]->id;
+						$query = "SELECT count(*) as anzahl FROM blogtexte WHERE kategorie = $kategorie";
+						$anzahlPosts = $this->getObjektInfo($query);
+						$anzahlPosts = $anzahlPosts[0]->anzahl;
+						# Wenn der Check bestanden ist, dann anzeigen.
+						echo "<tbody><td><a href='?blogcategory=".$row[$i]->id."'><strong>".$row[$i]->kategorie."</strong></a>
+						<br>".$row[$i]->beschreibung."</td><td>$anzahlPosts</td></tbody>";
+					}
+				}
+				
+			}
+			
+			if(!isset($row[0])) {
+				echo "<tbody><td><strong>Es gibt leider noch kein Forum</strong>
+						<br>Der Administrator muss das Forum zunächst einrichten. Als Administrator klicke <a href='/flatnet2/admin/control.php?action=5'>HIER</a></td><td>x</td></tbody>";
+			}
+			
+			echo "<tbody><td><a href='?publicArea'><strong>Public Area</strong></a>
+						<br>Shows Public Information</td><td></td></tbody>";
+			
+			echo "</table>";
+		}
 	}
 	
 	function showBlogPosts() {
@@ -122,19 +138,60 @@ class forum extends functions {
 					$menge = $this->getObjektInfo($countList);
 					$menge = $menge[0]->anzahl;
 					
+					if($row[$i]->status == 4) {
+						$publicLink = "<a class='rightGreenLink' href='public.php?topicID=".$row[$i]->id."'>Public Link</a>";
+					} else {
+						$publicLink = "";
+					}
+					
 					echo "<tbody>
-					<td><a href='/flatnet2/blog/blogentry.php?showblogid=".$row[$i]->id."&ursprungKategorie=".$row[$i]->kategorie."'>".$row[$i]->titel."</a></td>
+					<td><a href='/flatnet2/blog/blogentry.php?showblogid=".$row[$i]->id."&ursprungKategorie=".$row[$i]->kategorie."'>".$row[$i]->titel."</a> $publicLink</td>
 					<td><a href='/flatnet2/usermanager/usermanager.php'>$autor</a></td>
 					<td> $menge </td>";
 					echo "<td>" . $row[$i]->tag . "." . $row[$i]->monat . "." . $row[$i]->jahr . " " . $row[$i]->stunde . ":" . $row[$i]->minute . " Uhr" . "</td>";
-					if($row[$i]->status == 1) {
-						$offen = "&#10004;";
-					} else {
-						$offen = "&#10008;";
-					}
-					echo "<td>$locked $offen</td>";
+					if($row[$i]->status == 1) { $offen = "&#10004;"; } else { $offen = "&#10008;";	}
+					if($row[$i]->status == 4) { $status = "&#937;"; } else { $status = ""; 	}
+					
+					echo "<td>$status $locked $offen</td>";
 					echo "</tbody>";
 				}
+			}
+			echo "</table>";
+		}
+	}
+	
+	function showPublicArea() {
+		if(isset($_GET['publicArea'])) {
+			echo "<a href='?'>Zurück</a>";
+			$query = "SELECT * FROM blogtexte WHERE status=4";
+			
+			$countList = "SELECT count(*) as anzahl FROM blogtexte WHERE status=4";
+			$menge = $this->getObjektInfo($countList);
+			$menge = $menge[0]->anzahl;
+			
+			$beitraege = $this->getObjektInfo($query);
+			
+			echo "<table class='forum'>";
+			echo "<thead><td>Titel</td></thead>";
+			for($i = 0 ; $i < sizeof($beitraege) ; $i++) {
+				echo "<tbody>
+					<td><a href='/flatnet2/blog/blogentry.php?showblogid=".$beitraege[$i]->id."&ursprungKategorie=".$beitraege[$i]->kategorie."'>".$beitraege[$i]->titel."</a></td>
+					<td><a href='/flatnet2/usermanager/usermanager.php'>$autor</a></td>
+					<td> $menge </td>";
+				echo "<td>" . $beitraege[$i]->tag . "." . $beitraege[$i]->monat . "." . $beitraege[$i]->jahr . " " . $beitraege[$i]->stunde . ":" . $beitraege[$i]->minute . " Uhr" . "</td>";
+				if($beitraege[$i]->status == 1) {
+					$offen = "&#10004;";
+				} else {
+					$offen = "&#10008;";
+				}
+				
+				if($beitraege[$i]->status == 4) {
+					$status = "&#937;";
+				} else {
+					$status = "";
+				}
+				echo "<td>$status $locked $offen</td>";
+				echo "</tbody>";
 			}
 			echo "</table>";
 		}

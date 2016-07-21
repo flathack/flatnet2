@@ -15,27 +15,10 @@
 #Inclusions:
 include '../includes/gw.class.php';
 
-?>
-
-<?php 
-class api extends guildwars {
-	
-	function apiTest() {
-		echo "<h2>Api Test</h2>";
-		
-		# include_once 'https://api.guildwars2.com/v1/world_names.json';
-	}
-	
-}
-?>
-
-<?php 
-
 # GW start
 $guildwars = NEW api;
 
 # STELLT DEN HEADER ZUR VERFÜGUNG
-$guildwars->connectToDB();
 $guildwars->header();
 
 $guildwars->logged_in("redirect", "index.php");

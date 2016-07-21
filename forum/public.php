@@ -16,6 +16,65 @@ include '../includes/objekt/functions.class.php';
 
 class publicThings extends functions {
 	
+	function createEntry($blogid) {
+		if(isset($_POST['submit']) AND isset($_POST['newText'])) {
+			$text = $_POST['newText'];
+			$test = $_POST['test'];
+			$username = $_POST['username'];
+			
+			$text = "<h3>Response from " . $username . "</h3>" . $text;
+			
+			if($test == "Marcel" OR $test == "marcel" OR $test == "Steven" OR $test == "steven") {
+				$query = "INSERT INTO blog_kommentare (autor, text, blogid) VALUES ('0','$text','$blogid')";
+				$check = "SELECT count(*) as anzahl FROM blog_kommentare WHERE text ='$text'";
+				$checkInfo = $this->getObjektInfo($query);
+				
+				if(isset($checkInfo[0]->anzahl) AND $checkInfo[0]->anzahl > 0) {
+					echo "<p class='meldung'>Creation failed! You cannot create the same post twice!</p>";
+					exit;
+				}
+				if($this->sql_insert_update_delete($query) == true) {
+					echo "<p class='erfolg'>Post created!</p>";
+				} else {
+					echo "<p class='meldung'>Creation failed!</p>";
+				}
+				
+			} else {
+				echo "<p class='meldung'>The name of the student is not $test.</p>";
+			}
+		} else {
+			echo "<p class='meldung'>You didnt fill out all necessary data.</p>";
+		}
+	}
+	
+	function createResponse($id) {
+		if(isset($_POST['submit'])) { $this->createEntry($id); }
+		echo "<div>";
+		echo "<form method=post>";
+			echo "<input type=text name=username placeholder=Username /> ";
+			echo "What is the first name of the owner of this site? <input type=text name=test placeholder='e. g. Peter' />";
+			echo "<textarea name=newText class=ckeditor></textarea> ";
+			echo "<input type=submit name=submit value=Save /> ";
+		echo "</form>";
+		echo "</div>";
+	}
+	
+	function showComments($blogid) {
+		echo "<div class='kommentare'>";
+		$query = "SELECT * FROM blog_kommentare WHERE blogid=$blogid ";
+		
+		$kommentare = $this->getObjektInfo($query);
+		for ($i = 0 ; $i < sizeof($kommentare) ; $i++) {
+			echo "<div class='publicInfo'>";
+			$autorName = $this->getUserName($kommentare[$i]->autor);
+				echo "<h3>Response from $autorName, ".$kommentare[$i]->timestamp. "</h3>";
+				echo $kommentare[$i]->text;
+			echo "</div>";
+		}
+		
+		echo "</div>";
+	}
+	
 	function showPublicTopics() {
 		# Prüfen ob Var gesetzt ist.
 		if(isset($_GET['topicID'])) {
@@ -23,17 +82,23 @@ class publicThings extends functions {
 			
 			# Prüfen ob topicID eine Nummer ist.
 			if(is_numeric($topicID) == true AND $topicID > 0) {
-				$query = "SELECT * FROM blogtexte WHERE id=$topicID AND autor = '0'";
+				$query = "SELECT * FROM blogtexte WHERE id=$topicID AND status=4";
 				$beitrag = $this->getObjektInfo($query);
 				
 				# Prüfen ob ID existiert,
 				if(isset($beitrag[0]->titel)) {
-					echo "<div class=''>";
+					echo "<div class='publicInfo'>";
 					
 						echo "<h2>" . $beitrag[0]->titel . "</h2>";
 						echo $beitrag[0]->text;
 					
 					echo "</div>"; 
+					
+					# Kommentare
+					
+					$this->showComments($beitrag[0]->id);
+					
+					$this->createResponse($beitrag[0]->id);
 				} 
 			} else {
 				echo "<p class='meldung'>Error</p>";
@@ -47,7 +112,6 @@ class publicThings extends functions {
 
 <?php 
 $public = NEW publicThings();
-$public->connectToDB();
 ?>
 
 <header>

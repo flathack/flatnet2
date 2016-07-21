@@ -18,7 +18,6 @@
 include '../includes/blog.class.php';
 # Blog start
 $addBlog = NEW blog;
-$addBlog->connectToDB();
 $addBlog->header();
 $addBlog->userHasRightPruefung("3");
 $addBlog->logged_in("redirect", "index.php");

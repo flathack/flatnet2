@@ -70,8 +70,15 @@ class guildwars extends functions {
 		$anz = count($nachnamen) - 1;
 		$zufallszahl = rand(1, $anz);
 		$nachname2 = $nachnamen[$zufallszahl];
-
-		print("". $f ." ". $nachname1 ."oder ". $m ." ". $nachname2 ."<br>");
+		
+		$m = substr($m, 1, 20);
+		$f = substr($f, 1, 20);
+		$nachname1 = substr($nachname1, 1, 20);
+		$nachname2 = substr($nachname2, 1, 20);
+		echo "<div class='newChar'>";
+			echo "Name 1: $m | $nachname1 <br>";
+			echo "Name 2: $f | $nachname2 <br>";
+		echo "</div>";
 
 	}
 
@@ -1144,8 +1151,12 @@ class gw_charakter extends guildwars {
 			$EigeneGelöschteStunden = $this->getObjektInfo("SELECT sum(wert) as summe FROM account_infos WHERE besitzer = '$userID' AND attribut = 'gw_geloschte_stunden' AND account = '$aktuellerAccount'");
 			$eigeneStundenGesamt = $EigeneGelöschteStunden[0]->summe + $alleEigenenStunden[0]->summe;
 			$allePlusGelöschte = $alleSpielstunden[0]->summe + $gelöschteStundenGesamt[0]->summe;
-				
-			$prozent = round($alleEigenenStunden[0]->summe / $alleSpielstunden[0]->summe * 100, 2);
+			if($allePlusGelöschte > 0) {
+				$prozent = round($alleEigenenStunden[0]->summe / $alleSpielstunden[0]->summe * 100, 2);
+			} else {
+				$prozent = 0;
+			}
+			
 				
 			echo "<h2>$username</h2>";
 				
@@ -1169,7 +1180,7 @@ class gw_charakter extends guildwars {
 			if($this->getObjektInfo($query) == true) {
 				echo "<tr><td>Nächster Geb.:</td></tr>";
 				$naechsterGeb = $this->getObjektInfo($query);
-				echo "<tr><td><p class='erfolg'>" . $naechsterGeb->name . " am " .$naechsterGeb->tag.".$currentMonth</p></td></tr>";
+				echo "<tr><td><p class='erfolg'>" . $naechsterGeb[0]->name . " am " .$naechsterGeb[0]->tag.".$currentMonth</p></td></tr>";
 			}
 				
 			echo "</table>";
@@ -1258,127 +1269,7 @@ class gw_handwerk extends guildwars {
 			$this->createNewMats();
 		}
 	}
-	
-	function obsolet() {
-		/*
-		
-		$i = 1;
-		$j = 1;
-		$name = 0;
-		# Ausgabe der Datenbank
-		for ($i = 1 ; $i <= $gesamtanzahl ; $i++) {
-		# Wenn eine Überschrift eingefügt werden soll.
-		# GEWÖHNLICHE HANDERKSMATERIALIEN
-		if($i == 1) {
-		echo "<thead>";
-		echo "<td colspan='7'><a name='gewoehnlich'>Gewöhnliche Handwerksmaterialien</a></td>
-		<td colspan='3'><input type=submit name=absenden value='Materialien speichern' /></td>";
-		echo "</thead>";
-		}
-		# Zusatzmaterialien GEWÖHNLICH
-		$this->zusatzMatsErweiterung($i, 64, 352, 354);
-		
-		# Edele Handwerksmats
-		if($i == 64) {
-		echo "<thead>";
-		echo "<td colspan='7'><a name='edel'>Edle Handwerksmaterialien</a></td>
-		<td colspan='3'><input type=submit name=absenden value='Materialien speichern' /></td>";
-		echo "</thead>";
-		$j = 1;
-		}
-		
-		# Zusatzmaterialien FINE
-		$this->zusatzMatsErweiterung($i, 114, 354, 358);
-		
-		# Seltene handwerksmats
-		if($i == 114) {
-		echo "<thead>";
-		echo "<td colspan='7'><a name='selten'>Seltene Handwerksmaterialien</a></td>
-		<td colspan='3'><input type=submit name=absenden value='Materialien speichern' /></td>";
-		echo "</thead>";
-		$j = 1;
-		}
-		
-		# Zusatzmaterialien FINE
-		$this->zusatzMatsErweiterung($i, 169, 358, 368);
-		$this->zusatzMatsErweiterung($i, 169, 368, 374);
-		
-		# Aufgestiegen
-		if($i == 169) {
-		echo "<thead>";
-		echo "<td colspan='7'><a name='aufgestiegen'>Aufgestiegene Handwerksmaterialien</a></td>
-		<td colspan='3'><input type=submit name=absenden value='Materialien speichern' /></td>";
-		echo "</thead>";
-		$j = 1;
-		}
-		
-		# Zusatzmaterialien Cooking
-		$this->zusatzMatsErweiterung($i, 188, 374, 378);
-		
-		# Edelsteine
-		if($i == 188) {
-		echo "<thead>";
-		echo "<td colspan='7'><a name='edelsteine'>Edelsteine und Juwelen</a></td>
-		<td colspan='3'><input type=submit name=absenden value='Materialien speichern' /></td>";
-		echo "</thead>";
-		$j = 1;
-		}
-		
-		# Zusatzmaterialien Edelsteine
-		$this->zusatzMatsErweiterung($i, 233, 378, 385);
-		
-		# Zutaten zum Kochen
-		if($i == 233) {
-		echo "<thead>";
-		echo "<td colspan='7'><a name='kochen'>Zutaten zum Kochen</a></td>
-		<td colspan='3'><input type=submit name=absenden value='Materialien speichern' /></td>";
-		echo "</thead>";
-		$j = 1;
-		}
-		
-		# Zusatzmaterialien Kochen
-		$this->zusatzMatsErweiterung($i, 337, 385, 390);
-		
-		# Festliche Materialien
-		if($i == 337) {
-		echo "<thead>";
-		echo "<td colspan='7'><a name='festlich'>Festliche Materialien</a></td>
-		<td colspan='3'><input type=submit name=absenden value='Materialien speichern' /></td>";
-		echo "</thead>";
-		$j = 1;
-		}
-		
-		# Zusatzmaterialien festlich
-		$this->zusatzMatsErweiterung($i, 352, 390, 391);
-		
-		if($i == 352) {
-		echo "<thead>";
-		echo "<td colspan='7'>Heart of Thorns neue Materialien (sind die selben, die auch nochmal oben stehen)</td>
-		<td colspan='3'><input type=submit name=absenden value='Materialien speichern' /></td>";
-		echo "</thead>";
-		$j = 1;
-		}
-		
-		# AUSGABE DER NÄCHSTEN ZELLE
-		$name = $name + 1;
-		$matName = $this->getMatName($name);
-		$matAnzahl = $this->getMatAnzahlFromCurrentUser($name);
-		if($matName == "none") {
-		echo "<td> <input type=text name=matName[$name] value='' placeholder='Name' /> <br>";
-		} else {
-		echo "<td> $matName <br>";
-		}
-		echo "<input type=number name='name[$name]' value='$matAnzahl' placeholder='$matName' /></td>";
-		
-		# ZeilenEnde
-		if($j == 10) {
-		echo "</tbody><tbody>";
-		$j = 0;
-		}
-		$j = $j + 1;
-		}
-		*/
-	}
+
 	
 	/**
 	 * Ermöglicht es, neue Mats zu erstellen
@@ -1432,7 +1323,7 @@ class gw_handwerk extends guildwars {
 			echo "<h2><a name='newMats'>Neue Materialien erstellen</a></h2>";
 			echo "<a href='?reload#newMats' class='buttonlink' >Seite neu laden</a>";
 			
-			echo "<p>Hier können neue Materialien erstellt werden. </p>";
+			echo "<p>Hier können neue Materialien erstellt werden.</p>";
 			
 			# Infos:
 			echo "<h3>Informationen</h3>";
@@ -1443,7 +1334,6 @@ class gw_handwerk extends guildwars {
 			for($i = 0 ; $i < 10 ; $i++) {
 				echo "<tbody>";
 				echo "<td><input type=text name=newMatName[$i] value='' placeholder='Materialname' /></td>"; 
-			#	echo "<td><input type=number name=newMatKat[$i] value='' placeholder='Kategorie' /></td>";
 				echo "<td>";
 				echo "<select name=newMatKat[$i]>";
 					echo "<option></option>";
@@ -1561,11 +1451,10 @@ class gw_handwerk extends guildwars {
 					}
 				}
 				if($fehler > 0) {
-					echo "<p class='meldung'>Übersprungen, da keine Änderung: " . $fehler . " Materialien</p>";
+					echo "<p class=''>Übersprungen, da einige Felder nicht geändert wurden: " . $fehler . " Materialien</p>";
 					echo "<p class='erfolg'>Erfolgreich gespeicherte Änderungen: " . $erfolg . "</p>";
 				} else {
-					echo "<p class='erfolg'>Deine Materialien wurden gespeichert. <br>Fehler: " . $fehler;
-					echo "<br>Erfolgreich: " . $erfolg . "</p>";
+					echo "<p class='erfolg'>Deine Materialien wurden alle gespeichert!</p>";
 				}
 			}
 		}
@@ -1844,7 +1733,11 @@ class gw_handwerk extends guildwars {
 			$besitzer = $this->getUserID($_SESSION['username']);
 				
 			$select = "SELECT * FROM gw_chars WHERE handwerk1 = '$beruf' AND besitzer = '$besitzer' OR handwerk2 = '$beruf' AND besitzer = '$besitzer'";
-			
+			if($this->getAmount($select) == 0) {
+				$meldung .= "Keine Chars in diesem Beruf";
+			} else {
+				$meldung .= "";
+			}
 			$row = $this->getObjektInfo($select);
 			
 			for ($i = 0 ; $i < sizeof($row) ; $i++) {
@@ -2334,6 +2227,12 @@ class gw_handwerk extends guildwars {
 		echo "</div>";
 	}
 	
+}
+
+class api extends guildwars {
+	function apiTest() {
+		echo "<h2>Es gibt noch keine Api Verbindung ...</h2>";
+	}
 }
 
 ?>

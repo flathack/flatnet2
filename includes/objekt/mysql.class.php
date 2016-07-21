@@ -16,6 +16,8 @@ class sql {
 	 * geschrieben.
 	 */
 	function connectToDBOldWay() {
+		
+		echo "<p class='meldung'>connectToDBOldWay. Diese Funktion ist veraltet!</p>";
 
 	#	error_reporting(0);
 
@@ -58,7 +60,8 @@ class sql {
 	 */
 	function connectToDBNewWay() {
 		try {
-		$db = new PDO('mysql:host=localhost;dbname=flathacksql1', 'root', '12141214');
+		$dbname = $this->getDBName();
+		$db = new PDO("mysql:host=localhost;dbname=$dbname", "62_flathacksql1", "f12245f8@sql1");
 		} catch (Exception $e) {
 			$css = '<link href="/flatnet2/css/error.css" type="text/css" rel="stylesheet" />';
 			$errorText = "<p class='info'>Datenbank Error</p>";
@@ -73,12 +76,22 @@ class sql {
 	}
 	
 	/**
+	 * Setzt den DB Namen fest.
+	 * @return string
+	 */
+	function getDBName() {
+		$name = "62_flathacksql1";
+		return $name;
+	}
+	
+	/**
 	 * Stellt die Verbindung zu einer anderen Datenbank her.
 	 * @param unknown $db
 	 * @param unknown $username
 	 * @param unknown $password
 	 */
 	function connectToSpecialDB($db, $username, $password) {
+		echo "<p class='meldung'>connectToSpecialDB. Diese Funktion ist veraltet!</p>";
 		$mode = "phpfriends";
 
 		# Bauen der ErrorMessages:
@@ -237,12 +250,7 @@ class sql {
 	 * @return unknown
 	 */
 	function getObjektInfo($query) {
-		
-		// $ergebnis = mysql_query($query);
-		// $row = mysql_fetch_object($ergebnis);
-		
 		$db = $this->connectToDBNewWay();
-		
 		$stmt = $db->query($query);
 		$results = $stmt->fetchAll(PDO::FETCH_OBJ);
 						

@@ -19,7 +19,6 @@ include '../includes/datenbanken.class.php';
 $datenbank = NEW datenbanken;
 
 # STELLT DEN HEADER ZUR VERFÜGUNG
-$datenbank->connectToDB();
 $datenbank->header();
 
 if($datenbank->userHasRight("14", 0) == false) {

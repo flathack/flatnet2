@@ -22,7 +22,6 @@ $admin = NEW control;
 #Start
 $kontakt = NEW functions();
 # STELLT DEN HEADER ZUR VERFÜGUNG
-$kontakt->connectToDB();
 $kontakt->header();
 $kontakt->logged_in();
 

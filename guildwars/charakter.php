@@ -1,10 +1,3 @@
-<?php 
-/**
- * @author Steven Schödel
- * Flatnet2 Projekt
- */
-header('Content-Type: text/html; charset=ISO-8859-1');
-?>
 <?php echo '<'.'?xml version="1.0" encoding="utf-8"?'.'>'; ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -32,7 +25,6 @@ if(!isset($_GET['charID'])) {
 $guildwars = NEW gw_charakter;
 
 # STELLT DEN HEADER ZUR VERFÜGUNG
-$guildwars->connectToDB();
 $guildwars->header();
 
 $guildwars->logged_in("redirect", "index.php");
@@ -87,9 +79,9 @@ $breite = 640 / 100 * $row[0]->erkundung;
 				?>
 				<form action='?saveActions=yes&charID=<?php echo $row[0]->id;?>' method=post>
 				<?php # SPEICHERN ?>
-				<input type="submit" name="action" value="speichern" />
+				<input type=submit name=action value=speichern />
 				<?php # LÖSCHEN ?>
-				<input type="submit" name="action" value="löschen" class='highlightedLink' />
+				<input type=submit name=action value=löschen />
 					<div class='gwShowChar<?php echo $row[0]->klasse ?>'>
 						
 						<?php

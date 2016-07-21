@@ -16,7 +16,6 @@ include '../includes/forum.class.php';
 $forum = NEW forum;
 
 # STELLT DEN HEADER ZUR VERFÜGUNG
-$forum->connectToDB();
 $forum->header();
 
 $forum->logged_in("redirect", "index.php");
@@ -39,6 +38,8 @@ echo $forum->suche($suche, "blogtexte", "titel", "/flatnet2/blog/blogentry.php?s
 			$forum->showBlogCategories();
 		}
 		$forum->showBlogPosts();
+		
+		$forum->showPublicArea();
 		?>
 		<div class='spacer'>
 			<a href="public.php" class="buttonlink">Öffentlicher Bereich</a>

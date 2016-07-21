@@ -13,7 +13,6 @@ include '../includes/finanzen.class.php';
 $finanzen = NEW finanzenNEW;
 
 # STELLT DEN HEADER ZUR VERFÜGUNG
-$finanzen->connectToDB();
 $finanzen->header();
 
 $finanzen->logged_in("redirect", "index.php");

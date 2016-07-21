@@ -16,7 +16,6 @@ include '../includes/fahrten.class.php';
 $fahrten = NEW fahrten;
 
 # STELLT DEN HEADER ZUR VERFÜGUNG
-$fahrten->connectToDB();
 $fahrten->header();
 
 $fahrten->logged_in("redirect", "index.php");

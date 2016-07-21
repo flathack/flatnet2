@@ -16,7 +16,6 @@ include '../includes/learn.class.php';
 $learn = NEW learn;
 
 # STELLT DEN HEADER ZUR VERFÜGUNG
-$learn->connectToDB();
 $learn->header();
 
 $learn->logged_in("redirect", "index.php");

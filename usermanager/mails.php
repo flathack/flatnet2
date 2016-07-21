@@ -12,13 +12,6 @@
 	<?php # Wrapper start ?>
 	<head>
 <?php 
-#Inclusions:
-include '../header.php';
-include '../includes/mysql.class.php';
-include '../includes/login.class.php';
-include '../includes/usermanager.class.php';
-include '../includes/rights.class.php';
-include '../includes/mail.class.php';
 
 # Check ob User eingeloggt ist:
 $checkIfLoggedIn = NEW login;
@@ -27,12 +20,7 @@ $checkIfLoggedIn->logged_in("redirect", "index.php");
 # Benutzername:
 $benutzername = $_SESSION['username'];
 
-#connect zur DB:
-$dbconnect = NEW sql();
-
-#Check ob User Seite betrachten darf:
-$checkUserRights = NEW rights;
-$checkUserRights->pruefung("8");
+$usermanager->userHasRightPruefung("8");
 ?>
 
 <title><?php echo $benutzername . "'s Emails"; ?></title>

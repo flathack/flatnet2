@@ -13,14 +13,13 @@ include '../includes/finanzen.class.php';
 $finanzen = NEW finanzenNEW;
 
 # STELLT DEN HEADER ZUR VERFÜGUNG
-$finanzen->connectToDB();
 $finanzen->header();
 
 $finanzen->logged_in("redirect", "index.php");
 $finanzen->userHasRightPruefung("17");
 
 $suche = isset($_GET['suche']) ? $_GET['suche'] : '';
-echo $finanzen->suche($suche, "adressbuch", "nachname", "eintrag.php?bearbeiten");
+echo $finanzen->finanzSuche($suche);
 
 ?>
 <title>Steven.NET Finanzen</title>

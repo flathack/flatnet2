@@ -218,110 +218,49 @@ class control extends functions {
 			if (isset ( $_GET ['bearb'] )) {
 				$bearb = $_GET ['bearb'];
 				if ($bearb) {
-					echo "<div class='newChar'>";
+					echo "<div class='newCharWIDE'>";
 					echo "<h2><a name='bearbeiten'>Benutzerbearbeitung</a> <a href='?userverw=1' class='highlightedLink'>X</a></h2>";
-					$userinfo = "SELECT timestamp, id, Name, Passwort, titel, forumRights FROM benutzer WHERE id LIKE $bearb";
+					$userinfo = "SELECT timestamp, id, Name, Passwort, titel, forumRights FROM benutzer WHERE id = $bearb";
 					$row = $this->getObjektInfo($userinfo);
 					echo "<table>";
-					for ($i = 0 ; $i < sizeof($row) ; $i++) {
-						echo "<form action='?' method=post>";
-						echo "<tr><td>Neuer Benutzername: </td><td><input type=text value='".$row[$i]->Name."' name=newname autofocus required></td></tr>";
-						echo "<tr><td>Neues Passwort: </td><td><input type=password value='' name=newpass ></td></tr>";
-						echo "<tr><td><input type=hidden value='".$row[$i]->id."' name=id readonly></td></tr>";
-						echo "<tr><td><input type=hidden value='".$row[$i]->Name."' name=name readonly></td></tr>";
-						echo "<tr><td>Titel: </td><td><input type=text value='".$row[$i]->titel."' name=titel></td></tr>";
-						echo "<tr><td>Forum Rechte: </td><td><input type=text value='".$row[$i]->forumRights."' name=forumRights></td></tr>";
-						echo "<tr><td><input type=submit name='bearbuser' value='Ausführen'></td>
-								<td><input type=submit name='bearbuser' value='Benutzer Informationen anzeigen' />";
-						echo "<a class='highlightedLink' href='?action=3&table=benutzer&id=".$row[$i]->id."#angezeigteID'>Löschen</a></td></tr>";
-						echo "</form>";
-					}
+					
+					$i = 0;
+					
+					echo "<form action='?' method=post>";
+					echo "<tr><td>Neuer Benutzername: </td><td><input type=text value='".$row[$i]->Name."' name=newname autofocus required></td></tr>";
+					echo "<tr><td>Neues Passwort: </td><td><input type=password value='' name=newpass ></td></tr>";
+					echo "<tr><td><input type=hidden value='".$row[$i]->id."' name=id readonly></td></tr>";
+					echo "<tr><td><input type=hidden value='".$row[$i]->Name."' name=name readonly></td></tr>";
+					echo "<tr><td>Titel: </td><td><input type=text value='".$row[$i]->titel."' name=titel></td></tr>";
+					echo "<tr><td>Forum Rechte: </td><td><input type=text value='".$row[$i]->forumRights."' name=forumRights></td></tr>";
+					echo "<tr><td><input type=submit name='bearbuser' value='Ausführen'></td>
+							<td><input type=submit name='bearbuser' value='Benutzer Informationen anzeigen' />";
+					echo "</td></tr>";
+					echo "</form>";
 					echo "</table>";
+					
+					
+					echo "<h3>Diese Inhalte hat der Benutzer veröffentlicht </h3>";
+					
+					$columnNames = $this->setBesitzerArray();
+					
+					foreach ($columnNames as $tabelle => $spalte) {
+						
+						if($spalte != "xxx") {
+							$query = "SELECT count(*) as anzahl FROM ".$tabelle." WHERE ".$spalte." = $bearb ";
+							$amount = $this->getObjektInfo($query);
+								
+							if($amount[0]->anzahl > 0) {
+								echo "<div class='kleineBox'>";
+								echo "<h3>".$tabelle."</h3>";
+								echo "<p>Einträge: " .$amount[0]->anzahl. "</p>";
+								echo "</div>";
+							}
+						}
+					
+					}
+					
 					echo "</div>";
-					
-					// # Guildwars
-					$selectGuildwars = "SELECT count(*) as anzahl FROM gw_chars WHERE besitzer = '$bearb'";
-					$mengeGuildwars = $this->getObjektInfo($selectGuildwars);
-					if (! isset ( $mengeGuildwars[0]->anzahl )) {
-						$mengeGuildwars = 0;
-					}
-					
-					// # Guildwars Kost calc
-					$selectGuildwars2 = "SELECT count(*) as anzahl FROM gwcosts WHERE besitzer = '$bearb'";
-					$mengeGuildwars2 = $this->getObjektInfo($selectGuildwars2);
-					if (! isset ( $mengeGuildwars2[0]->anzahl )) {
-						$mengeGuildwars2 = 0;
-					}
-					
-					// # Dokumentareinträge
-					$selectDocu = "SELECT count(*) as anzahl FROM docu WHERE autor = '$bearb'";
-					$mengeDocu = $this->getObjektInfo($selectDocu);
-					if (! isset ( $mengeDocu[0]->anzahl )) {
-						$mengeDocu = 0;
-					}
-					
-					// # BlogKommentare
-					$selectBlogKommentare = "SELECT count(*) as anzahl FROM blog_kommentare WHERE autor = '$bearb'";
-					$mengeBlogKommentare = $this->getObjektInfo($selectBlogKommentare);
-					if (! isset ( $mengeBlogKommentare[0]->anzahl )) {
-						$mengeBlogKommentare = 0;
-					}
-					
-					// # Vorschläge
-					$selectVorschlaege = "SELECT count(*) as anzahl FROM vorschlaege WHERE autor = '$bearb'";
-					$mengeVorschlaege = $this->getObjektInfo($selectVorschlaege);
-					if (! isset ( $mengeVorschlaege[0]->anzahl )) {
-						$mengeVorschlaege = 0;
-					}
-					
-					// # Blogtexte
-					$selectBlogTexte = "SELECT count(*) as anzahl FROM blogtexte WHERE autor = '$bearb'";
-					$mengeBlogTexte = $this->getObjektInfo($selectBlogTexte);
-					if (! isset ( $mengeBlogTexte[0]->anzahl )) {
-						$mengeBlogTexte = 0;
-					}
-					
-					// # Konten
-					$selectKonten = "SELECT count(*) as anzahl FROM finanzen_konten WHERE besitzer = '$bearb'";
-					$mengeKonten = $this->getObjektInfo($selectKonten);
-					if (! isset ( $mengeKonten[0]->anzahl )) {
-						$mengeKonten = 0;
-					}
-					
-					// # Umsätze
-					$selectUmsaetze = "SELECT count(*) as anzahl FROM finanzen_umsaetze WHERE besitzer = '$bearb'";
-					$mengeUmsaetze = $this->getObjektInfo($selectUmsaetze);
-					if (! isset ( $mengeUmsaetze[0]->anzahl )) {
-						$mengeUmsaetze = 0;
-					}
-					
-					// Ausgabe der Meldungen:
-					if ($mengeBlogKommentare[0]->anzahl + $mengeBlogTexte[0]->anzahl + $mengeVorschlaege[0]->anzahl + $mengeDocu[0]->anzahl + $mengeGuildwars[0]->anzahl > 0) {
-						echo "<p class=''><h2>Dieser Benutzer hat folgende Objekte: </h2>";
-						if ($mengeGuildwars[0]->anzahl > 0) {
-							echo $mengeGuildwars[0]->anzahl . " Guildwars-Charakter, <br>";
-						}
-						if ($mengeGuildwars2[0]->anzahl > 0) {
-							echo $mengeGuildwars2[0]->anzahl . " Einträge in Kosten, <br>";
-						}
-						if ($mengeBlogKommentare[0]->anzahl > 0) {
-							echo $mengeBlogKommentare[0]->anzahl . " Kommentare, <br>";
-						}
-						
-						if ($mengeBlogTexte[0]->anzahl > 0) {
-							echo $mengeBlogTexte[0]->anzahl . " Foreneinträge, <br>";
-						}
-						
-						if ($mengeVorschlaege[0]->anzahl > 0) {
-							echo $mengeVorschlaege[0]->anzahl . " Vorschläge, ";
-						}
-						
-						if ($mengeDocu[0]->anzahl > 0) {
-							echo $mengeDocu[0]->anzahl . " Doku Einträge, <br>";
-						}
-						
-						echo "<br><br><br><br><br><br><br><br><br><br><br><br>";
-					}
 				}
 			}
 		} else {
@@ -424,6 +363,86 @@ class control extends functions {
 	}
 	
 	/**
+	 * Ordnet die Besitzer-Spalte einer Tabelle zu.
+	 * @return string
+	 */
+	function setBesitzerArray() {
+		
+		$zuordnung = array (
+				"account_infos" => "besitzer",
+				"adressbuch" => "xxx",
+				"benutzer" => "xxx",
+				"blogtexte" => "autor",
+				"blogkategorien" => "xxx",
+				"blog_kommentare" => "autor",
+				"docu" => "autor",
+				"fahrkosten" => "besitzer",
+				"fahrkostenziele" => "besitzer",
+				"fahrzeuge" => "besitzer",
+				"finanzen_jahresabschluss" => "besitzer",
+				"finanzen_konten" => "besitzer",
+				"finanzen_monatsabschluss" => "besitzer",
+				"finanzen_umsaetze" => "besitzer",
+				"gw_accounts" => "besitzer",
+				"gw_chars" => "besitzer",
+				"gwcosts" => "besitzer",
+				"gwmatlist" => "xxx",
+				"gwusersmats" => "besitzer",
+				"learnkategorie" => "besitzer",
+				"learnlernkarte" => "besitzer",
+				"lernstatus" => "besitzer",
+				"registercode" => "xxx",
+				"rightkategorien" => "xxx",
+				"rights" => "besitzer",
+				"uebersicht_kacheln" => "xxx",
+				"userrights" => "xxx",
+				"vorschlaege" => "xxx"
+		);
+		
+		$zuordnung2 = array (
+				"besitzer" => "account_infos",
+				"xxx" => "adressbuch",
+				"xxx" => "benutzer",
+				"autor" => "blogtexte",
+				"xxx" => "blogkategorien",
+				"autor" => "blog_kommentare",
+				"autor" => "docu",
+				"besitzer" => "fahrkosten",
+				"besitzer" => "fahrkostenziele",
+				"besitzer" => "fahrzeuge",
+				"besitzer" => "finanzen_jahresabschluss",
+				"besitzer" => "finanzen_konten",
+				"besitzer" => "finanzen_monatsabschluss",
+				"besitzer" => "finanzen_umsaetze",
+				"besitzer" => "gw_accounts",
+				"besitzer" => "gw_chars",
+				"besitzer" => "gwcosts",
+				"xxx" => "gwmatlist",
+				"besitzer" => "gwusersmats",
+				"besitzer" => "learnkategorie",
+				"besitzer" => "learnlernkarte",
+				"besitzer" => "lernstatus",
+				"xxx" => "registercode",
+				"xxx" => "rightkategorien",
+				"besitzer" => "rights",
+				"xxx" => "uebersicht_kacheln",
+				"xxx" => "userrights",
+				"xxx" => "vorschlaege"
+		);
+				
+		return $zuordnung;
+	}
+	
+	/**
+	 * Gibt den Namen der Besitzerspalte zurück.
+	 * @param unknown $tabelle
+	 */
+	function getBesitzerSpalte($tabelle) {
+		
+		
+	}
+	
+	/**
 	 * Zeigt alle Informationen eines Benutzers an und ermöglicht die Löschung der bestehenden Informationen.
 	 */
 	function deleteBenutzerFunction() {
@@ -449,96 +468,66 @@ class control extends functions {
 			
 			echo "<h2>Aktuelle Benutzerinformationen</h2>";
 			
-			// Alle Tables bekommen:
-			$allTables = $this->getObjektInfo ( "SHOW TABLES FROM flathacksql1" );
-			
-			// Tabellen: account_infos, adressbuch, benutzer, blogkategorien, blogtexte, blog_kommentare, docu,
-			// fahrkosten, fahrkostenziele, fahrzeuge, finanzen_jahresabschluss, finanzen_konten, finanzen_monatsabschluss,
-			// finanzen_umsaetze, gwcosts, gwmatlist, gwusersmats, gw_accounts, gw_chars, learnkategorie, learnlernkarte, 
-			// registercode, rights, uebersicht_kacheln, userrights, vorschlaege,
-			$columnNamesForBesitzer = array (
-					'besitzer',
-					'xxx',
-					'xxx',
-					'xxx',
-					'autor',
-					'autor', 
-					'autor', 
-					'besitzer',
-					'besitzer',
-					'besitzer',
-					'besitzer',
-					'besitzer',
-					'besitzer',
-					'besitzer',
-					'besitzer',
-					'xxx',
-					'besitzer',
-					'besitzer',
-					'besitzer',
-					'besitzer',
-					'besitzer',
-					'xxx',
-					'xxx',
-					'besitzer',
-					'xxx',
-					'xxx',
-					'xxx'
-			);
-			
+			$columnNames = $this->setBesitzerArray();
 			$userID = $_POST ['id'];
 			
-			// Pro Table durchlaufen ...
-			for($i = 0; $i < sizeof ( $allTables ); $i ++) {
+			$i = 0;
 				
-				// Nur anzeigen, wenn Table nicht excluded ist.
-				if ($columnNamesForBesitzer [$i] != "xxx") {
+			foreach ($columnNames as $table => $spalte) {
+				if ($spalte != "xxx") {
 					// Table anzeigen:
 					
-					$table = $allTables [$i]->Tables_in_flathacksql1;
-					
+					echo "<p class='info'>Suche nach Spalte: ".$spalte."</p>";
+				
 					// Spalten bekommen
 					$columns = $this->getColumns ( $table );
-					
+				
 					// Informationen des aktuellen Tables auslesen
-					$currentTableInfo = $this->getObjektInfo ( "SELECT * FROM $table WHERE $columnNamesForBesitzer[$i] = '$userID'" );
-					
+					$currentTableInfo = $this->getObjektInfo ( "SELECT * FROM $table WHERE $spalte = $userID" );
+				
 					// Table nur anzeigen, wenn etwas vom Benutzer da ist:
 					// if(isset($currentTableInfo[$i])) {
-					
+				
 					echo "<table class='flatnetTable'>";
-					
+				
 					// Überschrift anzeigen
-					$spaltenanzahlMinusEins = sizeof ( $columns ) -1;
-					echo "<thead><td colspan ='" . $spaltenanzahlMinusEins . "'>$i ) " . $allTables [$i]->Tables_in_flathacksql1 . " ($columnNamesForBesitzer[$i])" . "</td><td>
-				 				<a class='highlightedLink' href='?action=1&loeschen&loeschid=" . $userID . "&table=" . $table . "&tableNumber=$i'>LÖSCHEN</a>
-				 				</td></thead>";
+					$spaltenanzahlMinusEins = sizeof ( $columns );
+					echo "<thead><td colspan ='" . $spaltenanzahlMinusEins . "'>$i) " . $table . " (".$spalte.")" . "</td><td>
+					<a class='highlightedLink' href='?action=1&loeschen&loeschid=" . $userID . "&table=" . $table . "&tableNumber=$i'>LÖSCHEN</a>
+									</td></thead>";
 					
 					// Gibt die aktuelle Kopfzeile der aktuellen Tabelle aus
 					echo "<thead>";
-					for($k = 0; $k < sizeof ( $columns ); $k ++) {
+					echo "<td></td>";
+					for($k = 0; $k < sizeof ( $columns ); $k++) {
 						echo "<td>$columns[$k]</td>";
 					}
 					echo "</thead>";
-					
-					for($j = 0; $j < sizeof ( $currentTableInfo ); $j ++) {
+					for($j = 0; $j < sizeof ( $currentTableInfo ); $j++) {
 						echo "<tbody>";
-						echo "<td><a class='rightBlueLink' href='?action=3&table=$table&id=".$currentTableInfo [$j]->id."'>open</a></td>";
-						
+						if(!isset($currentTableInfo[$j]->id)) {
+							echo "<td><a class='rightBlueLink' href='?action=3&table=$table'>open</a></td>";
+						} else {
+							echo "<td><a class='rightBlueLink' href='?action=3&table=$table&id=".$currentTableInfo [$j]->id."'>open</a></td>";
+						}
+							
 						// Gibt die Information der aktuellen Zelle aus:
 						for($k = 0; $k < sizeof ( $columns ); $k ++) {
 							echo "<td>";
 							echo substr ( strip_tags($currentTableInfo [$j]->$columns [$k]), 0, 20 );
 							echo "</td>";
 						}
-						
+							
 						echo "</tbody>";
 					}
 					echo "</table>";
 					
-					// }
+					
 				}
+				$i++;
+					
 			}
+
 		}
 	}
 	
@@ -678,7 +667,7 @@ class control extends functions {
 				}
 				
 				echo ">
-				<td>".$row[$i]->id."<input type=hidden value='".$row->id."' name='hiddenID' /></td>
+				<td>".$row[$i]->id."<input type=hidden value='".$row[$i]->id."' name='hiddenID' /></td>
 				<td>".$row[$i]->tage.".".$row[$i]->monat.".".$row[$i]->jahr."</td>";
 				if ($row[$i]->autor == 0) {
 					echo "<td>System</td>";
@@ -1059,7 +1048,7 @@ class control extends functions {
 					echo "<h3>Rechteliste</h3>";
 					echo "<table class='flatnetTable'>";
 					echo "<thead><td id='text'>Recht</td><td>vorhanden</td><td>Ändern</td></thead>";
-					for($j = 0 ; $i < sizeof($row2) ; $j++) {
+					for($j = 0 ; $j < sizeof($row2) ; $j++) {
 						if ($this->check($row2[$j]->rightWert, $benutzerrechteVorher ) == true) {
 							
 							echo "<tbody id='offen'>" . "<td>".$row2[$j]->kategorie."</td>" . "<td>Ja</td> " . "<td><a href='?action=5&user=$id&status=ja&right=".$row2[$j]->id."#forumRechte'>verweigern</a></td>" . "<tbody>";
@@ -1205,13 +1194,13 @@ class control extends functions {
 					// ##########################
 					$loeschid = $_GET ['loeschid'];
 					
-					$query = "DELETE FROM blogkategorien WHERE id = '$loeschid'";
+					$query = "DELETE FROM blogkategorien WHERE id = $loeschid";
 					
 					// nicht zugeordnet Kategorie finden:
 					$select = "SELECT id, kategorie FROM blogkategorien WHERE kategorie = 'nicht zugeordnet' LIMIT 1";
 					$row = $this->getObjektInfo($select);
 					if(isset($row[0]->id)) {
-						$notAssigned = $row->id;
+						$notAssigned = $row[0]->id;
 					}					
 					
 					if (!isset($notAssigned)) {
@@ -1343,11 +1332,9 @@ class control extends functions {
 	function getColumns($table) {
 		// COLUMNS SPEICHERN;
 		$select1 = "SHOW COLUMNS FROM $table";
-		$ergebnis1 = mysql_query ( $select1 );
-		$i = 0;
-		while ( $row = mysql_fetch_object ( $ergebnis1 ) ) {
-			$columns [$i] = $row->Field;
-			$i ++;
+		$row = $this->getObjektInfo($select1);
+		for ($i = 0 ; $i < sizeof($row) ; $i++) {
+			$columns [$i] = $row[$i]->Field;
 		}
 		
 		return $columns;
@@ -1359,55 +1346,46 @@ class control extends functions {
 	 * @param unknown $query        	
 	 */
 	function getColumnsFromQuery($query) {
-		$createTempTable = "
-		CREATE TEMPORARY TABLE
-		IF NOT EXISTS tempTable AS ($query);";
-		mysql_query ( $createTempTable );
+		$createTempTable = "CREATE TEMPORARY TABLE IF NOT EXISTS tempTable AS ($query);";
+		$this->sql_insert_update_delete($createTempTable);
 		
 		$select1 = "SHOW COLUMNS FROM tempTable";
-		$ergebnis1 = mysql_query ( $select1 );
-		$i = 0;
-		while ( $row = mysql_fetch_object ( $ergebnis1 ) ) {
-			$columns [$i] = $row->Field;
-			$i ++;
+		$row = $this->getObjektInfo($select1);
+		for ($i = 0 ; $i < sizeof($row) ; $i++) {
+			$columns[$i]=$row[$i]->Field;
 		}
 		
 		return $columns;
 	}
+	
+	
 	function getColumnAnzahl($query) {
 		$createTempTable = "
 		CREATE TEMPORARY TABLE
 		IF NOT EXISTS tempTable AS ($query);";
-		mysql_query ( $createTempTable );
+		$this->sql_insert_update_delete($createTempTable);
 		
 		$select1 = "SHOW COLUMNS FROM tempTable";
 		
-		$ergebnis = mysql_query ( $select1 );
-		$menge = mysql_num_rows ( $ergebnis );
-		return $menge;
+		$row = $this->getAmount($select1);
+		return $row;
 	}
 	
 	/**
-	 * gibt die Kommentare der Spalten einer Tabelle wieder und speichert diese in einem Array.
+	 * Gibt die Kommentare der Spalten einer Tabelle wieder und speichert diese in einem Array.
 	 * 
 	 * @param unknown $table        	
 	 * @return unknown
 	 */
 	function getColumnComments($table) {
 		
-		// COLUMNS SPEICHERN;
-		mysql_close ();
-		$this->connectToSpecialDB ( "information_schema", "devUser", "" );
-		$select1 = "SELECT column_name, column_comment FROM columns WHERE TABLE_SCHEMA = 'flathacksql1' AND TABLE_NAME='$table'";
-		$ergebnis1 = mysql_query ( $select1 );
-		$i = 0;
-		while ( $row = mysql_fetch_object ( $ergebnis1 ) ) {
-			$comments [$i] = $row->column_comment;
-			$i ++;
-		}
-		
-		$this->connectToDB ();
-		
+	#	$this->connectToSpecialDB ( "information_schema", "info_user", "GCbzZFw2ppBwJp7Q" );
+		$dbname = $this->getDBName();
+		$select1 = "SELECT column_name, column_comment FROM columns WHERE TABLE_SCHEMA = '$dbname' AND TABLE_NAME='$table'";
+		$row = $this->getObjektInfo($select1);
+		for ($i = 0 ; $i < sizeof($row); $i++) {
+			$comments[$i] = $row[$i]->column_comment;
+		}		
 		return $comments;
 	}
 	
@@ -1480,7 +1458,8 @@ class control extends functions {
 					$columns = $this->getColumns ( $table );
 					
 					// Menge bekommen
-					$query = "SELECT COUNT(*) as anzahl FROM information_schema.columns WHERE table_schema = 'flathacksql1' and table_name = '$table'";
+					$dbname = $this->getDBName();
+					$query = "SELECT COUNT(*) as anzahl FROM information_schema.columns WHERE table_schema = '$dbname' and table_name = '$table'";
 					$mengeGrund = $this->getObjektInfo($query);
 					$menge = $mengeGrund[0]->anzahl;
 					
@@ -1537,11 +1516,10 @@ class control extends functions {
 				$row = $this->getObjektInfo($select);
 				
 				// Kommentar der Spalte auslesen:
-				$comments = $this->getColumnComments ( $table );
+			#	$comments = $this->getColumnComments ( $table );
 				
 				// Columns bekommen:
 				$columns = $this->getColumns ( $table );
-				$i = 0;
 				$this->insertQuery ( $select );
 				
 				if(isset($_GET['von'])) {
@@ -1553,16 +1531,16 @@ class control extends functions {
 				echo "<thead>" . "<td>Table: $table</td>" . "<td><a name='angezeigteID'>Angezeigte ID</a>: $id <a href='?action=3$von&table=$table' class='highlightedLink'>X</a></td>" . "</thead>";
 				
 				for ($i = 0 ; $i < sizeof($row) ; $i++) {
-					for($i = 0; $i < $menge; $i ++) {
-						if (strlen ( $row[$i]->$columns [$i] ) > 50) {
-							echo "<tbody><td>" . $columns [$i] . "</td>
-							<td><textarea rows=10 cols=100 name=currentObject[$i]";
-							echo ">" . $row[$i]->$columns [$i] . "</textarea>$comments[$i]</td></tbody>";
+					for($j = 0; $j < $menge; $j ++) {
+						if (strlen ( $row[$i]->$columns [$j] ) > 50) {
+							echo "<tbody><td>" . $columns [$j] . "</td>
+							<td><textarea rows=10 cols=100 name=currentObject[$j]";
+							echo ">" . $row[$i]->$columns [$j] . "</textarea></td></tbody>";
 						} else {
-							echo "<tbody><td>" . $columns [$i] . "</td><td><input type=text class='' name=currentObject[$i] value='";
-							echo $row[$i]->$columns [$i];
+							echo "<tbody><td>" . $columns [$j] . "</td><td><input type=text class='' name=currentObject[$j] value='";
+							echo $row[$i]->$columns [$j];
 							
-							echo "' placeholder='$columns[$i]'/> $comments[$i]</td></tbody>";
+							echo "' placeholder='$columns[$j]'/> </td></tbody>";
 						}
 					}
 				}
@@ -1578,21 +1556,17 @@ class control extends functions {
 	}
 	
 	function tableStructure($table) {
-		if (isset ( $_GET ['table'] ) and isset ( $_GET ['showStructure'] )) {
-			// Aktuelle DB schließen
-			mysql_close ();
-			
+		if (isset ( $_GET ['table'] ) and isset ( $_GET ['showStructure'] )) {			
 			// Neue DB öffnen
-			$this->connectToSpecialDB ( "information_schema", "devUser", "" );
+		#	$this->connectToSpecialDB ( "information_schema", "info_user", "GCbzZFw2ppBwJp7Q" );
 			
 			// Columns bekommen:
-			
+			echo "<p class='meldung'>Diese Funktion ist außer Betrieb</p>";
+			/*
 			$select1 = "SHOW COLUMNS FROM columns";
-			$ergebnis1 = mysql_query ( $select1 );
-			$i = 0;
-			while ( $row = mysql_fetch_object ( $ergebnis1 ) ) {
-				$columns [$i] = $row->Field;
-				$i ++;
+			$row = $this->getObjektInfo($select1);
+			for ($i = 0 ; $i < sizeof($row) ; $i++) {
+				$columns [$i] = $row[$i]->Field;
 			}
 			
 			if (sizeof ( $columns ) > 5) {
@@ -1607,7 +1581,6 @@ class control extends functions {
 			// Table erstellen
 			echo "<table class='flatnetTable'>";
 			echo "<thead>";
-			$i = 0;
 			for($i = 0; $i < sizeof ( $columns ); $i ++) {
 				echo "<td>";
 				echo $columns [$i];
@@ -1616,21 +1589,18 @@ class control extends functions {
 			echo "</thead>";
 			
 			// Select des Inhalts
-			$select1 = "SELECT * FROM columns WHERE TABLE_SCHEMA = 'flathacksql1' AND TABLE_NAME='$table'";
-			$ergebnis1 = mysql_query ( $select1 );
-			while ( $row = mysql_fetch_object ( $ergebnis1 ) ) {
+			$dbname = $this->getDBName();
+			$select1 = "SELECT * FROM columns WHERE TABLE_SCHEMA = '$dbname' AND TABLE_NAME='$table'";
+			$row = $this->getObjektInfo($select1);
+			for($i = 0; $i < sizeof ($row); $i ++) {
 				echo "<tbody>";
-				$j = 0;
-				for($j = 0; $j < sizeof ( $columns ); $j ++) {
+				for($j = 0; $j < sizeof ($columns); $j ++) {
 					echo "<td>";
-					echo substr ( $row->$columns [$j], 0, 30 );
+					echo substr ( $row[$i]->$columns[$j], 0, 30 );
 					echo "</td>";
 				}
 				echo "</tbody>";
-			}
-			
-			// Normale Datenbank wieder öffnen.
-			$this->connectToDB ();
+			} */
 		}
 	}
 	
@@ -1659,10 +1629,8 @@ class control extends functions {
 			$query = "SHOW COLUMNS FROM $table";
 			$menge = $this->getAmount ( $query );
 			
-			$ergebnis = mysql_query ( $query );
 			// Columns bekommen:
 			$columns = $this->getColumns ( $table );
-			$i = 0;
 			
 			if(isset($_GET['von'])) {
 				$von = "&von=" . $_GET['von'];
@@ -1706,13 +1674,10 @@ class control extends functions {
 			if (isset ( $_POST ['globalqueryok'] )) {
 				$query = $_POST ['sqlbox'];
 				
-				$sqlquery = mysql_query ( $query ) or die ( mysql_error () );
-				if ($sqlquery == true) {
+				if ($this->sql_insert_update_delete($query) == true) {
 					echo "<p class='erfolg'>SQL Query wurde erfolgreich durchgeführt.</p>";
 				} else {
-					echo "<p class='meldung'>Es ist ein Fehler aufgetreten: <br>";
-					echo mysql_error ();
-					echo "</p>";
+					echo "<p class='meldung'>Es ist ein Fehler aufgetreten</p>";
 				}
 				
 				// Abstandshalter nach unten:
@@ -1731,19 +1696,22 @@ class control extends functions {
 		if($this->userHasRight("51", 0) == true) {
 			
 			// Ausgabe aller Tables
-			$select = "SHOW TABLES FROM flathacksql1";
+			$DBName = $this->getDBName();
+			$select = "SHOW TABLES FROM $DBName";
+			$columnName = "Tables_in_".$DBName;
+
 			$row = $this->getObjektInfo($select);
 			echo "<form method=get action='?action=3'>";
 			echo "<input type=hidden name=action value=3 />";
 			echo "<select class='bigSelect' name='table'>";
 			for($i = 0 ; $i < sizeof($row) ; $i++) {
 				echo "<option ";
-				if (isset ( $_GET ['table'] ) and $_GET ['table'] == $row[$i]->Tables_in_flathacksql1) {
+				if (isset ( $_GET ['table'] ) and $_GET ['table'] == $row[$i]->$columnName) {
 					echo " selected ";
 				} else {
 					echo "";
 				}
-				echo " value='".$row[$i]->Tables_in_flathacksql1."' >".$row[$i]->Tables_in_flathacksql1."</option>";
+				echo " value='".$row[$i]->$columnName."' >".$row[$i]->$columnName."</option>";
 			}
 			echo "</select><input type=submit name='submit' value='Table wechseln'/></form>";
 			// Table Variable zuweisen
@@ -1904,7 +1872,7 @@ class control extends functions {
 				}
 				
 				// Ergebnis der SQL Abfrage
-				$ergebnis = mysql_query ( $select );
+				$row = $this->getObjektInfo($select);
 				$abfrageMenge = $this->getAmount ( $pageSelect );
 				$currentSelect = $this->getAmount ( $select );
 				
@@ -1937,12 +1905,12 @@ class control extends functions {
 				echo "</thead> ";
 				
 				// Gibt den Tabellen Inhalt zeilenweise aus.
-				while ( $row = mysql_fetch_object ( $ergebnis ) ) {
+				for ($i = 0 ; $i < sizeof($row) ; $i++){
 					echo "<tbody>";
-					echo "<td><a href='?action=3$von&table=$table&id=$row->id#angezeigteID' class='buttonlink'>EDIT</a></td>";
+					echo "<td><a href='?action=3$von&table=$table&id=".$row[$i]->id."#angezeigteID' class='buttonlink'>EDIT</a></td>";
 					for($j = 0; $j < $menge; $j ++) {
 						echo "<td>";
-						echo substr ( strip_tags($row->$columns [$j]), 0, 30 );
+						echo substr ( strip_tags($row[$i]->$columns [$j]), 0, 30 );
 						echo "</td>";
 					}
 					if ($changedColumns == true) {
@@ -1991,33 +1959,7 @@ class control extends functions {
 	/**
 	 */
 	function getBesitzerColumnName($table, $tableNumber) {
-		$columnNamesForBesitzer = array (
-				'besitzer',
-				'xxx',
-				'xxx',
-				'autor',
-				'xxx',
-				'autor',
-				'autor',
-				'besitzer',
-				'besitzer',
-				'besitzer',
-				'besitzer',
-				'besitzer',
-				'besitzer',
-				'xxx',
-				'besitzer',
-				'besitzer',
-				'xxx',
-				'besitzer',
-				'ersteller',
-				'xxx',
-				'xxx',
-				'xxx',
-				'besitzer',
-				'xxx',
-				'xxx' 
-		);
+		$columnNamesForBesitzer = $this->setBesitzerArray();
 		
 		$column = $columnNamesForBesitzer [$tableNumber];
 		
@@ -2133,7 +2075,7 @@ class control extends functions {
 									echo " id = '' ";
 								}
 								echo ">";
-								echo "<td>" .$getEintraegeVonDieserKategorie[$j]->recht. "</td>";
+								echo "<td>" .$getEintraegeVonDieserKategorie[$j]->id." - ".$getEintraegeVonDieserKategorie[$j]->recht. "</td>";
 								
 								echo "<td>";
 								if($this->userHasRight($getEintraegeVonDieserKategorie[$j]->id, $userInformation[0]->id) == true) {

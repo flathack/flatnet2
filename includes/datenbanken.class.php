@@ -495,7 +495,7 @@ class datenbanken extends functions {
 		if($this->userHasRight("22", 0) == true) {
 			echo "<div class='mainbodyDark'>Gruppen:";
 			# Alle Gruppen aus DB ziehen: 
-			$allgroups = $this->getObjectsToArray ( "SELECT * FROM adressbuch GROUP BY gruppe" );
+			$allgroups = $this->getObjektInfo("SELECT * FROM adressbuch GROUP BY gruppe");
 			
 			# Checkboxen erstellen:
 			echo "<form action='#gebs' method=post>";
@@ -515,10 +515,10 @@ class datenbanken extends functions {
 				}
 				
 				echo " ></input> ";
-				if ($allgroups [$i]->gruppe == "") {
+				if ($allgroups[$i]->gruppe == "") {
 					# echo "<label for='" . $allgroups [$i]->gruppe . "' >Ohne Gruppe</label>";
 				} else {
-					echo "<label for='" . $allgroups [$i]->gruppe . "' >" . $allgroups [$i]->gruppe . "</label>";
+					echo "<label for='" . $allgroups[$i]->gruppe . "' >" .$allgroups[$i]->gruppe . "</label>";
 				}
 			}
 			
@@ -533,11 +533,13 @@ class datenbanken extends functions {
 			
 			for($i = 1; $i <= 12; $i ++) {
 				echo "<div class='kalender'>";
-				echo "<h2><a href='?month=$i#gebs'>" . $this->getMonthName ( $i ) . "</a></h2>";
+				echo "<h2><a href='?month=$i#gebs'>" . $this->getMonthName($i). "</a></h2>";
 				if ($this->userHasRight("22",0) == true) {
 					
 					if($selectedGroups == "")  {
-						$query = "SELECT *, month(geburtstag) AS monat, day(geburtstag) as tag
+						$query = "SELECT *
+						, month(geburtstag) AS monat
+						, day(geburtstag) as tag
 						FROM adressbuch
 						WHERE month(geburtstag) = '$i' ORDER BY tag, vorname";
 					} else {
@@ -570,7 +572,7 @@ class datenbanken extends functions {
 					# echo "<div class='newChar'>" . $query . " Größe von SelectedGroups:" . sizeof($selectedGroups) .  " | Counter: $counterFürOR</div>";
 					
 					# Aus Datenbank laden: 
-					$getGeburtstage = $this->getObjectsToArray($query);
+					$getGeburtstage = $this->getObjektInfo($query);
 					
 					$j = 1;
 					if (sizeof($getGeburtstage) > 6) { // wenn nicht genug Platz ist.

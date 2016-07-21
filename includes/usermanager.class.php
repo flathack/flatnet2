@@ -174,7 +174,7 @@ class usermanager extends functions {
 		$menge = $mengeGrund[0]->anzahl;
 		
 		for($i = 0 ; $i < sizeof($row2) ; $i++) {
-			echo "<div class='adresseintrag'><a href='/flatnet2/blog/blogentry.php?showblogid=".$row2[$i]->id."'>".$row2[$i]->titel."</a><br>";
+			echo "<div class='newChar'><a href='/flatnet2/blog/blogentry.php?showblogid=".$row2[$i]->id."'>".$row2[$i]->titel."</a><br>";
 			echo $row2[$i]->tag . "." . $row2[$i]->monat . "." . $row2[$i]->jahr . " / " . $row2[$i]->stunde . ":" . $row2[$i]->minute . " Uhr";
 					
 			echo "<br>";
@@ -220,8 +220,7 @@ class usermanager extends functions {
 
 		# Altes Passwort holen aus der Datenbank holen:
 		$abfrage = "SELECT Name, Passwort FROM benutzer WHERE Name LIKE '$user' LIMIT 1";
-		$ergebnis = mysql_query($abfrage);
-		$row = mysql_fetch_object($ergebnis);
+		$row = $this->getObjektInfo($abfrage);
 
 		# Check ob altes passwort = dem alten eingegeben Passwort ist:
 		$hashOldPass = md5($altesPasswort);
@@ -234,7 +233,7 @@ class usermanager extends functions {
 					return false;
 				}
 					
-				if($row->Passwort != $hashOldPass) {
+				if($row[0]->Passwort != $hashOldPass) {
 					echo "<p class='meldung'>Altes Passwort stimmt nicht!</p>";
 				} else {
 
@@ -248,12 +247,11 @@ class usermanager extends functions {
 						} else {
 							$hashedPass = md5($neuesPass);
 							$sqlupdate="UPDATE benutzer SET Passwort='$hashedPass' WHERE Name='$user' LIMIT 1";
-							$ergebnis = mysql_query($sqlupdate);
-							if($ergebnis == true) {
+							
+							if($this->sql_insert_update_delete($sqlupdate) == true) {
 								echo "<p class='erfolg'>Passwort geändert</p>";
 							} else {
-								echo "<p class='meldung'>Eigentlich hätte es klappen müssen :( Es tut mir leid. Das Passwort
-										kann nicht geändert werden.</p>";
+								echo "<p class='meldung'>Das Passwort wurde nicht geändert (hast du etwa das gleiche wieder genommen?)</p>";
 							}
 								
 						}
@@ -357,38 +355,6 @@ class usermanager extends functions {
 			}
 		}
 		
-	}
-	
-	/**
-	 * gibt die ID der kategorie aus.
-	 * @param unknown $kategorieName
-	 * @return unknown
-	 */
-	function getCatID($kategorieName) {
-	
-		$selectKat = "SELECT id, kategorie FROM blogkategorien WHERE kategorie = '$kategorieName' LIMIT 1";
-		$katergeb = mysql_query($selectKat);
-		while($row = mysql_fetch_object($katergeb)) {
-			$catID = $row->id;
-		}
-	
-		return $catID;
-	}
-	
-	/**
-	 * gibt den Namen der Kategorie aus.
-	 * @param unknown $kategorieID
-	 * @return unknown
-	 */
-	function getCatName($kategorieID) {
-	
-		$selectKat = "SELECT id, kategorie FROM blogkategorien WHERE id = '$kategorieID' LIMIT 1";
-		$katergeb = mysql_query($selectKat);
-		while($row = mysql_fetch_object($katergeb)) {
-			$catName = $row->kategorie;
-		}
-	
-		return $catName;
 	}
 	
 	/**
@@ -554,7 +520,7 @@ class usermanager extends functions {
 			}
 			
 			$query = "SELECT * FROM gw_accounts WHERE besitzer = '$user' AND account = '$nummer' LIMIT 1";
-	//		$row = $this->getObjektInfo($query); // ?????
+			$row = $this->getObjektInfo($query);
 			
 			$sqlupdate= "UPDATE gw_accounts SET mail='$mail' WHERE besitzer='$user' AND account='$nummer'";
 						
@@ -563,26 +529,33 @@ class usermanager extends functions {
 			
 			
 			if($this->sql_insert_update_delete($sqlupdate) == true) {
-				
-				# Stunden speichern: 
-				
-				if(!isset($stundenOld[0]->wert)) {
-					# Neuen Eintrag erstellen:
-					$this->sql_insert_update_delete("INSERT INTO account_infos (besitzer, attribut, wert, account) VALUES ('$user','gw_geloschte_stunden','$stunden','$nummer')");
-				} else {
-					# Bestehenden Eintrag ändern:
-					$this->sql_insert_update_delete("UPDATE account_infos SET wert='$stunden' WHERE besitzer='$user' AND account='$nummer' AND attribut = 'gw_geloschte_stunden'");
-				}
-								
+							
 				echo "<div class='erfolg'>";
-					echo "<h2>Ergebnis</h2>";
 					echo "<p >Eintrag geändert</p>";
 				echo "</div>";
 			} else {
-				echo "<div class='meldung'>";
-					echo "<h2>Ergebnis</h2>";
-					echo "<p>Fehler</p>";
-				echo "</div>";
+				
+					echo "<p>Accountname nicht geändert, </p>";
+			}
+			
+			# Stunden speichern:
+			
+			if(!isset($stundenOld[0]->wert)) {
+				# Neuen Eintrag erstellen:
+				
+				if($this->sql_insert_update_delete("INSERT INTO account_infos (besitzer, attribut, wert, account) VALUES ('$user','gw_geloschte_stunden','$stunden','$nummer')") == true) {
+					echo "<p class='erfolg'>Der Eintrag für gelöschte Stunden wurde erstellt.</p>";
+				} else {
+					echo "<p class=''>Der Eintrag für die gelöschten Stunden wurde nicht erstellt.</p>";
+				}
+			} else {
+				# Bestehenden Eintrag ändern:
+				
+				if($this->sql_insert_update_delete("UPDATE account_infos SET wert='$stunden' WHERE besitzer='$user' AND account='$nummer' AND attribut = 'gw_geloschte_stunden'") == true) {
+					echo "<p class='erfolg'>Die gelöschten Stunden wurden abgeändert.</p>";
+				} else {
+					echo "<p class=''>Die gelöschten Stunden wurden nicht geändert.</p>";
+				}
 			}
 		}
 	}
@@ -597,27 +570,38 @@ class usermanager extends functions {
 				$user = $this->getUserID($_SESSION['username']);
 				# nächste Acc Nr bekommen:
 				$query = "SELECT * FROM gw_accounts WHERE besitzer = '$user' AND account = '$nummer' LIMIT 1";
-				$ergebnis = mysql_query($query);
-				$row = mysql_fetch_object($ergebnis);
+				
+				$row = $this->getObjektInfo($query);
 				
 				if(isset($_GET['Sure'])) {
 					if($_GET['Sure'] == 1) {
-						if(isset($row->besitzer) AND $user == $row->besitzer AND $this->userHasRight("9", 0) == true) {
+						if(isset($row[0]->besitzer) AND $user == $row[0]->besitzer AND $this->userHasRight("9", 0) == true) {
 							
 							$sqlupdate="UPDATE gw_chars SET account='1' WHERE besitzer='$user' AND account='$nummer'";
 							
-							$sqlupdategesamt = mysql_query($sqlupdate);
-							if($sqlupdategesamt == true) {
+							$getAmountOfChars = $this->getAmount($sqlupdate);
+							
+							# Löschen, wenn die Charakter verschoben wurden, oder aber die Anzahl der Charakter ist gleich 0.
+							if($this->sql_insert_update_delete($sqlupdate) == true OR $getAmountOfChars == 0) {
 								
 								$sql = "DELETE FROM gw_accounts WHERE account='$nummer' AND besitzer = '$user'";
-								$del= mysql_query($sql);
-								if($del == true) {
+								
+								if($this->sql_insert_update_delete($sql) == true) {
 									
 									# Löscht die Informationen zum account in der Tabelle Account Infos:
-									$this->sql_insert_update_delete("DELETE FROM account_infos WHERE besitzer = '$user' AND account = '$nummer'");
+									if($this->sql_insert_update_delete("DELETE FROM account_infos WHERE besitzer = '$user' AND account = '$nummer'") == true) {
+										echo "Accountinfos für Accountnummer $nummer gelöscht.";
+									} else {
+										echo "Accountinfos wurden nicht gelöscht.";
+									}
 									
 									# Löscht alle Informationen in der gwusersmats
-									$this->sql_insert_update_delete("DELETE FROM gwusersmats WHERE besitzer = '$user' AND account = '$nummer'");
+									if($this->sql_insert_update_delete("DELETE FROM gwusersmats WHERE besitzer = '$user' AND account = '$nummer'") == true) {
+										echo "Handwerksmaterialien für diesen Accountg gelöscht.";
+									} else {
+										echo "Handwerksmaterialien wurden nicht gelöscht.";
+									}
+									
 																	
 									echo "<div class='erfolg'>";
 									echo "<h2>Erfolg</h2>";
@@ -638,9 +622,9 @@ class usermanager extends functions {
 						}
 					}
 				} else {
-					if($this->userHasRight("9", 0) == true AND $row->besitzer == $user) {
+					if($this->userHasRight("9", 0) == true AND $row[0]->besitzer == $user) {
 						echo "<div class='rightSpacer'>";
-							echo "<h2>" .$row->mail . "</h2>";
+							echo "<h2>" .$row[0]->mail . "</h2>";
 							echo "Willst du diesen Account wirklich löschen? ";
 							echo "<a href='?delete=$nummer&passChange&Sure=1' class='highlightedLink'/> JA </a>";
 							echo "<p class='info'>Die Charakter werden zum Hauptaccount geschoben.</p>";
@@ -672,17 +656,17 @@ class usermanager extends functions {
 			$stundenThisAcc = $this->getObjektInfo("SELECT sum(spielstunden) as summe FROM gw_chars WHERE besitzer = '$user' AND account = '$nummer' LIMIT 1");
 			$geloschteStundenCurrentAccount = $this->getObjektInfo("SELECT besitzer, attribut, wert, account FROM account_infos WHERE besitzer = '$user' AND attribut = 'gw_geloschte_stunden' AND account = '$nummer'");
 			
-			if(!isset($geloschteStundenCurrentAccount->wert)) {
+			if(!isset($geloschteStundenCurrentAccount[0]->wert)) {
 				$geloschteStunden = 0;
 			} else {
-				$geloschteStunden = $geloschteStundenCurrentAccount->wert;
+				$geloschteStunden = $geloschteStundenCurrentAccount[0]->wert;
 			}
 			
-			if($this->userHasRight("9", 0) == true AND $row->besitzer == $user) {
+			if($this->userHasRight("9", 0) == true AND $row[0]->besitzer == $user) {
 				echo "<div class='rightSpacer'>";
-					echo "<h2>" .$row->mail . "</h2>";
+					echo "<h2>" .$row[0]->mail . "</h2>";
 					echo "Informationen:<br><strong>" . $menge . "</strong> Charakter,";
-					echo "<br>gespielte Stunden: <strong>" . $stundenThisAcc->summe . " </strong>";
+					echo "<br>gespielte Stunden: <strong>" . $stundenThisAcc[0]->summe . " </strong>";
 					echo "<br>und <strong> ". $geloschteStunden ." </strong> gelöschte Stunden.";
 				echo "</div>";
 			}

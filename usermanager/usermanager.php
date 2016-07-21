@@ -16,7 +16,6 @@
 include '../includes/usermanager.class.php';
 # Usermanager öffnen
 $usermanager = NEW usermanager;
-$usermanager->connectToDB();
 $usermanager->header();
 $usermanager->logged_in("redirect", "index.php");
 

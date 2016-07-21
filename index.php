@@ -14,10 +14,7 @@ session_start(); ?>
 <?php 
 # Inclusions
 include 'includes/login.class.php';
-
 $indexlogin = NEW login();
-$indexlogin->connectToDB();
-
 ?>
 
 <div id="funktion"> 

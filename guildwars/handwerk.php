@@ -1,9 +1,3 @@
-<?php 
-/**
- * @author Steven Schödel
- * Flatnet2 Projekt
- */
-?>
 <?php echo '<'.'?xml version="1.0" encoding="utf-8"?'.'>'; ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -19,7 +13,6 @@ include '../includes/gw.class.php';
 $guildwars = NEW gw_handwerk;
 
 # STELLT DEN HEADER ZUR VERFÜGUNG
-$guildwars->connectToDB();
 $guildwars->header();
 
 $guildwars->logged_in("redirect", "index.php");
@@ -65,28 +58,23 @@ echo $guildwars->suche($suche, "gw_chars", "name", "charakter.php?charID");
 						</div>
 			</div>
 			<div class='innerBody'>
-				<div class="bereiche">
-					<div id="lederer">
+					<div class="bereichlederer">
 					<a href='http://gw.gameplorer.de/guides/lederer-leveling-guide/' target='_blank' class='rightLink'>Guide öffnen</a>
 						<h3>
 							<a name='guides' href="http://gw.gameplorer.de/guides/lederer-leveling-guide/" target='_blank' >Lederer</a>
 						</h3>
 						<?php echo $guildwars->charInBeruf("Lederer"); ?>
 					</div>
-				</div>
 
-				<div class="bereiche">
-					<div id="schneider">
+					<div class="bereichschneider">
 					<a href='http://gw.gameplorer.de/guides/schneider-leveling-guide/' class='rightLink' target='_blank' >Guide öffnen</a>
 					<h3>
 						<a href="http://gw.gameplorer.de/guides/schneider-leveling-guide/" target='_blank' >Schneider</a>
 					</h3>
 					<?php echo $guildwars->charInBeruf("Schneider"); ?>
 					</div>
-				</div>
 
-				<div class="bereiche">
-					<div id="konstrukteur">
+					<div class="bereichkonstrukteur">
 					<a href='http://gw.gameplorer.de/guides/konstrukteur-leveling-guide/' class='rightLink' target='_blank' >Guide öffnen</a>
 					<h3>
 						<a
@@ -94,20 +82,16 @@ echo $guildwars->suche($suche, "gw_chars", "name", "charakter.php?charID");
 					</h3>
 					<?php echo $guildwars->charInBeruf("Konstrukteur"); ?>
 					</div>
-				</div>
 
-				<div class="bereiche">
-					<div id="koch">
+					<div class="bereichkoch">
 					<a href='http://gw.gameplorer.de/guides/koch-leveling-guide/' class='rightLink' target='_blank' >Guide öffnen</a>
 					<h3>
 						<a href="http://gw.gameplorer.de/guides/koch-leveling-guide/" target='_blank' >Koch</a>
 					</h3>
 					<?php echo $guildwars->charInBeruf("Koch"); ?>
-				</div>
-				</div>
+					</div>
 
-				<div class="bereiche">
-					<div id="waffenschmied">
+					<div class="bereichwaffenschmied">
 					<a href='http://gw.gameplorer.de/guides/waffenschmied-leveling-guide/' class='rightLink' target='_blank' >Guide öffnen</a>
 					<h3>
 						<a
@@ -115,10 +99,8 @@ echo $guildwars->suche($suche, "gw_chars", "name", "charakter.php?charID");
 					</h3>
 					<?php  echo $guildwars->charInBeruf("Waffenschmied"); ?>
 					</div>
-				</div>
 
-				<div class="bereiche">
-					<div id="ruestungsschmied">
+					<div class="bereichruestungsschmied">
 					<a href='http://gw.gameplorer.de/guides/ruestungsschmied-leveling-guide/' class='rightLink' target='_blank' >Guide öffnen</a>
 					<h3>
 						<a
@@ -126,44 +108,31 @@ echo $guildwars->suche($suche, "gw_chars", "name", "charakter.php?charID");
 					</h3>
 					<?php echo $guildwars->charInBeruf("Rüstungsschmied"); ?>
 					</div>
-				</div>
 
-				<div class="bereiche">
-					<div id="juwelier">
+					<div class="bereichjuwelier">
 					<a href='http://gw.gameplorer.de/guides/juwelier-leveling-guide/' class='rightLink' target='_blank' >Guide öffnen</a>
 					<h3>
 						<a href="http://gw.gameplorer.de/guides/juwelier-leveling-guide/" target='_blank' >Juwelier</a>
 					</h3>
 					<?php echo $guildwars->charInBeruf("Juwelier"); ?>
 					</div>
-				</div>
 
-				<div class="bereiche">
-					<div id="waidmann">
+					<div class="bereichwaidmann">
 					<a href='http://gw.gameplorer.de/guides/waidmann-leveling-guide/' class='rightLink' target='_blank' >Guide öffnen</a>
 					<h3>
 						<a href="http://gw.gameplorer.de/guides/waidmann-leveling-guide/" target='_blank' >Waidmann</a>
 					</h3>
 					<?php echo $guildwars->charInBeruf("Waidmann"); ?>
 					</div>
-				</div>
 			</div>
-
-				<br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br>
-				<br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> 
-				
-
-			
+		
 		</div>
 		<div class='mainbody'>
 			<div class='einkaufslisten'>
-			<br><br><br><br><br><br><br><br><br>
-							<h2>
-								<a name='einkaufslisten'>Einkaufslisten berechnen</a>
-							</h2>
-							<?php $guildwars->showBerufLinks(); ?>
-							<?php $guildwars->getBerufInfo(); ?>
-						</div>
+				<h2><a name='einkaufslisten'>Einkaufslisten berechnen</a></h2>
+				<?php $guildwars->showBerufLinks(); ?>
+				<?php $guildwars->getBerufInfo(); ?>
+			</div>
 		</div>
 		
 		<div class='mainbody'>
