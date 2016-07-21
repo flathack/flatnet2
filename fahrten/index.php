@@ -38,7 +38,7 @@ echo $fahrten->suche($suche, "fahrkosten", "datum", "?edit");
 			
 			<div class='rightBody'>
 			
-				<?php # $fahrten->showStatistik(); ?>
+				<?php $fahrten->showStatistik(); ?>
 				
 			</div>
 			
@@ -51,7 +51,7 @@ echo $fahrten->suche($suche, "fahrkosten", "datum", "?edit");
 				<?php $fahrten->alterFahrt(); ?>
 				<?php $fahrten->alterFahrzeug(); ?>
 				<?php $fahrten->alterZiel(); ?>
-				<?php $fahrten->showFahrtenNEW(); ?>
+				<?php $fahrten->showFahrten(); ?>
 				
 			</div>
 			

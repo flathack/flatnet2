@@ -2959,18 +2959,4 @@ input[type=checkbox]+label:hover {
 	padding-top: 20px;
 }
 
-.fahrt {
-	display: inline-block;
-	padding: 5px;
-	border: 1px solid grey;
-	margin: 4px;
-	width: 120px;
-}
-
-.fahrt h2 {
-	margin: 0px;
-	padding: 0px;
-	font-size: 15px;
-	font-weight: normal;
-}
 /* ENDE DER CSS */

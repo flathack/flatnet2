@@ -135,21 +135,6 @@ class fahrten extends functions {
 		}
 	}
 	
-	function showFahrtenNEW() {
-		
-		$userID = $this->getUserID($_SESSION['username']);
-		
-		$query = "SELECT * FROM fahrkosten WHERE besitzer=$userID ORDER BY datum DESC";
-		$getFahrtenInfo = $this->getObjektInfo($query);
-		
-		for ($i = 0 ; $i < sizeof($getFahrtenInfo) ; $i++) {
-			echo "<div class='fahrt'>";
-				echo "<h2>" .$getFahrtenInfo[$i]->datum . "</h2>";
-				echo "" .$getFahrtenInfo[$i]->fahrart. "";
-			echo "</div>";
-		}
-	}
-	
 	/**
 	 * Gibt Detailsinformationen zu einer bestimmten Fahrt zurück. Hat den Charakter einer Statistik.
 	 */
@@ -611,8 +596,4 @@ class fahrten extends functions {
 			}
 		}
 	}
-}
-
-class fahrtenNEW extends functions {
-	
 }
