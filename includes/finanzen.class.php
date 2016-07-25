@@ -1127,7 +1127,7 @@ class finanzenNEW extends functions {
 						$mark = "Konto";
 					}
 					echo "<div class='$mark'>";
-					echo "<p><a href='?editKonto=" . $konten [$i]->id . "'>" . $konten [$i]->konto . "</a><br>Saldo: ";
+					echo "<p><a href='detail.php?editKonto=" . $konten [$i]->id . "'>" . $konten [$i]->konto . "</a><br>Saldo: ";
 					echo $umsaetze [0]->summe . " €</p>";
 					echo "</div>";
 				}
@@ -1786,15 +1786,15 @@ class finanzenNEW extends functions {
 			echo "<p class='info'>Du hast noch keine Konten, du brauchst mindestens zwei Konten. Klicke <a href='?createStandardConfig'>hier</a> um eine Standardkonfiguration zu erstellen</p>";
 			
 			if (isset ( $_GET ['createStandardConfig'] )) {
-				if($this->userHasRight("18") == true) {
+				if($this->userHasRight(18, 0) == true) {
 					if ($this->objectExists ( "SELECT * FROM finanzen_konten WHERE besitzer = $besitzer AND konto = 'Hauptkonto'" ) == false) {
-						if ($this->sql_insert_update_delete ( "INSERT INTO finanzen_konten (konto, besitzer) VALUES ('Hauptkonto','$besitzer')" ) == true) {
+						if ($this->sql_insert_update_delete ( "INSERT INTO finanzen_konten (konto, besitzer, aktiv) VALUES ('Hauptkonto','$besitzer', 1)" ) == true) {
 							echo "<p class='erfolg'>Ein Hauptkonto wurde erstellt.</p>";
 						}
 					}
 					
-					if ($this->objectExists ( "SELECT * FROM finanzen_konten WHERE besitzer = $besitzer AND konto = 'Hauptkonto'" ) == false) {
-						if ($this->sql_insert_update_delete ( "INSERT INTO finanzen_konten (konto, besitzer) VALUES ('Ausgaben','$besitzer')" ) == true) {
+					if ($this->objectExists("SELECT * FROM finanzen_konten WHERE besitzer = $besitzer AND konto = 'Ausgaben'") == false) {
+						if ($this->sql_insert_update_delete ( "INSERT INTO finanzen_konten (konto, besitzer, aktiv) VALUES ('Ausgaben','$besitzer', 0)" ) == true) {
 							echo "<p class='erfolg'>Ein Ausgabenkonto wurde erstellt.</p>";
 						}
 					}
