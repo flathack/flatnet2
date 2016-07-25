@@ -1161,6 +1161,105 @@ blockquote {
 	border: 1px solid #c5c5c5;
 }
 
+.newFahrt {
+	border: 1px solid grey;
+	box-shadow: 5px 5px 5px grey;
+	padding: 10px;
+	margin-top: 10px;
+	margin-bottom: 10px;
+}
+
+.newFahrt #bemerkungen {
+	float: right;
+}
+.newFahrt #bemerkungen input[type=text] {
+	padding: 15px;
+}
+
+input[type=radio]:not(old) + label > span{
+  display          : inline-block;
+  width            : 0.875em;
+  height           : 0.875em;
+  margin           : 0.25em 0.5em 0.25em 0.25em;
+  border-radius    : 0.25em;
+  background       : rgb(224,224,224);
+  background-image :    -moz-linear-gradient(rgb(240,240,240),rgb(224,224,224));
+  background-image :     -ms-linear-gradient(rgb(240,240,240),rgb(224,224,224));
+  background-image :      -o-linear-gradient(rgb(240,240,240),rgb(224,224,224));
+  background-image : -webkit-linear-gradient(rgb(240,240,240),rgb(224,224,224));
+  background-image :         linear-gradient(rgb(240,240,240),rgb(224,224,224));
+  vertical-align   : bottom;
+}
+
+input[type=radio]:not(old):checked + label > span{
+  background-image :    -moz-linear-gradient(rgb(224,224,224),rgb(240,240,240));
+  background-image :     -ms-linear-gradient(rgb(224,224,224),rgb(240,240,240));
+  background-image :      -o-linear-gradient(rgb(224,224,224),rgb(240,240,240));
+  background-image : -webkit-linear-gradient(rgb(224,224,224),rgb(240,240,240));
+  background-image :         linear-gradient(rgb(224,224,224),rgb(240,240,240));
+}
+
+input[type=radio]:not(old):checked + label > span > span{
+  display          : block;
+  width            : 0.5em;
+  height           : 0.5em;
+  margin           : 0.125em;
+  border           : 0.0625em solid grey;
+  border-radius    : 0.125em;
+  background       : red;
+  background-image :    -moz-linear-gradient(rgb(179,217,140),rgb(153,204,102));
+  background-image :     -ms-linear-gradient(rgb(179,217,140),rgb(153,204,102));
+  background-image :      -o-linear-gradient(rgb(179,217,140),rgb(153,204,102));
+  background-image : -webkit-linear-gradient(rgb(179,217,140),rgb(153,204,102));
+  background-image :         linear-gradient(rgb(179,217,140),rgb(153,204,102));
+}
+
+.newFahrt #anzahlFahrten {
+	padding: 10px;
+	marign-right: 10px;
+}
+.newFahrt #anzahlFahrten input[type=text] {
+	width: 20px;
+}
+
+.newFahrt #spritpreis {
+	padding: 10px;
+	marign-right: 10px;
+}
+.newFahrt #spritpreis input[type=text] {
+	width: 50px;
+}
+
+.newFahrt #datum {
+	position: relative;
+	margin-top: -30px;
+	float: right;
+	border: 1px dotted grey;
+	width: 150px;
+}
+
+.newFahrt #datum input[type=date] {
+	border: none;
+	width: 130px;
+}
+
+.newFahrt #fahrzeuge {
+	padding-bottom: 5px;
+	margin-bottom: 5px;
+	border-bottom: 1px solid grey;
+	
+}
+.newFahrt #ziele {
+	padding-bottom: 5px;
+	margin-bottom: 5px;
+	border-bottom: 1px solid grey;
+	
+}
+
+.newFahrt #absenden {
+	margin-top: 20px;
+}
+
 .newCharWIDE {
 	border: 1px solid #a03235;
 	margin-bottom: 10px;
@@ -1833,14 +1932,13 @@ input[type=radio] {
 
 input[type=radio]+label {
 	display: inline-block;
-	box-shadow: 0px 0px 5px grey;
 	margin-right: 2px;
 	padding: 4px 12px;
 	font-size: 14px;
 	color: #333;
 	cursor: pointer;
 	background-color: white;
-	border: 1px solid #3366FF;
+	border: 1px solid grey;
 	-webkit-transition: all 0.3s ease-in-out;
 	-moz-transition: all 0.3s ease-in-out;
 	-ms-transition: all 0.3s ease-in-out;
@@ -1849,8 +1947,8 @@ input[type=radio]+label {
 }
 
 input[type=radio]:checked+label {
-	background-color: #b3cfff;
-	border: 1px solid blue;
+	background-color: #d8d8da;
+	border: 1px solid black;
 	-webkit-transition: all 0.3s ease-in-out;
 	-moz-transition: all 0.3s ease-in-out;
 	-ms-transition: all 0.3s ease-in-out;
@@ -1861,7 +1959,7 @@ input[type=radio]:checked+label {
 input[type=radio]+label:hover {
 	border: 1px solid #3366FF;
 	background: #e4e1ff;
-	box-shadow: 0px 0px 5px grey;
+	box-shadow: 0px 0px 2px grey;
 	-webkit-transition: all 0.3s ease-in-out;
 	-moz-transition: all 0.3s ease-in-out;
 	-ms-transition: all 0.3s ease-in-out;

@@ -73,8 +73,7 @@ class fahrten extends functions {
 	function showFahrten() {
 		
 		if($this->userHasRight("11", 0) == true) {
-			
-			echo "<h2>Fahrkosten</h2>";
+			echo "<div class='newFahrt'>";
 			$userID = $this->getUserID ( $_SESSION ['username'] );
 			
 			# ###################################
@@ -98,10 +97,10 @@ class fahrten extends functions {
 			echo "<td>Notizen</td>";
 			echo "<td>Spritpreis</td>";
 			echo "<td>Kosten</td>";
-			echo "<td></td>";
+			echo "<td></td><td></td>";
 			for($i = 0; $i < sizeof ( $fahrten ); $i ++) {
 				echo "<tbody><td>";
-				echo "<a href='#' onclick=\"document.getElementById('fahrt$i').style.display = 'block'\">" . $fahrten [$i]->tag . "-" . $fahrten [$i]->monat . "-" . $fahrten [$i]->jahr . "</a></td><td>" . $fahrten [$i]->fahrart . "</td><td>" . $fahrten [$i]->ziel . "</td><td>" . substr ( $fahrten [$i]->notizen, 0, 10 ) . "..</td><td>" . $fahrten [$i]->spritpreis . " &#8364;</td>";
+				echo "<a href='#' onclick=\"document.getElementById('fahrt$i').style.display = 'block'\">" . $fahrten [$i]->tag . "." . $fahrten [$i]->monat . "." . $fahrten [$i]->jahr . "</a></td><td>" . $fahrten [$i]->fahrart . "</td><td>" . $fahrten [$i]->ziel . "</td><td>" . substr ( $fahrten [$i]->notizen, 0, 10 ) . "..</td><td>" . $fahrten [$i]->spritpreis . " &#8364;</td>";
 				
 				// BERECHNUNG DER KOSTEN
 				echo "<td>";
@@ -124,9 +123,10 @@ class fahrten extends functions {
 				echo $kosten . " &#8364;";
 				echo "</td>";
 				// OPTIONEN
-				echo "<td>$error<a href='?edit=" . $fahrten [$i]->id . "' class='rightBlueLink'>edit</a>
-				<a href='?loeschen&loeschid=" . $fahrten [$i]->id . "' class='rightRedLink'>X</a>
-				</td>" . "</tbody>";
+				echo "<td>$error<a href='?edit=" . $fahrten [$i]->id . "' class='rightBlueLink'>edit</a></td>";
+				echo "<td><a href='?loeschen&loeschid=" . $fahrten [$i]->id . "' class='rightRedLink'>X</a></td>";
+				echo "</tbody>";
+				echo "</div>";
 			}
 			
 			echo "</table>";
@@ -168,11 +168,12 @@ class fahrten extends functions {
 		if($this->userHasRight("12", 0) == true) {
 			
 			// Feld zur Eingabe anzeigen.
-			echo "<div class='newChar' style=\"display: none;\" id=\"neueFahrt\">";
-			echo "<a href=\"#\"  class='highlightedLink' onclick=\"document.getElementById('neueFahrt').style.display = 'none'\">X</a>";
-			echo "<h2>Neue Fahrt erstellen</h2>";
+			echo "<div class='newFahrt' id=\"neueFahrt\">";
+		#	echo "<a href=\"#\"  class='highlightedLink' onclick=\"document.getElementById('neueFahrt').style.display = 'none'\">X</a>";
+			echo "<h2>Fahrt hinzufügen</h2>";
 			echo "<form method=post>";
-
+			
+			# bereits vorhandene Variablen erkennen:
 			if (isset ( $_POST ['fahrart'] )) {
 				$fahrtart = $_POST ['fahrart'];
 			} else {
@@ -188,41 +189,36 @@ class fahrten extends functions {
 			$timestamp = time();
 			$heute = date("Y-m-d", $timestamp);
 			
-			echo "<table>";
-			echo "<tr><td>" . "Datum der Fahrt:</td><td> <input type=date id='datepicker' placeholder='Datum' name='datum' value='$heute' required /></td></tr>";
-			echo "<tr><td>Welches Fahrzeug: </td>";
+			#################################### Neue Darstellung ###################################
+			### Datum
 			
+			echo "<div id=datum> <input type=date id='datepicker' placeholder='Datum' name='datum' value='$heute' required /></div>";
+			
+			### Fahrzeuge
+			echo "<div id=fahrzeuge>";
 			$userID = $this->getUserID ( $_SESSION ['username'] );
 			$fahrzeuge = $this->getObjektInfo ( "SELECT * FROM fahrzeuge WHERE besitzer = '$userID'" );
-			echo "<td><select name='fahrart'>";
-			echo "<option></option>";
+			
 			for($i = 0; $i < sizeof ( $fahrzeuge ); $i ++) {
-				echo "<option";
-				if (isset ( $_POST ['fahrart'] )) {
-					if ($_POST ['fahrart'] == $fahrzeuge [$i]->name_tag) {
-						echo " selected ";
-					}
-				}
-				echo ">" . $fahrzeuge [$i]->name_tag . "</option>";
+				echo "<input type=radio name='fahrart' value='".$fahrzeuge[$i]->name_tag."' id='".$fahrzeuge[$i]->name_tag."'>";
+				echo "<label for='".$fahrzeuge[$i]->name_tag."'><span><span></span></span>".$fahrzeuge[$i]->name_tag."</label>";
 			}
-			echo "</select></td></tr>";
+			echo "</div>";
 			
+			### ZIELE
+			echo "<div id=ziele>";
+			$userID = $this->getUserID ( $_SESSION ['username'] );
 			$ziele = $this->getObjektInfo ( "SELECT * FROM fahrkostenziele WHERE besitzer = '$userID'" );
-			echo "<tr><td>Welches Ziel: </td>";
-			echo "<td><select name='ziel'>";
-			echo "<option></option>";
+				
 			for($i = 0; $i < sizeof ( $ziele ); $i ++) {
-				echo "<option";
-				if (isset ( $_POST ['ziel'] )) {
-					if ($_POST ['ziel'] == $ziele [$i]->name) {
-						echo " selected ";
-					}
-				}
-				echo ">" . $ziele [$i]->name . "</option>";
+				echo "<input type=radio name='ziel' value='".$ziele[$i]->name."' id='".$ziele[$i]->name."'>";
+				echo "<label for='".$ziele[$i]->name."'><span><span></span></span>".$ziele[$i]->name."</label>";
 			}
-			echo "</select></td></tr>";
-			echo "<tr><td>Bemerkungen: </td><td><input type=text placeholder='Platz für Bemerkungen' name='notizen' value='' /></td></tr>";
+			echo "</div>";
 			
+			echo "<div id=bemerkungen><input type=text placeholder='Platz für Bemerkungen' name='notizen' value='' /></div>";
+			
+			echo "<div id=zusatz>";
 			// Spritpreis: Letzten Spritpreis automatisch einfügen.
 			$userID = $this->getUserID ( $_SESSION ['username'] );
 			$lastPreis = $this->getObjektInfo ( "SELECT id, spritpreis as preis FROM fahrkosten WHERE besitzer = '$userID' order by id DESC" );
@@ -231,12 +227,12 @@ class fahrten extends functions {
 			} else {
 				$preis = 0;
 			}
+				echo "<span id=anzahlFahrten><input type=text placeholder='Hin- und Rückfahrt?' name='fahrrichtung' value='2' /> Fahrten</span>";
+				echo "<span id=spritpreis><input type=text placeholder='Preis' name='spritpreis' value='$preis' /> Spritpreis</span>";
+			echo "</div>";
 			
-			echo "<tr><td>Spritpreis: </td><td><input type=text placeholder='Preis' name='spritpreis' value='$preis' /></td></tr>";
-			echo "<tr><td>Fahrt: </td><td><input type=text placeholder='Hin- und Rückfahrt?' name='fahrrichtung' value='2' /></td></tr>";
-			
-			echo "<tr><td><input type=submit name=ok value='Absenden' /></td></tr>";
-			echo "</table>";
+			echo "<div id='absenden'><input type=submit name=ok value='Absenden' /></div>";
+
 			echo "</form>";
 			
 			echo "</div>";
