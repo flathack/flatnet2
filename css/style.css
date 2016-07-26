@@ -1161,6 +1161,29 @@ blockquote {
 	border: 1px solid #c5c5c5;
 }
 
+.navigationReiter li {
+	display: inline;
+	margin: 0px 0px 0px 0px;
+	padding: 5px;
+	border-bottom: 1px dotted #1000a4;
+	border: 1px solid transparent;
+}
+
+.navigationReiter li:hover {
+	border: 1px dotted #1000a4;
+	text-decoration: none;
+	border-radius: 5px;
+}
+
+.navigationReiter li a {
+	color: #1000a4;
+	text-decoration: none;
+}
+
+.navigationReiter li a:hover {
+	color: blue;
+}
+
 .newFahrt {
 	border: 1px solid grey;
 	box-shadow: 5px 5px 5px grey;
@@ -1295,7 +1318,7 @@ input[type=radio]:not(old):checked + label > span > span{
 	position: relative;
 }
 
-.newChar select, .newCharWIDE select {
+.newChar select, .newCharWIDE select, .newFahrt select {
 	padding: 3px;
 	width: 211px;
 	background: #ebebeb;
@@ -1308,6 +1331,10 @@ input[type=radio]:not(old):checked + label > span > span{
 , .newChar input[type=number]
 , .newChar input[type=date]
 , .newChar input[type=password],
+.newFahrt input[type=text],
+.newFahrt input[type=number],
+.newFahrt input[type=date],
+.newFahrt input[type=password],
 .newCharWIDE input[type=text]
 , .newCharWIDE input[type=number]
 , .newCharWIDE input[type=date]
@@ -1319,7 +1346,7 @@ input[type=radio]:not(old):checked + label > span > span{
 	font-family: cursive;
 }
 
-.newChar textarea, .newCharWIDE textarea {
+.newChar textarea, .newCharWIDE textarea, .newFahrt textarea {
 	padding: 10px; 
 	margin-top: 15px;
 	margin-bottom: 15px;

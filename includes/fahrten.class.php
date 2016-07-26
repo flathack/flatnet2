@@ -118,7 +118,6 @@ class fahrten extends functions {
 						
 				}
 				
-				
 				$kosten = round ( $liter * $fahrten [$i]->spritpreis, 2 );
 				echo $kosten . " &#8364;";
 				echo "</td>";
@@ -299,7 +298,7 @@ class fahrten extends functions {
 			if (isset ( $_GET ['edit'] )) {
 				$id = $_GET ['edit'];
 				
-				echo "<div id='draggable' class='newChar'>";
+				echo "<div id='draggable' class='newFahrt'>";
 				echo "<a href='?' class='highlightedLink'>X</a>";
 				
 				// Wenn abgeschickt wurde:
@@ -420,7 +419,7 @@ class fahrten extends functions {
 	function newFahrzeug() {
 		if($this->userHasRight("12", 0) == true) {
 		
-			echo "<div class='newChar' style=\"display: none;\" id=\"neuesFahrzeug\">";
+			echo "<div class='newFahrt' style=\"display: none;\" id=\"neuesFahrzeug\">";
 			echo "<a href=\"#\"  class='highlightedLink' onclick=\"document.getElementById('neuesFahrzeug').style.display = 'none'\">X</a>";
 			echo "<h2>Neues Fahrzeug erstellen</h2>";
 			
@@ -526,7 +525,7 @@ class fahrten extends functions {
 	function newZiel() {
 		if($this->userHasRight("12", 0) == true) {
 			
-			echo "<div class='newChar' style=\"display: none;\" id=\"neuesZiel\">";
+			echo "<div class='newFahrt' style=\"display: none;\" id=\"neuesZiel\">";
 			echo "<a href=\"#\"  class='highlightedLink' onclick=\"document.getElementById('neuesZiel').style.display = 'none'\">X</a>";
 			echo "<h2>Neues Ziel erstellen</h2>";
 			

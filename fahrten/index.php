@@ -29,12 +29,16 @@ echo $fahrten->suche($suche, "fahrkosten", "datum", "?edit");
 	</head>
 	<body>
 		<div class='mainbodyDark'>
-		
-			<a href="#" class='buttonlink' onclick="document.getElementById('neueFahrt').style.display = 'block'"> Neue Fahrt</a>
-			<a href="#" class='buttonlink' onclick="document.getElementById('neuesFahrzeug').style.display = 'block'"> Neues Fahrzeug</a>
-			<a href="#" class='buttonlink' onclick="document.getElementById('neuesZiel').style.display = 'block'"> Neues Ziel</a>
-			<a href="#" class='buttonlink' onclick="document.getElementById('listFahrzeuge').style.display = 'block'"> Fahrzeuge anzeigen</a>
-			<a href="#" class='buttonlink' onclick="document.getElementById('listZiele').style.display = 'block'"> Ziele anzeigen</a>
+			<div class="navigationReiter">
+				<ul>
+					<li><a href="#" class='' onclick="document.getElementById('neuesFahrzeug').style.display = 'block'">Fahrzeug erstellen</a></li>
+					<li><a href="#" class='' onclick="document.getElementById('neuesZiel').style.display = 'block'">Ziel erstellen</a></li>
+					<li><a href="#" class='' onclick="document.getElementById('listFahrzeuge').style.display = 'block'">Fahrzeuge anzeigen</a></li>
+					<li><a href="#" class='' onclick="document.getElementById('listZiele').style.display = 'block'">Ziele anzeigen</a></li>
+				</ul>
+			</div>
+			
+			
 			
 			<div class='rightBody'>
 			
@@ -43,14 +47,14 @@ echo $fahrten->suche($suche, "fahrkosten", "datum", "?edit");
 			</div>
 			
 			<div class='innerBody'>
-				<?php $fahrten->newFahrt(); ?>
-				<?php $fahrten->newFahrzeug(); ?>
-				<?php $fahrten->newZiel(); ?>
 				<?php $fahrten->listFahrzeuge(); ?>
 				<?php $fahrten->listZiele(); ?>
 				<?php $fahrten->alterFahrt(); ?>
 				<?php $fahrten->alterFahrzeug(); ?>
 				<?php $fahrten->alterZiel(); ?>
+				<?php $fahrten->newFahrzeug(); ?>
+				<?php $fahrten->newZiel(); ?>
+				<?php $fahrten->newFahrt(); ?>
 				<?php $fahrten->showFahrten(); ?>
 				
 			</div>
