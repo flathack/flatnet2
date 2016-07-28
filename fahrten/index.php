@@ -35,6 +35,7 @@ echo $fahrten->suche($suche, "fahrkosten", "datum", "?edit");
 					<li><a href="#" class='' onclick="document.getElementById('neuesZiel').style.display = 'block'">Ziel erstellen</a></li>
 					<li><a href="#" class='' onclick="document.getElementById('listFahrzeuge').style.display = 'block'">Fahrzeuge anzeigen</a></li>
 					<li><a href="#" class='' onclick="document.getElementById('listZiele').style.display = 'block'">Ziele anzeigen</a></li>
+					<li><a href="monitor.php" class='' >Spritmonitor</a></li>
 				</ul>
 			</div>
 			
