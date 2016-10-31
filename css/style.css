@@ -250,6 +250,7 @@ blockquote {
 #guildwars #guildwars,
 #forum #forum,
 #fahrten #fahrten,
+#amazon #amazon,
 #gesundheit #gesundheit,
 #starcitizen #starcitizen,
 #profil #profil,
@@ -345,6 +346,7 @@ blockquote {
 .bereichforum h2,
 .bereichfinanzen h2,
 .bereichfahrten h2,
+.bereichamazon h2,
 .bereichlernen h2,
 .bereichadministration h2,
 .bereichprofil h2,
@@ -359,6 +361,7 @@ blockquote {
 .bereichforum p,
 .bereichfinanzen p,
 .bereichfahrten p,
+.bereichamazon p,
 .bereichlernen p,
 .bereichadministration p,
 .bereichprofil p,
@@ -461,6 +464,18 @@ blockquote {
 }
 
 .bereichfahrten {
+	background-color: #ffffff;
+	border: 1px solid #c0c0c0;
+	box-shadow: 0px 0px 5px #c0c0c0;
+	margin-bottom: 10px;
+	margin-right: 10px;
+	padding: 5px;
+	min-height: 120px;
+	width: 46%;
+	display: inline-block;
+}
+
+.bereichamazon {
 	background-color: #ffffff;
 	border: 1px solid #c0c0c0;
 	box-shadow: 0px 0px 5px #c0c0c0;
@@ -2266,6 +2281,14 @@ input[type=password]:focus {
 	background-color: #f0faff;
 	border: 1px solid black;
 	color: black;
+}
+
+.kontoTable #ok {
+	background-color: #b3ffb3;
+}
+
+.kontoTable #notOK {
+	background-color: #ffd9da;
 }
 
 .kontoTable #today a {

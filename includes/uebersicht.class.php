@@ -258,11 +258,11 @@ class uebersicht extends functions {
 		# Bereiche, welche für den Benutzer nicht sichtbar sind.
 		for($i = 0; $i < sizeof($kacheln); $i++) {
 			if($this->userHasRight($kacheln[$i]->rightID, 0) == false) {
-				echo "<div class='bereichINACTIVE'>";
-				echo "<h2></h2>";
+			#	echo "<div class='bereichINACTIVE'>";
+				echo "<h2> - </h2>";
 				echo "<p></p>";
 				$this->changeStatus($kacheln[$i]->id);
-				echo "</div>";
+			#	echo "</div>";
 			}
 		}
 		

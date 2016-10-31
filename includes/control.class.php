@@ -371,6 +371,7 @@ class control extends functions {
 		$zuordnung = array (
 				"account_infos" => "besitzer",
 				"adressbuch" => "xxx",
+				"amazon_infos" => "autor",
 				"benutzer" => "xxx",
 				"blogtexte" => "autor",
 				"blogkategorien" => "xxx",
@@ -402,6 +403,7 @@ class control extends functions {
 		$zuordnung2 = array (
 				"besitzer" => "account_infos",
 				"xxx" => "adressbuch",
+				"autor" => "amazon_infos",
 				"xxx" => "benutzer",
 				"autor" => "blogtexte",
 				"xxx" => "blogkategorien",
