@@ -35,9 +35,9 @@ class sql {
 		if($mode == "phpfriends") {
 			# PHP Friends
 			$host = "localhost";
-			$sqlusername = "root";
+			$sqlusername = "62_flathacksql1";
 			$sqluserpassword = "12141214";
-			$sqldatabase = "flathacksql1";
+			$sqldatabase = "62_flathacksql1";
 			$errorsqlconnect .= "<p class=''>Quaggan kann Seite nicht finden. Nur 404. Quaggan traurig.</p>";
 			$errorsqlconnect .= "<img src='/flatnet2/images/fehler/404.png' name='' alt='404 Fehler'>";
 			$errordbconnect .= "<p class=''>Quaggan kann Seite nicht finden. Nur 404. Quaggan traurig.</p>";
@@ -61,7 +61,7 @@ class sql {
 	function connectToDBNewWay() {
 		try {
 		$dbname = $this->getDBName();
-		$db = new PDO("mysql:host=localhost;dbname=$dbname", "62_flathacksql1", "f12245f8@sql1");
+		$db = new PDO("mysql:host=localhost;dbname=$dbname", "62_flathacksql1", "12141214");
 		} catch (Exception $e) {
 			$css = '<link href="/flatnet2/css/error.css" type="text/css" rel="stylesheet" />';
 			$errorText = "<p class='info'>Datenbank Error</p>";
