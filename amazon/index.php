@@ -23,13 +23,14 @@ $amazon->logged_in("redirect", "index.php");
 # $amazon->userHasRightPruefung("11");
 
 $suche = isset($_GET['suche']) ? $_GET['suche'] : '';
-echo $amazon->suche($suche, "fahrkosten", "datum", "?edit");
+echo $amazon->suche($suche, "amazon_infos", "name_of_article", "?edit");
 ?>
 <title>Steven.NET - Amazonliste</title>
 	</head>
 	<body>
 		<div class='mainbodyDark'>
 			<?php $amazon->setErstattet(); ?>
+			<?php $amazon->setPayed(); ?>
 			<?php $amazon->setRuecksendung(); ?>
 			<?php $amazon->createAmazonArticle(); ?>
 			<?php $amazon->editPayment(); ?>
