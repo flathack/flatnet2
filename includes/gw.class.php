@@ -426,7 +426,7 @@ class gw_charakter extends guildwars {
 				echo "<select class='selectUsers' onChange='this.form.submit();' name='userNameForGW' onclick='' >";
 	
 				#while($row = mysql_fetch_object($getusersErgeb)) {
-				$allUsers = $this->getObjectsToArray("SELECT Name FROM benutzer ORDER BY Name");
+				$allUsers = $this->getObjektInfo("SELECT Name FROM benutzer ORDER BY Name");
 					
 				# Gibt Benutzer aus.
 				for ($i = 0; $i < sizeof($allUsers); $i++) {
