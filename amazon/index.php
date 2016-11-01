@@ -31,6 +31,7 @@ echo $amazon->suche($suche, "amazon_infos", "name_of_article", "?edit");
 		<div class='mainbodyDark'>
 			<?php $amazon->setErstattet(); ?>
 			<?php $amazon->setPayed(); ?>
+			<?php $amazon->setHide(); ?>
 			<?php $amazon->setRuecksendung(); ?>
 			<?php $amazon->createAmazonArticle(); ?>
 			<?php $amazon->editPayment(); ?>

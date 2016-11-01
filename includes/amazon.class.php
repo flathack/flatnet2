@@ -15,11 +15,11 @@ class amazon extends functions {
 	 * Gibt alle Zugeordneten Amazon-Umsätze zurück, welche für den Benutzer vorhanden sind.
 	 */
 	function getAmazonPayments() {
-		echo "<div class=''>";
+		echo "<div class='newFahrt'>";
 		
 		if($this->userHasRight(80, 0) == false) {
 			$userid = $this->getUserID($_SESSION['username']);
-			$query = "SELECT * FROM amazon_infos WHERE autor=$userid ";
+			$query = "SELECT * FROM amazon_infos WHERE autor=$userid AND hide=0";
 			$userArticles = $this->getObjektInfo($query);
 			
 			$getRuecksendungSumme = $this->getObjektInfo("SELECT sum(value_of_article) as summe FROM amazon_infos WHERE autor = $userid AND payed=1 AND ruecksendung=1 and erstattet=0");
@@ -108,10 +108,8 @@ class amazon extends functions {
 	
 		if($this->userHasRight(80, 0) == true) {
 			
-			echo "<h2>Umsätze deiner User</h2>";
-			
-			echo "<div class='ok'>";
-			
+			echo "<div class='newFahrt'>";
+						
 			$queryusers = "SELECT * FROM amazon_infos GROUP BY autor";
 			$usersWithArticles = $this->getObjektInfo($queryusers);
 			
@@ -119,23 +117,24 @@ class amazon extends functions {
 								
 				$userid = $usersWithArticles[$i]->autor;
 				$username = $this->getUserName($usersWithArticles[$i]->autor);
-				echo "<h3>" . $username . "</h3>";
+				echo "<h2>" . $username . "</h2>";
 				
 				$offeneSumme = $this->getObjektInfo("SELECT sum(value_of_article) as summe FROM amazon_infos WHERE autor=$userid AND payed=0 AND ruecksendung=0");
-				
+				echo "<p class='info'>";
 				$openSum = 0 + $offeneSumme[0]->summe;
 				if($openSum > 0) {
-					echo "<p class='meldung'>$openSum € sind offen</p>";
+					echo "$openSum € sind offen <br>";
 				}
 				
 				$erstattenDuMusst = $this->getObjektInfo("SELECT sum(value_of_article) as summe FROM amazon_infos WHERE autor=$userid AND payed=1 AND ruecksendung=1 AND erstattet=0");
 				
 				$sumOfErstattung = 0 + $erstattenDuMusst[0]->summe;
 				if($sumOfErstattung > 0) {
-					echo "<p class='meldung'>Du musst $sumOfErstattung € erstatten</p>";
+					echo "Du musst $sumOfErstattung € erstatten <br> ";
 				}
+				echo "</p>";
 				
-				$query = "SELECT * FROM amazon_infos WHERE autor =$userid ORDER BY payed, date_of_order, date_of_faelligkeit, date_of_payment";
+				$query = "SELECT * FROM amazon_infos WHERE autor=$userid AND hide=0 ORDER BY payed, date_of_order, date_of_faelligkeit, date_of_payment";
 				$adminArticles = $this->getObjektInfo($query);
 				
 				echo "<table class='kontoTable'>";
@@ -148,7 +147,7 @@ class amazon extends functions {
 					echo "<td>" . "bezahlt" . "</td>";
 					echo "<td>" . "Rücksendung" . "</td>";
 					echo "<td>" . "Erstattet" . "</td>";
-				#	echo "<td>" . "Optionen" . "</td>";
+					echo "<td>" . "Verbergen" . "</td>";
 				echo "</thead>";
 				for ($j = 0 ; $j < sizeof($adminArticles) ; $j++) {
 					
@@ -205,7 +204,16 @@ class amazon extends functions {
 								echo "<a href='?id=" . $adminArticles[$j]->id . "&erstattetDO'>nein</a>";
 							}
 						echo "</td>";
-					#	echo "<td>" . "<a href='?id=" . $adminArticles[$j]->id . "&edit=yes'>edit</a>" . "</td>";
+						
+						echo "<td>";
+						if($adminArticles[$j]->hide == 1) {
+							echo "<a href='?id=" . $adminArticles[$j]->id . "&HideUNDO'>verborgen</a>";
+						}
+						if($adminArticles[$j]->hide == 0) {
+							echo "<a href='?id=" . $adminArticles[$j]->id . "&HideDO'>verbergen</a>";
+						}
+						echo "</td>";
+					
 						
 					echo "</tbody>";
 				}
@@ -237,24 +245,33 @@ class amazon extends functions {
 						echo "<td>User</td>";
 						echo "<td>Name</td>";
 						echo "<td>Preis</td>";
+					echo "</thead>";
+					
+					echo "<tbody>";
+						echo "<td><select name=user>";
+						for($i = 0 ; $i < sizeof($alluser) ; $i++) {
+							echo "<option value='".$alluser[$i]->id."'>" . $alluser[$i]->Name. "</option>";
+						}
+						echo "</select></td>";
+						echo "<td><input name=name type=text placeholder='Name des Artikels' /></td>";
+						echo "<td><input name=preis type=text placeholder='Preis' /></td>";
+					echo "</tbody>";
+					
+				echo "</table>";
+				
+				echo "<table>";
+					echo "<thead>";
 						echo "<td>Kaufdatum</td>";
 						echo "<td>Fällig am</td>";
 					echo "</thead>";
-					echo "<tbody><td>";
-					echo "<select name=user>";
-					for($i = 0 ; $i < sizeof($alluser) ; $i++) {
-						echo "<option value='".$alluser[$i]->id."'>" . $alluser[$i]->Name. "</option>";
-					}
-					echo "</select></td>";
+					echo "<tbody>";
+						echo "<td><input name=kdate type=date placeholder='Kaufdatum' /></td>";
+						echo "<td><input name=fdate type=date placeholder='Fälligkeit' /></td>";
+						echo "<td><input type=submit name=absenden value=speichern /></td>";
+					echo "</tbody>";
 					
-					echo "<td><input name=name type=text placeholder='Name des Artikels' /></td>";
-					echo "<td><input name=preis type=text placeholder='Preis' /></td>";
-					echo "<td><input name=kdate type=date placeholder='Kaufdatum' /></td>";
-					echo "<td><input name=fdate type=date placeholder='Fälligkeit' /></td>";
-					echo "<td><input type=submit name=absenden value=speichern /></td>";
-					echo "</form>";
-				
 				echo "</table>";
+				echo "</form>";
 				
 			echo "</div>";
 			
@@ -272,8 +289,8 @@ class amazon extends functions {
 				
 				if($user > 0 AND $preis != "" AND $kdate != "" AND $fdate != "") {
 					
-					$query="INSERT INTO amazon_infos (autor, name_of_article, value_of_article, date_of_order, date_of_faelligkeit, date_of_payment, payed, ruecksendung, erstattet) 
-							VALUES ('$user', '$name', '$preis', '$kdate', '$fdate', '0000-00-00', '0', '0', '0')";
+					$query="INSERT INTO amazon_infos (autor, name_of_article, value_of_article, date_of_order, date_of_faelligkeit, date_of_payment, payed, ruecksendung, erstattet,hide) 
+							VALUES ('$user', '$name', '$preis', '$kdate', '$fdate', '0000-00-00', '0', '0', '0', '0')";
 					
 					if ($this->sql_insert_update_delete($query) == true) {
 						
@@ -399,6 +416,38 @@ class amazon extends functions {
 					
 			}
 				
+		}
+	}
+	
+	/**
+	 * Setzt das gezahlt Attribut von 0 auf 1 und umgekehrt
+	 */
+	function setHide() {
+		if($this->userHasRight(80, 0) == true) {
+	
+			# payed Attribut wird auf 0 gesetzt
+			if(isset($_GET['HideDO']) AND isset($_GET['id'])) {
+				$id = $_GET['id'];
+				$sqlupdate = "UPDATE amazon_infos SET hide=1 WHERE id=$id";
+				if ($this->sql_insert_update_delete($sqlupdate) == true) {
+					echo "<p class='erfolg'>OK</p>";
+				} else {
+					echo "<p class='meldung'>ERROR</p>";
+				}
+			}
+	
+			# payed Attribut wird auf 0 gesetzt
+			if(isset($_GET['HideUNDO']) AND isset($_GET['id'])) {
+				$id = $_GET['id'];
+				$sqlupdate = "UPDATE amazon_infos SET hide=0 WHERE id=$id";
+				if ($this->sql_insert_update_delete($sqlupdate) == true) {
+					echo "<p class='erfolg'>OK</p>";
+				} else {
+					echo "<p class='meldung'>ERROR</p>";
+				}
+					
+			}
+	
 		}
 	}
 	
