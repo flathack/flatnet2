@@ -33,6 +33,8 @@ echo '<link href="/flatnet2/css/style.css" type="text/css" rel="stylesheet" />
 			<a href="http://www.disclaimer.de/disclaimer.htm?farbe=FFFFFF/000000/000000/000000"><img src="http://www.disclaimer.de/images/d_aniwhite.gif" 
 			width="84" height="20" border=0 alt="disclaimer"></a>
 			
+			<?php include 'impressum.html';?>
+			
 
 		</div>
 

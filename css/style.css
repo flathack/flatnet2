@@ -34,6 +34,7 @@ h1 {
 	font-size: 25px;
 	padding-top: 5px;
 	padding-bottom: 15px;
+	color: #3f3f3f;
 }
 
 h2 {
@@ -44,12 +45,19 @@ h2 {
 	color: #3f3f3f;
 }
 
-h3, h4, h5, h6 {
-	font-size: 15px;
+h3, h5, h6 {
+	font-size: 16px;
 	margin-top: 5px;
 	margin-bottom: 5px;
 	font-weight: 600;
-	color: #000095;
+	color: #3f3f3f;
+}
+
+h4 {
+	font-size: 15px;
+	color: #000091;
+	text-decoration: underline;
+	font-weight: normal;
 }
 
 /* Standard-Links */
