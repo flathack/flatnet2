@@ -80,8 +80,8 @@ class datenbanken extends functions {
 		// Erst los legen, wenn in Adresszeile Bearbeiten steht.
 		if (isset ( $_GET ["bearbeiten"] )) {
 			$userid = $_GET ['bearbeiten'];
+			$ausgabe .= "<div class='newFahrt'>";
 			$ausgabe .= "<h2>Eintrag anzeigen und bearbeiten</h2>";
-			$ausgabe .= "<div>";
 			$ausgabe .= "<table class='AdressTable'>";
 			$ausgabe .= "<form action='?' METHOD=GET>";
 			$bearbeiten = $_GET ["bearbeiten"];
