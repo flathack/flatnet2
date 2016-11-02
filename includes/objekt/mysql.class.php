@@ -253,7 +253,7 @@ class sql {
 	 */
 	function logme($received_query) {
 		if(isset($_SESSION['username'])) {
-			$username = "";
+			$username = $_SESSION['username'];
 		} else {
 			$username = "Unknown-User";
 		}
