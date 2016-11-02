@@ -2273,7 +2273,7 @@ class control extends functions {
 			echo "<thead>";
 				echo "<td>"."ID"."</td>";
 				echo "<td id='fixedLaenge'>"."Datum & Zeit"."</td>";
-				echo "<td>"."Benutzer"."</td>";
+				echo "<td id='fixedLaenge'>"."Benutzer"."</td>";
 				echo "<td>"."Text"."</td>";
 				echo "<td id='fixedLaenge'>"."IP"."</td>";
 			echo "</thead>";
@@ -2282,7 +2282,7 @@ class control extends functions {
 					$username = $this->getUserName($getLogs[$i]->benutzer);
 					echo "<td>" . $getLogs[$i]->id . "</td>";
 					echo "<td>" . $getLogs[$i]->timestamp . "</td>";
-					echo "<td>" . "" . $username . " (ID: " . $getLogs[$i]->benutzer . ")" . "</td>";
+					echo "<td>" . $getLogs[$i]->benutzer ."-". $username . "</td>";
 					echo "<td>" . $getLogs[$i]->log_text . "</td>";
 					echo "<td>" . $getLogs[$i]->ip_adress . "</td>";
 					

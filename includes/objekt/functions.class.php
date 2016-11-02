@@ -568,12 +568,12 @@ class functions extends sql {
 				<meta name="msapplication-TileImage" content="/ms-icon-144x144.png">
 				<meta http-equiv="X-UA-Compatible" content="IE=edge" />
 				<meta name="theme-color" content="#ffffff">';
-		echo '	<script src="/flatnet2/tools/ckeditor/ckeditor.js"></script>';
+		echo '<script src="/flatnet2/tools/ckeditor/ckeditor.js"></script>';
 		echo '<link href="/flatnet2/css/style.css" type="text/css" rel="stylesheet" />';
 		
 		# Quellen für JQUERY Scripte
-		echo "<script src='//code.jquery.com/jquery-1.10.2.js'></script>
-				<script src='//code.jquery.com/ui/1.11.4/jquery-ui.js'></script>";
+		echo "<script src='//code.jquery.com/jquery-1.10.2.js'></script>";
+		echo "<script src='//code.jquery.com/ui/1.11.4/jquery-ui.js'></script>";
 		echo "<script src='/flatnet2/Chart.min.js'></script>";
 		
 		# Verschiebbare Fenster
@@ -599,6 +599,7 @@ class functions extends sql {
 				<li><a href='/flatnet2/informationen/quellen.php'>Quellen</a></li>";
 		if($this->userHasRight("36", 0) == "true") {
 			echo "	<li><a href='/flatnet2/admin/control.php'>Admin</a></li>";
+			echo "	<li><a href='/flatnet2/informationen/dokumentation.php'>Dokumentation</a></li>";
 		}
 		echo "</ul>
 				<div id='suche'>
@@ -608,7 +609,7 @@ class functions extends sql {
 				</form>";
 		
 		# Benachrichtigungscenter:
-		$this->benachrichtigungsCenter();
+	#	$this->benachrichtigungsCenter();
 		
 		echo "</div></div>";
 		

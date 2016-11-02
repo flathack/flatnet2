@@ -31,7 +31,7 @@ p {
 }
 
 h1 {
-	font-size: 25px;
+	font-size: 20px;
 	padding-top: 5px;
 	padding-bottom: 15px;
 	color: #3f3f3f;
@@ -205,7 +205,7 @@ blockquote {
  * Das ist die obere Navigation
  */
 .header #ueberschrift {
-	margin-top: 20px;
+	margin-top: 4px;
 }
 
 .header #ueberschrift a {
@@ -226,7 +226,7 @@ blockquote {
 
 .header #navigation li a:link, 
 .header #navigation li a:visited {
-	padding: 13px 5px 13px 5px;
+	padding: 5px 2px 5px 2px;
 	margin-top: 0px;
 	margin-right: 3px;
 	display: inline-block;
@@ -2551,9 +2551,9 @@ input[type=password]:focus {
 	min-width: 650px;
 	max-width: 1000px;
 	background-color: transparent;
-	border-left: 5px solid white;
-	border-right: 5px solid white;
-	border-bottom: 5px solid white;
+	border-left: 2px solid #2e2e2e;
+	border-right: 2px solid #2e2e2e;
+	border-bottom: 2px solid #2e2e2e;
 	opacity: .96
 }
 
@@ -2743,11 +2743,11 @@ input[type=password]:focus {
 	position: absolute;
 	overflow: hidden;
 	min-width: 400px;
-	max-width: 600px;
+	max-width: 550px;
 	max-height: 75px;
-	margin-left: 170px;
-	margin-top: -98px;
-	background-color: #2e2e2e;
+	margin-left: 120px;
+	margin-top: -70px;
+	background-color: transparent;
 }
 
 .rightOuterBody li {
@@ -2762,9 +2762,9 @@ input[type=password]:focus {
 	padding: 3px 5px 3px 5px;
 }
 
-.rightOuterBody li a:hover {
+.rightOuterBody li a:hover, .rightOuterBody li a:visited:hover {
 	color: white;
-	text-decoration: none;
+	text-decoration: underline;
 }
 
 .rightBody li {

@@ -204,17 +204,17 @@ class sql {
 	/** Type = BOOLEAN
 	 * Führt die Funktionen Insert, Update und Delete durch.
 	 * Gibt true oder false zurück.
+	 * Loggt nur, wenn Änderungen tatsächlich durchgeführt werden.
 	 */
 	function sql_insert_update_delete($query) {
 		
 		$db = $this->connectToDBNewWay();
 		
-		# Log durchführen:
-		$this->logme($query);
-		
 		$affected_rows = $db->exec($query);
 		
 		if($affected_rows > 0) {
+			# Log durchführen:
+			$this->logme($query);
 			return true;
 		} else {
 			return false;
@@ -224,6 +224,7 @@ class sql {
 	
 	/**
 	 * Extra sql Methode für gw.class.php in Zeile 1446
+	 * Hier wird nicht geloggt.
 	 * @param unknown $query
 	 * @return boolean
 	 */
@@ -252,7 +253,7 @@ class sql {
 	 */
 	function logme($received_query) {
 		if(isset($_SESSION['username'])) {
-			$username = $_SESSION['username'];
+			$username = "";
 		} else {
 			$username = "Unknown-User";
 		}
