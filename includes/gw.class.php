@@ -1442,8 +1442,8 @@ class gw_handwerk extends guildwars {
 							VALUES ('$user','$matID','$matAnzahl','$account')";
 						}
 	
-	
-						if($this->sql_insert_update_delete($query) == true) {
+						# Extrawurst für das Handwerk, weil sonst das Log vollgespammt wird.
+						if($this->sql_insert_update_delete_hw($query) == true) {
 							$erfolg = $erfolg + 1;
 						} else {
 							$fehler = $fehler + 1;
@@ -1451,10 +1451,16 @@ class gw_handwerk extends guildwars {
 					}
 				}
 				if($fehler > 0) {
-					echo "<p class=''>Übersprungen, da einige Felder nicht geändert wurden: " . $fehler . " Materialien</p>";
-					echo "<p class='erfolg'>Erfolgreich gespeicherte Änderungen: " . $erfolg . "</p>";
+					echo "<p class='dezentInfo'>Übersprungene Felder: " . $fehler . " (wurden nicht geändert)</p>";
+					if($erfolg > 0) {
+						echo "<p class='erfolg'>Erfolgreich gespeicherte Änderungen: " . $erfolg . "</p>";
+						$this->logme("Handwerksmats gespeichert, gespeicherte Änderungen: $erfolg, nicht gespeicherte Änderungen: $fehler");
+					} else {
+						echo "<p class='dezentInfo'>Du hast keine Ändeurngen vorgenommen.</p>";
+					}
 				} else {
 					echo "<p class='erfolg'>Deine Materialien wurden alle gespeichert!</p>";
+					$this->logme("INITIAL Handwerkmats gespeichert (alle Materialien)");
 				}
 			}
 		}

@@ -368,6 +368,10 @@ class control extends functions {
 	 */
 	function setBesitzerArray() {
 		
+		/**
+		 * Richtige Zuordnung
+		 * @var unknown
+		 */
 		$zuordnung = array (
 				"account_infos" => "besitzer",
 				"adressbuch" => "xxx",
@@ -391,6 +395,7 @@ class control extends functions {
 				"gwusersmats" => "besitzer",
 				"learnkategorie" => "besitzer",
 				"learnlernkarte" => "besitzer",
+				"log" => "besitzer",
 				"lernstatus" => "besitzer",
 				"registercode" => "xxx",
 				"rightkategorien" => "xxx",
@@ -400,6 +405,10 @@ class control extends functions {
 				"vorschlaege" => "xxx"
 		);
 		
+		/**
+		 * Umgekehrte Zuordnung
+		 * @var unknown
+		 */
 		$zuordnung2 = array (
 				"besitzer" => "account_infos",
 				"xxx" => "adressbuch",
@@ -423,6 +432,7 @@ class control extends functions {
 				"besitzer" => "gwusersmats",
 				"besitzer" => "learnkategorie",
 				"besitzer" => "learnlernkarte",
+				"besitzer" => "log",
 				"besitzer" => "lernstatus",
 				"xxx" => "registercode",
 				"xxx" => "rightkategorien",

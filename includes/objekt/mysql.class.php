@@ -16,6 +16,7 @@ class sql {
 	 * geschrieben.
 	 */
 	function connectToDBOldWay() {
+		/*
 		
 		echo "<p class='meldung'>connectToDBOldWay. Diese Funktion ist veraltet!</p>";
 
@@ -51,9 +52,10 @@ class sql {
 		mysql_connect($host, $sqlusername, $sqluserpassword);
 		
 		mysql_select_db($sqldatabase) or die ("<body id='wrapper'>" . $errordbconnect . "<div class='mainbody'><img src='/flatnet2/images/fehler/dbError.png' name='' alt='Fehler'></div></body>");
+		
+		*/
 	}
 
-	
 	/**
 	 * New Connect
 	 * @todo
@@ -72,7 +74,6 @@ class sql {
 					."</div></div></body></html>");
 		}
 		return $db;
-		
 	}
 	
 	/**
@@ -205,18 +206,11 @@ class sql {
 	 * Gibt true oder false zurück.
 	 */
 	function sql_insert_update_delete($query) {
-		/*
-		$ergebnis = mysql_query($query);
-		if($ergebnis == true) {
-			return true;
-		} else {
-			return false;
-		}
-		*/
-		
-		/* NEW WAY mit PDO */
 		
 		$db = $this->connectToDBNewWay();
+		
+		# Log durchführen:
+		$this->logme($query);
 		
 		$affected_rows = $db->exec($query);
 		
@@ -226,6 +220,66 @@ class sql {
 			return false;
 		}
 		
+	}
+	
+	/**
+	 * Extra sql Methode für gw.class.php in Zeile 1446
+	 * @param unknown $query
+	 * @return boolean
+	 */
+	function sql_insert_update_delete_hw($query) {
+	
+		$db = $this->connectToDBNewWay();
+	
+		# Log durchführen:
+		# $this->logme($query);
+	
+		$affected_rows = $db->exec($query);
+	
+		if($affected_rows > 0) {
+			return true;
+		} else {
+			return false;
+		}
+	
+	
+	}
+	
+	/**
+	 * Loggt transaktionen auf der Datenbank
+	 * @param unknown $received_query
+	 * @return boolean
+	 */
+	function logme($received_query) {
+		if(isset($_SESSION['username'])) {
+			$username = $_SESSION['username'];
+		} else {
+			$username = "Unknown-User";
+		}
+		
+		# UserID bekommen
+		$getuserid = $this->getObjektInfo("SELECT id, Name FROM benutzer WHERE Name='$username' LIMIT 1");
+		if(!isset($getuserid[0]->id)) {
+			$id=0;
+		} else {
+			$id=$getuserid[0]->id;
+		}
+		
+		# IP herausfinden:
+		if (!isset($_SERVER['HTTP_X_FORWARDED_FOR']) ) { $ip = $_SERVER['REMOTE_ADDR']; } else { $ip = $_SERVER['HTTP_X_FORWARDED_FOR']; }
+		
+		# Querytext bauen:
+		$text_for_log = $username ." : ". $received_query;
+		$query = "INSERT INTO log (benutzer, log_text, ip_adress) VALUES (\"$id\",\"$text_for_log\",\"$ip\")";
+		# Logeintrag hinzufügen
+		$db = $this->connectToDBNewWay();
+		$affected_rows = $db->exec($query);
+		
+		if($affected_rows > 0) {
+			return true;
+		} else {
+			echo "<p class='dezentInfo'>Es konnte nicht geloggt werden: $query</p>";
+		}
 		
 	}
 
