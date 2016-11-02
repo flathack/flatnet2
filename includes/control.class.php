@@ -22,7 +22,6 @@ class control extends functions {
 			$this->newBenutzerEingabe ();
 			$this->bearbBenutzerEingabe ();
 			$this->bearbBenutzerFunction ();
-			$this->codeVerwaltung ();
 			$this->Aufraeumen ();
 		}
 		
@@ -35,7 +34,6 @@ class control extends functions {
 			$this->newBenutzerEingabe ();
 			$this->bearbBenutzerEingabe ();
 			$this->bearbBenutzerFunction ();
-			$this->codeVerwaltung ();
 			$this->Aufraeumen ();
 		}
 		
@@ -44,7 +42,8 @@ class control extends functions {
 		 */
 		if ($action == 2) {
 			$this->adminVorschlaegeDELETE_Eintraege ();
-			$this->adminVorschlaege ();
+			$this->adminVorschlaege();
+			$this->log_verwaltung();
 		}
 		
 		if ($action == 3) {
@@ -73,6 +72,10 @@ class control extends functions {
 			$this->rechteverwaltung();
 			$this->rechtekategorienVerwaltung();
 		}
+		
+		if ($action == 7) {
+			
+		}
 	}
 	
 	/**
@@ -81,8 +84,10 @@ class control extends functions {
 	function showBenutzer() {
 		
 		if($this->userHasRight("37", 0) == true) {
+			
+			echo "<div class='newFahrt'>";
 		
-			echo "<table class='flatnetTable'>";
+			echo "<table class='logTable'>";
 			echo "<thead>
 					<td>ID</td>
 					<td>Benutzername</td>
@@ -117,7 +122,12 @@ class control extends functions {
 				echo ">";
 				echo "<td>".$row[$i]->id."</td>";
 				echo "<td><a href='?bearb=". $row[$i]->id."&userverw=1#bearbeiten'>".$row[$i]->Name."</a></td>";
-				echo "<td>".$row[$i]->titel."</td>";
+				if(isset($row[$i]->titel) AND $row[$i]->titel != "") {
+					$titel = "id='smallLink' class='rightRedLink'";
+				} else {
+					$titel = "";
+				}
+				echo "<td><span $titel>".$row[$i]->titel."</span></td>";
 				echo "<td>".$row[$i]->rights."</td>";
 				echo "<td>".$row[$i]->forumRights."</td>";
 				if ($row[$i]->versuche == 3) {
@@ -136,6 +146,8 @@ class control extends functions {
 		} else {
 			echo "<p class=''>Du darfst die Benutzerverwaltung nicht anzeigen</p>";
 		}
+		
+		echo "</div>";
 	}
 	
 	/**
@@ -218,8 +230,8 @@ class control extends functions {
 			if (isset ( $_GET ['bearb'] )) {
 				$bearb = $_GET ['bearb'];
 				if ($bearb) {
-					echo "<div class='newCharWIDE'>";
-					echo "<h2><a name='bearbeiten'>Benutzerbearbeitung</a> <a href='?userverw=1' class='highlightedLink'>X</a></h2>";
+					echo "<div class='newFahrt'>";
+					echo "<h2><a name='bearbeiten'>Benutzerbearbeitung</a> <a href='?userverw=1' class='rightRedLink'>X</a></h2>";
 					$userinfo = "SELECT timestamp, id, Name, Passwort, titel, forumRights FROM benutzer WHERE id = $bearb";
 					$row = $this->getObjektInfo($userinfo);
 					echo "<table>";
@@ -298,10 +310,10 @@ class control extends functions {
 					$titel = $_POST ['titel'];
 					
 					// Prüfen, ob die Daten überhaupt geändert wurden:
-					$checkRights = "SELECT id, Name, forumRights FROM benutzer WHERE id = '$selectedid' LIMIT 1";
+					$checkRights = "SELECT * FROM benutzer WHERE id = '$selectedid' LIMIT 1";
 					$rightsCheck = $this->getObjektInfo($checkRights);
 					
-					if ($forumRights == $rightsCheck[0]->forumRights and $updatepass == "" and $newUserName == $rightsCheck[0]->Name) {
+					if ($forumRights == $rightsCheck[0]->forumRights and $updatepass == "" and $newUserName == $rightsCheck[0]->Name and $titel == $rightsCheck[0]->titel) {
 						echo "<p class='info'>Es gab keine Änderung</p>";
 						return false;
 					}
@@ -489,7 +501,7 @@ class control extends functions {
 				if ($spalte != "xxx") {
 					// Table anzeigen:
 					
-					echo "<p class='info'>Suche nach Spalte: ".$spalte."</p>";
+					echo "<p class='dezentInfo'>Suche nach Spalte: ".$spalte."</p>";
 				
 					// Spalten bekommen
 					$columns = $this->getColumns ( $table );
@@ -500,12 +512,12 @@ class control extends functions {
 					// Table nur anzeigen, wenn etwas vom Benutzer da ist:
 					// if(isset($currentTableInfo[$i])) {
 				
-					echo "<table class='flatnetTable'>";
+					echo "<table class='logTable'>";
 				
 					// Überschrift anzeigen
 					$spaltenanzahlMinusEins = sizeof ( $columns );
 					echo "<thead><td colspan ='" . $spaltenanzahlMinusEins . "'>$i) " . $table . " (".$spalte.")" . "</td><td>
-					<a class='highlightedLink' href='?action=1&loeschen&loeschid=" . $userID . "&table=" . $table . "&tableNumber=$i'>LÖSCHEN</a>
+					<a class='rightGreenLink' href='?action=1&loeschen&loeschid=" . $userID . "&table=" . $table . "'>alle Einträge entfernen</a>
 									</td></thead>";
 					
 					// Gibt die aktuelle Kopfzeile der aktuellen Tabelle aus
@@ -518,9 +530,9 @@ class control extends functions {
 					for($j = 0; $j < sizeof ( $currentTableInfo ); $j++) {
 						echo "<tbody>";
 						if(!isset($currentTableInfo[$j]->id)) {
-							echo "<td><a class='rightBlueLink' href='?action=3&table=$table'>open</a></td>";
+							echo "<td><a class='' href='?action=3&table=$table'>open</a></td>";
 						} else {
-							echo "<td><a class='rightBlueLink' href='?action=3&table=$table&id=".$currentTableInfo [$j]->id."'>open</a></td>";
+							echo "<td><a class='' href='?action=3&table=$table&id=".$currentTableInfo [$j]->id."'>open</a></td>";
 						}
 							
 						// Gibt die Information der aktuellen Zelle aus:
@@ -543,6 +555,17 @@ class control extends functions {
 		}
 	}
 	
+	function getLogEintraege() {
+		echo "<div class='newFahrt'>";
+		echo "<h3>Logeinträge</h3>";
+			
+		$select = "SELECT count(*) as anzahl FROM `vorschlaege`";
+		$row = $this->getObjektInfo($select);
+			
+		echo "Das Log umfasst " . $row[0]->anzahl . " Einträge.";
+		echo "</div>";
+	}
+	
 	/**
 	 * Zeigt eingereichte Vorschläge der Benutzer an
 	 */
@@ -553,24 +576,20 @@ class control extends functions {
 				$this->vorschlaegeAction ( $_GET ['submit'], $_GET ['status'], $_GET ['hiddenID'] );
 			}
 			
-			echo "<div class='neuerBlog'>";
-			echo "<h2>Logeinträge</h2>";
-			
-			$select = "SELECT count(*) as anzahl FROM `vorschlaege`";
-			$row = $this->getObjektInfo($select);
-			
-			echo "Es gibt " . $row[0]->anzahl . " Einträge im LOG!";
-			echo "</div>";
+			# Zeigt eine Box an, in der die Anzahl der Logeinträge angezeigt wird.
+			$this->getLogEintraege();
 			
 			// Select from Database
-			echo "<table class='flatnetTable'>";
+			echo "<div class='newFahrt'>";
+			echo "<h3>" . "Benutzervorschläge" . "</h3>";
+			echo "<table class='logTable'>";
 			echo "<thead>";
-			echo "<td>ID</td>
-					<td>Datum</td>
-					<td>Autor</td>
+			echo "<td id='smallLaenge'>ID</td>
+					<td id='smallLaenge'>Datum</td>
+					<td id='smallLaenge'>Benutzer</td>
 					<td>Text</td>
-					<td>ART</td>
-					<td>Optionen</td>";
+					<td id='fixedLaenge'>ART</td>
+					<td id='smallLaenge'>Optionen</td>";
 			echo "</thead>";
 			
 			// ILLEGALE AKTIONEN
@@ -604,7 +623,7 @@ class control extends functions {
 				} else {
 					echo "<td>" . $this->getUserName ( $row[$i]->autor ) . "</td>";
 				}
-				echo "<td>$row[$i]->text</td>
+				echo "<td>". $row[$i]->text . "</td>
 				<td>
 				<select name='status' value='' size='1'>";
 				
@@ -655,7 +674,6 @@ class control extends functions {
 			}
 			
 			// VORSCHLAEGE
-			echo "<thead><td colspan = '6'>Benutzer Vorschläge</td></thead>";
 			$vorschlaege = "SELECT id, timestamp, autor, text, status, year(timestamp) as jahr, month(timestamp) as monat, day(timestamp) as tage
 					FROM vorschlaege
 					WHERE status = 'offen'
@@ -736,7 +754,12 @@ class control extends functions {
 				echo "</form>";
 			}
 			
+			echo "</table>";
+			echo "</div>";
+			
 			// Login Log ############################################################################################################################################
+			echo "<div class='newFahrt'>";
+			echo "<h3>" . "Login-Log" . "</h3>";
 			
 			$vorschlaegeNEW = "SELECT count(id) as anzahl, id, timestamp, autor, text, hour(timestamp) as hour, minute(timestamp) as minute, status,year(timestamp) as jahr, month(timestamp) as monat, day(timestamp) as tage
 					FROM vorschlaege
@@ -744,8 +767,8 @@ class control extends functions {
 					GROUP BY autor ORDER BY timestamp ASC";
 			$rowNEW = $this->getObjektInfo($vorschlaegeNEW);
 			
-			echo "<table class='flatnetTable'>";
-			echo "<thead><td>Autor</td><td>Text</td><td>Anzahl dieser Einträge</td><td>Letzter Eintrag</td><td>Optionen</td></thead>";
+			echo "<table class='logTable'>";
+			echo "<thead><td id='smallLaenge'>Benutzer</td><td>Text</td><td id='smallLaenge'>Anzahl</td><td id='fixedLaenge'>Letzter Eintrag</td><td id='smallLaenge'>Optionen</td></thead>";
 			
 			for($i = 0 ; $i < sizeof($rowNEW) ; $i++) {
 				
@@ -756,9 +779,11 @@ class control extends functions {
 				echo "<td>" . $this->getUserName ( $rowNEW[$i]->autor ) . "</td>";
 				echo "		<td>" . $rowNEW[$i]->text . "</td><td>".$rowNEW[$i]->anzahl."</td>
 						<td>" . $letzterEintrag[0]->timestamp . "</td>
-						<td><a href='?action=2&kategorieLoeschen=".$rowNEW[$i]->id."&loeschen=ja&loeschid=".$rowNEW[$i]->id."' class='highlightedLink'>X</a></td>
+						<td><a href='?action=2&kategorieLoeschen=".$rowNEW[$i]->id."&loeschen=ja&loeschid=".$rowNEW[$i]->id."' class='rightGreenLink'>X</a></td>
 						</tbody>";
 			}
+			echo "</table>";
+			echo "</div>";
 			// ##########################################################################################################################################################
 			// Error Log:
 			$vorschlaegeNEW = "SELECT count(id) as anzahl, id, timestamp, autor, text, hour(timestamp) as hour, minute(timestamp) as minute, status, year(timestamp) as jahr, month(timestamp) as monat, day(timestamp) as tage
@@ -767,21 +792,25 @@ class control extends functions {
 					GROUP BY text ORDER BY timestamp DESC";
 			$rowNEW = $this->getObjektInfo($vorschlaegeNEW);
 			
-			echo "<thead><td></td><td>Login Error:</td><td>Anzahl dieser Einträge</td><td>Letzter Eintrag</td><td>Optionen</td></thead>";
+			echo "<div class='newFahrt'>";
+			echo "<h3>" ."Fehlgeschlagene Logins oder Registrierungen". "</h3>";
+			echo "<table class='logTable'>";
+			echo "<thead><td>Fehlertext</td><td id='smallLaenge'>Anzahl</td><td id='fixedLaenge'>Letzter Eintrag</td><td id='smallLaenge'>Optionen</td></thead>";
 			
 			for($i = 0 ; $i < sizeof($rowNEW) ; $i++) {
 				
 				// letzter Eintag:
 				$letzterEintrag = $this->getObjektInfo ( "SELECT * FROM vorschlaege WHERE text = '".$rowNEW[$i]->text."' ORDER BY timestamp DESC" );
 				
-				echo "<tbody><td></td>
+				echo "<tbody>
 						<td>" . $rowNEW[$i]->text . "</td><td>".$rowNEW[$i]->anzahl."</td>
 						<td>" . $letzterEintrag[0]->timestamp . "</td>
-						<td><a href='?action=2&kategorieLoeschen=".$rowNEW[$i]->id."&loeschen=ja&loeschid=".$rowNEW[$i]->id."' class='highlightedLink'>X</a></td>
+						<td><a href='?action=2&kategorieLoeschen=".$rowNEW[$i]->id."&loeschen=ja&loeschid=".$rowNEW[$i]->id."' class='rightGreenLink'>X</a></td>
 						</tbody>";
 			}
 			
 			echo "</table>";
+			echo "</div>";
 		} else {
 			echo "<p class=''>Du darfst die globalen Informationen zu einem Benutzer nicht anzeigen.</p>";
 		}
@@ -822,7 +851,7 @@ class control extends functions {
 			// Select from Database
 			$vorschlaege = "SELECT id, timestamp, autor, text, status FROM vorschlaege WHERE status = 'offen' ORDER BY status DESC";
 			$row = $this->getObjektInfo($vorschlaege);
-			echo "<table class='flatnetTable'>";
+			echo "<table class='logTable'>";
 			echo "<thead>";
 			echo "<td>Text</td><td>Status</td>";
 			echo "</thead>";
@@ -1970,15 +1999,19 @@ class control extends functions {
 	
 	/**
 	 */
-	function getBesitzerColumnName($table, $tableNumber) {
-		$columnNamesForBesitzer = $this->setBesitzerArray();
+	function getBesitzerColumnName($lookingForThisTable) {
 		
-		$column = $columnNamesForBesitzer [$tableNumber];
+		$columnNames = $this->setBesitzerArray();
 		
-		if ($column == "xxx") {
-			$column = "";
+		foreach ($columnNames as $tabelle => $spalte) {
+			if($tabelle == $lookingForThisTable) {
+				$column=$spalte;
+			}
 		}
 		
+		if($column == "") {
+			echo "Keinen Spaltennamen gefunden (getBesitzerColumnName) ";
+		}
 		return $column;
 	}
 	
@@ -1987,32 +2020,32 @@ class control extends functions {
 	 */
 	function Aufraeumen() {
 		if($this->userHasRight("58", 0) == true) {
-			if (isset ( $_POST ['loeschid'] ) and isset ( $_POST ['table'] ) and isset ( $_POST ['endgueltigLoeschen'] ) and isset ( $_POST ['tableNumber'] )) {
-				echo "<p class='info'>Es wird gelöscht ....</p>";
+			if (isset($_POST ['loeschid']) AND isset($_POST['table']) AND isset($_POST['endgueltigLoeschen'])) {
 				$table = $_POST ['table'];
 				$userID = $_POST ['loeschid'];
-				$tableNumber = $_POST ['tableNumber'];
-				$column = $this->getBesitzerColumnName ( $table, $tableNumber );
+				$column = $this->getBesitzerColumnName($table);
 				
 				if ($column == "") {
+					echo "<p class='meldung'>Keine Spalte gefunden!
+					<br>Debuginfo: Table: $table, UserID: $userID, $column</p>";
 					exit ();
 				}
-				$query = "DELETE FROM $table WHERE $column = $userID";
-				if ($this->sql_insert_update_delete ( $query ) == true) {
+				
+				$query = "DELETE FROM $table WHERE $column=$userID";
+				if ($this->sql_insert_update_delete($query)==true) {
 					echo "<p class='erfolg'>Benutzerdaten wurden gelöscht.</p>";
 				}
 			}
 			
-			if (isset ( $_GET ['loeschen'] ) and isset ( $_GET ['loeschid'] ) and isset ( $_GET ['table'] ) and isset ( $_GET ['tableNumber'] )) {
+			if (isset ( $_GET ['loeschen'] ) and isset ( $_GET ['loeschid'] ) and isset ( $_GET ['table'] )) {
 				echo "<div class='meldung'>";
 				
 				echo "<p>Der Benutzer mit der ID " . $_GET ['loeschid'] . "</p>";
 				echo "<p>wird aus dem table <strong>" . $_GET ['table'] . "</strong> gelöscht!</p>";
 				if($this->userHasRight("58", 0) == true) {
 					echo "<form method=post>";
-					echo "<input type=hidden name=loeschid value='" . $_GET ['loeschid'] . "' />";
-					echo "<input type=hidden name=tableNumber value='" . $_GET ['tableNumber'] . "' />";
-					echo "<input type=hidden name=table value='" . $_GET ['table'] . "' />";
+					echo "<input type=hidden name=loeschid value='".$_GET ['loeschid']."' />";
+					echo "<input type=hidden name=table value='".$_GET ['table']."' />";
 					echo "<input type=submit name=endgueltigLoeschen value='Fortfahren' />";
 					echo "</form>";
 				}
@@ -2221,4 +2254,44 @@ class control extends functions {
 		}
 	}
 	
+	/**
+	 * Zeigt eine Ansicht der Tabelle "log"
+	 */
+	function log_verwaltung() {
+		if($this->userHasRight("42", 0) == true) {
+			
+			echo "<div class='newFahrt'>";
+			
+			# setlimit get-action
+			if(isset($_GET['setlimit'])) { if(is_numeric($_GET['setlimit']) == true) { $limit = $_GET['setlimit']; } else { $limit = 100; } } else { $limit = 100; }
+			
+			$getLogs = $this->getObjektInfo("SELECT * FROM log ORDER BY timestamp DESC LIMIT $limit");
+			$getanzahl = $this->getAmount("SELECT * FROM log");
+			echo "<h3>" ."Datenbankänderungen (insert, update, delete)". "(" .$getanzahl ." Einträge)"."</h3>";
+			echo "<form method=get><input type=number name=setlimit value=$limit /><input type=hidden name=action value=2 /><input type=submit class='' /></form>";
+			echo "<table class='logTable'>";
+			echo "<thead>";
+				echo "<td>"."ID"."</td>";
+				echo "<td id='fixedLaenge'>"."Datum & Zeit"."</td>";
+				echo "<td>"."Benutzer"."</td>";
+				echo "<td>"."Text"."</td>";
+				echo "<td id='fixedLaenge'>"."IP"."</td>";
+			echo "</thead>";
+			for($i = 0 ; $i < sizeof($getLogs) ; $i++) {
+				echo "<tbody>";
+					$username = $this->getUserName($getLogs[$i]->benutzer);
+					echo "<td>" . $getLogs[$i]->id . "</td>";
+					echo "<td>" . $getLogs[$i]->timestamp . "</td>";
+					echo "<td>" . "" . $username . " (ID: " . $getLogs[$i]->benutzer . ")" . "</td>";
+					echo "<td>" . $getLogs[$i]->log_text . "</td>";
+					echo "<td>" . $getLogs[$i]->ip_adress . "</td>";
+					
+				echo "</tbody>";
+			}
+			echo "</table>";
+			
+			echo "</div>";
+		
+		}
+	}
 }

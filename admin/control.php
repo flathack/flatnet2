@@ -1,9 +1,3 @@
-<?php 
-/**
- * @author Steven Schödel
- * Flatnet2 Projekt
- */
-?>
 <?php echo '<'.'?xml version="1.0" encoding="utf-8"?'.'>'; ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -55,21 +49,6 @@
 			$admin->contentSelector($action);
 			?>
 		</div>
-		<!--  
-		<table class='flatnetTable'>
-				<thead><td>Überschrift</td><td></td></thead>
-				
-				<tbody><td>Normaler TBODY</td><td><a href='?'>Link</a></td></tbody>
-				<tbody id='offen'><td >Offen</td><td><a href='?'>Link</a></td></tbody>
-				<tbody id='illegal'><td >Illegal</td><td><a href='?'>Link</a></td></tbody>
-				<tbody id='error'><td >Error</td><td><a href='?'>Link</a></td></tbody>
-				<tbody id='login'><td >Login</td><td><a href='?'>Link</a></td></tbody>
-				<thead><td>Überschrift</td><td></td></thead>
-				
-				<tfood><td>Footer</td></tfood>
-				
-			</table>
- -->
 	</body>
 </div>
 </html>

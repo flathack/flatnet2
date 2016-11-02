@@ -67,23 +67,27 @@ class login extends functions {
 						$_SESSION['selectGWUser'] = $row[0]->Name;
 
 						# Logeintrag
-						$this->logEintrag(true, "hat sich eingeloggt", "login");
-						
-						# Versuche um eins erhöhen
-						
-						$this->sql_insert_update_delete("UPDATE benutzer SET versuche=5 WHERE Name='" .$row[0]->Name. "' LIMIT 1");
+						$this->logEintrag(true, " logged in", "login");
 							
 						#Versuche Updaten
-						$update = "UPDATE benutzer SET versuche=0 WHERE Name = '" .$row[0]->Name. "' LIMIT 1";
+						$getversucheAnzahl = $this->getObjektInfo("SELECT id, Name, versuche FROM benutzer WHERE Name='".$row[0]->Name."' LIMIT 1");
 						
-						if($this->sql_insert_update_delete($update) == true) {
+						# Prüfen ob die Versuche > 0 sind.
+						if($getversucheAnzahl[0]->versuche == 0) { $noupdateneeded = 1; } else { $noupdateneeded = 0; }
+						
+						if($noupdateneeded == 1) {
 							header("Location: $umleitung");
 						} else {
-							$errorMessage .= "<p class='info'>Ein Login ist derzeit nicht möglich.</p>";
-							$this->logEintrag(false, "Versuche von $username konnten nicht auf 0 gesetzt werden.", "Error");
-							return $errorMessage;
+							$update = "UPDATE benutzer SET versuche=0 WHERE Name = '" .$row[0]->Name. "' LIMIT 1";
+							
+							if($this->sql_insert_update_delete_hw($update) == false) {
+								echo "<p class='info'>Ein Login ist derzeit nicht möglich.</p>";
+								$this->logEintrag(false, "Versuche von $username konnten nicht auf 0 gesetzt werden.", "Error");
+							} else {
+								header("Location: $umleitung");
+							}
+							
 						}
-
 							
 					} else {
 

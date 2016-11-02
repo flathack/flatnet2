@@ -2237,13 +2237,38 @@ input[type=password]:focus {
 	color: black;
 }
 
-.kontoTable {
+.logTable {
 	border-collapse: collapse;
 	border: 2px solid white;
 	width: 100%;
 	color: black;
 }
 
+.logTable #fixedLaenge {
+	width: 130px;
+}
+
+.logTable #smallLaenge {
+	width: 70px;
+}
+
+.logTable thead td {
+	padding: 5px;
+	border-right: 1px solid grey;
+	border-left: 1px solid grey;
+}
+
+.logTable thead {
+	background: #cdcdcd;
+	color: black;
+}
+
+.kontoTable {
+	border-collapse: collapse;
+	border: 2px solid white;
+	width: 100%;
+	color: black;
+}
 
 .kontoTable a {
 	color: black;
@@ -2271,7 +2296,7 @@ input[type=password]:focus {
 	padding-bottom: 10px;
 }
 
-.kontoTable tfoot td {
+.kontoTable tfoot td, .logTable tfoot td {
 	background-color: #c1ccff;
 }
 
@@ -2321,6 +2346,18 @@ input[type=password]:focus {
 	transition: all 0.3s ease-in-out;
 	font-weight: normal;
 	font-family: cursive;
+	border: 1px solid #c0c0c0;
+	background-color: #f5f5f5;
+	color: black;
+}
+
+.logTable tbody {
+	-webkit-transition: all 0.3s ease-in-out;
+	-moz-transition: all 0.3s ease-in-out;
+	-ms-transition: all 0.3s ease-in-out;
+	-o-transition: all 0.3s ease-in-out;
+	transition: all 0.3s ease-in-out;
+	font-size: 13px;
 	border: 1px solid #c0c0c0;
 	background-color: #f5f5f5;
 	color: black;

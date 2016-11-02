@@ -357,7 +357,7 @@ class functions extends sql {
 			$userID = $this->getUserID($username);
 			$insert="INSERT INTO vorschlaege (text, autor, status, ipadress) VALUES ('$username $art','$userID','$status','$ip')";
 
-			if($this->sql_insert_update_delete($insert) == true) {
+			if($this->sql_insert_update_delete_hw($insert) == true) {
 				return true;
 			} else {
 				return false;
@@ -367,7 +367,7 @@ class functions extends sql {
 			# Log Eintrag erstellen.
 			$insert="INSERT INTO vorschlaege (text, autor, status, ipadress) VALUES ('Ein Login ist fehlgeschlagen: $art ($ip).','0','Error','$ip')";
 			
-			if($this->sql_insert_update_delete($insert) == true) {
+			if($this->sql_insert_update_delete_hw($insert) == true) {
 				return true;
 			} else {
 				return false;
