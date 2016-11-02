@@ -28,7 +28,7 @@ class amazon extends functions {
 			$getopenSumme = $this->getObjektInfo("SELECT sum(value_of_article) as summe FROM amazon_infos WHERE autor = $userid AND payed=0 AND ruecksendung=0 and erstattet=0");
 			$offeneSumme = 0 + $getopenSumme[0]->summe;
 			if($offeneSumme == 0) {
-				echo "<p class='erfolg'>Du hast alles bezahlt!</p>";
+				echo "<p class='dezentInfo'>Du hast alles bezahlt!<br>";
 			} else {
 				echo "<p class='info'>Offener Betrag: " . $offeneSumme . " € <br>";
 			}
@@ -37,7 +37,13 @@ class amazon extends functions {
 			if($ruecksendungSumme > 0) {
 				echo "Erstattungen von Rücksendungen: " . $ruecksendungSumme . " € <br>";
 				$endbetrag = $offeneSumme - $ruecksendungSumme;
-				echo "<strong>Endbetrag: $endbetrag €</strong></p>";
+				if($endbetrag <= 0) {
+					$endbetragText = "Guthaben:";
+					$endbetrag = $endbetrag * (-1);
+				} else {
+					$endbetragText = "Überweisungsbetrag:";
+				}
+				echo "<strong>$endbetragText $endbetrag €</strong></p>";
 			}
 			echo "</p>";
 			
@@ -53,46 +59,36 @@ class amazon extends functions {
 			echo "</thead>";
 			
 			for($i = 0 ; $i < sizeof($userArticles) ; $i++) {
-				if($userArticles[$i]->payed == 1 AND $userArticles[$i]->ruecksendung == 0
-						OR $userArticles[$i]->ruecksendung == 1 AND $userArticles[$i]->payed == 0
-						OR $userArticles[$i]->ruecksendung == 1 AND $userArticles[$i]->payed == 1) {
-					$statusIsOk=1;
-				} else {
-					$statusIsOk=0;
+				
+				$articleStatus = "offen";
+				if($userArticles[$i]->payed == 1 AND $userArticles[$i]->ruecksendung == 0 AND $userArticles[$i]->erstattet == 0) {
+					$articleStatus = "bezahlt & abgeschlossen";
+					$statusIsOk = 1;
 				}
 				
-				if($statusIsOk == 1) {
-					$status = "ok";
-				} else {
-					$status = "";
+				if($userArticles[$i]->ruecksendung == 1 AND $userArticles[$i]->payed == 0 AND $userArticles[$i]->erstattet == 0) {
+					$articleStatus = "Rücksendung vor Fälligkeit";
+					$statusIsOk = 1;
 				}
+				
+				if($userArticles[$i]->ruecksendung == 1 AND $userArticles[$i]->payed == 1 AND $userArticles[$i]->erstattet == 0) {
+					$articleStatus = "Rücksendung läuft, Betrag wird bald gutgeschrieben";
+					$statusIsOk = 0;
+				}
+				
+				if($userArticles[$i]->erstattet == 1 AND $userArticles[$i]->ruecksendung == 1 AND $userArticles[$i]->payed == 1) {
+					$articleStatus = "zurückgesendet & Geld wurde erstattet ";
+					$statusIsOk = 1;
+				}
+				
+				if($statusIsOk == 1) { $status = "ok"; } else { $status = ""; }
 				
 				echo "<tbody id='$status'>";
 				echo "<td>" . $userArticles[$i]->date_of_order . "</td>";
 				echo "<td>" . substr($userArticles[$i]->name_of_article,0,40) . "...</td>";
 				echo "<td>" . $userArticles[$i]->value_of_article . "</td>";
 				echo "<td>" . $userArticles[$i]->date_of_faelligkeit . "</td>";
-			#	echo "<td>" . $userArticles[$i]->date_of_payment . "</td>";
-				echo "<td>";
-				if($userArticles[$i]->payed == 0 AND $userArticles[$i]->ruecksendung == 0) {
-					echo " offen ";
-				}
-				
-				if($userArticles[$i]->payed == 1) {
-					echo "& bezahlt ";
-				}
-				if($userArticles[$i]->ruecksendung == 1) {
-					echo "& zurückgesendet ";
-				}
-				
-				if($userArticles[$i]->erstattet == 1) {
-					echo "& Geld wurde erstattet ";
-				}
-				
-				if($userArticles[$i]->payed == 1 AND $userArticles[$i]->ruecksendung == 0) {
-					echo "& ABGESCHLOSSEN | ";
-				}
-				echo "</td>";
+				echo "<td>" . $articleStatus . "</td>";
 				echo "</tbody>";
 			}
 			echo "</table>";
@@ -120,17 +116,17 @@ class amazon extends functions {
 				echo "<h2>" . $username . "</h2>";
 				
 				$offeneSumme = $this->getObjektInfo("SELECT sum(value_of_article) as summe FROM amazon_infos WHERE autor=$userid AND payed=0 AND ruecksendung=0");
-				echo "<p class='info'>";
+				echo "<p class='dezentInfo'>";
 				$openSum = 0 + $offeneSumme[0]->summe;
 				if($openSum > 0) {
-					echo "$openSum € sind offen <br>";
+					echo "Überweisungsbetrag: $openSum € <br>";
 				}
 				
 				$erstattenDuMusst = $this->getObjektInfo("SELECT sum(value_of_article) as summe FROM amazon_infos WHERE autor=$userid AND payed=1 AND ruecksendung=1 AND erstattet=0");
 				
 				$sumOfErstattung = 0 + $erstattenDuMusst[0]->summe;
 				if($sumOfErstattung > 0) {
-					echo "Du musst $sumOfErstattung € erstatten <br> ";
+					echo "Erstattungsbetrag: $sumOfErstattung € <br> ";
 				}
 				echo "</p>";
 				
@@ -178,7 +174,7 @@ class amazon extends functions {
 						# GEZAHLT LINK
 						echo "<td>";
 						if($adminArticles[$j]->payed == 1) {
-							echo "<a href='?id=" . $adminArticles[$j]->id . "&PayedUNDO'>bezahlt</a>";
+							echo "<a href='?id=" . $adminArticles[$j]->id . "&PayedUNDO'>".$adminArticles[$j]->date_of_payment."</a>";
 						}
 						if($adminArticles[$j]->payed == 0) {
 							echo "<a href='?id=" . $adminArticles[$j]->id . "&PayedDO'>nein</a>";
@@ -217,7 +213,6 @@ class amazon extends functions {
 						
 					echo "</tbody>";
 				}
-				echo "<tfoot><td colspan=10>Endpreis:  €</td></tfoot>";
 				echo "</table>";
 				
 				
@@ -233,6 +228,11 @@ class amazon extends functions {
 	 */
 	function createAmazonArticle() {
 		if($this->userHasRight(80, 0) == true) {
+			
+			# Check if there was data before
+			if(isset($_POST['kdate'])) { $kdate = $_POST['kdate']; } else { $kdate = ""; }
+			if(isset($_POST['fdate'])) { $fdate = $_POST['fdate']; } else { $fdate = ""; }
+			
 			echo "<div class='newFahrt'>";
 				echo "<h2>Neuer Datensatz</h2>";
 				
@@ -250,7 +250,16 @@ class amazon extends functions {
 					echo "<tbody>";
 						echo "<td><select name=user>";
 						for($i = 0 ; $i < sizeof($alluser) ; $i++) {
-							echo "<option value='".$alluser[$i]->id."'>" . $alluser[$i]->Name. "</option>";
+							
+							if(isset($_POST['user'])) {
+								if($_POST['user'] == $alluser[$i]->id) {
+									$selected="selected";
+								} else {
+									$selected="";
+								}
+							}
+							
+							echo "<option $selected value='".$alluser[$i]->id."'>" . $alluser[$i]->Name. "</option>";
 						}
 						echo "</select></td>";
 						echo "<td><input name=name type=text placeholder='Name des Artikels' /></td>";
@@ -265,15 +274,15 @@ class amazon extends functions {
 						echo "<td>Fällig am</td>";
 					echo "</thead>";
 					echo "<tbody>";
-						echo "<td><input name=kdate type=date placeholder='Kaufdatum' /></td>";
-						echo "<td><input name=fdate type=date placeholder='Fälligkeit' /></td>";
+						echo "<td><input name=kdate value='$kdate' type=date placeholder='Kaufdatum' /></td>";
+						echo "<td><input name=fdate value='$fdate' type=date placeholder='Fälligkeit' /></td>";
 						echo "<td><input type=submit name=absenden value=speichern /></td>";
 					echo "</tbody>";
 					
 				echo "</table>";
 				echo "</form>";
 				
-			echo "</div>";
+			
 			
 			### Umsatz speichern ###
 			
@@ -285,7 +294,9 @@ class amazon extends functions {
 				$kdate = $_POST['kdate'];
 				$fdate = $_POST['fdate'];
 				
-				echo "$user . $name . $preis . $kdate . $fdate";
+				$getusername = $this->getObjektInfo("SELECT id, Name FROM benutzer WHERE id='$user' LIMIT 1");
+				
+				echo "<p class='dezentInfo'>Folgende Daten wurden eingegeben: <br>Benutzer: " .$getusername[0]->Name. " | Name des Artikels: $name | Preis: $preis | Kaufdatum: $kdate | Fälligkeitsdatum: $fdate</p>";
 				
 				if($user > 0 AND $preis != "" AND $kdate != "" AND $fdate != "") {
 					
@@ -301,9 +312,13 @@ class amazon extends functions {
 						echo "<p class='meldung'>FAIL</p>" ;
 						
 					}
+				} else {
+					echo "<p class='meldung'>Nicht alle Felder befüllt.</p>";
 				}
 				
 			}
+			
+			echo "</div>";
 		}
 		
 	}
@@ -396,7 +411,7 @@ class amazon extends functions {
 			# payed Attribut wird auf 0 gesetzt
 			if(isset($_GET['PayedDO']) AND isset($_GET['id'])) {
 				$id = $_GET['id'];
-				$sqlupdate = "UPDATE amazon_infos SET payed=1 WHERE id=$id";
+				$sqlupdate = "UPDATE amazon_infos SET payed=1,date_of_payment=CURRENT_TIMESTAMP WHERE id=$id";
 				if ($this->sql_insert_update_delete($sqlupdate) == true) {
 					echo "<p class='erfolg'>OK</p>";
 				} else {
@@ -407,7 +422,7 @@ class amazon extends functions {
 			# payed Attribut wird auf 0 gesetzt
 			if(isset($_GET['PayedUNDO']) AND isset($_GET['id'])) {
 				$id = $_GET['id'];
-				$sqlupdate = "UPDATE amazon_infos SET payed=0 WHERE id=$id";
+				$sqlupdate = "UPDATE amazon_infos SET payed=0,date_of_payment='0000-00-00' WHERE id=$id";
 				if ($this->sql_insert_update_delete($sqlupdate) == true) {
 					echo "<p class='erfolg'>OK</p>";
 				} else {
