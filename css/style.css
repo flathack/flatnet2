@@ -2270,6 +2270,22 @@ input[type=password]:focus {
 	color: black;
 }
 
+.kontoTable #width140px {
+	width: 140px;
+}
+.kontoTable #width70px {
+	width: 70px;
+}
+
+.kontoTable #date {
+	width: 100px;
+}
+
+
+.kontoTable #small {
+	width: 50px;
+}
+
 .kontoTable a {
 	color: black;
 }
@@ -2293,7 +2309,22 @@ input[type=password]:focus {
 }
 
 .kontoTable thead td {
-	padding-bottom: 10px;
+	padding: 5px;
+	border-left: 1px solid grey;
+	border-right: 1px solid grey;
+}
+
+.kontoTable a {
+	text-decoration: underline;
+	padding: 2px;
+	border-radius: 5px;
+	border: 1px solid transparent;
+}
+
+.kontoTable a:hover {
+	text-decoration: none;
+	background-color: #d5d5ff;
+	border: 1px solid blue;
 }
 
 .kontoTable tfoot td, .logTable tfoot td {

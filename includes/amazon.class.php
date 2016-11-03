@@ -8,7 +8,6 @@ class amazon extends functions {
 			echo "<h2>Willkommen</h2>";
 			echo "<p>Hier siehst du alle deine gebuchten Einkäufe und die Gesamtsumme zur Zahlung";
 		}
-		
 	}
 	
 	/**
@@ -46,7 +45,6 @@ class amazon extends functions {
 				echo "<strong>$endbetragText $endbetrag €</strong></p>";
 			}
 			echo "</p>";
-			
 			
 			echo "<table class='kontoTable'>";
 			echo "<thead>";
@@ -92,7 +90,6 @@ class amazon extends functions {
 				echo "</tbody>";
 			}
 			echo "</table>";
-			
 	}
 		echo "</div>";
 	}
@@ -105,10 +102,8 @@ class amazon extends functions {
 		if($this->userHasRight(80, 0) == true) {
 			
 			echo "<div class='newFahrt'>";
-						
 			$queryusers = "SELECT * FROM amazon_infos GROUP BY autor";
 			$usersWithArticles = $this->getObjektInfo($queryusers);
-			
 			for ($i = 0 ; $i < sizeof($usersWithArticles) ; $i++) {
 								
 				$userid = $usersWithArticles[$i]->autor;
@@ -141,20 +136,32 @@ class amazon extends functions {
 				echo "<table class='kontoTable'>";
 				echo "<thead>";
 				#	echo "<td>" . "ID" . "</td>";
-					echo "<td>" . "Name" . "</td>";
-					echo "<td>" . "Preis" . "</td>";
-					echo "<td>" . "Kaufdatum" . "</td>";
-					echo "<td>" . "Fällig am" . "</td>";
-					echo "<td>" . "bezahlt" . "</td>";
-					echo "<td>" . "Rücksendung" . "</td>";
-					echo "<td>" . "Erstattet" . "</td>";
-					echo "<td>" . "Verbergen" . "</td>";
+					echo "<td" ." id='' ". ">" . "Name" . "</td>";
+					echo "<td" ." id='small' ". ">" . "Preis" . "</td>";
+					echo "<td" ." id='date' ". ">" . "Kaufdatum" . "</td>";
+					echo "<td" ." id='date' ". ">" . "Fällig am" . "</td>";
+					echo "<td" ." id='date' ". ">" . "bezahlt" . "</td>";
+					echo "<td" ." id='width70px' ". ">" . "Rücksendung" . "</td>";
+					echo "<td" ." id='small' ". ">" . "Erstattet" . "</td>";
+					echo "<td" ." id='width140px' ". ">" . "Optionen" . "</td>";
 				echo "</thead>";
+				
 				for ($j = 0 ; $j < sizeof($adminArticles) ; $j++) {
+					
+					# Checken ob ein Artikel nicht zurückgeschickt aber erstattet wurde.
+					if($adminArticles[$j]->ruecksendung == 0 AND $adminArticles[$j]->erstattet == 1) {
+						echo "<tbody id='notOK'>";
+						echo "<td colspan='8'>" . "Dieser FOLGENDE Artikel wurde erstattet, obwohl dieser nicht zurückgeschickt wurde:" . "</td>";
+						echo "</tbody>";
+					}
 					
 					# Zeile einfärben
 					echo "<tbody"; 
-					if($adminArticles[$j]->payed == 1 AND $adminArticles[$j]->ruecksendung == 0) {
+					if($adminArticles[$j]->payed == 1 AND $adminArticles[$j]->ruecksendung == 0 AND $adminArticles[$j]->erstattet == 0) {
+						echo " id='ok' ";
+					}
+					
+					if($adminArticles[$j]->payed == 0 AND $adminArticles[$j]->ruecksendung == 1 AND $adminArticles[$j]->erstattet == 1) {
 						echo " id='ok' ";
 					}
 					
@@ -166,65 +173,62 @@ class amazon extends functions {
 						echo " id='ok' ";
 					}
 					
-					echo ">";
+					if($adminArticles[$j]->ruecksendung == 0 AND $adminArticles[$j]->erstattet == 1) {
+						echo " id='notOK' ";
+					}
 					
-					#	echo "<td>" . $adminArticles[$j]->id . "</td>";
-					#	echo "<td>" . $adminArticles[$j]->autor . "</td>";
-						echo "<td>" . substr($adminArticles[$j]->name_of_article,0,40) . "...</td>";
-						echo "<td>" . $adminArticles[$j]->value_of_article . "</td>";
-						echo "<td>" . $adminArticles[$j]->date_of_order . "</td>";
-						echo "<td>" . $adminArticles[$j]->date_of_faelligkeit . "</td>";
-					#	echo "<td>" . $adminArticles[$j]->date_of_payment . "</td>";
+					echo ">";
+					echo "<td>" . substr($adminArticles[$j]->name_of_article,0,40) . "...</td>";
+					echo "<td>" . $adminArticles[$j]->value_of_article . "</td>";
+					echo "<td>" . $adminArticles[$j]->date_of_order . "</td>";
+					echo "<td>" . $adminArticles[$j]->date_of_faelligkeit . "</td>";
 						
-						# GEZAHLT LINK
-						echo "<td>";
+					# GEZAHLT LINK
+					echo "<td>";
 						if($adminArticles[$j]->payed == 1) {
 							echo "<a href='?id=" . $adminArticles[$j]->id . "&PayedUNDO'>".$adminArticles[$j]->date_of_payment."</a>";
 						}
 						if($adminArticles[$j]->payed == 0) {
 							echo "<a href='?id=" . $adminArticles[$j]->id . "&PayedDO'>nein</a>";
 						}
-						echo "</td>";
-						
-						# RÜCKSENDUNG LINK
-						echo "<td>"; 
-							if($adminArticles[$j]->ruecksendung == 1) {
-								echo "<a href='?id=" . $adminArticles[$j]->id . "&sendbackUNDO'>zurückgesendet</a>";
-							}
-							if($adminArticles[$j]->ruecksendung == 0) {
-								echo "<a href='?id=" . $adminArticles[$j]->id . "&sendbackDO'>nein</a>";
-							}
-						echo "</td>";
-						
-						# ERSTATTET LINK
-						echo "<td>"; 
-							if($adminArticles[$j]->erstattet == 1) {
-								echo "<a href='?id=" . $adminArticles[$j]->id . "&erstattetUNDO'>wurde erstattet</a>";
-							}
-							if($adminArticles[$j]->erstattet == 0) {
-								echo "<a href='?id=" . $adminArticles[$j]->id . "&erstattetDO'>nein</a>";
-							}
-						echo "</td>";
-						
-						echo "<td>";
+					echo "</td>";
+					
+					# RÜCKSENDUNG LINK
+					echo "<td>"; 
+						if($adminArticles[$j]->ruecksendung == 1) {
+							echo "<a href='?id=" . $adminArticles[$j]->id . "&sendbackUNDO'>zurückgesendet</a>";
+						}
+						if($adminArticles[$j]->ruecksendung == 0) {
+							echo "<a href='?id=" . $adminArticles[$j]->id . "&sendbackDO'>nein</a>";
+						}
+					echo "</td>";
+					
+					# ERSTATTET LINK
+					echo "<td>"; 
+						if($adminArticles[$j]->erstattet == 1) {
+							echo "<a href='?id=" . $adminArticles[$j]->id . "&erstattetUNDO'>erstattet</a>";
+						}
+						if($adminArticles[$j]->erstattet == 0) {
+							echo "<a href='?id=" . $adminArticles[$j]->id . "&erstattetDO'>nein</a>";
+						}
+					echo "</td>";
+					
+					echo "<td>";
 						if($adminArticles[$j]->hide == 1) {
 							echo "<a href='?id=" . $adminArticles[$j]->id . "&HideUNDO'>verborgen</a>";
 						}
 						if($adminArticles[$j]->hide == 0) {
 							echo "<a href='?id=" . $adminArticles[$j]->id . "&HideDO'>verbergen</a>";
 						}
-						echo "</td>";
-					
+						echo " <a class='rightBlueLink'href=/flatnet2/admin/control.php?action=3&table=amazon_infos&id=" . $adminArticles[$j]->id . "#angezeigteID>edit</a> ";
+					echo "</td>";
 						
 					echo "</tbody>";
+					
 				}
 				echo "</table>";
-				
-				
 			}
-			
 			echo "</div>";
-			
 		}
 	}
 	
@@ -295,7 +299,7 @@ class amazon extends functions {
 				
 				$user = $_POST['user'];
 				$name = $_POST['name'];
-				$preis = $_POST['preis'];
+				$preis = str_replace ( ',', '.', $_POST['preis'] );
 				$kdate = $_POST['kdate'];
 				$fdate = $_POST['fdate'];
 				
@@ -310,11 +314,11 @@ class amazon extends functions {
 					
 					if ($this->sql_insert_update_delete($query) == true) {
 						
-						echo "<p class='erfolg'>ERFOLG</p>";
+						echo "<p class='erfolg'>Der Artikel wurde erstellt.</p>";
 						
 					} else {
 						
-						echo "<p class='meldung'>FAIL</p>" ;
+						echo "<p class='meldung'>Beim erstellen ist ein Fehler aufgetreten.</p>" ;
 						
 					}
 				} else {
@@ -355,11 +359,12 @@ class amazon extends functions {
 			# Es wird zurückgesendet
 			if(isset($_GET['sendbackDO']) AND isset($_GET['id'])) {
 				$id = $_GET['id'];
+				$articleInfos=$this->getObjektInfo("SELECT id, name_of_article, payed,ruecksendung,erstattet FROM amazon_infos WHERE id=$id");
 				$sqlupdate = "UPDATE amazon_infos SET ruecksendung=1 WHERE id=$id";
 				if ($this->sql_insert_update_delete($sqlupdate) == true) {
-					echo "<p class='erfolg'>OK</p>";
+					echo "<p class='erfolg'>Der Artikel " .$articleInfos[0]->name_of_article. " wurde auf <strong>zurückgeschickt</strong> gesetzt.</p>";
 				} else {
-					echo "<p class='meldung'>ERROR</p>";
+					echo "<p class='meldung'>SQL ERROR</p>";
 				}
 				
 			}
@@ -367,48 +372,56 @@ class amazon extends functions {
 			#Rücksendung wird auf 0 gesetzt
 			if(isset($_GET['sendbackUNDO']) AND isset($_GET['id'])) {
 				$id = $_GET['id'];
+				$articleInfos=$this->getObjektInfo("SELECT id, name_of_article, payed,ruecksendung,erstattet FROM amazon_infos WHERE id=$id");
 				$sqlupdate = "UPDATE amazon_infos SET ruecksendung=0 WHERE id=$id";
 				if ($this->sql_insert_update_delete($sqlupdate) == true) {
-					echo "<p class='erfolg'>OK</p>";
+					echo "<p class='erfolg'>Der Artikel " .$articleInfos[0]->name_of_article. " wurde auf <strong>nicht zurückgeschickt</strong> gesetzt.</p>";
 				} else {
-					echo "<p class='meldung'>ERROR</p>";
+					echo "<p class='meldung'>SQL_ERROR</p>";
 				}
 			
 			}
 		}
 	}
 	
+	/**
+	 * Setzt einen Artikel in der Datenbank amazon_infos in der Spalte erstattet auf 1 oder 0
+	 */
 	function setErstattet() {
 		if($this->userHasRight(80, 0) == true) {
-			
 			# Es wird erstattet
 			if(isset($_GET['erstattetDO']) AND isset($_GET['id'])) {
 				$id = $_GET['id'];
-				$sqlupdate = "UPDATE amazon_infos SET erstattet=1 WHERE id=$id";
-				if ($this->sql_insert_update_delete($sqlupdate) == true) {
-					echo "<p class='erfolg'>OK</p>";
+				$articleInfos=$this->getObjektInfo("SELECT id, name_of_article, payed,ruecksendung,erstattet FROM amazon_infos WHERE id=$id");
+				# Man darf nur etwas erstatten, wenn es zurückgesendet wurde
+				if($articleInfos[0]->ruecksendung == 1) {
+					$sqlupdate = "UPDATE amazon_infos SET erstattet=1 WHERE id=$id";
+					if ($this->sql_insert_update_delete($sqlupdate) == true) {
+						echo "<p class='erfolg'>Der Artikel ".$articleInfos[0]->name_of_article ." wurde auf <strong>erstattet</strong> gesetzt.</p>";
+					} else {
+						echo "<p class='meldung'>SQL ERROR</p>";
+					}
 				} else {
-					echo "<p class='meldung'>ERROR</p>";
+					echo "<p class='meldung'>Du darfst nichts erstatten, was nicht zurückgeschickt wurde.</p>";
 				}
 			}
 				
 			# Erstattung wird auf 0 gesetzt
 			if(isset($_GET['erstattetUNDO']) AND isset($_GET['id'])) {
 				$id = $_GET['id'];
+				$articleInfos=$this->getObjektInfo("SELECT id, name_of_article, payed,ruecksendung,erstattet FROM amazon_infos WHERE id=$id");
 				$sqlupdate = "UPDATE amazon_infos SET erstattet=0 WHERE id=$id";
 				if ($this->sql_insert_update_delete($sqlupdate) == true) {
-					echo "<p class='erfolg'>OK</p>";
+					echo "<p class='erfolg'>Der Artikel ".$articleInfos[0]->name_of_article ." wurde auf <strong>nicht erstattet</strong> gesetzt</p>";
 				} else {
 					echo "<p class='meldung'>ERROR</p>";
 				}
-					
 			}
-			
 		}
 	}
 	
 	/**
-	 * Setzt das gezahlt Attribut von 0 auf 1 und umgekehrt
+	 * Setzt das gezahlt Attribut in der Relation amazon_infos von 0 auf 1 und umgekehrt
 	 */
 	function setPayed() {
 		if($this->userHasRight(80, 0) == true) {
@@ -416,7 +429,7 @@ class amazon extends functions {
 			# payed Attribut wird auf 0 gesetzt
 			if(isset($_GET['PayedDO']) AND isset($_GET['id'])) {
 				$id = $_GET['id'];
-				$sqlupdate = "UPDATE amazon_infos SET payed=1,date_of_payment=CURRENT_TIMESTAMP WHERE id=$id";
+				$sqlupdate="UPDATE amazon_infos SET payed=1,date_of_payment=CURRENT_TIMESTAMP WHERE id=$id";
 				if ($this->sql_insert_update_delete($sqlupdate) == true) {
 					echo "<p class='erfolg'>OK</p>";
 				} else {
@@ -427,15 +440,13 @@ class amazon extends functions {
 			# payed Attribut wird auf 0 gesetzt
 			if(isset($_GET['PayedUNDO']) AND isset($_GET['id'])) {
 				$id = $_GET['id'];
-				$sqlupdate = "UPDATE amazon_infos SET payed=0,date_of_payment='0000-00-00' WHERE id=$id";
+				$sqlupdate="UPDATE amazon_infos SET payed=0,date_of_payment='0000-00-00' WHERE id=$id";
 				if ($this->sql_insert_update_delete($sqlupdate) == true) {
 					echo "<p class='erfolg'>OK</p>";
 				} else {
 					echo "<p class='meldung'>ERROR</p>";
 				}
-					
 			}
-				
 		}
 	}
 	

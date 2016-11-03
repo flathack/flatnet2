@@ -30,7 +30,7 @@ class finanzenNEW extends functions {
 			$this->erstelleJahresabschluesseFromOldEintraegen ();
 			
 			// automatische Monatsabschlussgeneration
-			$this->erstelleMonatsabschluesseFromOldEintraegen ();
+			# $this->erstelleMonatsabschluesseFromOldEintraegen ();
 		}
 	}
 	function mainKontoFunction() {
@@ -186,34 +186,15 @@ class finanzenNEW extends functions {
 					// Daten in Array laden:
 					$zahlen [$i] = $zwischensumme;
 					
-					if ($zwischensumme < 0) {
-						$spaltenFarbe = "rot";
-					} else {
-						$spaltenFarbe = "rightAlign";
-					}
+					if ($zwischensumme < 0) { $spaltenFarbe = "rot"; } else { $spaltenFarbe = "rightAlign"; }
 					
-					if ($zwischensumme < 0) {
-						$zeile = " id='minus' ";
-					} else {
-						$zeile = "";
-					}
+					if ($zwischensumme < 0) { $zeile = " id='minus' "; } else { $zeile = ""; }
 					
-					if ($umsaetze [$i]->umsatzWert < 0) {
-						$zelle = " id='minus' ";
-					} else {
-						$zelle = " id='plus' ";
-					}
+					if ($umsaetze [$i]->umsatzWert < 0) { $zelle = " id='minus' "; } else { $zelle = " id='plus' "; }
 					
 					// Wenn der Umsatz ausgewählt wurde, dann wird er rot markiert.
-					if (isset ( $_GET ['selected'] )) {
-						if ($_GET ['selected'] == $umsaetze [$i]->buchungsnr) {
-							$selected = "id='rot'";
-						} else {
-							$selected = "";
-						}
-					} else {
-						$selected = "";
-					}
+					if (isset ( $_GET ['selected'] )) { if ($_GET ['selected'] == $umsaetze [$i]->buchungsnr) {
+						$selected = "id='rot'"; } else { $selected = ""; } } else { $selected = ""; }
 					
 					echo "<tbody $selected>";
 					echo "<td>" . $umsaetze [$i]->buchungsnr . "</td>";
@@ -1475,10 +1456,19 @@ class finanzenNEW extends functions {
 	function showDeleteKonto($besitzer) {
 		if (isset ( $_GET ['deleteKonto'] )) {
 			$konto = $_GET ['deleteKonto'];
-			$select = "SELECT * FROM finanzen_konten WHERE besitzer = $besitzer AND id = $konto";
-			$select2 = "SELECT * FROM finanzen_umsaetze WHERE besitzer = $besitzer AND konto = $konto";
-			if ($this->objectExists ( $select ) == true and $this->objectExists ( $select2 ) == false) {
-				if ($this->sql_insert_update_delete ( "DELETE FROM finanzen_konten WHERE besitzer = $besitzer AND id = $konto" ) == true) {
+			$select = "SELECT id, besitzer FROM finanzen_konten WHERE besitzer=$besitzer AND id=$konto";
+			$select2 = "SELECT id, besitzer, konto FROM finanzen_umsaetze WHERE besitzer=$besitzer AND konto=$konto";
+			if ($this->objectExists($select) == true and $this->objectExists($select2) == false) {
+				
+				$delquery="DELETE FROM finanzen_konten WHERE besitzer=$besitzer AND id=$konto";
+				$delAbschluesseQuery="DELETE FROM finanzen_monatsabschluss WHERE konto=$konto";
+				$delAbschluesseQuery2="DELETE FROM finanzen_jahresabschluss WHERE konto=$konto";
+				
+				if ($this->sql_insert_update_delete ($delquery) == true) {
+					# Monatsabschlüsse löschen ...
+					$this->sql_insert_update_delete ($delAbschluesseQuery);
+					# Jahresabschlüsse löschen ...
+					$this->sql_insert_update_delete ($delAbschluesseQuery2);
 					echo "<p class='info'>Konto wurde gelöscht.</p>";
 				} else {
 					echo "<p class='meldung'>Beim löschen ist ein Fehler aufgetreten.</p>";
@@ -1488,6 +1478,7 @@ class finanzenNEW extends functions {
 			}
 		}
 	}
+	
 	function saldenUebersicht($besitzer) {
 		if (isset ( $_GET ['Salden'] )) {
 			echo "<div>";
