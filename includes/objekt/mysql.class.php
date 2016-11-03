@@ -188,7 +188,7 @@ class sql {
 		if (!isset($_SERVER['HTTP_X_FORWARDED_FOR']) ) { $ip = $_SERVER['REMOTE_ADDR']; } else { $ip = $_SERVER['HTTP_X_FORWARDED_FOR']; }
 		
 		# Querytext bauen:
-		$text_for_log = $username ." : ". $received_query;
+		$text_for_log = $username ." : ". strip_tags(stripslashes($received_query));
 		$query = "INSERT INTO log (benutzer, log_text, ip_adress) VALUES (\"$id\",\"$text_for_log\",\"$ip\")";
 		# Logeintrag hinzufügen
 		$db = $this->connectToDBNewWay();

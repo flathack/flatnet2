@@ -59,19 +59,33 @@ class amazon extends functions {
 			for($i = 0 ; $i < sizeof($userArticles) ; $i++) {
 				
 				$articleStatus = "offen";
-				if($userArticles[$i]->payed == 1 AND $userArticles[$i]->ruecksendung == 0 AND $userArticles[$i]->erstattet == 0) {
+				$statusIsOk = "";
+				if($userArticles[$i]->payed == 1 
+					AND $userArticles[$i]->ruecksendung == 0 
+					AND $userArticles[$i]->erstattet == 0) {
 					$articleStatus = "bezahlt & abgeschlossen";
-					$statusIsOk = 1;
+					$statusIsOk = "ok";
+				}
+				 
+				if($userArticles[$i]->ruecksendung == 1 
+					AND $userArticles[$i]->payed == 0 
+					AND $userArticles[$i]->erstattet == 0) {
+					$articleStatus = "zurückgesendet, warte auf Amazon";
+					$statusIsOk = "pending";
 				}
 				
-				if($userArticles[$i]->ruecksendung == 1 AND $userArticles[$i]->payed == 0 AND $userArticles[$i]->erstattet == 0) {
-					$articleStatus = "Rücksendung vor Fälligkeit";
-					$statusIsOk = 1;
+				if($userArticles[$i]->ruecksendung == 1 
+					AND $userArticles[$i]->payed == 0 
+					AND $userArticles[$i]->erstattet == 1) {
+					$articleStatus = "Rücksendung abgeschlossen";
+					$statusIsOk = "ok";
 				}
 				
-				if($userArticles[$i]->ruecksendung == 1 AND $userArticles[$i]->payed == 1 AND $userArticles[$i]->erstattet == 0) {
-					$articleStatus = "Rücksendung läuft, Betrag wird bald gutgeschrieben";
-					$statusIsOk = 0;
+				if($userArticles[$i]->ruecksendung == 1 
+					AND $userArticles[$i]->payed == 1 
+					AND $userArticles[$i]->erstattet == 0) {
+					$articleStatus = "Rücksendung läuft, Geld wird erstattet, wenn Amazon Geld gutschreibt.";
+					$statusIsOk = "pending";
 				}
 				
 				if($userArticles[$i]->erstattet == 1 AND $userArticles[$i]->ruecksendung == 1 AND $userArticles[$i]->payed == 1) {
@@ -79,9 +93,9 @@ class amazon extends functions {
 					$statusIsOk = 1;
 				}
 				
-				if($statusIsOk == 1) { $status = "ok"; } else { $status = ""; }
+			#	if($statusIsOk == 1) { $status = "ok"; } else { $status = ""; }
 				
-				echo "<tbody id='$status'>";
+				echo "<tbody id='$statusIsOk'>";
 				echo "<td>" . $userArticles[$i]->date_of_order . "</td>";
 				echo "<td>" . substr($userArticles[$i]->name_of_article,0,40) . "...</td>";
 				echo "<td>" . $userArticles[$i]->value_of_article . "</td>";
@@ -90,7 +104,36 @@ class amazon extends functions {
 				echo "</tbody>";
 			}
 			echo "</table>";
+			
+			
 	}
+		echo "</div>";
+		
+		$this->legende();
+	}
+	
+	/**
+	 * Eine Legende für die Nutzer zur Beschreiben der verschiedenen Stati.
+	 */
+	function legende() {
+		echo "<div class='newFahrt'>";
+		echo "<h3>Legende der Stati</h3>";
+			echo "<h4>" ."bezahlt & abgeschlossen". "</h4>";
+			echo "<p>" ."Du hast den Artikel bestellt und fristgerecht bezahlt. Dieser Posten benötigt keine weitere Aufmerksamkeit von dir.". "</p>";
+			
+			echo "<h4>" ."zurückgesendet, warte auf Amazon". "</h4>";
+			echo "<p>" ."Dieser Status beschreibt den Umstand, dass du einen Artikel zurückgesendet hast, 
+					den du noch nicht bezahlt hast. Wenn Amazon das Geld vor Monatsende gutschreibt, musst 
+					du diesen Artikel nicht mehr bezahlen.". "</p>";
+			
+			echo "<h4>" ."Rücksendung abgeschlossen". "</h4>";
+			echo "<p>" ."Wie oben, nur jetzt hat Amazon den Betrag wieder gutgeschrieben. Der Artikel muss am
+					Monatsende nicht mehr von dir bezahlt werden.". "</p>";
+			
+			echo "<h4>" ."Rücksendung läuft, Geld wird erstattet, wenn Amazon Geld gutschreibt.". "</h4>";
+			echo "<p>" ."Du hast den Artikel im letzten Monat bestellt, bereits bezahlt und wieder zurückgeschickt. 
+					Sobald das Geld auf Stevens Konto gutgeschrieben wird, wird dieses mit dem neuen Monat verrechnet
+					oder dir zurücküberwiesen.". "</p>";
 		echo "</div>";
 	}
 	
@@ -101,10 +144,12 @@ class amazon extends functions {
 	
 		if($this->userHasRight(80, 0) == true) {
 			
-			echo "<div class='newFahrt'>";
-			$queryusers = "SELECT * FROM amazon_infos GROUP BY autor";
+			
+			$queryusers = "SELECT * FROM amazon_infos GROUP BY autor ORDER BY autor";
 			$usersWithArticles = $this->getObjektInfo($queryusers);
 			for ($i = 0 ; $i < sizeof($usersWithArticles) ; $i++) {
+				
+				echo "<div class='newFahrt'>";
 								
 				$userid = $usersWithArticles[$i]->autor;
 				$username = $this->getUserName($usersWithArticles[$i]->autor);
@@ -227,8 +272,9 @@ class amazon extends functions {
 					
 				}
 				echo "</table>";
+				echo "</div>";
 			}
-			echo "</div>";
+			
 		}
 	}
 	

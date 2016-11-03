@@ -587,8 +587,8 @@ class functions extends sql {
 		echo "<div class='userInfo'>";
 
 		if(isset($_SESSION["username"])) {
-			echo "Willkommen " . "<strong><a href='/flatnet2/usermanager/usermanager.php'>" . $_SESSION['username'] . "</a></strong> | ";
-			echo "<a href='/flatnet2/includes/logout.php'> Abmelden </a>";
+			echo "<p>Willkommen " . "<strong><a href='/flatnet2/usermanager/usermanager.php'>" . $_SESSION['username'] . "</a></strong> | ";
+			echo "<a href='/flatnet2/includes/logout.php'> Abmelden </a></p>";
 		} else {
 			echo "<p class='info'>Du hast versucht auf eine Seite zuzugreifen, für die du nicht angemeldet bist. Bitte melde dich an und versuche es erneut<br>
 					<a class='rightBlueLink' href='/flatnet2/index.php'>Hauptseite</a></p>

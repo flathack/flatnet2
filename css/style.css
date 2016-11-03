@@ -8,8 +8,8 @@ body {
 	background-color: grey;
 	background-repeat: repeat;
 	background-attachment: fixed;
-	font-family: Segoe UI;
-	font-size: 15px;
+	font-family: "Palatino Linotype", "Book Antiqua", Palatino, serif;
+	font-size: 1em;
 	font-style: normal;
 	font-weight: normal;
 	text-decoration: none;
@@ -27,11 +27,11 @@ body {
 
 p {
 	padding-bottom: 5px;
-	font-size: 15px;
+	font-size: 1em;
 }
 
 h1 {
-	font-size: 20px;
+	font-size: 1.5em;
 	padding-top: 5px;
 	padding-bottom: 15px;
 	color: #3f3f3f;
@@ -40,13 +40,13 @@ h1 {
 h2 {
 	padding-top: 2px;
 	padding-bottom: 2px;
-	font-size: 18px;
+	font-size: 1.3em;
 	margin: none;
 	color: #3f3f3f;
 }
 
 h3, h5, h6 {
-	font-size: 16px;
+	font-size: 1.2em;
 	margin-top: 5px;
 	margin-bottom: 5px;
 	font-weight: 600;
@@ -54,16 +54,17 @@ h3, h5, h6 {
 }
 
 h4 {
-	font-size: 15px;
-	color: #000091;
-	text-decoration: underline;
+	font-size: 1.1em;
 	font-weight: normal;
+	color: #3f3f3f;
+	padding-bottom: 5px;
 }
 
 /* Standard-Links */
 a {
 	color: #000095;
 	text-decoration: none;
+	font-size: 1em;
 }
 
 a:hover, 
@@ -130,30 +131,13 @@ blockquote {
 .header {
 	padding: 10px;
 	border-bottom: 5px solid white;
-	background-color: #2e2e2e; /* #373737 */
+	background-color: #2e2e2e;
 	color: black;
 }
 
 /*
  * Suchleiste
  */
-.userInfo #suche {
-	margin-top: 5px;
-}
-
-.userInfo a {
-	color: white;
-}
-
-.userInfo input[type=text] {
-	background-color: transparent;
-	color: white;
-}
-
-.userInfo #suche #sucheSubmit {
-	border: 1px solid grey;
-	padding: 1px;
-}
 
 .invSuchErgeb {
 	border: 1px solid #aa0004;
@@ -177,18 +161,23 @@ blockquote {
  * Willkommen USER | Abmelden + Impressum usw.
  */
 .userInfo {
-	text-align: right;
-	max-width: 260px;
+	max-width: 40%;
 	float: right;
+	border: 1px solid transparent;
 	margin-top: -17px;
 	max-height: 100px;
 	overflow: hidden;
-	padding: 10px;
+	padding-top: 10px;
+	color: white;
+	font-size: 0.9em;
+}
+
+.userInfo a, .userInfo p {
 	color: white;
 }
 
 .userInfo ul {
-	font-size: 13px;
+	font-size: 1em;
 }
 
 .userInfo li {
@@ -197,9 +186,11 @@ blockquote {
 	margin-left: 0px;
 }
 
-.userInfo li a {
+.userInfo li a, .userInfo li a:hover, .userInfo li a:visited, .userInfo li a:visited:hover {
 	color: white;
 }
+
+
 
 /*
  * Das ist die obere Navigation
@@ -360,6 +351,7 @@ blockquote {
 .bereichprofil h2,
 .bereichINACTIVE h2 {
 	color: #414141;
+	font-size: 1.1em;
 }
 
 .bereichadressbuch p,
@@ -375,8 +367,7 @@ blockquote {
 .bereichprofil p,
 .bereichINACTIVE p {
 	color: black;
-	font-size: 12px;
-	font-family: cursive;
+	font-size: 1em;
 }
 
 .bereichINACTIVE {
@@ -618,7 +609,7 @@ blockquote {
 .handwerkField td {
 	border: 1px solid #464646;
 	padding: 3px;
-	font-size: 12px;
+	font-size: 1em;
 	height: 50px;
 	word-wrap: break-word;
 	-webkit-transition: all 0.3s ease-in-out;
@@ -824,7 +815,6 @@ blockquote {
 
 .scrollContainer {
 	padding: 10px;
-	font-family: cursive;
 }
 
 .kleineBox {
@@ -888,7 +878,7 @@ blockquote {
 #stern {
 	color: white;
 	float: left;
-	font-size: 40px;
+	font-size: 5em;
 	margin-top: -8px;
 }
 
@@ -1186,6 +1176,7 @@ blockquote {
 
 .navigationReiter li {
 	display: inline;
+	font-size: 1em;
 	margin: 0px 0px 0px 0px;
 	padding: 5px;
 	border-bottom: 1px dotted #1000a4;
@@ -1264,8 +1255,8 @@ input[type=radio]:not(old):checked + label > span > span{
 	padding: 10px;
 	marign-right: 10px;
 }
-.newFahrt #anzahlFahrten input[type=text] {
-	width: 20px;
+.newFahrt input[type=text] {
+	font-size: 1em;
 }
 
 .newFahrt #spritpreis {
@@ -1277,16 +1268,17 @@ input[type=radio]:not(old):checked + label > span > span{
 }
 
 .newFahrt #datum {
-	position: relative;
 	margin-top: -30px;
 	float: right;
-	border: 1px dotted grey;
-	width: 150px;
 }
 
-.newFahrt #datum input[type=date] {
+.newFahrt input[type=date] {
 	border: none;
-	width: 130px;
+	font-size: 1em;
+}
+
+.newFahrt select {
+	font-size: 1em;
 }
 
 .newFahrt #fahrzeuge {
@@ -1307,7 +1299,7 @@ input[type=radio]:not(old):checked + label > span > span{
 }
 
 .newCharWIDE {
-	border: 1px solid #a03235;
+	border: 1px solid grey;
 	margin-bottom: 10px;
 	box-shadow: 0px 0px 5px black;
 	padding: 10px;
@@ -1329,7 +1321,7 @@ input[type=radio]:not(old):checked + label > span > span{
 }
 
 .newChar {
-	border: 1px solid #a03235;
+	border: 1px solid grey;
 	margin-left: auto;
 	margin-right: auto;
 	margin-bottom: 10px;
@@ -1405,7 +1397,7 @@ input[type=radio]:not(old):checked + label > span > span{
 	border-radius: 2px;
 	color: black;
 	margin-right: 20px;
-	font-size: 15px;
+	font-size: 1em;
 }
 
 .showChars {
@@ -1635,7 +1627,7 @@ input[type=radio]:not(old):checked + label > span > span{
 
 .bereichLink2 {
 	padding: 2px;
-	font-size: 15px;
+	font-size: 1em;
 	text-shadow: 0px 0px 3px white;
 }
 
@@ -1695,7 +1687,8 @@ input[type=radio]:not(old):checked + label > span > span{
 
 .buttonlink {
 	display: inline-block;
-	padding: 3px 12px;
+	padding: 2px 7px;
+	font-size: 1em;
 	border: 1px solid #3366FF;
 	box-shadow: 0px 0px 5px grey;
 	margin: 0px 2px 2px 2px;
@@ -1710,8 +1703,7 @@ input[type=radio]:not(old):checked + label > span > span{
 
 .buttonlink:hover {
 	box-shadow: 0px 0px 5px #3366FF;
-	background: #F0F0F0;
-	text-shadow: none;
+	background-color: #b7b7ff;
 	-webkit-transition: all 0.3s ease-in-out;
 	-moz-transition: all 0.3s ease-in-out;
 	-ms-transition: all 0.3s ease-in-out;
@@ -1739,7 +1731,7 @@ input[type=submit]:focus {
 	padding: 4px 12px;
 	margin-right: 2px;
 	margin-bottom: 2px;
-	font-size: 14px;
+	font-size: 1em;
 	color: black;
 	border-radius: 2px;
 	background-color: #808080;
@@ -1984,7 +1976,7 @@ input[type=radio]+label {
 	display: inline-block;
 	margin-right: 2px;
 	padding: 4px 12px;
-	font-size: 14px;
+	font-size: 1em;
 	color: #333;
 	cursor: pointer;
 	background-color: white;
@@ -2025,9 +2017,9 @@ input[type=submit] {
 	-o-transition: all 0.3s ease-in-out;
 	transition: all 0.3s ease-in-out;
 	background: white;
-	padding: 7px 12px 5px 12px;
+	padding: 4px 7px 4px 7px;
 	border:1px solid #3366FF;
-	box-shadow: 0px 0px 5px #3366FF;
+	box-shadow: 0px 0px 2px #3366FF;
 	cursor:pointer;
 	color: #3366FF;
 }
@@ -2051,7 +2043,7 @@ input[type=submit]:hover {
 /* Hilfebox */
 .mainbody .rightBody #hilfebox textarea {
 	padding: 5px;
-	font-size: 18px;
+	font-size: 1.5em;
 	
 } 
 
@@ -2245,17 +2237,23 @@ input[type=password]:focus {
 }
 
 .logTable #fixedLaenge {
-	width: 130px;
+	width: 140px;
 }
 
 .logTable #smallLaenge {
-	width: 70px;
+	width: 80px;
 }
 
 .logTable thead td {
 	padding: 5px;
 	border-right: 1px solid grey;
 	border-left: 1px solid grey;
+}
+
+.logTable tbody td {
+	padding: 2px;
+	border: 1px solid #a2a2a2;
+	font-size: 0.8em;
 }
 
 .logTable thead {
@@ -2354,6 +2352,9 @@ input[type=password]:focus {
 .kontoTable #notOK {
 	background-color: #ffd9da;
 }
+.kontoTable #pending {
+	background-color: #ffddaa;
+}
 
 .kontoTable #today a {
 	color: black;
@@ -2388,7 +2389,7 @@ input[type=password]:focus {
 	-ms-transition: all 0.3s ease-in-out;
 	-o-transition: all 0.3s ease-in-out;
 	transition: all 0.3s ease-in-out;
-	font-size: 13px;
+	font-size: 1em;
 	border: 1px solid #c0c0c0;
 	background-color: #f5f5f5;
 	color: black;
@@ -2605,7 +2606,7 @@ input[type=password]:focus {
 	background-repeat: no-repeat;
 	background-position: right;
 	width: 900px;
-	height: 500px;
+	height: 450px;
 	margin-left: auto;
 	margin-right: auto;
 	margin-top: 20px;
@@ -2615,13 +2616,13 @@ input[type=password]:focus {
 }
 
 .login h1 a {
-	font-size: 35px;
+	font-size: 1.1em;
 	color: grey;
 }
 
 .login #loginTitel {
 	font-style: italic;
-	font-size: large;
+	font-size: 1em;
 	color: #595959;
 }
 
@@ -2679,7 +2680,7 @@ input[type=password]:focus {
 .login #Impressum li,
 .login #zweck p,
 .login #zweck li {
-	font-size: 12px;
+	font-size: 1em;
 	margin-left: 0px;
 }
 
@@ -2689,7 +2690,7 @@ input[type=password]:focus {
 .login #Impressum h2,
 .login #zweck h1,
 .login #zweck h2 {
-	font-size: 15px;
+	font-size: 1em;
 	color: grey;
 }
 
@@ -2726,7 +2727,7 @@ input[type=password]:focus {
 	float: right;
 	padding: 0 10px 0 10px;
 	border-left: 2px solid grey;
-	font-size: 14px;
+	font-size: 1em;
 }
 
 .sqlbox {
@@ -2741,27 +2742,26 @@ input[type=password]:focus {
 	border: 1px solid green;
 }
 
-.InfoCenter, .InfoCenter a {
+.InfoCenter, .InfoCenter a, .InfoCenter a:hover, .InfoCenter a:visited, .InfoCenter a:visited:hover {
 	color: white;
 }
 
 .InfoCenter {
 	position: absolute;
-	top: 70px;
-	margin-left: 150px;
-	max-width: 500px
+	padding: 2px;
+	margin-top: -50px;
+	margin-left: 140px;
+	border: 1px solid transparent;
 	overflow: hidden;
+	max-height: 50px;
 }
 
 .InfoCenter:hover {
-	background-color: grey;
+	border: 1px solid red;
 }
 
-
 #home #home,
-#tiere #tiere,
 #handwerk #handwerk,
-#statistik #statistik,
 #kalender #kalender,
 #calc #calc,
 #marked {
@@ -2775,10 +2775,10 @@ input[type=password]:focus {
 	overflow: hidden;
 	min-width: 400px;
 	max-width: 550px;
-	max-height: 75px;
-	margin-left: 120px;
-	margin-top: -70px;
-	background-color: transparent;
+	max-height: 80px;
+	margin-left: 140px;
+	margin-top: -43px;
+	background-color: #2e2e2e;
 }
 
 .rightOuterBody li {
@@ -2903,7 +2903,7 @@ input[type=password]:focus {
 	background: white;
 	padding: 10px;
 	margin-top: 3px;
-	font-size: 14px;
+	font-size: 1em;
 	border: 1px solid grey;
 	margin-bottom: 3px;
 	color: #4a4a4a;
@@ -2929,7 +2929,7 @@ input[type=password]:focus {
 
 .infoText {
 	color: grey;
-	font-size: 10px;
+	font-size: 1em;
 	padding: 5px;
 	margin-left: auto;
 	margin-right: auto;
@@ -2964,7 +2964,7 @@ input[type=password]:focus {
 }
 
 .forumPost #small {
-	font-size: 10px;
+	font-size: 1em;
 	background-color: transparent;
 	color: grey;
 	text-align: right;
@@ -2981,7 +2981,7 @@ input[type=password]:focus {
 }
 
 .forumPost #smallLink {
-	font-size: 10px;
+	font-size: 0.7em;
 }
 
 .forumPost thead td {
@@ -3073,7 +3073,7 @@ input[type=checkbox]+label {
 	border-radius: 5px 0px 5px 0px;
 	margin-right: 2px;
 	padding: 4px 12px;
-	font-size: 14px;
+	font-size: 1em;
 	color: #333;
 	cursor: pointer;
 	background-color: #f5f5f5;
