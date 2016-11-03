@@ -83,7 +83,7 @@ class control extends functions {
 	 */
 	function showBenutzer() {
 		
-		if($this->userHasRight("37", 0) == true) {
+		if($this->userHasRight(37, 0) == true) {
 			
 			echo "<div class='newFahrt'>";
 		
@@ -92,7 +92,7 @@ class control extends functions {
 					<td>ID</td>
 					<td>Benutzername</td>
 					<td>Titel</td>
-					<td><a href='?action=4'>Rechte</a>
+					<td><a href='?action=6'>Rechte</a>
 					<td><a href='?action=5'>Forum Rechte</a>
 					</td><td>Versuche</td>
 					<td>Optionen</td></thead>";
@@ -154,7 +154,7 @@ class control extends functions {
 	 * Ermöglicht das hinzufügen eines neuen Benutzers.
 	 */
 	function newBenutzerEingabe() {
-		if($this->userHasRight("38", 0) == true) {
+		if($this->userHasRight(38, 0) == true) {
 			echo "<a href='?regnewuser' class='buttonlink'>Neuer Benutzer</a><br>";
 			if (isset ( $_GET ['regnewuser'] )) {
 				echo "<div class='newChar'>";
@@ -179,11 +179,11 @@ class control extends functions {
 	 * Returns false or true.
 	 */
 	function newBenutzerFunction() {
-		if($this->userHasRight("38", 0) == true) {
+		if($this->userHasRight(38, 0) == true) {
 			if (isset ( $_POST ['passwort'] ) and isset ( $_POST ['passwort2'] ) and isset ( $_POST ['username'] ) and isset ( $_POST ['regnewuser'] )) {
 				
 				// RightCheck:
-				if($this->userHasRight("38", 0) == true) {
+				if($this->userHasRight(38, 0) == true) {
 					// Deklaration der Variablen
 					$passwort1 = $_POST ['passwort'];
 					$passwort2 = $_POST ['passwort2'];
@@ -226,7 +226,7 @@ class control extends functions {
 	 * bearb ist in dem Fall eine ID.
 	 */
 	function bearbBenutzerEingabe() {
-		if($this->userHasRight("39", 0) == true) {
+		if($this->userHasRight(39, 0) == true) {
 			if (isset ( $_GET ['bearb'] )) {
 				$bearb = $_GET ['bearb'];
 				if ($bearb) {
@@ -286,7 +286,7 @@ class control extends functions {
 	 */
 	function bearbBenutzerFunction() {
 		if (isset ( $_POST ['bearbuser'] ) and isset ( $_POST ['id'] )) {
-			if($this->userHasRight("39", 0) == true) {
+			if($this->userHasRight(39, 0) == true) {
 				if ($_POST ['bearbuser'] == "Ausführen") {
 					
 					if (! isset ( $_POST ['newname'] )) {
@@ -345,7 +345,7 @@ class control extends functions {
 	 * @return boolean
 	 */
 	function deleteSingleUser() {
-		if($this->userHasRight("40", 0) == true) {
+		if($this->userHasRight(40, 0) == true) {
 			echo "<p class='meldung'>Der Benutzer $name wird gelöscht. Sicher? ";
 			echo "<input type=hidden value='$loeschid' name='id' readonly />";
 			echo "<input type=hidden value='löschen' name='bearbuser' readonly />";
@@ -471,7 +471,7 @@ class control extends functions {
 	 */
 	function deleteBenutzerFunction() {
 		
-		if($this->userHasRight("41", 0) == true) {
+		if($this->userHasRight(41, 0) == true) {
 			
 			if (isset ( $_POST ['id'] )) {
 				$loeschid = $_POST ['id'];
@@ -570,7 +570,7 @@ class control extends functions {
 	 * Zeigt eingereichte Vorschläge der Benutzer an
 	 */
 	function adminVorschlaege() {
-		if($this->userHasRight("42", 0) == true) {
+		if($this->userHasRight(42, 0) == true) {
 			// Einfügen der Function
 			if (isset ( $_GET ['submit'] ) and isset ( $_GET ['status'] ) and isset ( $_GET ['hiddenID'] )) {
 				$this->vorschlaegeAction ( $_GET ['submit'], $_GET ['status'], $_GET ['hiddenID'] );
@@ -820,7 +820,7 @@ class control extends functions {
 	 * Löscht die Logeinträge aus dem gewählten Text.
 	 */
 	function adminVorschlaegeDELETE_Eintraege() {
-		if($this->userHasRight("42", 0) == true) {
+		if($this->userHasRight(42, 0) == true) {
 			if (isset ( $_GET ['kategorieLoeschen'] ) and isset ( $_GET ['loeschen'] ) and isset ( $_GET ['loeschid'] )) {
 				$id = $_GET ['kategorieLoeschen'];
 				if ($id != "" and $id > 0) {
@@ -842,7 +842,7 @@ class control extends functions {
 	 */
 	function userVorschlaege() {
 		
-		if($this->userHasRight("8", 0) == true) {
+		if($this->userHasRight(8, 0) == true) {
 			// Einfügen der Function
 			if (isset ( $_GET ['submit'] ) and isset ( $_GET ['status'] ) and isset ( $_GET ['hiddenID'] )) {
 				$this->vorschlaegeAction ( $_GET ['submit'], $_GET ['status'], $_GET ['hiddenID'] );
@@ -878,7 +878,7 @@ class control extends functions {
 	 */
 	function vorschlaegeAction($submit, $status, $id) {
 		
-		if($this->userHasRight("8", 0) == true) {
+		if($this->userHasRight(8, 0) == true) {
 		
 			if ($submit == "OK") {
 				// Vars zuweisen
@@ -926,7 +926,7 @@ class control extends functions {
 	 * Ermöglicht das erstellen eines neuen Rechts
 	 */
 	function newRight() {
-		if($this->userHasRight("15", 0) == true) {
+		if($this->userHasRight(15, 0) == true) {
 			
 			// Eintragung des Rechts in die DB
 			if (isset ( $_POST ['newRightName'] ) and isset ( $_POST ['kategorie'] )) {
@@ -982,7 +982,7 @@ class control extends functions {
 	 * Entsperrt einen Benutzer
 	 */
 	function modifyUsersStatus($id, $status) {
-		if($this->userHasRight("45", 0) == true) {
+		if($this->userHasRight(45, 0) == true) {
 			if (isset ( $id ) and isset ( $status )) {
 				if ($status == "entsperren") {
 					$updateVersuche = "UPDATE benutzer SET versuche='0' WHERE id = '$id'";
@@ -1009,7 +1009,7 @@ class control extends functions {
 	 * Ermöglicht das freischalten von Rechten für den Bereich "Forum".
 	 */
 	function setUserForumRights() {
-		if($this->userHasRight("47", 0) == true) {
+		if($this->userHasRight(47, 0) == true) {
 			
 			// Benutzerauswahl
 			echo "<div>";
@@ -1023,7 +1023,7 @@ class control extends functions {
 			
 			// Status der Rechte Änderung:
 			if (isset ( $_GET ['right'] )) {
-				if($this->userHasRight("47", 0) == true) {
+				if($this->userHasRight(47, 0) == true) {
 					// ALTE BENUTZERRECHTE BEKOMMEN:
 					$userid = $_GET ['user'];
 					$rightFromCurrentUser = "SELECT forumRights FROM benutzer WHERE id = '$userid'";
@@ -1111,7 +1111,7 @@ class control extends functions {
 	 */
 	function showForumCategories() {
 		
-		if($this->userHasRight("48", 0) == true) {
+		if($this->userHasRight(48, 0) == true) {
 			
 			echo "<table class='flatnetTable'>";
 			echo "<thead><td>Kategorie</td><td>Erstellungsdatum</td><td>Rechte</td><td>Optionen</td></thead>";
@@ -1145,7 +1145,7 @@ class control extends functions {
 	 * Ermöglicht das setzen einer neuen Kategorie.
 	 */
 	function newForumCategory() {
-		if($this->userHasRight("49", 0) == true) {
+		if($this->userHasRight(49, 0) == true) {
 			if (! isset ( $_GET ['editid'] )) {
 				
 				# Höchste Potenz bekommen:
@@ -1182,7 +1182,7 @@ class control extends functions {
 	 * siehe $this->newForumCategory();
 	 */
 	function addNewForumCategory() {
-		if($this->userHasRight("49", 0) == true) {
+		if($this->userHasRight(49, 0) == true) {
 			// leere Felder abfangen:
 			if (isset ( $_POST ['nameNewCat'] ) and isset ( $_POST ['description'] )) {
 				if ($_POST ['nameNewCat'] == "" or $_POST ['description'] == "" or $_POST ['potenz'] == "" or $_POST ['sortierung'] == "") {
@@ -1227,7 +1227,7 @@ class control extends functions {
 	 * Ermöglicht das verändern einer bestehendes Kategorie.
 	 */
 	function alternateForumCategory() {
-		if($this->userHasRight("50", 0) == true) {
+		if($this->userHasRight(50, 0) == true) {
 			if (isset ( $_GET ['editid'] ) or isset ( $_GET ['loeschid'] )) {
 				if (isset ( $_GET ['loeschid'] ) and $_GET ['loeschid'] != "") {
 					// ##########################
@@ -1434,11 +1434,11 @@ class control extends functions {
 	 * Speichert die Inhalte erneut.
 	 */
 	function saveObjects() {
-		if($this->userHasRight("51", 0) == true) {
+		if($this->userHasRight(51, 0) == true) {
 			
 			// UPDATE TABLE ENTRY
 			if (isset ( $_POST ['ok'] )) {
-				if($this->userHasRight("52", 0) == true) {
+				if($this->userHasRight(52, 0) == true) {
 					$table = $_GET ['table'];
 					$currentObject = $_POST ['currentObject'];
 					$columns = $this->getColumns ( $table );
@@ -1473,7 +1473,7 @@ class control extends functions {
 			
 			// LÖSCHEN AUS TABLE
 			if (isset ( $_POST ['loeschen'] )) {
-				if($this->userHasRight("53", 0) == true) {
+				if($this->userHasRight(53, 0) == true) {
 					$table = $_GET ['table'];
 					$id = $_GET ['id'];
 					$sql = "DELETE FROM $table WHERE id='$id'";
@@ -1492,7 +1492,7 @@ class control extends functions {
 			// INSERT INTO TABLE
 			if (isset ( $_POST ['insertOK'] )) {
 				
-				if($this->userHasRight("54", 0) == true) {
+				if($this->userHasRight(54, 0) == true) {
 				
 					$table = $_GET ['table'];
 					$currentObject = $_POST ['currentObject'];
@@ -1544,7 +1544,7 @@ class control extends functions {
 	 * Zeigt eine Datenzeile aus einer Tabelle an.
 	 */
 	function showObject() {
-		if($this->userHasRight("55", 0) == true) {
+		if($this->userHasRight(55, 0) == true) {
 			if (isset ( $_GET ['id'] ) and isset ( $_GET ['table'] )) {
 				$table = $_GET ['table'];
 				$id = $_GET ['id'];
@@ -1664,7 +1664,7 @@ class control extends functions {
 	 */
 	function insertIntoTable($table) {
 		
-		if($this->userHasRight("54", 0) == true) {
+		if($this->userHasRight(54, 0) == true) {
 			
 			// Menge bekommen
 			$query = "SHOW COLUMNS FROM $table";
@@ -1699,7 +1699,7 @@ class control extends functions {
 	 * Zeigt eine QueryBox an, mit deren Hilfe man jede Art von Abfrage starten kann.
 	 */
 	function globalQueryBox() {
-		if($this->userHasRight("56", 0) == true) {
+		if($this->userHasRight(56, 0) == true) {
 			echo "<div class='sqlbox'>";
 			if (isset ( $_POST ['sqlbox'] )) {
 				$query = $_POST ['sqlbox'];
@@ -1734,7 +1734,7 @@ class control extends functions {
 	 * Aber Designtechnisch auf meinem Niveau.
 	 */
 	function objektControl() {
-		if($this->userHasRight("51", 0) == true) {
+		if($this->userHasRight(51, 0) == true) {
 			
 			// Ausgabe aller Tables
 			$DBName = $this->getDBName();
@@ -1820,11 +1820,11 @@ class control extends functions {
 				
 				// Optionsknöpfe
 				echo "<div>";
-				if($this->userHasRight("56", 0) == true) {
+				if($this->userHasRight(56, 0) == true) {
 					echo "<a href='?action=3$von&globalQuery&table=$table#administration' class='buttonlink'>manuelle Query</a>"; 
 				}
 				
-				if($this->userHasRight("54", 0) == true) {
+				if($this->userHasRight(54, 0) == true) {
 					echo "<a href='?action=3$von&table=$table&insert#administration' class='greenLink'>INSERT</a>";
 				}
 				
@@ -1970,7 +1970,7 @@ class control extends functions {
 	 * Ermöglicht die Erstellung von Codes, damit sich User registrieren können.
 	 */
 	function codeVerwaltung() {
-		if($this->userHasRight("57", 0) == true) {
+		if($this->userHasRight(57, 0) == true) {
 			echo "<h2>Codeverwaltung</h2>";
 			echo "<a href='/flatnet2/admin/control.php?action=3&table=registercode' class='buttonlink'>Codes anzeigen</a><a href='?action=1&createNewCode=1' class='buttonlink'>Neuen Code</a>";
 			
@@ -2019,7 +2019,7 @@ class control extends functions {
 	 * Zeigt Einträge an, bei denen der Benutzer nicht mehr existiert und bietet an, diese zu löschen.
 	 */
 	function Aufraeumen() {
-		if($this->userHasRight("58", 0) == true) {
+		if($this->userHasRight(58, 0) == true) {
 			if (isset($_POST ['loeschid']) AND isset($_POST['table']) AND isset($_POST['endgueltigLoeschen'])) {
 				$table = $_POST ['table'];
 				$userID = $_POST ['loeschid'];
@@ -2042,7 +2042,7 @@ class control extends functions {
 				
 				echo "<p>Der Benutzer mit der ID " . $_GET ['loeschid'] . "</p>";
 				echo "<p>wird aus dem table <strong>" . $_GET ['table'] . "</strong> gelöscht!</p>";
-				if($this->userHasRight("58", 0) == true) {
+				if($this->userHasRight(58, 0) == true) {
 					echo "<form method=post>";
 					echo "<input type=hidden name=loeschid value='".$_GET ['loeschid']."' />";
 					echo "<input type=hidden name=table value='".$_GET ['table']."' />";
@@ -2064,20 +2064,20 @@ class control extends functions {
 	 * verweigert.
 	 */
 	function rechteverwaltung() {
-		if($this->userHasRight("44", 0) == true) {
+		if($this->userHasRight(44, 0) == true) {
 			echo "<h2>Neue Rechteverwaltung</h2>";
 			
-			if($this->userHasRight("15", 0) == true) {
+			if($this->userHasRight(15, 0) == true) {
 				$this->newRight();
 			}
 			
-			if($this->userHasRight("46", 0) == true) {
+			if($this->userHasRight(46, 0) == true) {
 				$this->rechteverwaltung_setright();
 			
 			
 				# Liste von allen Benutzern anzeigen:
 				#####################################################################################################################
-				$allusers = $this->getObjektInfo("SELECT * FROM benutzer");														#
+				$allusers = $this->getObjektInfo("SELECT * FROM benutzer");															#
 																																	#
 				for ($i = 0 ; $i < sizeof($allusers) ; $i++) {																		#
 					echo "<a class='buttonlink' href='?action=6&userid=".$allusers[$i]->id."'>".$allusers[$i]->Name."</a>";			#
@@ -2152,7 +2152,7 @@ class control extends functions {
 	 */
 	function rechteverwaltung_setright() {
 		
-		if($this->userHasRight("46", 0) == true) {
+		if($this->userHasRight(46, 0) == true) {
 			
 			if(isset($_GET['userid']) AND isset($_GET['gewaehren'])) {
 			#	echo "<p class='meldung'>Recht wird gewährt!</p>";
@@ -2236,7 +2236,7 @@ class control extends functions {
 	 */
 	function rechtekategorienVerwaltung() {
 		
-		if($this->userHasRight("68", 0) == true) {
+		if($this->userHasRight(68, 0) == true) {
 		
 			# Alle Kategorien bekommen:
 			$getallcategories = $this->getObjektInfo("SELECT * FROM rightkategorien");
@@ -2258,23 +2258,35 @@ class control extends functions {
 	 * Zeigt eine Ansicht der Tabelle "log"
 	 */
 	function log_verwaltung() {
-		if($this->userHasRight("42", 0) == true) {
+		if($this->userHasRight(42, 0) == true) {
 			
 			echo "<div class='newFahrt'>";
 			
+			
+			
 			# setlimit get-action
 			if(isset($_GET['setlimit'])) { if(is_numeric($_GET['setlimit']) == true) { $limit = $_GET['setlimit']; } else { $limit = 100; } } else { $limit = 100; }
+			if(isset($_GET['textLimit'])) {
+				if(is_numeric($_GET['textLimit']) == true) { $textLimit = $_GET['textLimit']; } else { $textLimit = 200; } 
+			} else { $textLimit = 200; }
 			
 			$getLogs = $this->getObjektInfo("SELECT * FROM log ORDER BY timestamp DESC LIMIT $limit");
 			$getanzahl = $this->getAmount("SELECT * FROM log");
-			echo "<h3>" ."Datenbankänderungen (insert, update, delete)". "(" .$getanzahl ." Einträge)"."</h3>";
+			echo "<h3>" ."Datenbankänderungen (insert, update, delete, html-tag bereinigt)". "(" .$getanzahl ." Einträge)"."</h3>";
 			echo "<form method=get><input type=number name=setlimit value=$limit /><input type=hidden name=action value=2 /><input type=submit class='' /></form>";
 			echo "<table class='logTable'>";
 			echo "<thead>";
 				echo "<td>"."ID"."</td>";
 				echo "<td id='fixedLaenge'>"."Datum & Zeit"."</td>";
 				echo "<td id='fixedLaenge'>"."Benutzer"."</td>";
-				echo "<td>"."Text"."</td>";
+				echo "<td>"."Text"; 
+					echo"<form method=get>
+					<input type=number value=$textLimit name=textLimit />
+					<input type=hidden value=$limit name=setlimit />
+					<input type=hidden value=2 name=action />
+					<input type=submit />
+					</form>"; 
+				echo "</td>";
 				echo "<td id='fixedLaenge'>"."IP"."</td>";
 			echo "</thead>";
 			for($i = 0 ; $i < sizeof($getLogs) ; $i++) {
@@ -2283,7 +2295,7 @@ class control extends functions {
 					echo "<td>" . $getLogs[$i]->id . "</td>";
 					echo "<td>" . $getLogs[$i]->timestamp . "</td>";
 					echo "<td>" . $getLogs[$i]->benutzer ."-". $username . "</td>";
-					echo "<td>" . $getLogs[$i]->log_text . "</td>";
+					echo "<td>" . substr(strip_tags(stripslashes($getLogs[$i]->log_text)),0,$textLimit) . "</td>";
 					echo "<td>" . $getLogs[$i]->ip_adress . "</td>";
 					
 				echo "</tbody>";

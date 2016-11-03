@@ -128,6 +128,11 @@ class amazon extends functions {
 				if($sumOfErstattung > 0) {
 					echo "Erstattungsbetrag: $sumOfErstattung € <br> ";
 				}
+				
+				$endsumme = 0 + $openSum - $sumOfErstattung;
+				if($endsumme != $openSum) {
+					echo "Endsumme: $endsumme €<br>";
+				}
 				echo "</p>";
 				
 				$query = "SELECT * FROM amazon_infos WHERE autor=$userid AND hide=0 ORDER BY payed, date_of_order, date_of_faelligkeit, date_of_payment";

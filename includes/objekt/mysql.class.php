@@ -12,53 +12,8 @@ class sql {
 	}
 
 	/**
-	 * Stellt die Verbindung zum SQL Server her, dafür werden die Daten direkt in die Class
-	 * geschrieben.
-	 */
-	function connectToDBOldWay() {
-		/*
-		
-		echo "<p class='meldung'>connectToDBOldWay. Diese Funktion ist veraltet!</p>";
-
-	#	error_reporting(0);
-
-		$mode = "phpfriends";
-
-		# Bauen der ErrorMessages:
-		$errordbconnect = "<html>";
-		$errordbconnect .= '<link href="/flatnet2/css/style.css" type="text/css" rel="stylesheet" />';
-		$errordbconnect .= "<div class='mainbody'>";
-
-		$errorsqlconnect = "<html>";
-		$errorsqlconnect .= '<link href="/flatnet2/css/style.css" type="text/css" rel="stylesheet" />';
-		$errorsqlconnect .= "<div id='wrapper'><div class='mainbody'>";
-
-		if($mode == "phpfriends") {
-			# PHP Friends
-			$host = "localhost";
-			$sqlusername = "62_flathacksql1";
-			$sqluserpassword = "12141214";
-			$sqldatabase = "62_flathacksql1";
-			$errorsqlconnect .= "<p class=''>Quaggan kann Seite nicht finden. Nur 404. Quaggan traurig.</p>";
-			$errorsqlconnect .= "<img src='/flatnet2/images/fehler/404.png' name='' alt='404 Fehler'>";
-			$errordbconnect .= "<p class=''>Quaggan kann Seite nicht finden. Nur 404. Quaggan traurig.</p>";
-			$errordbconnect .= "<img src='/flatnet2/images/fehler/404.png' name='' alt='404 Fehler'>";
-		}
-
-		$errordbconnect .= "</div></div></html>";
-		$errorsqlconnect .= "</div></div></html>";
-		# Stellt die Verbindung her:
-		
-		mysql_connect($host, $sqlusername, $sqluserpassword);
-		
-		mysql_select_db($sqldatabase) or die ("<body id='wrapper'>" . $errordbconnect . "<div class='mainbody'><img src='/flatnet2/images/fehler/dbError.png' name='' alt='Fehler'></div></body>");
-		
-		*/
-	}
-
-	/**
-	 * New Connect
-	 * @todo
+	 * Stellt die Verbindung zur Datenbank her.
+	 * 
 	 */
 	function connectToDBNewWay() {
 		try {
@@ -86,43 +41,9 @@ class sql {
 	}
 	
 	/**
-	 * Stellt die Verbindung zu einer anderen Datenbank her.
-	 * @param unknown $db
-	 * @param unknown $username
-	 * @param unknown $password
+	 * Function um Inhalte aus einer Tabelle zu löschen.
+	 * @param unknown $tabelle
 	 */
-	function connectToSpecialDB($db, $username, $password) {
-		echo "<p class='meldung'>connectToSpecialDB. Diese Funktion ist veraltet!</p>";
-		$mode = "phpfriends";
-
-		# Bauen der ErrorMessages:
-		$errordbconnect = "<html>";
-		$errordbconnect .= '<link href="/flatnet2/css/style.css" type="text/css" rel="stylesheet" />';
-		$errordbconnect .=  '<link rel="icon" href="/flatnet2/favicon.jpg" type="image/x-icon" />';
-		$errordbconnect .= "<div class='mainbody'>";
-		$errorsqlconnect = "<html>";
-		$errorsqlconnect .= '<link href="/flatnet2/css/style.css" type="text/css" rel="stylesheet" />';
-		$errorsqlconnect .= '<link rel="icon" href="/flatnet2/favicon.jpg" type="image/x-icon" />';
-		$errorsqlconnect .= "<div id='wrapper'><div class='mainbody'>";
-
-		if($mode == "phpfriends") {
-			# PHP Friends
-			$host = "127.0.0.1";
-			$sqlusername = $username;
-			$sqluserpassword = $password;
-			$sqldatabase = $db;
-			$errorsqlconnect .= "Verbindung zum SQL Server fehlgeschlagen.";
-			$errordbconnect .= "Datenbank konnte nicht ausgewählt werden";
-		}
-
-		$errordbconnect .= "</div></div></html>";
-		$errorsqlconnect .= "</div></div></html>";
-		# Stellt die Verbindung her:
-
-		mysql_connect($host, $sqlusername, $sqluserpassword) or die ($errorsqlconnect);
-		mysql_select_db($sqldatabase) or die ($errordbconnect);
-	}
-
 	function sqlDelete($tabelle) {
 
 		if(isset($_GET['loeschen']) AND isset($_GET['loeschid'])) {
@@ -162,7 +83,11 @@ class sql {
 		}
 
 	}
-
+	
+	/**
+	 * 
+	 * @param unknown $query
+	 */
 	function sqlDeleteCustom($query) {
 
 		if(isset($_GET['loeschen']) AND isset($_GET['loeschid'])) {
@@ -229,21 +154,14 @@ class sql {
 	 * @return boolean
 	 */
 	function sql_insert_update_delete_hw($query) {
-	
 		$db = $this->connectToDBNewWay();
-	
-		# Log durchführen:
-		# $this->logme($query);
-	
 		$affected_rows = $db->exec($query);
-	
+
 		if($affected_rows > 0) {
 			return true;
 		} else {
 			return false;
 		}
-	
-	
 	}
 	
 	/**
@@ -305,6 +223,8 @@ class sql {
 	 * @return unknown
 	 */
 	function getObjektInfo($query) {
+	#	echo "<p class='dezentInfo'>" .$query . "</p>";
+		
 		$db = $this->connectToDBNewWay();
 		$stmt = $db->query($query);
 		$results = $stmt->fetchAll(PDO::FETCH_OBJ);

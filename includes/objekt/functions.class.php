@@ -19,7 +19,7 @@ class functions extends sql {
 	 * @return string // Gibt die komplette Suche, samt umgebenen DIV wieder.
 	 */
 	function suche($suchWort = "test", $tabelle = "docu", $name = "text", $pfad = "?id") {
-		if($this->userHasRight("23", 0) == true) {
+		if($this->userHasRight(23, 0) == true) {
 			if($suchWort) {
 	
 				$ursprünglicheSuche = $suchWort;
@@ -229,7 +229,7 @@ class functions extends sql {
 		
 		$user = $this->getUserID($_SESSION['username']);
 		
-		$query = "SELECT * FROM rights WHERE besitzer = $user AND right_id = $rightID LIMIT 1";
+		$query = "SELECT besitzer, right_id FROM rights WHERE besitzer = $user AND right_id = $rightID LIMIT 1";
 		
 		$userHasRight = $this->getObjektInfo($query);
 		
@@ -261,7 +261,7 @@ class functions extends sql {
 			$user = $this->getUserID($_SESSION['username']);
 		}
 	
-		$query = "SELECT * FROM rights WHERE besitzer = $user AND right_id = $id LIMIT 1";
+		$query = "SELECT besitzer, right_id FROM rights WHERE besitzer = $user AND right_id = $id LIMIT 1";
 	
 		$userHasRight = $this->getObjektInfo($query);
 	
@@ -278,13 +278,14 @@ class functions extends sql {
 	}
 
 	/**
-	 * Alte Rechtecheck Funktion.
+	 * Checkt Rechte eines Benutzers im 2er Potenzsystem.
+	 * Wird noch im Forum verwendet.
 	 * @param unknown $benoetigt
 	 * @param unknown $benutzerrechte
 	 * @return boolean
 	 */
 	function check($benoetigt, $benutzerrechte) {
-
+	#	echo "<p class='meldung'>ALTE CHECK FUNKTION " .$benoetigt . $benutzerrechte."</p>";
 		if($benutzerrechte == 0) {
 			$user = $_SESSION['username'];
 			$rightFromCurrentUser="SELECT * FROM benutzer WHERE Name = '$user' LIMIT 1";
@@ -351,7 +352,7 @@ class functions extends sql {
 			if(isset($_SESSION['username'])) {
 				$username = $_SESSION['username'];
 			} else {
-				$username = "Unbekannter Benutzer";
+				$username = "Unknown User";
 			}
 			
 			$userID = $this->getUserID($username);
@@ -445,17 +446,17 @@ class functions extends sql {
 			echo "<li><a href='start.php' id='home'>Charakter</a></li>";
 			echo "<li><a href='http://gw2cartographers.com/' target='_blank' class='extern'>Maps</a></li>";
 			
-			if($this->userHasRight("62", 0) == true) {
+			if($this->userHasRight(62, 0) == true) {
 				echo "	<li><a href='kalender.php' id='kalender'>Kalender</a></li>";
 			}
 			
-			if($this->userHasRight("63", 0) == true) {
+			if($this->userHasRight(63, 0) == true) {
 				echo "<li><a href='kosten.php' id='calc'>Kostenrechner</a></li>";
 			}
 			
 			echo "<li><a href='handwerk.php' id='handwerk'>Handwerk</a></li>";
 					
-			echo "<li><a href='api.php' id='api'>API</a></li>";
+		#	echo "<li><a href='api.php' id='api'>API</a></li>";
 
 			echo "</ul>";
 			echo "</div>";
@@ -490,42 +491,42 @@ class functions extends sql {
 					<div class='rightOuterBody'>
 					<ul>";
 			
-			if($this->userHasRight("37", 0) == true) {
+			if($this->userHasRight(37, 0) == true) {
 				echo "<li><a href='?action=1'";
 				if(!isset($_GET['action']) OR $_GET['action'] == 1) { echo " id='marked' ";	} else { echo " id='' "; }
 				echo ">Benutzer</a></li>";
 			}
 			
-			if($this->userHasRight("42", 0) == true) {
+			if($this->userHasRight(42, 0) == true) {
 				echo "<li><a href='?action=2'";
 				if(isset($_GET['action']) AND $_GET['action'] == 2) { echo " id='marked' ";	} else { echo " id='' "; }
 				echo ">Logs</a></li>";
 			}
 			
-			if($this->userHasRight("51", 0) == true) {
+			if($this->userHasRight(51, 0) == true) {
 				echo "<li><a href='?action=3'";
 				if(isset($_GET['action']) AND $_GET['action'] == 3) { echo " id='marked' ";	} else { echo " id='' "; }
 				echo ">Objekte</a></li>";
 			}
 			
-			if($this->userHasRight("48", 0) == true) {
+			if($this->userHasRight(48, 0) == true) {
 				echo "<li><a href='?action=5'";
 				if(isset($_GET['action']) AND $_GET['action'] == 5) { echo " id='marked' ";	} else { echo " id='' "; }
 				echo ">Forum</a></li>";
 			}
 			
-			if($this->userHasRight("44", 0) == true) {
+			if($this->userHasRight(44, 0) == true) {
 				echo "<li><a href='?action=6'";
 				if(isset($_GET['action']) AND $_GET['action'] == 6) { echo " id='marked' ";	} else { echo " id='' "; }
 				echo ">Rechteverwaltung</a></li>";
 			}
 			
-			if($this->userHasRight("8", 0) == true) {
+			if($this->userHasRight(8, 0) == true) {
 				echo "<li><a href='/flatnet2/informationen/hilfe.php'";
 				echo ">Ankündigungen</a></li>";
 			}
 			
-			if($this->userHasRight("67", 0) == true) {
+			if($this->userHasRight(67, 0) == true) {
 				echo "<li><a href='http://localhost/phpmyadmin/' target='_blank' class='extern'>PMA Local</a></li>
 				<li><a href='https://bernd.php-friends.de:4443/' target='_blank' class='extern'>Verwaltungskonsole</a></li>";
 				
@@ -597,7 +598,7 @@ class functions extends sql {
 		echo "		<ul>
 				<li><a href='/flatnet2/informationen/impressum.php'>Impressum</a></li>
 				<li><a href='/flatnet2/informationen/quellen.php'>Quellen</a></li>";
-		if($this->userHasRight("36", 0) == "true") {
+		if($this->userHasRight(36, 0) == "true") {
 			echo "	<li><a href='/flatnet2/admin/control.php'>Admin</a></li>";
 			echo "	<li><a href='/flatnet2/informationen/dokumentation.php'>Dokumentation</a></li>";
 		}
@@ -631,7 +632,7 @@ class functions extends sql {
 		echo "<ul id='navigation'>";
 				
 		$kacheln = $this->getObjektInfo("SELECT * FROM uebersicht_kacheln WHERE active=1 ORDER BY sortierung");
-		if($this->userHasRight("7", 0) == "true") {
+		if($this->userHasRight(7, 0) == "true") {
 			echo "<li>	<a href='/flatnet2/uebersicht.php' id='uebersicht'>Startseite</a></li>";
 		}
 		
@@ -652,7 +653,7 @@ class functions extends sql {
 	 * Zeigt eine Ankündigung an
 	 */
 	function ankuendigung() {
-		if($this->userHasRight("24", 0) == true) {
+		if($this->userHasRight(24, 0) == true) {
 			echo "<div class='InfoCenter'>";
 			$docuInfo = $this->getObjektInfo("SELECT *, month(timestamp) AS monat, day(timestamp) AS tag, year(timestamp) AS jahr FROM docu ORDER BY timestamp DESC LIMIT 1");
 			if(isset($docuInfo[0]->text)) {
@@ -667,7 +668,7 @@ class functions extends sql {
 	 */
 	function benachrichtigungsCenter() {
 		
-		if($this->userHasRight("25", 0) == true) {
+		if($this->userHasRight(25, 0) == true) {
 		
 			$text = "%<strong>" .$_SESSION['username'] . "</strong>%";
 			
