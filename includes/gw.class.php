@@ -164,11 +164,11 @@ class gw_costs extends guildwars {
 			$summe = 0;
 			echo  "<thead><td id='datum'>Datum</td><td id=''>Text</td><td>Wert</td><td></td></thead>";
 			for($i = 0; $i < sizeof($row) ; $i++) {
-				$summe = $summe + $row[0]->wert;
+				$summe = $summe + $row[$i]->wert;
 				echo  "<tbody>
-						<td>".$row[0]->tag.".".$row[0]->monat.".".$row[0]->jahr."</td>
-						<td>".$row[0]->text."</td>
-						<td>".$row[0]->wert." €</td><td><a href='?loeschen&loeschid=".$row[0]->id."' class='highlightedLink'>X</a></td>
+						<td>".$row[$i]->tag.".".$row[$i]->monat.".".$row[$i]->jahr."</td>
+						<td>".$row[$i]->text."</td>
+						<td>".$row[$i]->wert." €</td><td><a href='?loeschen&loeschid=".$row[$i]->id."' class='highlightedLink'>X</a></td>
 					  </tbody>";
 			}
 	
