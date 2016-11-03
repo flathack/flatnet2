@@ -28,21 +28,19 @@ $quellen->header();
 				<?php $quellen->SubNav("informationen"); ?>
 				</div>
 			</div>
-			<h2>Quellen</h2>
+			<h2>Quellen & Beschreibung dieses Projektes</h2>
 
 			<p>Dieses Projekt wird vollständig in PHP programmiert. Diese Seite ist im Rahmen meines Informatikstudiums entstanden 
-			und wird stetig weiterentwickelt. Sie dient lediglich meinem Zeitvertreib. 
+			und wird stetig weiterentwickelt. Sie dient lediglich meinem Zeitvertreib. Ein Anspruch auf fehlerfreiheit besteht nicht
+			und wird auch nicht garantiert.
 			</p>
-			<p>Für die Erstellung wurde kein fertiges CMS System verwendet. Alle Codebestandteile wurden von mir händisch mit Hilfe
-			der Entwicklungsumgebung von Eclipse geschrieben. Der Verzicht auf die "klickiBunti" Programme gibt mir die Möglichkeit
-			jede Funktion zu entwickeln, welche ich möchte.</p>
+			<p>Alle Codebestandteile wurden von mir persönlich erstellt und unterliegen dem Urheberrecht. Ein kopieren oder
+			weiterverwenden dieses Codes ist nicht gestattet.</p>
 			<p>
-			Ich habe keinen code <b>geklaut oder kopiert</b>, dass liegt aber auch unter anderem daran,
-			dass die meisten Lösungen im Netz teilweise schlecht programmiert oder unbrauchbar für meine Seite sind. 
+			
 			</p>
-			<p>Für dieses Projekt habe ich, also unter vorbehalt, dass diese Liste vollständig ist, folgende Quellen verwendet:</p>
-			<br>
-			<table class='flatnetTable'>
+			<h2>Quellenverzeichnis</h2>
+			<table class='kontoTable'>
 			<thead>
 			<td>Seiten</td>
 			</thead>
