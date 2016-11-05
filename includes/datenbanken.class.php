@@ -82,7 +82,6 @@ class datenbanken extends functions {
 			$userid = $_GET ['bearbeiten'];
 			$ausgabe .= "<div class='newFahrt'>";
 			$ausgabe .= "<h2>Eintrag anzeigen und bearbeiten</h2>";
-			$ausgabe .= "<table class='AdressTable'>";
 			$ausgabe .= "<form action='?' METHOD=GET>";
 			$bearbeiten = $_GET ["bearbeiten"];
 			
@@ -92,69 +91,73 @@ class datenbanken extends functions {
 			
 			for ($i = 0 ; $i < sizeof($rowbearb) ; $i++) {
 				$_GET ['userid'] = $userid;
-				$ausgabe .= "
+				$ausgabe .= "<input type='hidden' name='id' value='".$rowbearb[0]->id."' readonly>";
+				
+				$ausgabe .= "<div class='rightBody'>";
+				$ausgabe .= "<h4>Fax: </h4>";
+				$ausgabe .= "<input placeholder='Fax' type='text'   name='fax' value='".$rowbearb[0]->fax."'>";
+					
+				$ausgabe .= "<h4>Gruppenzugehörigkeit: </h4>";
+				$ausgabe .= "<input placeholder='Gruppe' type='text'   name='gruppe' value='".$rowbearb[0]->gruppe."' />";
+				
+				$ausgabe .= "<h4>E-Mail: </h4>";
+				$ausgabe .= "<input placeholder='E-Mail' type='text'   name='email' value='".$rowbearb[0]->email."'>";
+				
+				
+				$ausgabe .= "<h4>Geburtstag: </h4>";
+				$ausgabe .= "<input placeholder='Geburtstag' type='date'  maxlength='10' name='geburtstag' value='".$rowbearb[0]->geburtstag."' />";
+				
+				$ausgabe .= "<h4>Social Media: </h4>";
+				$ausgabe .= "<input placeholder='Skype' type='text'   name='skype' value='".$rowbearb[0]->skype."' />";
+				$ausgabe .= "<input placeholder='Facebook' type='text'   name='facebook' value='".$rowbearb[0]->facebook."' />";
+				
+				$ausgabe .= "</div>";
+				
+				$ausgabe .= "<div class='innerBody'>";
+				$ausgabe .= "<h3>" .$rowbearb[0]->vorname . " " .$rowbearb[0]->nachname. "</h3>";
+				
+				$ausgabe .= "<input type='text'   name='vorname' value='".$rowbearb[0]->vorname."'  placeholder='Vorname' />";
+				$ausgabe .= "<input type='text'   name='nachname' value='".$rowbearb[0]->nachname."'  placeholder='Nachname' />";
+				
+				$ausgabe .= "<h4>Adresse: </h4>";
+				
+				$ausgabe .= "<input type='text'   name='strasse' value='".$rowbearb[0]->strasse."'  placeholder='Straße' />";
+				$ausgabe .= "<input  type='text'   name='hausnummer' value='".$rowbearb[0]->hausnummer."' placeholder='Nr.' />";
+				$ausgabe .= "<br>";
+				$ausgabe .= "<input placeholder='PLZ' type='text'   name='postleitzahl' value='".$rowbearb[0]->postleitzahl."' />";
+				$ausgabe .= "<input placeholder='Stadt' type='text'   name='stadt' value='".$rowbearb[0]->stadt."' />";
+				$ausgabe .= "<br>";
+				$ausgabe .= "<input placeholder='Bundesland' type='text'   name='bundesland' value='".$rowbearb[0]->bundesland."' />";
+				$ausgabe .= "<input placeholder='Land' type='text'   name='land' value='".$rowbearb[0]->land."' />";
+				
+				$ausgabe .= "<h4>Kontaktdaten: </h4>";
+				
+				$ausgabe .= "<input type='text'  size='10'  name='telefon1art' value='".$rowbearb[0]->telefon1art."' placeholder='Handy'>";
+				$ausgabe .= "<input placeholder='Telefon 1' type='text'   name='telefon1' value='".$rowbearb[0]->telefon1."' />";
+				$ausgabe .= "<br>";
+				$ausgabe .= "<input type='text'  size='10'  name='telefon2art' value='".$rowbearb[0]->telefon2art."' placeholder='Home' />";
+				$ausgabe .= "<input placeholder='Telefon 2' type='text'   name='telefon2' value='".$rowbearb[0]->telefon2."' />";
+				$ausgabe .= "<br>";
+				$ausgabe .= "<input type='text'  size='10'  name='telefon3art' value='".$rowbearb[0]->telefon3art."' placeholder='Arbeit' />";
+				$ausgabe .= "<input placeholder='Telefon 3' type='text'   name='telefon3' value='".$rowbearb[0]->telefon3."' />";
+				$ausgabe .= "<br>";
+				$ausgabe .= "<input  type='text' size='10'  name='telefon4art' value='".$rowbearb[0]->telefon4art."' placeholder='Privat' />";
+				$ausgabe .= "<input placeholder='Telefon 4' type='text'   name='telefon4' value='".$rowbearb[0]->telefon4."' />";
+				$ausgabe .= "</div>";
+				
+				$ausgabe .= "<h4>Notizen: </h4>";
+				$ausgabe .= "<textarea name='notizen' class='ckeditor' cols='52' rows='5' wrap='physical'>".$rowbearb[0]->notizen."</textarea>";
+				$ausgabe .= "<input type='submit' name='update' value='Speichern' />";
+				$ausgabe .= "<a href='?loeschen=ja&loeschid=".$rowbearb[0]->id."' class='buttonlink'>&#10008; löschen</a>";
+				
+				
+			/*	$ausgabe .= "
+				<td></td>
+				<td></tr>";
 
-				<tr>
-				<td><input type='hidden' name='id' value='".$rowbearb[0]->id."' readonly></td>
-
-				<tr>
-				<td ><input type='text'   name='vorname' value='".$rowbearb[0]->vorname."' required autofocus /></td>
-				<td><input placeholder='Nachname' type='text'  name='nachname' value='".$rowbearb[0]->nachname."' required></td>
-				<td rowspan='10'> <textarea name='notizen' class='ckeditor' cols='52' rows='5' wrap='physical'>".$rowbearb[0]->notizen."</textarea> </td>
-				</tr>
-
-				<tr>
-				<td ><input type='text'   name='strasse' value='".$rowbearb[0]->strasse."'  placeholder='Straße'>
-				<input  type='text'   name='hausnummer' value='".$rowbearb[0]->hausnummer."' placeholder='Nr.'></td><td></td>
-				</tr>
-
-				<tr>
-				<td ><input placeholder='PLZ' type='text'   name='postleitzahl' value='".$rowbearb[0]->postleitzahl."'></td>
-				<td><input placeholder='Stadt' type='text'   name='stadt' value='".$rowbearb[0]->stadt."'></td>
-				</tr>
-
-				<tr>
-				<td ><input placeholder='Bundesland' type='text'   name='bundesland' value='".$rowbearb[0]->bundesland."'></td>
-				<td><input placeholder='Land' type='text'   name='land' value='".$rowbearb[0]->land."'></td>
-				</tr>
-
-				<tr>
-				<td><input placeholder='Telefon 1' type='text'   name='telefon1' value='".$rowbearb[0]->telefon1."' >
-				<input type='text'  size='10'  name='telefon1art' value='".$rowbearb[0]->telefon1art."' placeholder='Handy'></td>
-				<td><input placeholder='Fax' type='text'   name='fax' value='".$rowbearb[0]->fax."'></td>
-				</tr>
-
-				<tr>
-				<td><input placeholder='Telefon 2' type='text'   name='telefon2' value='".$rowbearb[0]->telefon2."' >
-				<input type='text'  size='10'  name='telefon2art' value='".$rowbearb[0]->telefon2art."' placeholder='Home'></td>
-				<td><input placeholder='Gruppe' type='text'   name='gruppe' value='".$rowbearb[0]->gruppe."'></td>
-				</tr>
-
-				<tr>
-				<td><input placeholder='Telefon 3' type='text'   name='telefon3' value='".$rowbearb[0]->telefon3."' >
-				<input type='text'  size='10'  name='telefon3art' value='".$rowbearb[0]->telefon3art."' placeholder='Arbeit'></td>
-				<td><input placeholder='E-Mail' type='text'   name='email' value='".$rowbearb[0]->email."'></td>
-				</tr>
-
-				<tr>
-				<td><input placeholder='Telefon 4' type='text'   name='telefon4' value='".$rowbearb[0]->telefon4."' >
-				<input  type='text' size='10'  name='telefon4art' value='".$rowbearb[0]->telefon4art."' placeholder='Privat'></td>
-				<td><input placeholder='Geburtstag' type='date'  maxlength='10' name='geburtstag' value='".$rowbearb[0]->geburtstag."'></td></tr>
-
-				<tr>
-				<td><input placeholder='Skype' type='text'   name='skype' value='".$rowbearb[0]->skype."'></td>
-				<td><input placeholder='Facebook' type='text'   name='facebook' value=''></tr>";
-				$ausgabe .= "<tr>
-				<td>
-				<input type='submit' name='update' value='Speichern'>
-				</td>
-				<td>
-				<a href='?loeschen=ja&loeschid=".$rowbearb[0]->id."' class='buttonlink'>&#10008; löschen</a>
-				</td>
-				</tr>";
+ */
 			}
 			$ausgabe .= "</form>";
-			$ausgabe .= "</table>";
 			$ausgabe .= "</div>";
 		}
 		
@@ -415,30 +418,26 @@ class datenbanken extends functions {
 			# Daten beschaffen
 			$row = $this->getObjektInfo($query);
 			
-			$ausgabe .= "<div></div>";
+			$ausgabe .= "<table class='kontoTable'>";
+			$ausgabe .= "<thead><td>Name</td><td>Telefonnummer</td><td>E-Mail</td><td>Gruppe</td><td>Geburtstag</td></thead>";
 			for($i = 0; $i < sizeof($row) ; $i++) {
-				$ausgabe .= "<div class='adresseintrag'>";
-				$ausgabe .= "<table>";
-				$ausgabe .= "<tr>";
-				$ausgabe .= "<td colspan='2'>	<a href='eintrag.php?bearbeiten=" . $row[$i]->id. "'> ".$row[$i]->vorname." ";
-				$ausgabe .= $row[$i]->nachname;
-				if ($row[$i]->gruppe != "") {
-					$ausgabe .= "(".$row[$i]->gruppe.")</a>";
-				}
-				$ausgabe .= "</td>";
-				$ausgabe .= "<td>	<a href='eintrag.php?bearbeiten=".$row[$i]->id."' class='adressbuchlink'>&#10150;</a>	</td>";
-				$ausgabe .= "</tr>";
-				if ($row[$i]->telefon1 != "") {
-					$ausgabe .= "<tr><td><strong>".$row[$i]->telefon1art.": </strong> </td><td><strong>".$row[$i]->telefon1." </strong> </td></tr>";
-				} else if ($row[$i]->email != "") {
-					$ausgabe .= "<tr><td colspan='3'><strong>".$row[$i]->email."</td></tr>";
-				} else {
-					$ausgabe .= "<tr><td colspan = '2' class='grey'>Füge eine Nummer hinzu!</td><td></td></tr>";
-				}
 				
-				$ausgabe .= "</table>";
-				$ausgabe .= "</div>";
+				$ausgabe .= "<tbody>";
+					$ausgabe .= "<td><a href='eintrag.php?bearbeiten=".$row[$i]->id."'>" .$row[$i]->vorname. " " .$row[$i]->nachname. "</a></td>";
+					$ausgabe .= "<td>".$row[$i]->telefon1art. " - " .$row[$i]->telefon1. "</td>";
+					$ausgabe .= "<td><a href='mailto:" .$row[$i]->email. "'>" .$row[$i]->email. "</a></td>";
+					$ausgabe .= "<td>" .$row[$i]->gruppe. "</td>";
+					if($row[$i]->geburtstag == "0000-00-00") {
+						$ausgabe .= "<td></td>";
+					} else {
+						$ausgabe .= "<td>" .$row[$i]->geburtstag. "</td>";
+					}
+					
+				$ausgabe .= "</tbody>";
+				
 			}
+			
+			$ausgabe .= "</table>";
 			return $ausgabe;
 		}
 	}
