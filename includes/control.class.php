@@ -2267,8 +2267,8 @@ class control extends functions {
 			# setlimit get-action
 			if(isset($_GET['setlimit'])) { if(is_numeric($_GET['setlimit']) == true) { $limit = $_GET['setlimit']; } else { $limit = 100; } } else { $limit = 100; }
 			if(isset($_GET['textLimit'])) {
-				if(is_numeric($_GET['textLimit']) == true) { $textLimit = $_GET['textLimit']; } else { $textLimit = 200; } 
-			} else { $textLimit = 200; }
+				if(is_numeric($_GET['textLimit']) == true) { $textLimit = $_GET['textLimit']; } else { $textLimit = 70; } 
+			} else { $textLimit = 70; }
 			
 			$getLogs = $this->getObjektInfo("SELECT * FROM log ORDER BY timestamp DESC LIMIT $limit");
 			$getanzahl = $this->getAmount("SELECT * FROM log");
