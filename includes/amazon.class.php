@@ -21,15 +21,22 @@ class amazon extends functions {
 			$query = "SELECT * FROM amazon_infos WHERE autor=$userid AND hide=0";
 			$userArticles = $this->getObjektInfo($query);
 			
+			$getPendingRuecksendung = $this->getObjektInfo("SELECT sum(value_of_article) as summe FROM amazon_infos WHERE autor = $userid AND payed=0 AND ruecksendung=1 and erstattet=0");
+				
 			$getRuecksendungSumme = $this->getObjektInfo("SELECT sum(value_of_article) as summe FROM amazon_infos WHERE autor = $userid AND payed=1 AND ruecksendung=1 and erstattet=0");
 				
 			# CHECK IF USER HAS PAYED EVERYTHING
 			$getopenSumme = $this->getObjektInfo("SELECT sum(value_of_article) as summe FROM amazon_infos WHERE autor = $userid AND payed=0 AND ruecksendung=0 and erstattet=0");
 			$offeneSumme = 0 + $getopenSumme[0]->summe;
+			$pendingSumme = 0 + $getPendingRuecksendung[0]->summe;
 			if($offeneSumme == 0) {
 				echo "<p class='dezentInfo'>Du hast alles bezahlt!<br>";
 			} else {
 				echo "<p class='info'>Offener Betrag: " . $offeneSumme . " € <br>";
+			}
+			
+			if($pendingSumme > 0) {
+				echo "Noch nicht erstattete Rücksendungen: " . $pendingSumme . " € <br>";
 			}
 			
 			$ruecksendungSumme = 0 + $getRuecksendungSumme[0]->summe;
@@ -118,6 +125,9 @@ class amazon extends functions {
 	function legende() {
 		echo "<div class='newFahrt'>";
 		echo "<h3>Legende der Stati</h3>";
+			echo "<h4>" ."offen". "</h4>";
+			echo "<p>" ."Der Betrag für diese Bestellung ist noch offen und ist zu dem Fälligkeitsdatum fällig." . "</p>";
+				
 			echo "<h4>" ."bezahlt & abgeschlossen". "</h4>";
 			echo "<p>" ."Du hast den Artikel bestellt und fristgerecht bezahlt. Dieser Posten benötigt keine weitere Aufmerksamkeit von dir.". "</p>";
 			
@@ -161,6 +171,13 @@ class amazon extends functions {
 				if($openSum > 0) {
 					echo "Überweisungsbetrag: $openSum € <br>";
 				}
+				
+				$getPendingRuecksendung = $this->getObjektInfo("SELECT sum(value_of_article) as summe FROM amazon_infos WHERE autor = $userid AND payed=0 AND ruecksendung=1 and erstattet=0");
+				$pendingSumme = 0 + $getPendingRuecksendung[0]->summe;
+				if($pendingSumme > 0) {
+					echo "Noch nicht erstattete Rücksendungen: " . $pendingSumme . " € <br>";
+				}
+					
 				
 				$erstattenDuMusst = $this->getObjektInfo("SELECT sum(value_of_article) as summe FROM amazon_infos WHERE autor=$userid AND payed=1 AND ruecksendung=1 AND erstattet=0");
 				
