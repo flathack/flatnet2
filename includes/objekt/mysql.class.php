@@ -3,7 +3,7 @@
  * @history Steven 18.08.2014 angelegt.
  * @history Steven 01.09.2014 selektor geschrieben
  * @author Steven
- * Führt die Aktionen zwischen der Site und dem SQL Server durch.
+ * FÃ¼hrt die Aktionen zwischen der Site und dem SQL Server durch.
  */
 class sql {
 	
@@ -41,7 +41,7 @@ class sql {
 	}
 	
 	/**
-	 * Function um Inhalte aus einer Tabelle zu löschen.
+	 * Function um Inhalte aus einer Tabelle zu lÃ¶schen.
 	 * @param unknown $tabelle
 	 */
 	function sqlDelete($tabelle) {
@@ -52,9 +52,9 @@ class sql {
 				
 			if($id > 0 AND !isset($_POST['jaloeschen'])) {
 
-				# Abfrage, ob der User den Artikel wirklich löschen will.
+				# Abfrage, ob der User den Artikel wirklich lÃ¶schen will.
 				echo "<form method=post>";
-				echo "<p class='meldung'>Soll der Eintrag gelöscht werden?<br>";
+				echo "<p class='meldung'>Soll der Eintrag gelÃ¶scht werden?<br>";
 				echo "<input type = hidden value = '$id' name ='id' readonly />";
 				echo "<input type=submit name='jaloeschen' value='Ja'/>
 						<a href='?' class='buttonlink'>Nein</a></p>";
@@ -63,20 +63,20 @@ class sql {
 		}
 
 		/*
-		 * Führt die Löschung durch.
+		 * FÃ¼hrt die LÃ¶schung durch.
 		*/
 		if(isset($_POST['jaloeschen'])) {
 			$jaloeschen = isset($_POST['jaloeschen']) ? $_POST['jaloeschen'] : '';
 			$loeschid = isset($_POST['id']) ? $_POST['id'] : '';
 			if($loeschid) {
 
-				# Durchführung der Löschung.
+				# DurchfÃ¼hrung der LÃ¶schung.
 				$loeschQuery = "DELETE FROM `$tabelle` WHERE `id` = $loeschid";
 					
 				if($this->sql_insert_update_delete($loeschQuery) == true) {
-					echo "<p class='erfolg'>Eintrag gelöscht.</p>";
+					echo "<p class='erfolg'>Eintrag gelÃ¶scht.</p>";
 				} else {
-					echo "<p class='meldung'>Fehler beim löschen!</p>";
+					echo "<p class='meldung'>Fehler beim lÃ¶schen!</p>";
 				}
 
 			}
@@ -96,9 +96,9 @@ class sql {
 
 			if($id > 0 AND !isset($_POST['jaloeschen'])) {
 
-				# Abfrage, ob der User den Artikel wirklich löschen will.
+				# Abfrage, ob der User den Artikel wirklich lÃ¶schen will.
 				echo "<form method=post>";
-				echo "<p class='meldung'>Soll die Löschung durchgeführt werden?<br>";
+				echo "<p class='meldung'>Soll die LÃ¶schung durchgefÃ¼hrt werden?<br>";
 				echo "<input type = hidden value = '$id' name ='id' readonly />";
 				echo "<input type=submit name='jaloeschen' value='Ja'/>
 						<a href='?' class='buttonlink'>Nein</a></p>";
@@ -107,7 +107,7 @@ class sql {
 		}
 
 		/*
-		 * Führt die Löschung durch.
+		 * FÃ¼hrt die LÃ¶schung durch.
 		*/
 		if(isset($_POST['jaloeschen'])) {
 			$jaloeschen = isset($_POST['jaloeschen']) ? $_POST['jaloeschen'] : '';
@@ -116,9 +116,9 @@ class sql {
 
 					
 				if($this->sql_insert_update_delete($query) == true) {
-					echo "<p class='erfolg'>Erfolgreich gelöscht</p>";
+					echo "<p class='erfolg'>Erfolgreich gelÃ¶scht</p>";
 				} else {
-					echo "<p class='meldung'>Fehler beim löschen!</p>";
+					echo "<p class='meldung'>Fehler beim lÃ¶schen!</p>";
 				}
 
 			}
@@ -127,9 +127,9 @@ class sql {
 	}
 
 	/** Type = BOOLEAN
-	 * Führt die Funktionen Insert, Update und Delete durch.
-	 * Gibt true oder false zurück.
-	 * Loggt nur, wenn Änderungen tatsächlich durchgeführt werden.
+	 * FÃ¼hrt die Funktionen Insert, Update und Delete durch.
+	 * Gibt true oder false zurÃ¼ck.
+	 * Loggt nur, wenn Ã„nderungen tatsÃ¤chlich durchgefÃ¼hrt werden.
 	 */
 	function sql_insert_update_delete($query) {
 		
@@ -138,7 +138,7 @@ class sql {
 		$affected_rows = $db->exec($query);
 		
 		if($affected_rows > 0) {
-			# Log durchführen:
+			# Log durchfÃ¼hren:
 			$this->logme($query);
 			return true;
 		} else {
@@ -148,7 +148,7 @@ class sql {
 	}
 	
 	/**
-	 * Extra sql Methode für gw.class.php in Zeile 1446
+	 * Extra sql Methode fÃ¼r gw.class.php in Zeile 1446
 	 * Hier wird nicht geloggt.
 	 * @param unknown $query
 	 * @return boolean
@@ -190,7 +190,7 @@ class sql {
 		# Querytext bauen:
 		$text_for_log = $username ." : ". strip_tags(stripslashes($received_query));
 		$query = "INSERT INTO log (benutzer, log_text, ip_adress) VALUES (\"$id\",\"$text_for_log\",\"$ip\")";
-		# Logeintrag hinzufügen
+		# Logeintrag hinzufÃ¼gen
 		$db = $this->connectToDBNewWay();
 		$affected_rows = $db->exec($query);
 		
@@ -233,7 +233,7 @@ class sql {
 	}
 	
 	/**
-	 * Läd Informationen in ein Objekt.
+	 * LÃ¤d Informationen in ein Objekt.
 	 * @param unknown $query
 	 * @return unknown
 	 */
@@ -242,8 +242,8 @@ class sql {
 	}
 	
 	/**
-	 * Ermöglicht das Abfragen, ob ein Objekt in einer Datenbank bereits existiert.
-	 * und gibt True oder False zurück.
+	 * ErmÃ¶glicht das Abfragen, ob ein Objekt in einer Datenbank bereits existiert.
+	 * und gibt True oder False zurÃ¼ck.
 	 */
 	function objectExists($query) {
 		$row = $this->getObjektInfo($query);	

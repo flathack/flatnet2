@@ -1,9 +1,9 @@
 <?php
 /**
  * @history Steven 19.08.2014 angelegt.
- * @history Steven 27.08.2014 Der Login setzt jetzt den Blog beim einloggen auf "öffentlich"
+ * @history Steven 27.08.2014 Der Login setzt jetzt den Blog beim einloggen auf "Ã¶ffentlich"
  * @author Steven
- * Führt den Login des Benutzers am Server durch.
+ * FÃ¼hrt den Login des Benutzers am Server durch.
  */
 
 include 'objekt/functions.class.php';
@@ -11,13 +11,13 @@ include 'objekt/functions.class.php';
 class login extends functions {
 
 	/**
-	 * Führt den Login durch und setzt verschiedene Session Variablen
+	 * FÃ¼hrt den Login durch und setzt verschiedene Session Variablen
 	 * $_SESSION['selectUser'] auf $username
 	 * Leitet auf eine entsprechende Seite weiter.
 	 */
 	public function login_user($umleitung = "uebersicht.php")  {
 
-		$errorMessage = "<p class='meldung'>Der Benutzername oder das Passwort ist falsch. Überprüfen Sie die Schreibweise und versuchen Sie es erneut.</p>";
+		$errorMessage = "<p class='meldung'>Der Benutzername oder das Passwort ist falsch. ÃœberprÃ¼fen Sie die Schreibweise und versuchen Sie es erneut.</p>";
 
 		if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
@@ -31,7 +31,7 @@ class login extends functions {
 				# HTML Tags und erlaubte Zeichen aus String herausfiltern:
 				$username = strip_tags( stripslashes($_POST['username']));
 				
-				# Passwort mit md5 hash verändern: 
+				# Passwort mit md5 hash verÃ¤ndern: 
 				$passwort = md5($_POST['passwort']);
 					
 				# Unbekannt?
@@ -62,7 +62,7 @@ class login extends functions {
 						$_SESSION['angemeldet'] = true;
 						$_SESSION['username'] = $row[0]->Name;
 							
-						# Hilfseinstellung für Guildwars
+						# Hilfseinstellung fÃ¼r Guildwars
 						$_SESSION['selectUser'] = $row[0]->Name;
 						$_SESSION['selectGWUser'] = $row[0]->Name;
 
@@ -72,7 +72,7 @@ class login extends functions {
 						#Versuche Updaten
 						$getversucheAnzahl = $this->getObjektInfo("SELECT id, Name, versuche FROM benutzer WHERE Name='".$row[0]->Name."' LIMIT 1");
 						
-						# Prüfen ob die Versuche > 0 sind.
+						# PrÃ¼fen ob die Versuche > 0 sind.
 						if($getversucheAnzahl[0]->versuche == 0) { $noupdateneeded = 1; } else { $noupdateneeded = 0; }
 						
 						if($noupdateneeded == 1) {
@@ -81,7 +81,7 @@ class login extends functions {
 							$update = "UPDATE benutzer SET versuche=0 WHERE Name = '" .$row[0]->Name. "' LIMIT 1";
 							
 							if($this->sql_insert_update_delete_hw($update) == false) {
-								echo "<p class='info'>Ein Login ist derzeit nicht möglich.</p>";
+								echo "<p class='info'>Ein Login ist derzeit nicht mÃ¶glich.</p>";
 								$this->logEintrag(false, "Versuche von $username konnten nicht auf 0 gesetzt werden.", "Error");
 							} else {
 								header("Location: $umleitung");
@@ -91,7 +91,7 @@ class login extends functions {
 							
 					} else {
 
-						# Versuche hochzählen // ab hier ist sicher, dass der Benutzer existiert.
+						# Versuche hochzÃ¤hlen // ab hier ist sicher, dass der Benutzer existiert.
 						$abfrage = "SELECT Name, versuche FROM benutzer WHERE Name LIKE '$username' LIMIT 1";
 						$row2 = $this->getObjektInfo($abfrage);
 						
@@ -106,7 +106,7 @@ class login extends functions {
 						$updateVersuche = "UPDATE benutzer SET versuche='$neueVersuche' WHERE Name = '$usernameSAVE'";
 						
 						if($this->sql_insert_update_delete($updateVersuche) == true) {
-							$this->logEintrag(false, "Versuche von $usernameSAVE wurden hochgezählt (falsches Passwort).", "Error");
+							$this->logEintrag(false, "Versuche von $usernameSAVE wurden hochgezÃ¤hlt (falsches Passwort).", "Error");
 							return $errorMessage;
 						} else {
 							$this->logEintrag(false, "Versuche konnten nicht geupdatet werden.", "Error");
@@ -120,7 +120,7 @@ class login extends functions {
 	} # function ende
 
 	/**
-	 * prüft, ob die Felder zum anmelden angezeigt werden sollen.
+	 * prÃ¼ft, ob die Felder zum anmelden angezeigt werden sollen.
 	 */
 	public function anmeldeCheck() {
 		$ausgabe = "";
@@ -134,13 +134,13 @@ class login extends functions {
 			$ausgabe .= '<input type="submit" value="Einloggen" />';
 			$ausgabe .= '</form>';
 		} else {
-			$ausgabe .= "<p id='loginTitel'>Du bist angemeldet<br><a href='uebersicht.php' class=''>Gehe zur Übersicht</a></p>";
+			$ausgabe .= "<p id='loginTitel'>Du bist angemeldet<br><a href='uebersicht.php' class=''>Gehe zur Ãœbersicht</a></p>";
 		}
 		if(!isset($_GET['createUser'])) { return $ausgabe; }
 	}
 
 	/**
-	 * Prüft, ob der User eingeloggt ist. Dabei ist es möglich nur abzufragen,
+	 * PrÃ¼ft, ob der User eingeloggt ist. Dabei ist es mÃ¶glich nur abzufragen,
 	 * ob der User eingeloggt ist oder ob er zu einem $pfad geschickt werden soll.
 	 */
 	public function logged_inOLD($redirect = "redirect", $pfad = "/flatnet2/index.php" ) {
@@ -155,7 +155,7 @@ class login extends functions {
 	}
 
 	/**
-	 * Gibt zurück, ob ein User eingeloggt ist.
+	 * Gibt zurÃ¼ck, ob ein User eingeloggt ist.
 	 * @return boolean
 	 */
 	public function is_logged_in() {
@@ -179,9 +179,9 @@ class login extends functions {
 	}
 	
 	/**
-	 * Ermöglicht das registrieren mit Hilfe eines Einladungscodes.
-	 * März 2015
-	 * @autor: Steven Schödel
+	 * ErmÃ¶glicht das registrieren mit Hilfe eines Einladungscodes.
+	 * MÃ¤rz 2015
+	 * @autor: Steven SchÃ¶del
 	 * @return boolean
 	 */
 	function registerNewUser() {
@@ -213,7 +213,7 @@ class login extends functions {
 				$username = $name;
 				$regnewuser = $_POST['register'];
 				if($username == "" OR $passwort1 == "" OR $passwort2 == "") {
-					echo "<p class='meldung'>Fehler, es wurden nicht alle Felder ausgefüllt.</p>";
+					echo "<p class='meldung'>Fehler, es wurden nicht alle Felder ausgefÃ¼llt.</p>";
 				} else {
 					$check = "SELECT * FROM benutzer WHERE Name LIKE '$username' LIMIT 1";
 					$row = $this->getObjektInfo($check);
@@ -223,7 +223,7 @@ class login extends functions {
 					} else {
 						if($passwort1 == $passwort2) {
 							
-						#	echo "<p class='meldung'>Passwörter sind gleich</p>";
+						#	echo "<p class='meldung'>PasswÃ¶rter sind gleich</p>";
 							
 							# Register Code Check
 							
@@ -240,7 +240,7 @@ class login extends functions {
 								
 							#	echo "<p class='meldung'>Code gibt es</p>";
 								
-								# Den Code überprüfen
+								# Den Code Ã¼berprÃ¼fen
 								$select = "SELECT * FROM registercode WHERE code = '$code' LIMIT 1";
 								$row = $this->getObjektInfo($select);
 								
@@ -248,7 +248,7 @@ class login extends functions {
 								if($row[0]->used >= $row[0]->usageTimes) {
 									echo "<p class='meldung'>Es gibt Probleme mit dem Code, kontaktiere den Administrtor.</p>";
 									# Logeintrag
-									$this->logEintrag(true, "hat den Code $code benutzt, die vorgeschriebene Nutzungszahl wurde überschritten.", "Error");
+									$this->logEintrag(true, "hat den Code $code benutzt, die vorgeschriebene Nutzungszahl wurde Ã¼berschritten.", "Error");
 									return false;
 									
 								} else {
@@ -263,7 +263,7 @@ class login extends functions {
 									# neue Benutzung ausrechnen
 									$used = $row[0]->used + 1;
 									
-									# Coderechte für den Benutzer übernehmen
+									# Coderechte fÃ¼r den Benutzer Ã¼bernehmen
 									# $codeRechte = $row[0]->rights;
 									
 									# Update des Codes.
@@ -291,7 +291,7 @@ class login extends functions {
 								$_SESSION['angemeldet'] = true;
 								$_SESSION['username'] = $username;
 									
-								# Hilfseinstellung für Guildwars
+								# Hilfseinstellung fÃ¼r Guildwars
 								$_SESSION['selectUser'] = $username;
 								$_SESSION['selectGWUser'] = $username;
 								
@@ -305,7 +305,7 @@ class login extends functions {
 								$this->logEintrag(true, "wollte sich registrieren, der DB Eintrag konnte aber nicht erstellt werden.", "Error");
 							}
 						} else {
-							echo "<p class='meldung'>Die Passwörter sind nicht identisch!</p>";
+							echo "<p class='meldung'>Die PasswÃ¶rter sind nicht identisch!</p>";
 						} # Else Ende
 					} # Else Ende
 				} # Else Ende

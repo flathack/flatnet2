@@ -6,12 +6,12 @@ class amazon extends functions {
 	function checkUser() {
 		if($this->userHasRight(80, 0) == false) {
 			echo "<h2>Willkommen</h2>";
-			echo "<p>Hier siehst du alle deine gebuchten Einkäufe und die Gesamtsumme zur Zahlung";
+			echo "<p>Hier siehst du alle deine gebuchten EinkÃ¤ufe und die Gesamtsumme zur Zahlung";
 		}
 	}
 	
 	/**
-	 * Gibt alle Zugeordneten Amazon-Umsätze zurück, welche für den Benutzer vorhanden sind.
+	 * Gibt alle Zugeordneten Amazon-UmsÃ¤tze zurÃ¼ck, welche fÃ¼r den Benutzer vorhanden sind.
 	 */
 	function getAmazonPayments() {
 		echo "<div class='newFahrt'>";
@@ -32,24 +32,24 @@ class amazon extends functions {
 			if($offeneSumme == 0) {
 				echo "<p class='dezentInfo'>Du hast alles bezahlt!<br>";
 			} else {
-				echo "<p class='info'>Offener Betrag: " . $offeneSumme . " € <br>";
+				echo "<p class='info'>Offener Betrag: " . $offeneSumme . " â‚¬ <br>";
 			}
 			
 			if($pendingSumme > 0) {
-				echo "Noch nicht erstattete Rücksendungen: " . $pendingSumme . " € <br>";
+				echo "Noch nicht erstattete RÃ¼cksendungen: " . $pendingSumme . " â‚¬ <br>";
 			}
 			
 			$ruecksendungSumme = 0 + $getRuecksendungSumme[0]->summe;
 			if($ruecksendungSumme > 0) {
-				echo "Erstattungen von Rücksendungen: " . $ruecksendungSumme . " € <br>";
+				echo "Erstattungen von RÃ¼cksendungen: " . $ruecksendungSumme . " â‚¬ <br>";
 				$endbetrag = $offeneSumme - $ruecksendungSumme;
 				if($endbetrag <= 0) {
 					$endbetragText = "Guthaben:";
 					$endbetrag = $endbetrag * (-1);
 				} else {
-					$endbetragText = "Überweisungsbetrag:";
+					$endbetragText = "Ãœberweisungsbetrag:";
 				}
-				echo "<strong>$endbetragText $endbetrag €</strong></p>";
+				echo "<strong>$endbetragText $endbetrag â‚¬</strong></p>";
 			}
 			echo "</p>";
 			
@@ -58,7 +58,7 @@ class amazon extends functions {
 			echo "<td>" . "Datum des Kaufes" . "</td>";
 			echo "<td>" . "Name des Artikels" . "</td>";
 			echo "<td>" . "Preis" . "</td>";
-			echo "<td>" . "Fällig am" . "</td>";
+			echo "<td>" . "FÃ¤llig am" . "</td>";
 		#	echo "<td>" . "bezahlt am" . "</td>";
 			echo "<td>Status</td>";
 			echo "</thead>";
@@ -77,26 +77,26 @@ class amazon extends functions {
 				if($userArticles[$i]->ruecksendung == 1 
 					AND $userArticles[$i]->payed == 0 
 					AND $userArticles[$i]->erstattet == 0) {
-					$articleStatus = "zurückgesendet, warte auf Amazon";
+					$articleStatus = "zurÃ¼ckgesendet, warte auf Amazon";
 					$statusIsOk = "pending";
 				}
 				
 				if($userArticles[$i]->ruecksendung == 1 
 					AND $userArticles[$i]->payed == 0 
 					AND $userArticles[$i]->erstattet == 1) {
-					$articleStatus = "Rücksendung abgeschlossen";
+					$articleStatus = "RÃ¼cksendung abgeschlossen";
 					$statusIsOk = "ok";
 				}
 				
 				if($userArticles[$i]->ruecksendung == 1 
 					AND $userArticles[$i]->payed == 1 
 					AND $userArticles[$i]->erstattet == 0) {
-					$articleStatus = "Rücksendung läuft, Geld wird erstattet, wenn Amazon Geld gutschreibt.";
+					$articleStatus = "RÃ¼cksendung lÃ¤uft, Geld wird erstattet, wenn Amazon Geld gutschreibt.";
 					$statusIsOk = "pending";
 				}
 				
 				if($userArticles[$i]->erstattet == 1 AND $userArticles[$i]->ruecksendung == 1 AND $userArticles[$i]->payed == 1) {
-					$articleStatus = "zurückgesendet & Geld wurde erstattet ";
+					$articleStatus = "zurÃ¼ckgesendet & Geld wurde erstattet ";
 					$statusIsOk = 1;
 				}
 				
@@ -120,35 +120,35 @@ class amazon extends functions {
 	}
 	
 	/**
-	 * Eine Legende für die Nutzer zur Beschreiben der verschiedenen Stati.
+	 * Eine Legende fÃ¼r die Nutzer zur Beschreiben der verschiedenen Stati.
 	 */
 	function legende() {
 		echo "<div class='newFahrt'>";
 		echo "<h3>Legende der Stati</h3>";
 			echo "<h4>" ."offen". "</h4>";
-			echo "<p>" ."Der Betrag für diese Bestellung ist noch offen und ist zu dem Fälligkeitsdatum fällig." . "</p>";
+			echo "<p>" ."Der Betrag fÃ¼r diese Bestellung ist noch offen und ist zu dem FÃ¤lligkeitsdatum fÃ¤llig." . "</p>";
 				
 			echo "<h4>" ."bezahlt & abgeschlossen". "</h4>";
-			echo "<p>" ."Du hast den Artikel bestellt und fristgerecht bezahlt. Dieser Posten benötigt keine weitere Aufmerksamkeit von dir.". "</p>";
+			echo "<p>" ."Du hast den Artikel bestellt und fristgerecht bezahlt. Dieser Posten benÃ¶tigt keine weitere Aufmerksamkeit von dir.". "</p>";
 			
-			echo "<h4>" ."zurückgesendet, warte auf Amazon". "</h4>";
-			echo "<p>" ."Dieser Status beschreibt den Umstand, dass du einen Artikel zurückgesendet hast, 
+			echo "<h4>" ."zurÃ¼ckgesendet, warte auf Amazon". "</h4>";
+			echo "<p>" ."Dieser Status beschreibt den Umstand, dass du einen Artikel zurÃ¼ckgesendet hast, 
 					den du noch nicht bezahlt hast. Wenn Amazon das Geld vor Monatsende gutschreibt, musst 
 					du diesen Artikel nicht mehr bezahlen.". "</p>";
 			
-			echo "<h4>" ."Rücksendung abgeschlossen". "</h4>";
+			echo "<h4>" ."RÃ¼cksendung abgeschlossen". "</h4>";
 			echo "<p>" ."Wie oben, nur jetzt hat Amazon den Betrag wieder gutgeschrieben. Der Artikel muss am
 					Monatsende nicht mehr von dir bezahlt werden.". "</p>";
 			
-			echo "<h4>" ."Rücksendung läuft, Geld wird erstattet, wenn Amazon Geld gutschreibt.". "</h4>";
-			echo "<p>" ."Du hast den Artikel im letzten Monat bestellt, bereits bezahlt und wieder zurückgeschickt. 
+			echo "<h4>" ."RÃ¼cksendung lÃ¤uft, Geld wird erstattet, wenn Amazon Geld gutschreibt.". "</h4>";
+			echo "<p>" ."Du hast den Artikel im letzten Monat bestellt, bereits bezahlt und wieder zurÃ¼ckgeschickt. 
 					Sobald das Geld auf Stevens Konto gutgeschrieben wird, wird dieses mit dem neuen Monat verrechnet
-					oder dir zurücküberwiesen.". "</p>";
+					oder dir zurÃ¼ckÃ¼berwiesen.". "</p>";
 		echo "</div>";
 	}
 	
 	/**
-	 * Zeigt alle Umsätze für Amazon an, für alle User
+	 * Zeigt alle UmsÃ¤tze fÃ¼r Amazon an, fÃ¼r alle User
 	 */
 	function getAmazonPaymentsAdmin() {
 	
@@ -169,13 +169,13 @@ class amazon extends functions {
 				echo "<p class='dezentInfo'>";
 				$openSum = 0 + $offeneSumme[0]->summe;
 				if($openSum > 0) {
-					echo "Überweisungsbetrag: $openSum € <br>";
+					echo "Ãœberweisungsbetrag: $openSum â‚¬ <br>";
 				}
 				
 				$getPendingRuecksendung = $this->getObjektInfo("SELECT sum(value_of_article) as summe FROM amazon_infos WHERE autor = $userid AND payed=0 AND ruecksendung=1 and erstattet=0");
 				$pendingSumme = 0 + $getPendingRuecksendung[0]->summe;
 				if($pendingSumme > 0) {
-					echo "Noch nicht erstattete Rücksendungen: " . $pendingSumme . " € <br>";
+					echo "Noch nicht erstattete RÃ¼cksendungen: " . $pendingSumme . " â‚¬ <br>";
 				}
 					
 				
@@ -183,12 +183,12 @@ class amazon extends functions {
 				
 				$sumOfErstattung = 0 + $erstattenDuMusst[0]->summe;
 				if($sumOfErstattung > 0) {
-					echo "Erstattungsbetrag: $sumOfErstattung € <br> ";
+					echo "Erstattungsbetrag: $sumOfErstattung â‚¬ <br> ";
 				}
 				
 				$endsumme = 0 + $openSum - $sumOfErstattung;
 				if($endsumme != $openSum) {
-					echo "Endsumme: $endsumme €<br>";
+					echo "Endsumme: $endsumme â‚¬<br>";
 				}
 				echo "</p>";
 				
@@ -201,23 +201,23 @@ class amazon extends functions {
 					echo "<td" ." id='' ". ">" . "Name" . "</td>";
 					echo "<td" ." id='small' ". ">" . "Preis" . "</td>";
 					echo "<td" ." id='date' ". ">" . "Kaufdatum" . "</td>";
-					echo "<td" ." id='date' ". ">" . "Fällig am" . "</td>";
+					echo "<td" ." id='date' ". ">" . "FÃ¤llig am" . "</td>";
 					echo "<td" ." id='date' ". ">" . "bezahlt" . "</td>";
-					echo "<td" ." id='width70px' ". ">" . "Rücksendung" . "</td>";
+					echo "<td" ." id='width70px' ". ">" . "RÃ¼cksendung" . "</td>";
 					echo "<td" ." id='small' ". ">" . "Erstattet" . "</td>";
 					echo "<td" ." id='width140px' ". ">" . "Optionen" . "</td>";
 				echo "</thead>";
 				
 				for ($j = 0 ; $j < sizeof($adminArticles) ; $j++) {
 					
-					# Checken ob ein Artikel nicht zurückgeschickt aber erstattet wurde.
+					# Checken ob ein Artikel nicht zurÃ¼ckgeschickt aber erstattet wurde.
 					if($adminArticles[$j]->ruecksendung == 0 AND $adminArticles[$j]->erstattet == 1) {
 						echo "<tbody id='notOK'>";
-						echo "<td colspan='8'>" . "Dieser FOLGENDE Artikel wurde erstattet, obwohl dieser nicht zurückgeschickt wurde:" . "</td>";
+						echo "<td colspan='8'>" . "Dieser FOLGENDE Artikel wurde erstattet, obwohl dieser nicht zurÃ¼ckgeschickt wurde:" . "</td>";
 						echo "</tbody>";
 					}
 					
-					# Zeile einfärben
+					# Zeile einfÃ¤rben
 					echo "<tbody"; 
 					if($adminArticles[$j]->payed == 1 AND $adminArticles[$j]->ruecksendung == 0 AND $adminArticles[$j]->erstattet == 0) {
 						echo " id='ok' ";
@@ -255,10 +255,10 @@ class amazon extends functions {
 						}
 					echo "</td>";
 					
-					# RÜCKSENDUNG LINK
+					# RÃœCKSENDUNG LINK
 					echo "<td>"; 
 						if($adminArticles[$j]->ruecksendung == 1) {
-							echo "<a href='?id=" . $adminArticles[$j]->id . "&sendbackUNDO'>zurückgesendet</a>";
+							echo "<a href='?id=" . $adminArticles[$j]->id . "&sendbackUNDO'>zurÃ¼ckgesendet</a>";
 						}
 						if($adminArticles[$j]->ruecksendung == 0) {
 							echo "<a href='?id=" . $adminArticles[$j]->id . "&sendbackDO'>nein</a>";
@@ -296,7 +296,7 @@ class amazon extends functions {
 	}
 	
 	/**
-	 * Ermöglicht das einfügen neuer Zeilen in die Amazon Payments
+	 * ErmÃ¶glicht das einfÃ¼gen neuer Zeilen in die Amazon Payments
 	 */
 	function createAmazonArticle() {
 		if($this->userHasRight(80, 0) == true) {
@@ -343,11 +343,11 @@ class amazon extends functions {
 				echo "<table>";
 					echo "<thead>";
 						echo "<td>Kaufdatum</td>";
-						echo "<td>Fällig am</td>";
+						echo "<td>FÃ¤llig am</td>";
 					echo "</thead>";
 					echo "<tbody>";
 						echo "<td><input name=kdate value='$kdate' type=date placeholder='Kaufdatum' /></td>";
-						echo "<td><input name=fdate value='$fdate' type=date placeholder='Fälligkeit' /></td>";
+						echo "<td><input name=fdate value='$fdate' type=date placeholder='FÃ¤lligkeit' /></td>";
 						echo "<td><input type=submit name=absenden value=speichern /></td>";
 					echo "</tbody>";
 					
@@ -368,7 +368,7 @@ class amazon extends functions {
 				
 				$getusername = $this->getObjektInfo("SELECT id, Name FROM benutzer WHERE id='$user' LIMIT 1");
 				
-				echo "<p class='dezentInfo'>Folgende Daten wurden eingegeben: <br>Benutzer: " .$getusername[0]->Name. " | Name des Artikels: $name | Preis: $preis | Kaufdatum: $kdate | Fälligkeitsdatum: $fdate</p>";
+				echo "<p class='dezentInfo'>Folgende Daten wurden eingegeben: <br>Benutzer: " .$getusername[0]->Name. " | Name des Artikels: $name | Preis: $preis | Kaufdatum: $kdate | FÃ¤lligkeitsdatum: $fdate</p>";
 				
 				if($user > 0 AND $preis != "" AND $kdate != "" AND $fdate != "") {
 					
@@ -385,7 +385,7 @@ class amazon extends functions {
 						
 					}
 				} else {
-					echo "<p class='meldung'>Nicht alle Felder befüllt.</p>";
+					echo "<p class='meldung'>Nicht alle Felder befÃ¼llt.</p>";
 				}
 				
 			}
@@ -419,26 +419,26 @@ class amazon extends functions {
 	
 	function setRuecksendung() {
 		if($this->userHasRight(80, 0) == true) {
-			# Es wird zurückgesendet
+			# Es wird zurÃ¼ckgesendet
 			if(isset($_GET['sendbackDO']) AND isset($_GET['id'])) {
 				$id = $_GET['id'];
 				$articleInfos=$this->getObjektInfo("SELECT id, name_of_article, payed,ruecksendung,erstattet FROM amazon_infos WHERE id=$id");
 				$sqlupdate = "UPDATE amazon_infos SET ruecksendung=1 WHERE id=$id";
 				if ($this->sql_insert_update_delete($sqlupdate) == true) {
-					echo "<p class='erfolg'>Der Artikel " .$articleInfos[0]->name_of_article. " wurde auf <strong>zurückgeschickt</strong> gesetzt.</p>";
+					echo "<p class='erfolg'>Der Artikel " .$articleInfos[0]->name_of_article. " wurde auf <strong>zurÃ¼ckgeschickt</strong> gesetzt.</p>";
 				} else {
 					echo "<p class='meldung'>SQL ERROR</p>";
 				}
 				
 			}
 			
-			#Rücksendung wird auf 0 gesetzt
+			#RÃ¼cksendung wird auf 0 gesetzt
 			if(isset($_GET['sendbackUNDO']) AND isset($_GET['id'])) {
 				$id = $_GET['id'];
 				$articleInfos=$this->getObjektInfo("SELECT id, name_of_article, payed,ruecksendung,erstattet FROM amazon_infos WHERE id=$id");
 				$sqlupdate = "UPDATE amazon_infos SET ruecksendung=0 WHERE id=$id";
 				if ($this->sql_insert_update_delete($sqlupdate) == true) {
-					echo "<p class='erfolg'>Der Artikel " .$articleInfos[0]->name_of_article. " wurde auf <strong>nicht zurückgeschickt</strong> gesetzt.</p>";
+					echo "<p class='erfolg'>Der Artikel " .$articleInfos[0]->name_of_article. " wurde auf <strong>nicht zurÃ¼ckgeschickt</strong> gesetzt.</p>";
 				} else {
 					echo "<p class='meldung'>SQL_ERROR</p>";
 				}
@@ -456,7 +456,7 @@ class amazon extends functions {
 			if(isset($_GET['erstattetDO']) AND isset($_GET['id'])) {
 				$id = $_GET['id'];
 				$articleInfos=$this->getObjektInfo("SELECT id, name_of_article, payed,ruecksendung,erstattet FROM amazon_infos WHERE id=$id");
-				# Man darf nur etwas erstatten, wenn es zurückgesendet wurde
+				# Man darf nur etwas erstatten, wenn es zurÃ¼ckgesendet wurde
 				if($articleInfos[0]->ruecksendung == 1) {
 					$sqlupdate = "UPDATE amazon_infos SET erstattet=1 WHERE id=$id";
 					if ($this->sql_insert_update_delete($sqlupdate) == true) {
@@ -465,7 +465,7 @@ class amazon extends functions {
 						echo "<p class='meldung'>SQL ERROR</p>";
 					}
 				} else {
-					echo "<p class='meldung'>Du darfst nichts erstatten, was nicht zurückgeschickt wurde.</p>";
+					echo "<p class='meldung'>Du darfst nichts erstatten, was nicht zurÃ¼ckgeschickt wurde.</p>";
 				}
 			}
 				

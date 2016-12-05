@@ -1,6 +1,6 @@
 <?php 
 /**
- * @author Steven Schödel
+ * @author Steven SchÃ¶del
  * Flatnet2 Projekt
  */
 ?>
@@ -31,7 +31,7 @@ $usermanager->userHasRightPruefung("8");
 		<div class='mainbody'>
 			<div class="topBody">
 				<h2>Emails</h2>
-				<a href="usermanager.php" class="buttonlink">Zurück</a>
+				<a href="usermanager.php" class="buttonlink">ZurÃ¼ck</a>
 			</div>
 
 			<div class="rightBody">Aktionen</div>

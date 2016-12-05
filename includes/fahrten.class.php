@@ -1,8 +1,8 @@
 <?php
 include 'objekt/functions.class.php';
 /**
- * Ermöglicht das Erstellen und Verwalten von Fahrtkosten.
- *
+ * ErmÃ¶glicht das Erstellen und Verwalten von Fahrtkosten.
+ * 
  * @author BSSCHOE
  *        
  */
@@ -82,7 +82,7 @@ class fahrten extends functions {
 			$proSeite = 15;
 			$this->SeitenZahlen("SELECT *, day(datum) as tag, month(datum) as monat, year(datum) as jahr FROM fahrkosten WHERE besitzer = '$userID' ORDER BY datum DESC", $proSeite);
 			$LimitUndOffset = $this->seitenAnzeigen($proSeite);
-			# Neue Query wird gelesen und in die richtige Query eingefügt:
+			# Neue Query wird gelesen und in die richtige Query eingefÃ¼gt:
 			$fahrten = $this->getObjektInfo ( "SELECT *, day(datum) as tag, month(datum) as monat, year(datum) as jahr FROM fahrkosten WHERE besitzer = '$userID' ORDER BY datum DESC $LimitUndOffset " );
 			$this->getFahrtInfo($fahrten);
 			# ################################# #
@@ -135,7 +135,7 @@ class fahrten extends functions {
 	}
 	
 	/**
-	 * Gibt Detailsinformationen zu einer bestimmten Fahrt zurück. Hat den Charakter einer Statistik.
+	 * Gibt Detailsinformationen zu einer bestimmten Fahrt zurÃ¼ck. Hat den Charakter einer Statistik.
 	 */
 	function getFahrtInfo($fahrten) {
 		
@@ -152,7 +152,7 @@ class fahrten extends functions {
 			$kosten = round ( $liter * $fahrten [$i]->spritpreis, 2 );
 			
 			echo "<p>Du bist mit dem <strong>" . $fahrten[$i]->fahrart . " (".$fahrzeugInfo[0]->name.")</strong> gefahren und hattest das Ziel <strong>" .$fahrten[$i]->ziel. "</strong></p>";
-			echo "<p>Du hast <strong>$liter</strong> Liter verbraucht und <strong>$kosten</strong> € dafür bezahlt. </p>";
+			echo "<p>Du hast <strong>$liter</strong> Liter verbraucht und <strong>$kosten</strong> â‚¬ dafÃ¼r bezahlt. </p>";
 			echo "<p>Notizen: <strong>" .$fahrten[$i]->notizen . "</strong></p>";
 			echo "</div>";
 		}
@@ -160,7 +160,7 @@ class fahrten extends functions {
 	}
 	
 	/**
-	 * Ermöglicht das erstellen einer neuen Fahrt
+	 * ErmÃ¶glicht das erstellen einer neuen Fahrt
 	 */
 	function newFahrt() {
 		// Right Check
@@ -169,7 +169,7 @@ class fahrten extends functions {
 			// Feld zur Eingabe anzeigen.
 			echo "<div class='newFahrt' id=\"neueFahrt\">";
 		#	echo "<a href=\"#\"  class='highlightedLink' onclick=\"document.getElementById('neueFahrt').style.display = 'none'\">X</a>";
-			echo "<h2>Fahrt hinzufügen</h2>";
+			echo "<h2>Fahrt hinzufÃ¼gen</h2>";
 			echo "<form method=post>";
 			
 			# bereits vorhandene Variablen erkennen:
@@ -215,10 +215,10 @@ class fahrten extends functions {
 			}
 			echo "</div>";
 			
-			echo "<div id=bemerkungen><input type=text placeholder='Platz für Bemerkungen' name='notizen' value='' /></div>";
+			echo "<div id=bemerkungen><input type=text placeholder='Platz fÃ¼r Bemerkungen' name='notizen' value='' /></div>";
 			
 			echo "<div id=zusatz>";
-			// Spritpreis: Letzten Spritpreis automatisch einfügen.
+			// Spritpreis: Letzten Spritpreis automatisch einfÃ¼gen.
 			$userID = $this->getUserID ( $_SESSION ['username'] );
 			$lastPreis = $this->getObjektInfo ( "SELECT id, spritpreis as preis FROM fahrkosten WHERE besitzer = '$userID' order by id DESC" );
 			if(isset($lastPreis[0]->preis)) {
@@ -226,7 +226,7 @@ class fahrten extends functions {
 			} else {
 				$preis = 0;
 			}
-				echo "<span id=anzahlFahrten><input type=text placeholder='Hin- und Rückfahrt?' name='fahrrichtung' value='2' /> Fahrten</span>";
+				echo "<span id=anzahlFahrten><input type=text placeholder='Hin- und RÃ¼ckfahrt?' name='fahrrichtung' value='2' /> Fahrten</span>";
 				echo "<span id=spritpreis><input type=text placeholder='Preis' name='spritpreis' value='$preis' /> Spritpreis</span>";
 			echo "</div>";
 			
@@ -240,7 +240,7 @@ class fahrten extends functions {
 			if (isset ( $_POST ['ok'] )) {
 				if ($_POST ['datum'] != "" and $_POST ['fahrart'] != "" and $_POST ['ziel'] != "") {
 					
-					// Benötigte Variablen erstellen.
+					// BenÃ¶tigte Variablen erstellen.
 					$userID = $this->getUserID ( $_SESSION ['username'] );
 					$datum = $_POST ['datum'];
 					$fahrtart = $_POST ['fahrart'];
@@ -249,7 +249,7 @@ class fahrten extends functions {
 					$spritpreis = $_POST ['spritpreis'];
 					$fahrrichtung = $_POST ['fahrrichtung'];
 					
-					// Einfügen
+					// EinfÃ¼gen
 					$query = "INSERT INTO fahrkosten (besitzer, datum, fahrart, ziel, notizen, spritpreis, fahrrichtung)
 						values ('$userID','$datum','$fahrtart','$ziel','$notizen','$spritpreis','$fahrrichtung')";
 					
@@ -271,7 +271,7 @@ class fahrten extends functions {
 	} // Function Ende
 	
 	/**
-	 * Ermöglicht das bearbeiten einer bestehenden Fahrt.
+	 * ErmÃ¶glicht das bearbeiten einer bestehenden Fahrt.
 	 */
 	function alterFahrt() {
 		if($this->userHasRight("12", 0) == true) {
@@ -281,7 +281,7 @@ class fahrten extends functions {
 			//
 			if (isset ( $_GET ['loeschid'] )) {
 				
-				// Prüfen ob der "löscher" das zu löschende Objekt besitzt.
+				// PrÃ¼fen ob der "lÃ¶scher" das zu lÃ¶schende Objekt besitzt.
 				$userID = $this->getUserID ( $_SESSION ['username'] );
 				$id = (isset ( $_GET ['loeschid'] )) ? $_GET ['loeschid'] : '';
 				$objekt = $this->getObjektInfo ( "SELECT * FROM fahrkosten WHERE id = $id LIMIT 1" );
@@ -305,7 +305,7 @@ class fahrten extends functions {
 				if (isset ( $_POST ['editOk'] )) {
 					if ($_POST ['datum'] != "" and $_POST ['fahrart'] != "" and $_POST ['ziel'] != "") {
 						
-						// Benötigte Variablen erstellen.
+						// BenÃ¶tigte Variablen erstellen.
 						$userID = $this->getUserID ( $_SESSION ['username'] );
 						$datum = $_POST ['datum'];
 						$fahrart = $_POST ['fahrart'];
@@ -318,7 +318,7 @@ class fahrten extends functions {
 						$fahrrichtung = $_POST ['fahrrichtung'];
 						$id = $_POST ['id'];
 						
-						// Einfügen
+						// EinfÃ¼gen
 						$query = "UPDATE fahrkosten SET 
 						datum='$datum', 
 						fahrart='$fahrart',
@@ -377,7 +377,7 @@ class fahrten extends functions {
 	# alt	#	echo "<tr><td>Bemerkungen</td><td><input type=text placeholder='Notizen' name='notizen' value='" . $objektInfo->notizen . "' /></td></tr>";
 				echo "<tr><td>Bemerkungen</td><td><textarea placeholder='Notizen' name='notizen' rows=2 cols=70>" . $objektInfo[0]->notizen . "</textarea></td></tr>";
 				echo "<tr><td>Spritpreis: </td><td><input type=text placeholder='Preis' name='spritpreis' value='" . $objektInfo[0]->spritpreis . "' /></td></tr>";
-				echo "<tr><td>Fahrrichtung: </td><td><input type=text placeholder='Hin- und Rückfahrt?' name='fahrrichtung' value='" . $objektInfo[0]->fahrrichtung . "' /></td></tr>";
+				echo "<tr><td>Fahrrichtung: </td><td><input type=text placeholder='Hin- und RÃ¼ckfahrt?' name='fahrrichtung' value='" . $objektInfo[0]->fahrrichtung . "' /></td></tr>";
 				echo "<tr><td><input type=submit name=editOk value='Absenden' /></td></tr>";
 				echo "<tr><td></td><td><input type=hidden name='id' value='" . $objektInfo[0]->id . "' />";
 				echo "</form>";
@@ -414,7 +414,7 @@ class fahrten extends functions {
 	}
 	
 	/**
-	 * Ermöglicht das Anlegen eines neuen Fahrzeuges.
+	 * ErmÃ¶glicht das Anlegen eines neuen Fahrzeuges.
 	 */
 	function newFahrzeug() {
 		if($this->userHasRight("12", 0) == true) {
@@ -426,9 +426,9 @@ class fahrten extends functions {
 			echo "<form method=post>";
 			
 			echo "<table>";
-				echo "<tr><td>Vollständiger Name</td><td><input type=text placeholder='Name des Fahrzeugs' name='name' value='' required /></td></tr>";
+				echo "<tr><td>VollstÃ¤ndiger Name</td><td><input type=text placeholder='Name des Fahrzeugs' name='name' value='' required /></td></tr>";
 				echo "<tr><td>Verbrauch (l / 100km)</td><td><input type=text placeholder='Verbrauch des Fahrzeugs' name='verbrauch' value='5.5' required /></td></tr>";
-				echo "<tr><td>Abkürzung</td><td><input type=text placeholder='z. B. AYGO oder BAHN' name='name_tag' value='' required /></td></tr>";
+				echo "<tr><td>AbkÃ¼rzung</td><td><input type=text placeholder='z. B. AYGO oder BAHN' name='name_tag' value='' required /></td></tr>";
 				echo "<tr><td><input type=submit name=FahrzeugOk value='Absenden' /></td></tr>";
 			echo "</table>";
 			echo "</form>";
@@ -439,13 +439,13 @@ class fahrten extends functions {
 			if (isset ( $_POST ['FahrzeugOk'] )) {
 				if ($_POST ['name'] != "" and $_POST ['verbrauch'] != "" and $_POST ['name_tag'] != "") {
 					
-					// Benötigte Variablen erstellen.
+					// BenÃ¶tigte Variablen erstellen.
 					$userID = $this->getUserID ( $_SESSION ['username'] );
 					$name = $_POST ['name'];
 					$verbrauch = $_POST ['verbrauch'];
 					$name_tag = $_POST ['name_tag'];
 					
-					// Einfügen
+					// EinfÃ¼gen
 					$query = "INSERT INTO fahrzeuge (besitzer, name, verbrauch, name_tag) values ('$userID','$name','$verbrauch','$name_tag')";
 					
 					if ($this->sql_insert_update_delete ( $query ) == true) {
@@ -466,7 +466,7 @@ class fahrten extends functions {
 	}
 	
 	/**
-	 * Ermögluicht das editieren und löschen von Fahrzeugen
+	 * ErmÃ¶gluicht das editieren und lÃ¶schen von Fahrzeugen
 	 */
 	function alterFahrzeug() {
 		if($this->userHasRight("12", 0) == true) {
@@ -482,11 +482,11 @@ class fahrten extends functions {
 				
 				echo "<h2><a name=fahrzeug'".$getFahrzeugInfo[0]->id."'>" . $getFahrzeugInfo[0]->name . "</a></h2>";
 				
-				echo "Abkürzung: " . $getFahrzeugInfo[0]->name_tag . "<br>";
+				echo "AbkÃ¼rzung: " . $getFahrzeugInfo[0]->name_tag . "<br>";
 				echo "Verbrauch: " . $getFahrzeugInfo[0]->verbrauch . " Liter auf 100 km<br>";
 				
 				echo "<a href='?listFahrzeuge' class='buttonlink'>Speichern</a>";
-				echo "<a href='?listFahrzeuge' class='buttonlink'>Zurück</a>";
+				echo "<a href='?listFahrzeuge' class='buttonlink'>ZurÃ¼ck</a>";
 				echo "</ul></div>";
 			}
 		
@@ -520,7 +520,7 @@ class fahrten extends functions {
 	}
 	
 	/**
-	 * Ermöglicht das erstellen eines neuen Ziels.
+	 * ErmÃ¶glicht das erstellen eines neuen Ziels.
 	 */
 	function newZiel() {
 		if($this->userHasRight("12", 0) == true) {
@@ -544,12 +544,12 @@ class fahrten extends functions {
 			if (isset ( $_POST ['ZielOK'] )) {
 				if ($_POST ['name'] != "" and $_POST ['entfernung'] != "" ) {
 			
-					// Benötigte Variablen erstellen.
+					// BenÃ¶tigte Variablen erstellen.
 					$userID = $this->getUserID ( $_SESSION ['username'] );
 					$name = $_POST ['name'];
 					$entfernung = $_POST ['entfernung'];
 			
-					// Einfügen
+					// EinfÃ¼gen
 					$query = "INSERT INTO fahrkostenziele (besitzer, name, entfernung) values ('$userID','$name','$entfernung')";
 			
 					if ($this->sql_insert_update_delete ( $query ) == true) {
@@ -567,7 +567,7 @@ class fahrten extends functions {
 	}
 	
 	/**
-	 * Ermöglicht das verändern und löschen von Zielen.
+	 * ErmÃ¶glicht das verÃ¤ndern und lÃ¶schen von Zielen.
 	 */
 	function alterZiel() {
 		if($this->userHasRight("12", 0) == true) {
@@ -586,7 +586,7 @@ class fahrten extends functions {
 				echo "Entfernung: " . $getFahrzeugInfo[0]->entfernung . "<br>";
 				
 				echo "<a href='?listZiele' class='buttonlink'>Speichern</a>";
-				echo "<a href='?listZiele' class='buttonlink'>Zurück</a>";
+				echo "<a href='?listZiele' class='buttonlink'>ZurÃ¼ck</a>";
 				echo "</ul></div>";
 			}
 		}

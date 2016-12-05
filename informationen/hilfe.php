@@ -10,10 +10,10 @@
 
 <?php
 /**
- * Ermöglicht das speichern von Einträgen der Doku innerhalb der Datenbank.
- * @author Steven Schödel
+ * ErmÃ¶glicht das speichern von EintrÃ¤gen der Doku innerhalb der Datenbank.
+ * @author Steven SchÃ¶del
  * @history 03.02.2015 angelegt.
- * @history 10.02.2015 Überarbeitung auf Objektorientierung.
+ * @history 10.02.2015 Ãœberarbeitung auf Objektorientierung.
  *
  */
 
@@ -56,7 +56,7 @@ class docu extends functions {
 	}
 
 	/**
-	 * Zeigt das Eingabefeld für neuen Dokueintrag
+	 * Zeigt das Eingabefeld fÃ¼r neuen Dokueintrag
 	 */
 	function showEingabeFeld() {
 		# Neuer Eintrag in die Doku:
@@ -93,7 +93,7 @@ class docu extends functions {
 	}
 
 	/**
-	 * Löscht einen Docueintrag.
+	 * LÃ¶scht einen Docueintrag.
 	 */
 	function deleteDocuEintrag() {
 		if($this->userHasRight("66", 0) == true) {
@@ -108,7 +108,7 @@ class docu extends functions {
 <?php 
 $docu = NEW docu();
 
-# STELLT DEN HEADER ZUR VERFÜGUNG
+# STELLT DEN HEADER ZUR VERFÃœGUNG
 $docu->header();
 $docu->logged_in();
 
@@ -131,7 +131,7 @@ echo $docu->suche($suche, "docu", "text", "?");
 			</div>
 
 			<div class="docuEintrag">
-				<h2>Ankündigungen</h2>
+				<h2>AnkÃ¼ndigungen</h2>
 				<?php $docu->showDocu(); ?>
 
 			</div>
@@ -142,91 +142,91 @@ echo $docu->suche($suche, "docu", "text", "?");
 				echo "
 				<div>
 				<ul>
-				<li>xx.08.2014: Kategorie kann jetzt im Blog verändert werden</li>
-				<li>xx.08.2014: Blog: Einträge der verschiedenen Benutzer können
+				<li>xx.08.2014: Kategorie kann jetzt im Blog verÃ¤ndert werden</li>
+				<li>xx.08.2014: Blog: EintrÃ¤ge der verschiedenen Benutzer kÃ¶nnen
 				gefiltert werden</li>
-				<li>xx.08.2014: Seitlich können 'andere Beiträge' angesehen werden.
+				<li>xx.08.2014: Seitlich kÃ¶nnen 'andere BeitrÃ¤ge' angesehen werden.
 				Die Ausgabe wurde begrenzt.</li>
-				<li>xx.08.2014: Zusätzliche Liste mit allen Beiträgen zu
-				Verwaltungszwecken erstellt. Bei zu vielen Einträgen werden
-				zusätzliche Seiten erstellt.</li>
+				<li>xx.08.2014: ZusÃ¤tzliche Liste mit allen BeitrÃ¤gen zu
+				Verwaltungszwecken erstellt. Bei zu vielen EintrÃ¤gen werden
+				zusÃ¤tzliche Seiten erstellt.</li>
 				<li>xx.08.2014: Textfelder werden durch Javascript durch einen
 				einfachen Editor ausgetauscht. (Opensource)</li>
-				<li>02.09.2014: Im Blog werden bei zu vielen Einträgen mehrere
+				<li>02.09.2014: Im Blog werden bei zu vielen EintrÃ¤gen mehrere
 				Seiten angezeigt.</li>
-				<li>03.09.2014: Alle Felder für die einzelnen Charakter wurden
-				hinzugefügt.</li>
-				<li>03.09.2014: Charakter im Guildwars-Bereich können jetzt
-				bearbeitet und gelöscht werden.</li>
+				<li>03.09.2014: Alle Felder fÃ¼r die einzelnen Charakter wurden
+				hinzugefÃ¼gt.</li>
+				<li>03.09.2014: Charakter im Guildwars-Bereich kÃ¶nnen jetzt
+				bearbeitet und gelÃ¶scht werden.</li>
 				<li>03.09.2014: Design Anpassungen.</li>
-				<li>05.09.2014: Diese Neuerungen benötigen die aktualisierten
-				Tabellen: vorschlaege, benutzer: rights hinzugefügt, salt, email
+				<li>05.09.2014: Diese Neuerungen benÃ¶tigen die aktualisierten
+				Tabellen: vorschlaege, benutzer: rights hinzugefÃ¼gt, salt, email
 				entfernt</li>
 				<li>05.09.2014: Vorschlag System integriert. Admin kann den Status
-				jedes Vorschlags ändern oder den Vorschlag löschen. Css ebenfalls
-				erstellt. Vorschläge können von jedem 'registriertem' User
+				jedes Vorschlags Ã¤ndern oder den Vorschlag lÃ¶schen. Css ebenfalls
+				erstellt. VorschlÃ¤ge kÃ¶nnen von jedem 'registriertem' User
 				eingereicht werden.</li>
 				<li>05.09.2014: Ein Rechtesystem wurde erstellt, welches mit dem
 				Exponenten und der Potenz von 2 arbeitet.</li>
-				<li>06.09.2014: Bei den Guildwars Charakteren wird der nächste
+				<li>06.09.2014: Bei den Guildwars Charakteren wird der nÃ¤chste
 				Geburtstag in Tagen angezeigt.</li>
 				<li>08.09.2014: Das Design der Guildwars Kacheln wurde verbessert.
 				Jetzt wird der Klasse entsprechend der Hintergrund ausgetauscht
 				und Farben angepasst.</li>
-				<li>08.08.2014: Ein Bereich für Guildwars Tiere wurde erstellt.
-				Dort können die Tiere, die in GW verteilt sind gesammelt werden.</li>
-				<li>09.09.2014: Adressbuch überarbeitet und mit neuen Funktionen
+				<li>08.08.2014: Ein Bereich fÃ¼r Guildwars Tiere wurde erstellt.
+				Dort kÃ¶nnen die Tiere, die in GW verteilt sind gesammelt werden.</li>
+				<li>09.09.2014: Adressbuch Ã¼berarbeitet und mit neuen Funktionen
 				versehen, z. B. wird ein Eintrag jetzt auf einer anderen Seite
-				geöffnet und kann dort direkt bearbeitet werden. ShowPerson fällt
-				weg und ist nur noch zusätzlich verfügbar.</li>
+				geÃ¶ffnet und kann dort direkt bearbeitet werden. ShowPerson fÃ¤llt
+				weg und ist nur noch zusÃ¤tzlich verfÃ¼gbar.</li>
 
 				<h3>10.09.2014:</h3>
 				<li>Fehler in Guildwars Charakter gefixt, ein Beruf fehlte.
-				Administration: Infotext hinzugefügt.</li>
+				Administration: Infotext hinzugefÃ¼gt.</li>
 				<li>Neue Startseite erstellt, mit verschiedenen Kacheln.
 				Verschiedene Infos werden direkt in die Kacheln eingebunden.</li>
-				<li>Usermanager wieder aktiviert. <strong>Zukünftig</strong> kann
-				der User hier sein Passwort ändern.
+				<li>Usermanager wieder aktiviert. <strong>ZukÃ¼nftig</strong> kann
+				der User hier sein Passwort Ã¤ndern.
 				</li>
 				<li>Favicon erstellt</li>
 				<li>Design der Bereichs-Kacheln angepasst. CSS.</li>
-				<li>Einen Wrapper für jede Seite hinzugefügt. Diese zentriert die
+				<li>Einen Wrapper fÃ¼r jede Seite hinzugefÃ¼gt. Diese zentriert die
 				Seite, nicht wie vorher der 'mainbody'.</li>
 
 				<h3>11.09.2014</h3>
-				<li>E-Mail Class erstellt und den dazugehörigen Bereich unter den
+				<li>E-Mail Class erstellt und den dazugehÃ¶rigen Bereich unter den
 				Benutzereinstellungen</li>
-				<li>Benutzerprofil Einstellungen hinzugefügt, sowie eine separaten
-				für die Emails (funktioniert aber noch nicht)</li>
-				<li>Bilder für die Homeseite hinzugefügt.</li>
-				<li>Sleep.php unter Datenbanken hinzugefügt.</li>
+				<li>Benutzerprofil Einstellungen hinzugefÃ¼gt, sowie eine separaten
+				fÃ¼r die Emails (funktioniert aber noch nicht)</li>
+				<li>Bilder fÃ¼r die Homeseite hinzugefÃ¼gt.</li>
+				<li>Sleep.php unter Datenbanken hinzugefÃ¼gt.</li>
 
 				<h3>12.09.2014</h3>
 				<li>Blog: Neuer Beitrag jetzt auf einer separaten Seite.</li>
 				<li>Blog: Jeder Benutzer darf jetzt einen Blog schreiben, ohne die
 				des anderen Users zu sehen</li>
 				<li>Blog: Positionen verschiedener Buttons angepasst und das Design
-				leicht verändert.</li>
+				leicht verÃ¤ndert.</li>
 				<li>Blog: An verschiedenen Stellen den RightsCheck eingebaut um
-				ungewollte Änderungen an der DB zu verhindern.</li>
+				ungewollte Ã„nderungen an der DB zu verhindern.</li>
 				<lI>Blog: Abstand der Spalten in der Blogliste angepasst</lI>
-				<li>Blog: Es ist nicht mehr notwendig den Button OK zu drücken,
+				<li>Blog: Es ist nicht mehr notwendig den Button OK zu drÃ¼cken,
 				wenn die Ansicht gewechselt werden soll.</li>
 				<li>Administration: RightCheck eingebaut.</li>
 				<li><strong>Sicherheitsfeature</strong>: Administration: Bei
 				dreimaligem falschen eingeben vom Passwort, wird der Benutzer
 				gesperrt.</li>
-				<li>Administration: Das Loginscript überarbeitet. Sollte nun
+				<li>Administration: Das Loginscript Ã¼berarbeitet. Sollte nun
 				sicherer sein.</li>
 
 				<h3>13.09.2014</h3>
 				<li>Benutzer-Profile erstellt. Zwar mit wenig Informationen, aber
-				das Grundgerüst steht. Über die richtigen Links zum anzeigen des
+				das GrundgerÃ¼st steht. Ãœber die richtigen Links zum anzeigen des
 				Profils gesetzt.</li>
 					
 				<h3>15.09.2014</h3>
-				<li>Kommentarsystem für den Blog erstellt, mit dem Autor als Fremdschlüssel.</li>
-				<li>Blogs können jetzt für andere Benutzer freigegeben werden.</li>
+				<li>Kommentarsystem fÃ¼r den Blog erstellt, mit dem Autor als FremdschlÃ¼ssel.</li>
+				<li>Blogs kÃ¶nnen jetzt fÃ¼r andere Benutzer freigegeben werden.</li>
 					
 				<h3>16.09.2014</h3>
 				<li>Inventarsystem erstellt.</li>
@@ -235,23 +235,23 @@ echo $docu->suche($suche, "docu", "text", "?");
 					
 				<h3>18.09.2014</h3>
 				<li>Die Suche kann jetzt allgemein erfolgen. Es wird in allen Spalten nach dem Suchbegriff gesucht.</li>
-				<li>Inventar: Kategorieauswahl hinzugefügt.</li>
-				<li>Suche: Suche jetzt verallgemeinert, und eine neue Class angelegt (functions) für allgemeine Funktionen.</li>
-				<li>Header verändert</li>
+				<li>Inventar: Kategorieauswahl hinzugefÃ¼gt.</li>
+				<li>Suche: Suche jetzt verallgemeinert, und eine neue Class angelegt (functions) fÃ¼r allgemeine Funktionen.</li>
+				<li>Header verÃ¤ndert</li>
 				<li>Einige Funktionen benutzen kein Echo mehr </li>
 				<li>In der Navigation wird die aktive Seite hervorgehoben</li>
 					
 				<h3>19.09.2014</h3>
-				<li>Code umgeschrieben, sodass keine Ausgabe innerhalb der Funktionen mehr erfolgt. Ausgabe stattdessen über RETURN $ausgabe;</li>
+				<li>Code umgeschrieben, sodass keine Ausgabe innerhalb der Funktionen mehr erfolgt. Ausgabe stattdessen Ã¼ber RETURN $ausgabe;</li>
 					
 				<h3>22.09.2014</h3>
 				<li>Rechteproblem behoben, Adressbuch jetzt separat geregelt.</li>
 					
 				<h3>26.09.2014</h3>
-				<li>Design überarbeitet. Adressbuch bearbeiten Design geändert, entspricht jetzt dem des Erstellens.</li>
+				<li>Design Ã¼berarbeitet. Adressbuch bearbeiten Design geÃ¤ndert, entspricht jetzt dem des Erstellens.</li>
 				<h3>02.02.2015</h3>
 				<li>Design korrekturen angewendet.</li>
-				<li>Rechtesystem weiter perfektioniert (grafische Oberfläche im Adminmenü).</li>
+				<li>Rechtesystem weiter perfektioniert (grafische OberflÃ¤che im AdminmenÃ¼).</li>
 
 				</ul>
 				</div>
@@ -261,14 +261,14 @@ echo $docu->suche($suche, "docu", "text", "?");
 
 				<ul>
 				<li>Bei den GW Kacheln wird ein Notice-Fehler angezeigt, kein
-				richtiger Fehler, aber unschön.</li>
+				richtiger Fehler, aber unschÃ¶n.</li>
 				</ul>
 				</div>
 
 				<div class='blogeintrag'>
 				<h2>Fehlende Features</h2>
 				<ul>
-				<li>Bilderupload bei Guildwars Charakteren, mit der Möglichkeit,
+				<li>Bilderupload bei Guildwars Charakteren, mit der MÃ¶glichkeit,
 				das Bild zu schneiden</li>
 				</ul>
 				</div>

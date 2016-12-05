@@ -3,13 +3,13 @@
 /**
  * @history Steven 20.08.2014 angelegt.
  * @author Steven
- * Erm鰃licht die Funktionen des Adressbuches.
+ * Erm蠁glicht die Funktionen des Adressbuches.
  */
 include 'objekt/functions.class.php';
 class datenbanken extends functions {
 	
 	/**
-	 * erm鰃tlicht das exportieren von Dateien, wenn 黚er GET die Zahl 1 angegeben wird und der User Steven ist.
+	 * erm蠁gtlicht das exportieren von Dateien, wenn 蠈ber GET die Zahl 1 angegeben wird und der User Steven ist.
 	 * @status: getestet, funktioniert, Ausgabe muss noch formatiert werden.
 	 * VERALTET
 	 */
@@ -63,8 +63,8 @@ class datenbanken extends functions {
 	}
 	
 	/**
-	 * Erm鰃licht das bearbeiten von Daten im Adressbuch.
-	 * Ben鰐igt folgende GET variablen zum funktionieren:
+	 * Erm蠁glicht das bearbeiten von Daten im Adressbuch.
+	 * Ben蠁tigt folgende GET variablen zum funktionieren:
 	 * bearbeiten != "", idanzeigen=(userid, z. b. 1)
 	 */
 	function UserBearbeitenEingabe() {
@@ -97,7 +97,7 @@ class datenbanken extends functions {
 				$ausgabe .= "<h4>Fax: </h4>";
 				$ausgabe .= "<input placeholder='Fax' type='text'   name='fax' value='".$rowbearb[0]->fax."'>";
 					
-				$ausgabe .= "<h4>Gruppenzugeh鰎igkeit: </h4>";
+				$ausgabe .= "<h4>Gruppenzugeh蠁rigkeit: </h4>";
 				$ausgabe .= "<input placeholder='Gruppe' type='text'   name='gruppe' value='".$rowbearb[0]->gruppe."' />";
 				
 				$ausgabe .= "<h4>E-Mail: </h4>";
@@ -121,7 +121,7 @@ class datenbanken extends functions {
 				
 				$ausgabe .= "<h4>Adresse: </h4>";
 				
-				$ausgabe .= "<input type='text'   name='strasse' value='".$rowbearb[0]->strasse."'  placeholder='Stra遝' />";
+				$ausgabe .= "<input type='text'   name='strasse' value='".$rowbearb[0]->strasse."'  placeholder='Stra委e' />";
 				$ausgabe .= "<input  type='text'   name='hausnummer' value='".$rowbearb[0]->hausnummer."' placeholder='Nr.' />";
 				$ausgabe .= "<br>";
 				$ausgabe .= "<input placeholder='PLZ' type='text'   name='postleitzahl' value='".$rowbearb[0]->postleitzahl."' />";
@@ -148,7 +148,7 @@ class datenbanken extends functions {
 				$ausgabe .= "<h4>Notizen: </h4>";
 				$ausgabe .= "<textarea name='notizen' class='ckeditor' cols='52' rows='5' wrap='physical'>".$rowbearb[0]->notizen."</textarea>";
 				$ausgabe .= "<input type='submit' name='update' value='Speichern' />";
-				$ausgabe .= "<a href='?loeschen=ja&loeschid=".$rowbearb[0]->id."' class='buttonlink'>&#10008; l鰏chen</a>";
+				$ausgabe .= "<a href='?loeschen=ja&loeschid=".$rowbearb[0]->id."' class='buttonlink'>&#10008; l蠁schen</a>";
 				
 				
 			/*	$ausgabe .= "
@@ -165,8 +165,8 @@ class datenbanken extends functions {
 	}
 	
 	/**
-	 * Erm鰃licht das Updaten der Informationen zu einem Eintrag im Adressbuch.
-	 * Ben鰐igt GET Var "update" == "Speichern".
+	 * Erm蠁glicht das Updaten der Informationen zu einem Eintrag im Adressbuch.
+	 * Ben蠁tigt GET Var "update" == "Speichern".
 	 */
 	function UserBearbeitenFunction() {
 		if($this->userHasRight("14", 0) == true) {
@@ -200,14 +200,14 @@ class datenbanken extends functions {
 				$notizen = $_GET ["notizen"];
 				$updid = $_GET ["id"];
 				if ($nachname == "" or $vorname == "") {
-					$fehler .= "<p class='meldung'>Eingabefehler. Es muss mindestens ein Vorname und ein Nachname eingegeben werden. <a href='?'>Zur點k</a></p>";
+					$fehler .= "<p class='meldung'>Eingabefehler. Es muss mindestens ein Vorname und ein Nachname eingegeben werden. <a href='?'>Zur蠈ck</a></p>";
 				} else {
 					$sqlupdate = "UPDATE adressbuch SET geburtstag='$geburtstag', vorname='$vorname', nachname='$nachname', strasse='$strasse', hausnummer='$hausnummer', postleitzahl='$postleitzahl',
 					stadt='$stadt', bundesland='$bundesland', land='$land', telefon1='$telefon1', telefon2='$telefon2', telefon3='$telefon3', telefon4='$telefon4', telefon1art='$telefon1art', telefon2art='$telefon2art',
 					telefon3art='$telefon3art', telefon4art='$telefon4art', email='$email', skype='$skype', facebook='$facebook', fax='$fax', gruppe='$gruppe', notizen='$notizen' WHERE id='$updid'";
 									
 					if ($this->sql_insert_update_delete($sqlupdate) == true) {
-						$fehler .= "<p class='erfolg'>Adressbucheintrag wurde erfolgreich ge鋘dert!</p>";
+						$fehler .= "<p class='erfolg'>Adressbucheintrag wurde erfolgreich ge未ndert!</p>";
 					} else {
 						$fehler .= "<p class='meldung'>Fehler beim speichern</p>";
 					}
@@ -219,7 +219,7 @@ class datenbanken extends functions {
 	}
 	
 	/**
-	 * Erm鰃licht das l鰏chen von Datens鋞zen aus dem Adressbuch.
+	 * Erm蠁glicht das l蠁schen von Datens未tzen aus dem Adressbuch.
 	 * Nur wenn der User "steven" ist.
 	 */
 	function UserLoeschen() {
@@ -276,7 +276,7 @@ class datenbanken extends functions {
 				$ausgabe .= "
 				<form method=post>
 				<div id='draggable' class='newChar'>
-				<a href='?' class='highlightedLink'>Schlie遝n</a></h2>
+				<a href='?' class='highlightedLink'>Schlie委en</a></h2>
 				<h2>Eingabebereich</h2>
 				
 				<table class='AdressTable'>
@@ -287,7 +287,7 @@ class datenbanken extends functions {
 				</tr>
 	
 				<tr>
-				<td><input type='text'   name='strasse' value='$strasse' placeholder='Stra遝' >
+				<td><input type='text'   name='strasse' value='$strasse' placeholder='Stra委e' >
 				<input type='text'   name='hausnummer' value='$hausnummer' placeholder='Nr.' ></td>
 				<td><input type='text'  name='geburtstag' value='$geburtstag'  placeholder='Geburtstag'></td>
 				</tr>
@@ -338,7 +338,7 @@ class datenbanken extends functions {
 				</table>
 				<input type='hidden' name='eintragenja' value='' />
 				<input type='submit' name='eintragen' value='Speichern'>
-				<a href='?' class='highlightedLink'>Schlie遝n</a></h2>
+				<a href='?' class='highlightedLink'>Schlie委en</a></h2>
 				</div>
 				</form>";
 			}
@@ -348,8 +348,8 @@ class datenbanken extends functions {
 	}
 	
 	/**
-	 * Erm鰃licht das eintragen von Datens鋞zen zum Adressbuch in die Datenbank, die
-	 * n鰐igen GET Vars liefert UserErstellenEingabe();
+	 * Erm蠁glicht das eintragen von Datens未tzen zum Adressbuch in die Datenbank, die
+	 * n蠁tigen GET Vars liefert UserErstellenEingabe();
 	 */
 	function UserErstellenFunction() {
 		if($this->userHasRight("59", 0) == true) {
@@ -382,7 +382,7 @@ class datenbanken extends functions {
 					$geburtstag = $_POST ["geburtstag"];
 					$notizen = $_POST ["notizen"];
 					if ($nachname == "" or $vorname == "") {
-						$ausgabe .= "<p class='meldung'>Eingabefehler. Es muss mindestens ein Vorname und ein Nachname eingegeben werden. <a href='?eintragenja=1' class='buttonlink'>Zur點k</a></p>";
+						$ausgabe .= "<p class='meldung'>Eingabefehler. Es muss mindestens ein Vorname und ein Nachname eingegeben werden. <a href='?eintragenja=1' class='buttonlink'>Zur蠈ck</a></p>";
 					} else {
 						$eintrag = "INSERT INTO adressbuch (geburtstag, vorname, nachname, strasse, hausnummer, postleitzahl,
 						stadt, bundesland, land, telefon1, telefon2, telefon3, telefon4, telefon1art, telefon2art,
@@ -392,9 +392,9 @@ class datenbanken extends functions {
 						'$telefon4art','$email','$skype','$facebook','$fax','$gruppe','$notizen')";
 						
 						if ($this->sql_insert_update_delete($eintrag) == true) {
-							$ausgabe .= "<p class='erfolg'>Adressbucheintrag wurde erfolgreich hinzugef黦t! <a href='?eintragenja=1'>Zur點k</a></p>";
+							$ausgabe .= "<p class='erfolg'>Adressbucheintrag wurde erfolgreich hinzugef蠈gt! <a href='?eintragenja=1'>Zur蠈ck</a></p>";
 						} else {
-							$ausgabe .= "<p class='meldung'>Fehler beim speichern der Daten, das tut uns leid.<a href='?eintragenja=1'>Zur點k</a></p>";
+							$ausgabe .= "<p class='meldung'>Fehler beim speichern der Daten, das tut uns leid.<a href='?eintragenja=1'>Zur蠈ck</a></p>";
 						}
 					}
 				}
@@ -405,7 +405,7 @@ class datenbanken extends functions {
 	}
 	
 	/**
-	 * lie遲 alle eingetragenen Datens鋞ze aus dem Adressbuch aus.
+	 * lie委t alle eingetragenen Datens未tze aus dem Adressbuch aus.
 	 * $query z. B.: "SELECT id, vorname, nachname FROM adressbuch ORDER BY nachname"
 	 * Gibt aus: $row->tabellenspalte
 	 */
@@ -443,7 +443,7 @@ class datenbanken extends functions {
 	}
 	
 	/**
-	 * Zeigt alle Geburtstage aus dem gew鋒lten Monat an.
+	 * Zeigt alle Geburtstage aus dem gew未hlten Monat an.
 	 */
 	function showMonthGesamt() {
 		
@@ -528,7 +528,7 @@ class datenbanken extends functions {
 			
 			if (isset ( $_POST ['checkedGroups'] )) { $selectedGroups = $_POST ['checkedGroups']; } else { $selectedGroups = ""; }
 			
-			$counterF黵OR = 0;
+			$counterF蠈rOR = 0;
 			
 			for($i = 1; $i <= 12; $i ++) {
 				echo "<div class='kalender'>";
@@ -547,16 +547,16 @@ class datenbanken extends functions {
 						FROM adressbuch
 						WHERE ";
 						
-						$counterF黵OR = 0;
+						$counterF蠈rOR = 0;
 						
 						# WHERE Klauseln bauen:
 						for ($y = 0; $y < sizeof($allgroups) ; $y++) {
 							if(isset($selectedGroups[$y]) AND $selectedGroups[$y] != "") {
 								
 								$query .= "month(geburtstag) = '$i' AND gruppe = '". $selectedGroups[$y] . "' ";
-								$counterF黵OR = $counterF黵OR + 1;
+								$counterF蠈rOR = $counterF蠈rOR + 1;
 								
-								if($counterF黵OR < sizeof($selectedGroups)) {
+								if($counterF蠈rOR < sizeof($selectedGroups)) {
 									$query .= "OR ";
 								}
 								
@@ -567,8 +567,8 @@ class datenbanken extends functions {
 						$query .= " ORDER BY tag, vorname";
 					}
 					
-					# $query zur 躡erpr黤ungszwecken anzeigen:
-					# echo "<div class='newChar'>" . $query . " Gr鲞e von SelectedGroups:" . sizeof($selectedGroups) .  " | Counter: $counterF黵OR</div>";
+					# $query zur 维berpr蠈fungszwecken anzeigen:
+					# echo "<div class='newChar'>" . $query . " Gr蠁委e von SelectedGroups:" . sizeof($selectedGroups) .  " | Counter: $counterF蠈rOR</div>";
 					
 					# Aus Datenbank laden: 
 					$getGeburtstage = $this->getObjektInfo($query);

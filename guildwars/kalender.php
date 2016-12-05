@@ -1,6 +1,6 @@
 <?php 
 /**
- * @author Steven Schödel
+ * @author Steven SchÃ¶del
  * Flatnet2 Projekt
  */
 ?>
@@ -18,7 +18,7 @@ include '../includes/gw.class.php';
 # GW start
 $guildwars = NEW gw_kalender();
 
-# STELLT DEN HEADER ZUR VERFÜGUNG
+# STELLT DEN HEADER ZUR VERFÃœGUNG
 $guildwars->header();
 
 $guildwars->logged_in("redirect", "index.php");
@@ -33,7 +33,7 @@ echo $guildwars->suche($suche, "gw_chars", "name", "charakter.php?charID");
 	</head>
 	<body>
 		<div class='mainbody'>
-			<a href="start.php" class="highlightedLink">Zurück</a>
+			<a href="start.php" class="highlightedLink">ZurÃ¼ck</a>
 			
 			<div id='kalender'>
 			<?php $guildwars->SubNav("guildwars"); ?>

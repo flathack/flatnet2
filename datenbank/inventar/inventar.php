@@ -1,31 +1,23 @@
-<?php echo '<'.'?xml version="1.0" encoding="utf-8"?'.'>'; ?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" id='inventar'>
+<!DOCTYPE html>
+<html id="inventar">
 <div id="wrapper">
 <head>
-<?php
-header('Content-Type: text/html; charset=UTF-8');
-?>
 <?php 
 #Inclusions:
 include '../../includes/inventar.class.php';
 
-# Inventar öffnen
+# Inventar Ã¶ffnen
 $inventar = NEW inventar;
 
-# STELLT DEN HEADER ZUR VERFÜGUNG
+# STELLT DEN HEADER ZUR VERFÃœGUNG
 $inventar->connectToDB();
 $inventar->header();
-
 $inventar->logged_in("redirect", "index.php");
-$inventar->pruefung("128");
-
-?>
+$inventar->pruefung(128);?>
 <title>Inventarliste</title>
 </head>
 <body>
-	<div class='mainbodyDark'>
+	<div class="mainbodyDark">
 		<a href="?action=Speichern&newEintrag" class="buttonlink">Neuer Eintrag</a>
 		<a href="?showSumme=1" class="buttonlink">Summe aller Kategorien anzeigen</a>
 		
@@ -80,7 +72,7 @@ $inventar->pruefung("128");
 				</thead>
 				
 				<?php 
-				# Füllt den BODY mit Informationen
+				# FÃ¼llt den BODY mit Informationen
 				$status = isset($_GET['status']) ? $_GET['status'] : '';
 				echo $inventar->showInventar($status);
 				?>

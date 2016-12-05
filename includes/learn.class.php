@@ -1,6 +1,6 @@
 <?php
 /**
- * Ermöglicht das lernen von Inhalten des Studiums
+ * ErmÃ¶glicht das lernen von Inhalten des Studiums
  * @author BSSCHOE
  * Erstellt am 25.11.2015
  */
@@ -10,7 +10,7 @@ include 'objekt/functions.class.php';
 class learn extends functions {
 	
 	/**
-	 * Erstellt den benÃ¶tigten DB Eintrag
+	 * Erstellt den benÃƒÂ¶tigten DB Eintrag
 	 */
 	function dbInhalt() {
 		
@@ -44,7 +44,7 @@ class learn extends functions {
 	
 	
 	/**
-	 * Zeigt die EintrÃ¤ge der Kategorie
+	 * Zeigt die EintrÃƒÂ¤ge der Kategorie
 	 */
 	function showKategorieEintraege() {
 		
@@ -73,7 +73,7 @@ class learn extends functions {
 						
 					echo "<div class='learnEintrag'>";
 					$idfornav = $getEintraege[$i]->id;
-					echo "<a href=\"#eintrag$idfornav\" class='rightGreenLink' onclick=\"document.getElementById('learnEintrag$i').style.display = 'block'\"> Lösung anzeigen </a>";
+					echo "<a href=\"#eintrag$idfornav\" class='rightGreenLink' onclick=\"document.getElementById('learnEintrag$i').style.display = 'block'\"> LÃ¶sung anzeigen </a>";
 					echo "<a href=\"#eintrag$idfornav\"  class='rightRedLink' onclick=\"document.getElementById('learnEintrag$i').style.display = 'none'\">Verstecken</a>";
 					
 					echo "<h3><a name='#eintrag". $getEintraege[$i]->id ."'>" . $getEintraege[$i]->frage . "</a></h3>";
@@ -83,7 +83,7 @@ class learn extends functions {
 							echo "<form method=post>";
 							echo "<textarea name='editEintrag' class='ckeditor' id='ckeditor'>" . $getEintraege[$i]->loesung . "</textarea>";
 							echo "<input type=hidden name=editID value='".$getEintraege[$i]->id."' />";
-							echo "<input type=submit name=saveEintrag$i value='Änderungen speichern' />";
+							echo "<input type=submit name=saveEintrag$i value='Ã„nderungen speichern' />";
 							echo "</form>";
 							echo "<p id='bottom'>Gewusst? 
 								<a class='greenLink' href='?kategorie=".$getEintraege[$i]->kategorie."&plusLernstatus&lern_id=".$getEintraege[$i]->id."'>Ja</a>
@@ -100,7 +100,7 @@ class learn extends functions {
 	}
 	
 	/**
-	 * Zeigt die Optionen fÃ¼r die gegenwÃ¤rtige Kategorie an.
+	 * Zeigt die Optionen fÃƒÂ¼r die gegenwÃƒÂ¤rtige Kategorie an.
 	 * @param unknown $kategorie
 	 */
 	function showOptionsForKategorie($kategorie) {
@@ -108,7 +108,7 @@ class learn extends functions {
 	}
 	
 	/**
-	 * Zeigt Optionen fÃ¼r die Seite an.
+	 * Zeigt Optionen fÃƒÂ¼r die Seite an.
 	 */
 	function showOptionsForAll() {
 		echo "<a href='?createNewCat' class='buttonlink'>Neue Kategorie erstellen</a>";
@@ -116,7 +116,7 @@ class learn extends functions {
 	}
 	
 	/**
-	 * Bietet eine Druckübersicht an:
+	 * Bietet eine DruckÃ¼bersicht an:
 	 */
 	function export() {
 		if(isset($_GET['kategorie'])) {
@@ -139,7 +139,7 @@ class learn extends functions {
 	public $lernkarte = "ENTITY";
 	
 	/**
-	 * Erstellt einen neuen Eintrag in der gewählten Kategorie
+	 * Erstellt einen neuen Eintrag in der gewÃ¤hlten Kategorie
 	 */
 	function createNewEintragInKategorie() {
 		if(isset($_GET['createNew']) AND isset($_GET['kategorie'])) {
@@ -198,7 +198,7 @@ class learn extends functions {
 	}
 	
 	/**
-	 * Prüft, ob der Eintrag (frage) bereits für diesen Benutzer in der Kategorie existiert.
+	 * PrÃ¼ft, ob der Eintrag (frage) bereits fÃ¼r diesen Benutzer in der Kategorie existiert.
 	 * @param unknown $titel
 	 * @param unknown $besitzer
 	 * @param unknown $kategorie
@@ -217,7 +217,7 @@ class learn extends functions {
 	}
 	
 	/**
-	 * ErmÃ¶glicht das editieren von Einträgen einer Kategorie.
+	 * ErmÃƒÂ¶glicht das editieren von EintrÃ¤gen einer Kategorie.
 	 */
 	function editEintrag() {
 		if(isset($_POST['editEintrag'])) {
@@ -226,9 +226,9 @@ class learn extends functions {
 				
 			if($id != "" AND $text != "") {
 				if($this->sql_insert_update_delete("UPDATE learnlernkarte SET loesung = '$text' WHERE id = '$id' ") == true) {
-					echo "<p class='erfolg'>Eintrag wurde geändert!</p>";
+					echo "<p class='erfolg'>Eintrag wurde geÃ¤ndert!</p>";
 				} else {
-					echo "<p class='meldung'>Änderung nicht möglich!</p>";;
+					echo "<p class='meldung'>Ã„nderung nicht mÃ¶glich!</p>";;
 				}
 			}
 		}
@@ -239,7 +239,7 @@ class learn extends functions {
 	}
 	
 	/**
-	 * Zeigt alle Einträge als Liste an
+	 * Zeigt alle EintrÃ¤ge als Liste an
 	 */
 	function showKategorieUeberschriften() {
 	
@@ -277,7 +277,7 @@ class learn extends functions {
 	public $kategorien = "ENTITY";
 	
 	/**
-	 * Zeigt die eigenen EintrÃ¤ge
+	 * Zeigt die eigenen EintrÃƒÂ¤ge
 	 */
 	function showKategorien() {
 		$userid = $this->getUserID($_SESSION['username']);
@@ -290,7 +290,7 @@ class learn extends functions {
 		}
 	
 		echo "<div class='showKategorien'>";
-		echo "<p>Bitte eine Kategorie wählen</p>";
+		echo "<p>Bitte eine Kategorie wÃ¤hlen</p>";
 		echo "<ul>";
 		for ($i = 0; $i < sizeof($getkategories); $i++) {
 				
@@ -308,7 +308,7 @@ class learn extends functions {
 	}
 	
 	/**
-	 * Ermöglicht die Funktionen, Kategorien zu verwalten.
+	 * ErmÃ¶glicht die Funktionen, Kategorien zu verwalten.
 	 */
 	function mainKategorieFunction() {
 		
@@ -319,7 +319,7 @@ class learn extends functions {
 	}
 	
 	/**
-	 * Ermöglicht das erstellen einer neuen Kategorie.
+	 * ErmÃ¶glicht das erstellen einer neuen Kategorie.
 	 */
 	function createNewKategorie() {
 		
@@ -349,7 +349,7 @@ class learn extends functions {
 			echo "<form method=post>";
 			
 				echo "<input type=text name=newcat value='' placeholder='Kategorienamen' />";
-				echo "<label for='slideThree'>Soll die Kategorie für alle sichtbar sein? </label>";
+				echo "<label for='slideThree'>Soll die Kategorie fÃ¼r alle sichtbar sein? </label>";
 				echo "<span class='slideThree'><input type=checkbox id='slideThree' name=public value=1 /></span>";
 				echo "<br><br>";
 				echo "<input type=submit name=submit value=Absenden />";
@@ -360,14 +360,14 @@ class learn extends functions {
 	}
 	
 	/**
-	 * Ermöglicht das editieren einer Kategorie.
+	 * ErmÃ¶glicht das editieren einer Kategorie.
 	 */
 	function editKategorie() {
 		
 	}
 	
 	/**
-	 * Ermöglicht das löschen einer Kategorie.
+	 * ErmÃ¶glicht das lÃ¶schen einer Kategorie.
 	 */
 	function deleteKategorie() {
 		
@@ -397,7 +397,7 @@ class learn extends functions {
 	public $lernstatus = "ENTITY";
 	
 	/**
-	 * Stellt die Funktionen zur Verfügung.
+	 * Stellt die Funktionen zur VerfÃ¼gung.
 	 */
 	function mainStatusFunction() {
 		$besitzer = $this->getUserID($_SESSION['username']);
@@ -416,7 +416,7 @@ class learn extends functions {
 	}
 	
 	/**
-	 * Erhöht den Lernstatus
+	 * ErhÃ¶ht den Lernstatus
 	 * @param unknown $besitzer
 	 * @param unknown $lern_id
 	 * @return boolean
@@ -497,7 +497,7 @@ class learn extends functions {
 	}
 	
 	/**
-	 * Gibt den Status zurück.
+	 * Gibt den Status zurÃ¼ck.
 	 * @param unknown $besitzer
 	 * @param unknown $lern_id
 	 * 
@@ -586,7 +586,7 @@ class learn extends functions {
 	}
 	
 	/**
-	 * Zeigt die Eintraege für den Lernmodus an.
+	 * Zeigt die Eintraege fÃ¼r den Lernmodus an.
 	 * @param unknown $kategorie
 	 * @param unknown $besitzer
 	 */
@@ -603,7 +603,7 @@ class learn extends functions {
 			echo "<p>Ranking: $status</p>";
 			
 			$id = $eintraege[$random]->id;
-			echo "<a href=\"#eintrag$id\" class='rightGreenLink' onclick=\"document.getElementById('learnEintrag$random').style.display = 'block'\"> Lösung anzeigen </a>";
+			echo "<a href=\"#eintrag$id\" class='rightGreenLink' onclick=\"document.getElementById('learnEintrag$random').style.display = 'block'\"> LÃ¶sung anzeigen </a>";
 			echo "<a href=\"#eintrag$id\"  class='rightRedLink' onclick=\"document.getElementById('learnEintrag$random').style.display = 'none'\">Verstecken</a>";
 
 			echo "<div class='loesungEintrag' style=\"display: none;\" id=\"learnEintrag$random\">";
@@ -620,7 +620,7 @@ class learn extends functions {
 	}
 	
 	/**
-	 * Gibt die Anzahl der Einträge zurück.
+	 * Gibt die Anzahl der EintrÃ¤ge zurÃ¼ck.
 	 * @param unknown $besitzer
 	 * @param unknown $kategorie
 	 */
@@ -638,7 +638,7 @@ class learn extends functions {
 	}
 	
 	/**
-	 * Gibt die Einträge der Kategorie als Array zurück. Dabei wird geprüft, ob der Benutzer die Kategorie sehen darf.
+	 * Gibt die EintrÃ¤ge der Kategorie als Array zurÃ¼ck. Dabei wird geprÃ¼ft, ob der Benutzer die Kategorie sehen darf.
 	 * @param unknown $besitzer
 	 * @param unknown $kategorie
 	 */
@@ -676,7 +676,7 @@ class learn extends functions {
 	}
 	
 	/**
-	 * Prüft, ob die Kategorie bereits existiert.
+	 * PrÃ¼ft, ob die Kategorie bereits existiert.
 	 * @param unknown $kategorie
 	 * @return boolean
 	 */

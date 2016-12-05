@@ -1,6 +1,6 @@
 <?php 
 /**
- * @author Steven Schödel
+ * @author Steven SchÃ¶del
  * Flatnet2 Projekt
  */
 ?>
@@ -18,7 +18,7 @@
 echo '<link href="/flatnet2/css/style.css" type="text/css" rel="stylesheet" />
 			<link href="/flatnet2/css/style.css" type="text/css" rel="stylesheet" />';
 
-# STELLT DEN HEADER ZUR VERFÜGUNG
+# STELLT DEN HEADER ZUR VERFÃœGUNG
 #$impressum = NEW functions;
 #$impressum->connectToDB();
 #$impressum->header();

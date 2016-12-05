@@ -15,7 +15,7 @@ include '../includes/fahrten.class.php';
 #Forum Function
 $ANPASSEN = NEW ANPASSEN;
 
-# STELLT DEN HEADER ZUR VERFÜGUNG
+# STELLT DEN HEADER ZUR VERFÃœGUNG
 $ANPASSEN->header();
 
 # Wohin soll redirected werden
@@ -26,7 +26,7 @@ $ANPASSEN->userHasRightPruefung();
 
 # Sucheinstellungen
 $suche = isset($_GET['suche']) ? $_GET['suche'] : '';
-# In welcher Tabelle, Spalte soll gesucht werden, dann ?edit Was soll als Link eingefügt werden
+# In welcher Tabelle, Spalte soll gesucht werden, dann ?edit Was soll als Link eingefÃ¼gt werden
 echo $fahrten->suche($suche, "fahrkosten", "datum", "?edit");
 
 ?>

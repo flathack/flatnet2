@@ -12,7 +12,7 @@ include '../includes/starcitizen.class.php';
 # GW start
 $rsi = NEW rsi;
 
-# STELLT DEN HEADER ZUR VERFÜGUNG
+# STELLT DEN HEADER ZUR VERFÃœGUNG
 $rsi->connectToDB();
 $rsi->header();
 

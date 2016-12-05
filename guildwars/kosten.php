@@ -1,6 +1,6 @@
 <?php 
 /**
- * @author Steven Schödel
+ * @author Steven SchÃ¶del
  * Flatnet2 Projekt
  */
 ?>
@@ -18,7 +18,7 @@ include '../includes/gw.class.php';
 # GW start
 $guildwars = NEW gw_costs;
 
-# STELLT DEN HEADER ZUR VERFÜGUNG
+# STELLT DEN HEADER ZUR VERFÃœGUNG
 $guildwars->header();
 
 $guildwars->logged_in("redirect", "index.php");
@@ -29,7 +29,7 @@ $guildwars->userHasRightPruefung("9");
 	</head>
 	<body>
 		<div class='mainbodyDark'>
-			<a href="start.php" class="highlightedLink">Zurück</a>
+			<a href="start.php" class="highlightedLink">ZurÃ¼ck</a>
 			<div id='calc'>
 			<?php $guildwars->SubNav("guildwars"); ?>
 			</div>

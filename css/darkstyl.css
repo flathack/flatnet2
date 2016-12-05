@@ -4,8 +4,8 @@ html {
 }
 
 body {
-	background-image: url(../images/gwbackground.jpg);
-	background-color: grey;
+	/*background-image: url(../images/gwbackground.jpg); */
+	background-color: #1e1e1e;
 	background-repeat: repeat;
 	background-attachment: fixed;
 	font-family: "Palatino Linotype", "Book Antiqua", Palatino, serif;
@@ -28,6 +28,7 @@ body {
 p {
 	padding-bottom: 5px;
 	font-size: 1em;
+	color: white;
 }
 
 h1 {
@@ -37,12 +38,12 @@ h1 {
 	color: #3f3f3f;
 }
 
-h2 {
+h2, h2 a, h2 a:hover {
 	padding-top: 2px;
 	padding-bottom: 2px;
 	font-size: 1.3em;
 	margin: none;
-	color: #3f3f3f;
+	color: white;
 }
 
 h3, h5, h6 {
@@ -50,19 +51,23 @@ h3, h5, h6 {
 	margin-top: 5px;
 	margin-bottom: 5px;
 	font-weight: 600;
-	color: #3f3f3f;
+	color: white;
 }
 
 h4 {
 	font-size: 1.1em;
 	font-weight: normal;
-	color: #3f3f3f;
+	color: white;
 	padding-bottom: 5px;
+}
+
+table {
+	color: white;
 }
 
 /* Standard-Links */
 a {
-	color: #000095;
+	color: #d2d2d2;
 	text-decoration: none;
 	font-size: 1em;
 }
@@ -71,7 +76,7 @@ a:hover,
 a:focus,
 a:active,
 a:visited:hover {
-	color: black;
+	color: white;
 	text-decoration: underline;
 }
 
@@ -94,11 +99,11 @@ li {
 /* Zitate */
 blockquote {
 	margin: 0px 0px 10px 30px;
-	background-color: transparent;
-	border-left: 5px solid #ff9f9f;
+	background-color: #4e4e4e;
+	border-left: 5px solid orange;
 	padding: 5px 10px 10px 20px;
 	font-style: italic;
-	color: #a40000;
+	color: white;
 }
 
 .marker {
@@ -611,6 +616,7 @@ blockquote {
 	padding: 3px;
 	font-size: 1em;
 	height: 50px;
+    color: black;
 	word-wrap: break-word;
 	-webkit-transition: all 0.3s ease-in-out;
 	-moz-transition: all 0.3s ease-in-out;
@@ -749,7 +755,7 @@ blockquote {
 
 .neuerBlog {
 	background-color: transparent;
-	color: black;
+	color: white;
 	margin-bottom: 10px;
 }
 
@@ -1199,8 +1205,8 @@ blockquote {
 }
 
 .newFahrt {
-	border: 1px solid grey;
-	box-shadow: 5px 5px 5px grey;
+	border: 1px solid white;
+	box-shadow: 0px 5px 10px white;
 	padding: 10px;
 	margin-top: 10px;
 	margin-bottom: 10px;
@@ -1255,9 +1261,6 @@ input[type=radio]:not(old):checked + label > span > span{
 	padding: 10px;
 	marign-right: 10px;
 }
-.newFahrt input[type=text] {
-	font-size: 1em;
-}
 
 .newFahrt #spritpreis {
 	padding: 10px;
@@ -1309,6 +1312,10 @@ input[type=radio]:not(old):checked + label > span > span{
 	position: relative;
 }
 
+.newCharWIDE h3 {
+    color: #3e3e3e;
+}
+
 .publicInfo {
 	border-left: 1px solid grey;
 	border-right: 1px solid grey;
@@ -1354,11 +1361,27 @@ input[type=radio]:not(old):checked + label > span > span{
 , .newCharWIDE input[type=number]
 , .newCharWIDE input[type=date]
 , .newCharWIDE input[type=password] {
-	background: #ebebeb;
-	color: black;
-	border: 1px solid #808080;
+	background: #8b8b8b;
+	color: white;
+	border: 1px solid black;
 	width: 200px;
 	font-family: cursive;
+	font-size: 1em;
+}
+
+.newChar input[type=text]::placeholder
+, .newChar input[type=number]::placeholder
+, .newChar input[type=date]::placeholder
+, .newChar input[type=password]::placeholder
+, .newFahrt input[type=text]::placeholder
+, .newFahrt input[type=number]::placeholder
+, .newFahrt input[type=date]::placeholder
+, .newFahrt input[type=password]::placeholder
+, .newCharWIDE input[type=text]::placeholder
+, .newCharWIDE input[type=number]::placeholder
+, .newCharWIDE input[type=date]::placeholder
+, .newCharWIDE input[type=password]::placeholder {
+	color: white;
 }
 
 .newChar textarea, .newCharWIDE textarea, .newFahrt textarea {
@@ -1687,12 +1710,13 @@ input[type=radio]:not(old):checked + label > span > span{
 
 .buttonlink {
 	display: inline-block;
-	padding: 2px 7px;
+	padding: 4px 7px;
 	font-size: 1em;
-	border: 1px solid #3366FF;
+	border: 1px solid black;
 	box-shadow: 0px 0px 5px grey;
 	margin: 0px 2px 2px 2px;
-	background-color: white;
+	background-color: #2e2e2e;
+	color: white;
 	-webkit-transition: all 0.3s ease-in-out;
 	-moz-transition: all 0.3s ease-in-out;
 	-ms-transition: all 0.3s ease-in-out;
@@ -1702,8 +1726,9 @@ input[type=radio]:not(old):checked + label > span > span{
 }
 
 .buttonlink:hover {
-	box-shadow: 0px 0px 5px #3366FF;
-	background-color: #b7b7ff;
+	box-shadow: 0px 0px 5px blue;
+	background-color: #c3c3c3;
+	color: black;
 	-webkit-transition: all 0.3s ease-in-out;
 	-moz-transition: all 0.3s ease-in-out;
 	-ms-transition: all 0.3s ease-in-out;
@@ -2097,28 +2122,38 @@ input[type=password]:focus {
 }
 
 .alterUmsatz {
+	background-color: white;
+	color: black;
+	position: fixed;
+	border-radius: 10px;
 	padding: 10px;
+	width: 400px;
+	left: 30%;
 	box-shadow: 0px 0px 20px black;
 	border: 1px solid #800000;
 }
 
-.alterUmsatz h2 a {
-    color: #2e2e2e;
-}
-
-.alterUmsatz input[type=text], .alterUmsatz input[type=date] {
+.alterUmsatz input[type=text] {
 	margin-bottom: 10px;
 	border: 1px solid #800000;
 	width: 90%;
-	color: white;
-	background-color: dimgrey;
+	color: black;
+	background-color: white;
+}
+
+.alterUmsatz input[type=date] {
+	margin-bottom: 10px;
+	border: 1px solid #800000;
+	width: 90%;
+	background-color: #ffffff;
+	color: black;
 }
 
 .alterUmsatz input[type=text]:focus,
 .alterUmsatz input[type=date]:focus {
 	border: 1px solid green;
 	color: green;
-	background-color: #d2ffbe;
+	background-color: #e0ffd2;
 }
 
 .finanzNAV li {
@@ -2130,6 +2165,7 @@ input[type=password]:focus {
 
 .finanzNAV li:hover {
 	background-color: #d5d8ff;
+    color: #3e3e3e;
 }
 
 .finanzNAV li a:hover {
@@ -2283,6 +2319,8 @@ input[type=password]:focus {
 	width: 90%;
 	padding: 10px;
 	border: 1px solid grey;
+    background-color: transparent;
+    color: #2e2e2e;
 }
 
 .kontoTable select {
@@ -2585,7 +2623,7 @@ input[type=password]:focus {
 }
 
 .mainbodyDark {
-	background-color: white; /* #373737; */
+	background-color: #373737;  /* #373737; */
 	padding: 10px;
 }
 
@@ -2897,6 +2935,10 @@ input[type=password]:focus {
 	border: 1px solid grey;
 	margin-bottom: 3px;
 	color: #4a4a4a;
+}
+
+.dezentInfo p {
+    color: #4a4a4a;
 }
 
 .dezentInfo a {

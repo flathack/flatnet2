@@ -1,9 +1,9 @@
 <?php
 /**
- * Ermöglicht das speichern von Einträgen der Doku innerhalb der Datenbank.
- * @author Steven Schödel
+ * ErmÃ¶glicht das speichern von EintrÃ¤gen der Doku innerhalb der Datenbank.
+ * @author Steven SchÃ¶del
  * @history 03.02.2015 angelegt.
- * @history 10.02.2015 Überarbeitung auf Objektorientierung.
+ * @history 10.02.2015 Ãœberarbeitung auf Objektorientierung.
  *
  */
 
@@ -41,7 +41,7 @@ class docu extends functions {
 	}
 	
 	/**
-	 * Zeigt das Eingabefeld für neuen Dokueintrag
+	 * Zeigt das Eingabefeld fÃ¼r neuen Dokueintrag
 	 */
 	function showEingabeFeld() {
 		# Neuer Eintrag in die Doku:
@@ -75,7 +75,7 @@ class docu extends functions {
 	}
 	
 	/**
-	 * Löscht einen Docueintrag.
+	 * LÃ¶scht einen Docueintrag.
 	 */
 	function deleteDocuEintrag() {
 		if($this->userHasRight("66", 0) == true) {

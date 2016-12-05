@@ -3,16 +3,16 @@
  * @history Steven 25.08.2014 angelegt.
  *
  * @author Steven
- * Ermöglicht das Verwalten des Inventars.
+ * ErmÃ¶glicht das Verwalten des Inventars.
  *
- * vollständig überarbeitet.
+ * vollstÃ¤ndig Ã¼berarbeitet.
  */
 include 'objekt/functions.class.php';
 
 class inventar extends functions  {
 
 	/**
-	 * Zeigt die Einträge aus der Datenbank an.
+	 * Zeigt die EintrÃ¤ge aus der Datenbank an.
 	 */
 	function showInventar($status) {
 		
@@ -40,7 +40,7 @@ class inventar extends functions  {
 			$ausgabe .= "<td><a href='Inventar_neu.php?action=update&id=$row->id'>" . substr($row->name, 0, 30) . "</a></td>";
 			$ausgabe .= "<td><a href='?suche=$row->standort'>" . substr($row->standort, 0, 10) . "</a></td>";
 			$ausgabe .= "<td><a href='?suche=$row->kategorie'>" . substr($row->kategorie, 0, 15) . "</a></td>";
-			$ausgabe .= "<td><a href='?suche=$row->preis'>" . $row->preis . "</a> €</td>";
+			$ausgabe .= "<td><a href='?suche=$row->preis'>" . $row->preis . "</a> â‚¬</td>";
 
 			$ausgabe .= "<td>" . "<a href='?del=$row->id' class='buttonlink'>X</a>" . "</td>";
 			$ausgabe .= "</tbody>";
@@ -84,7 +84,7 @@ class inventar extends functions  {
 			$sqlupdate = "
 			UPDATE inventar SET ersteller='$ersteller', name='$name',kaufdat='$kaufdat',preis='$preis',kaufort='$kaufort',standort='$standort',
 			bestellnummer='$bestellnummer',kategorie='$kategorieFinal',status='$status',
-			garantie='$garantie',verkäufer='$verkaeufer',menge='$menge',
+			garantie='$garantie',verkÃ¤ufer='$verkaeufer',menge='$menge',
 			notizen='$notizen',besitzer='$besitzer'
 			WHERE id = '$id'";
 		
@@ -145,7 +145,7 @@ class inventar extends functions  {
 				$menge = $row->menge;
 				$notizen = $row->notizen;
 				$preis = $row->preis;
-				$verkaeufer = $row->verkäufer;
+				$verkaeufer = $row->verkÃ¤ufer;
 				$status = $row->status;
 				$timestamp = $row->timestamp;
 				$ersteller = $row->ersteller;
@@ -153,13 +153,13 @@ class inventar extends functions  {
 		}
 		
 		if($this->getUserName($ersteller) != $_SESSION['username']) {
-			echo "<p class='info'>Anscheinend hast du Spaß in der Adresszeile herumzuspielen. Doch leider habe ich an diese
-					Eventualitäten gedacht und es wird dir nicht möglich sein, irgendwelche Daten auszuspionieren.</p>";
+			echo "<p class='info'>Anscheinend hast du SpaÃŸ in der Adresszeile herumzuspielen. Doch leider habe ich an diese
+					EventualitÃ¤ten gedacht und es wird dir nicht mÃ¶glich sein, irgendwelche Daten auszuspionieren.</p>";
 			$user = $_SESSION['username'];
-			$insert = "INSERT INTO vorschlaege (text, autor, status) VALUES ('Benutzer $user hat versucht, illegale Inventareinträge abzufragen.', '$ersteller', 'illegal')";
+			$insert = "INSERT INTO vorschlaege (text, autor, status) VALUES ('Benutzer $user hat versucht, illegale InventareintrÃ¤ge abzufragen.', '$ersteller', 'illegal')";
 				$ergebnis = mysql_query($insert);
 				if($ergebnis == true) {
-					echo "<p class='meldung'>Steven wurde über dieses Vergehen informiert.</p>";
+					echo "<p class='meldung'>Steven wurde Ã¼ber dieses Vergehen informiert.</p>";
 				}
 			exit;
 		}
@@ -169,7 +169,7 @@ class inventar extends functions  {
 		$ausgabe .= "<a href=\"?\"  class='highlightedLink'>X</a>";
 		$ausgabe .= "<h2>Inventareintrag</h2>";
 		if($timestamp != "") {
-			$ausgabe .= "Zuletzt geändert: $timestamp";
+			$ausgabe .= "Zuletzt geÃ¤ndert: $timestamp";
 		} else {
 			$ausgabe .= "Neuer Eintrag";
 		}
@@ -180,7 +180,7 @@ class inventar extends functions  {
 			$ausgabe .= "<input type='hidden' name='newEintrag' value='' />";
 		} else if($_GET['action'] == "update") {
 			$ausgabe .= "<input type='submit' name='update' value='UPDATE' />";
-			$ausgabe .= "<a href='inventar.php?del=$id' class='highlightedLink'>Löschen</a>";
+			$ausgabe .= "<a href='inventar.php?del=$id' class='highlightedLink'>LÃ¶schen</a>";
 		}
 		$user = $_SESSION['username'];
 		$ausgabe .= "<p><input type='text' name='name' id='titel' value='";
@@ -192,7 +192,7 @@ class inventar extends functions  {
 			$ausgabe .= $kategorie;
 		}  $ausgabe .= "' placeholder='neue Kategorie' />";
 		
-		# Kategorie Übersicht:
+		# Kategorie Ãœbersicht:
 		$getCategories = "SELECT kategorie FROM inventar GROUP BY kategorie";
 		$queryCategories = mysql_query($getCategories);
 		$ausgabe .= "<select name='kategorieListe' id='kategorieListe' value=''>";
@@ -223,7 +223,7 @@ class inventar extends functions  {
 		$ausgabe .= "<input type='text' name='verkaeufer' value='";
 		if(isset($verkaeufer)) {
 			$ausgabe .= $verkaeufer;
-		}  $ausgabe .= "' placeholder='Verkäufer' />";
+		}  $ausgabe .= "' placeholder='VerkÃ¤ufer' />";
 		$ausgabe .= "<input type=date name='garantie' value='";
 		if(isset($garantie)) {
 			$ausgabe .= $garantie;
@@ -283,7 +283,7 @@ class inventar extends functions  {
 		$ausgabe .= "</div>";
 
 		# Ausgabe der Daten
-		# $zurück = '<a href="inventar.php" class="highlightedLink">Zurück</a>';
+		# $zurÃ¼ck = '<a href="inventar.php" class="highlightedLink">ZurÃ¼ck</a>';
 		return $ausgabe;
 	}
 	
@@ -301,7 +301,7 @@ class inventar extends functions  {
 				# SQL
 				$insert="
 				INSERT INTO inventar
-				(name, kaufdat, preis, kaufort, standort, bestellnummer, kategorie, status, garantie, verkäufer, menge, notizen, besitzer, ersteller)
+				(name, kaufdat, preis, kaufort, standort, bestellnummer, kategorie, status, garantie, verkÃ¤ufer, menge, notizen, besitzer, ersteller)
 				VALUES
 				('$name','$kaufdat','$preis','$kaufort','$standort','$bestellnummer','$kategorieFinal','$status','$garantie','$verkaeufer',
 				'$menge','$notizen','$besitzer','$ersteller')";
@@ -318,13 +318,13 @@ class inventar extends functions  {
 	}
 
 	/**
-	 * Ermöglicht das löschen eines Eintrages im Inventar
+	 * ErmÃ¶glicht das lÃ¶schen eines Eintrages im Inventar
 	 * @param unknown $id
 	 */
 	function delInventar($id) {
 
 		/*
-		 * Abfrage ob gelöscht werden soll.
+		 * Abfrage ob gelÃ¶scht werden soll.
 		*/
 		if($id > 0 AND !isset($_POST['jaloeschen'])) { # check ob eine Zahl
 			
@@ -335,9 +335,9 @@ class inventar extends functions  {
 			$currentUser = $this->getUserID($_SESSION['username']);
 				
 			if($this->check("256", 0) == true AND $inventarErsteller == $currentUser) {
-				# Abfrage, ob der User den Artikel wirklich löschen will.
+				# Abfrage, ob der User den Artikel wirklich lÃ¶schen will.
 				$loeschabfrage .= "<form method=post>";
-				$loeschabfrage .= "<p class='meldung'>Sicher, dass der Inventareintrag Nr $id gelöscht werden soll?</p>";
+				$loeschabfrage .= "<p class='meldung'>Sicher, dass der Inventareintrag Nr $id gelÃ¶scht werden soll?</p>";
 				$loeschabfrage .= "<input type=hidden value='$id' name ='id' readonly />";
 				$loeschabfrage .= "<input type=submit name='jaloeschen' value='Ja'/>
 					<a href='/flatnet2/datenbank/inventar/inventar.php' class='buttonlink'>Nein</a><br><br>";
@@ -355,7 +355,7 @@ class inventar extends functions  {
 		}
 
 		/*
-		 * Führt die Löschung durch.
+		 * FÃ¼hrt die LÃ¶schung durch.
 		*/
 		$jaloeschen = isset($_POST['jaloeschen']) ? $_POST['jaloeschen'] : '';
 		$loeschid = isset($_GET['id']) ? $_GET['id'] : '';
@@ -368,18 +368,18 @@ class inventar extends functions  {
 				# Variable Initialisieren:
 				$status_loeschung = "";
 				
-				# Durchführung der Löschung.
+				# DurchfÃ¼hrung der LÃ¶schung.
 				$loeschQuery = "DELETE FROM `inventar` WHERE `id` = $loeschid";
 				$ergebnis = mysql_query($loeschQuery);
 				
 				if($ergebnis == true) {
-				$status_loeschung .=  "<p class='erfolg'>Eintrag gelöscht.</p>";
+				$status_loeschung .=  "<p class='erfolg'>Eintrag gelÃ¶scht.</p>";
 			} else {
 						$status_loeschung .= "<p class='meldung'>Es gab einen Fehler.</p>";
 				$status_loeschung .= mysql_error();
 				}
 				
-				# Ergebnis der Löschung ausgeben:
+				# Ergebnis der LÃ¶schung ausgeben:
 				return $status_loeschung;
 			} else {
 				 $status_loeschung .= "<p class='meldung'>Keine Berechtigung</p>";
@@ -391,7 +391,7 @@ class inventar extends functions  {
 	}
 
 	/**
-	 * Ermöglicht das filtern der Inventareinträge in die verschiedenen Stati, die ein Objekt haben kann.
+	 * ErmÃ¶glicht das filtern der InventareintrÃ¤ge in die verschiedenen Stati, die ein Objekt haben kann.
 	 * Input wird per GET generiert.
 	 */
 	function filter($selectedFilter = "Alle") {
@@ -429,7 +429,7 @@ class inventar extends functions  {
 		if($this->check("128", 0) == true) {
 			
 			$user = $this->getUserID($_SESSION['username']);
-			# Summe aller Einträge berechnen
+			# Summe aller EintrÃ¤ge berechnen
 			$summe= "SELECT status, kategorie, SUM(preis) as summe FROM $tabelle WHERE ersteller = '$user' GROUP BY status";
 	
 			$result = mysql_query($summe) or die(mysql_error());
@@ -437,7 +437,7 @@ class inventar extends functions  {
 			while($row = mysql_fetch_object($result)){
 				$status = $this->getStatusName($row->status);
 				$Group .= "<div class='invSuchErgeb'>";
-				$Group .= "<a href='?suche=$status'>" . $status . "</a>" . " = ". round($row->summe, 2) . " €";
+				$Group .= "<a href='?suche=$status'>" . $status . "</a>" . " = ". round($row->summe, 2) . " â‚¬";
 				$Group .= "</div>";
 			}
 			$close = "<a href='?' class='closeSumme'>X</a>";
@@ -466,7 +466,7 @@ class inventar extends functions  {
 	 */
 	function recentEntries() {
 		echo "<div>";
-		echo "<h2>Kürzlich aktualisiert</h2>";
+		echo "<h2>KÃ¼rzlich aktualisiert</h2>";
 		$user = $this->getUserID($_SESSION['username']);
 		$select= "SELECT *, day(timestamp) as tag, month(timestamp) as monat FROM inventar WHERE ersteller = '$user' ORDER BY timestamp DESC LIMIT 10";
 		$result = mysql_query($select) or die(mysql_error());

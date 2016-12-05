@@ -1,6 +1,6 @@
 <?php 
 /**
- * @author Steven Schödel
+ * @author Steven SchÃ¶del
  * Flatnet2 Projekt
  */
 ?>
@@ -14,7 +14,7 @@
 <?php 
 #Inclusions:
 include '../includes/usermanager.class.php';
-# Usermanager öffnen
+# Usermanager Ã¶ffnen
 $usermanager = NEW usermanager;
 $usermanager->header();
 $usermanager->logged_in("redirect", "index.php");

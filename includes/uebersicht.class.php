@@ -9,7 +9,7 @@ include 'objekt/functions.class.php';
 class uebersicht extends functions {
 	
 	function mainUebersichtFunction() {
-		# Übersicht Manipulation
+		# Ãœbersicht Manipulation
 		$this->changeStatusFunction();
 		
 		# Uebersicht anzeigen:
@@ -47,7 +47,7 @@ class uebersicht extends functions {
 	}
 	
 	/**
-	 * Ermöglicht die Detailansicht der Übersichtkacheln.
+	 * ErmÃ¶glicht die Detailansicht der Ãœbersichtkacheln.
 	 */
 	function showEditEntry() {
 		
@@ -102,7 +102,7 @@ class uebersicht extends functions {
 					}
 					
 					if($this->createEntity("", "CURRENT_TIMESTAMP", $_POST['name'], $_POST['link'], $_POST['beschreibung'], $_POST['sortierung'], $active, $_POST['css'], $_POST['rightID']) == true) {
-						echo "<p class='erfolg'>Die Übersicht wurde hinzugefügt</p>";
+						echo "<p class='erfolg'>Die Ãœbersicht wurde hinzugefÃ¼gt</p>";
 					} else {
 						echo "<p class='meldung'>Es gab einen Fehler</p>";
 					}
@@ -172,7 +172,7 @@ class uebersicht extends functions {
 	}
 	
 	/**
-	 * Führt die Änderung aus.
+	 * FÃ¼hrt die Ã„nderung aus.
 	 */
 	function changeStatusFunction() {
 		if($this->userHasRight(77, 0) == true) {
@@ -182,7 +182,7 @@ class uebersicht extends functions {
 				$status = $_POST['changeStatus'];
 			
 				if($this->sql_insert_update_delete("UPDATE uebersicht_kacheln SET active=$status WHERE id=$id LIMIT 1") == true) {
-					echo "<p class='erfolg'>Wurde geändert</p>";
+					echo "<p class='erfolg'>Wurde geÃ¤ndert</p>";
 				} else {
 					echo "<p class='meldung'>Es gab einen Fehler.</p>";
 				}
@@ -192,7 +192,7 @@ class uebersicht extends functions {
 	}
 	
 	/**
-	 * Ändert den Status einer Kachel.
+	 * Ã„ndert den Status einer Kachel.
 	 * @param unknown $id
 	 */
 	function changeStatus($id) {
@@ -255,7 +255,7 @@ class uebersicht extends functions {
 			}
 		}
 		
-		# Bereiche, welche für den Benutzer nicht sichtbar sind.
+		# Bereiche, welche fÃ¼r den Benutzer nicht sichtbar sind.
 		for($i = 0; $i < sizeof($kacheln); $i++) {
 			if($this->userHasRight($kacheln[$i]->rightID, 0) == false) {
 			#	echo "<div class='bereichINACTIVE'>";
@@ -271,7 +271,7 @@ class uebersicht extends functions {
 			if($this->userHasRight($kachelnGesperrt[$i]->rightID, 0) == true OR $this->userHasRight("45", 0) == true) {
 				echo "<div class='bereichGesperrt'>";
 				echo "<h2>".$kachelnGesperrt[$i]->name."</h2>";
-				echo "<p>Der Inhalt wurde kurzfristig aufgrund eines Fehlers gesperrt. Versuche es später erneut.</p>";
+				echo "<p>Der Inhalt wurde kurzfristig aufgrund eines Fehlers gesperrt. Versuche es spÃ¤ter erneut.</p>";
 				$this->changeStatus($kachelnGesperrt[$i]->id);
 				echo "</div>";
 			}
@@ -291,7 +291,7 @@ class uebersicht extends functions {
 		if($this->userHasRight("45", 0) == true) {
 			echo "<div class='adminKachel'>";
 			
-				echo "<h2>Administrationsübersicht</h2>";
+				echo "<h2>AdministrationsÃ¼bersicht</h2>";
 				if($this->userHasRight("54", 0) == true) {
 					echo "<a class='buttonlink' href='?newEntry'>Neue Kachel</a>";
 					echo "<a class='buttonlink' href='?editEntry'>Kacheln bearbeiten</a>";

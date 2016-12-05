@@ -1,7 +1,5 @@
-<?php echo '<'.'?xml version="1.0" encoding="utf-8"?'.'>'; ?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" id='administration'>
+<!DOCTYPE html>
+<html id="administration">
 <div id="wrapper">
 	<?php # Wrapper start ?>
 	<head>
@@ -13,7 +11,7 @@
 		#Start 
 		$admin = NEW control;
 		
-		# STELLT DEN HEADER ZUR VERFÜGUNG
+		# STELLT DEN HEADER ZUR VERFÃœGUNG
 		$admin->header();
 		
 		$admin->logged_in("redirect", "index.php");

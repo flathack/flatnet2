@@ -1,6 +1,6 @@
 <?php 
 /**
- * @author Steven Schödel
+ * @author Steven SchÃ¶del
  * Flatnet2 Projekt
  */
 ?>
@@ -15,7 +15,7 @@
 #Inclusions:
 include '../includes/objekt/functions.class.php';
 
-# STELLT DEN HEADER ZUR VERFÜGUNG
+# STELLT DEN HEADER ZUR VERFÃœGUNG
 $quellen = NEW functions;
 $quellen->header();
 ?>
@@ -30,11 +30,11 @@ $quellen->header();
 			</div>
 			<h2>Quellen & Beschreibung dieses Projektes</h2>
 
-			<p>Dieses Projekt wird vollständig in PHP programmiert. Diese Seite ist im Rahmen meines Informatikstudiums entstanden 
+			<p>Dieses Projekt wird vollstÃ¤ndig in PHP programmiert. Diese Seite ist im Rahmen meines Informatikstudiums entstanden 
 			und wird stetig weiterentwickelt. Sie dient lediglich meinem Zeitvertreib. Ein Anspruch auf fehlerfreiheit besteht nicht
 			und wird auch nicht garantiert.
 			</p>
-			<p>Alle Codebestandteile wurden von mir persönlich erstellt und unterliegen dem Urheberrecht. Ein kopieren oder
+			<p>Alle Codebestandteile wurden von mir persÃ¶nlich erstellt und unterliegen dem Urheberrecht. Ein kopieren oder
 			weiterverwenden dieses Codes ist nicht gestattet.</p>
 			<p>
 			
@@ -44,10 +44,10 @@ $quellen->header();
 			<thead>
 			<td>Seiten</td>
 			</thead>
-			<tbody><td id='text'><a href="http://ckeditor.com/">CKEditor für das Forum und für alle möglichen Textfelder.</a></td></tbody>
+			<tbody><td id='text'><a href="http://ckeditor.com/">CKEditor fÃ¼r das Forum und fÃ¼r alle mÃ¶glichen Textfelder.</a></td></tbody>
 			<tbody><td id='text'><a href="http://www.webmasterpro.de/coding/article/php-ein-einfaches-flexibles-rechtesystem.html">Rechtesystem</a></td></tbody>
 			<tbody><td id='text'><a href="http://www.php-einfach.de/tuts_php.php">Tutorials</a></td></tbody>
-			<tbody><td id='text'><a href="http://www.guildwars2.com/">Guildwars2.com für die Bilder und Screenshots.</a></td></tbody>
+			<tbody><td id='text'><a href="http://www.guildwars2.com/">Guildwars2.com fÃ¼r die Bilder und Screenshots.</a></td></tbody>
 			<tbody><td id='text'><a href="http://www.google.de/">Eclipse zum programmieren</a></td></tbody>
 			<tbody><td id='text'><a href="http://www.muster-vorlagen.net/impressum-generator.html">Impressumsgenerator</a></td></tbody>
 			<tbody><td id='text'><a href="http://www.webmasterpro.de/coding/article/sichere-php-web-applikationen-schreiben-ein-ueberblick.html">PHP Sicherheit</a></td></tbody>

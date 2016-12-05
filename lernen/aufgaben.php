@@ -7,7 +7,7 @@
 class lotto {
 	
 	/**
-	 * Führt eine Lottoziehung durch und berechnet, wann diese gewonnen wird.
+	 * FÃ¼hrt eine Lottoziehung durch und berechnet, wann diese gewonnen wird.
 	 */
 	function mainfunction() {
 		
@@ -76,7 +76,7 @@ class lotto {
 					$zeitProDurchlauf = $laufzeit / $max * 1000000;
 					echo "<p class='info'>Es wurden $max Ziehungen durchgef&uuml;hrt. ($laufzeit Sekunden, $zeitProDurchlauf Sekunden Pro 1 MIO Durchl&auml;ufe)</p> ";
 				} else {
-					echo "<p class='erfolg'>Es wurden " . $counter . " Ziehungen durchgeführt.</p>";
+					echo "<p class='erfolg'>Es wurden " . $counter . " Ziehungen durchgefÃ¼hrt.</p>";
 				} 
 				
 			}
@@ -85,7 +85,7 @@ class lotto {
 	}
 	
 	/**
-	 * Man kann die Würfelseiten und die Anzahl der Würfe angeben, diese Würfe werden dann durchgeführt.
+	 * Man kann die WÃ¼rfelseiten und die Anzahl der WÃ¼rfe angeben, diese WÃ¼rfe werden dann durchgefÃ¼hrt.
 	 */
 	function wuerfelWuerfe() {
 
@@ -106,7 +106,7 @@ class lotto {
 				$wuerfe = array_fill(0,$_GET['wuerfelseiten']+1,0);
 		
 				if($anzahl < 0 OR $wuerfelSeiten < 0 ) {
-					echo "<p class='meldung'>Die Zahlen dürfen nicht negativ sein!</p>";
+					echo "<p class='meldung'>Die Zahlen dÃ¼rfen nicht negativ sein!</p>";
 					exit;
 				}
 		
@@ -152,7 +152,7 @@ class lotto {
 	}
 	
 	/**
-	 * Prüft, ob die eigenen Lottozahlen gezogen wurden.
+	 * PrÃ¼ft, ob die eigenen Lottozahlen gezogen wurden.
 	 * @param unknown $meineLottoZahlen
 	 * @param unknown $bis
 	 * @return boolean
@@ -174,7 +174,7 @@ class lotto {
 			
 		}
 		
-		# Hier wird geprüft, ob eine Zahl in den Lottozahlen ist
+		# Hier wird geprÃ¼ft, ob eine Zahl in den Lottozahlen ist
 		$counter = 0;
 		
 		for ($i = 0 ; $i < sizeof($lottoZiehung) ; $i++) {
@@ -253,7 +253,7 @@ class lotto {
 	function additionBisHundert() {
 		echo "<h2>Zahlen Addition von 1 bis 100</h2>";
 		
-		# Lösung:
+		# LÃ¶sung:
 		$summe = 0;
 		
 		for($i = 1 ; $i <= 100 ; $i++) {
@@ -292,7 +292,7 @@ if(isset($_GET['lottoErweitert'])) {
 	$lotto->mainfunction();
 }
 
-# Würfelspiel
+# WÃ¼rfelspiel
 if(isset($_GET['werfen'])) {
 	$lotto->wuerfelWuerfe();
 }

@@ -23,7 +23,7 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur für Tabelle `account_infos`
+-- Tabellenstruktur fÃ¼r Tabelle `account_infos`
 --
 
 CREATE TABLE `account_infos` (
@@ -38,7 +38,7 @@ CREATE TABLE `account_infos` (
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur für Tabelle `adressbuch`
+-- Tabellenstruktur fÃ¼r Tabelle `adressbuch`
 --
 
 CREATE TABLE `adressbuch` (
@@ -72,7 +72,7 @@ CREATE TABLE `adressbuch` (
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur für Tabelle `benutzer`
+-- Tabellenstruktur fÃ¼r Tabelle `benutzer`
 --
 
 CREATE TABLE `benutzer` (
@@ -82,7 +82,7 @@ CREATE TABLE `benutzer` (
   `timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `rights` bigint(20) NOT NULL COMMENT 'Rechte des Benutzers',
   `forumRights` bigint(20) NOT NULL COMMENT 'Rechte zum Anzeigen von Inhalten im Forum',
-  `versuche` int(3) DEFAULT NULL COMMENT 'Versuche für den Login',
+  `versuche` int(3) DEFAULT NULL COMMENT 'Versuche fÃ¼r den Login',
   `realName` varchar(50) COLLATE latin1_general_ci NOT NULL COMMENT 'Echter Name des Benutzers',
   `titel` varchar(250) COLLATE latin1_general_ci NOT NULL COMMENT 'Titel des Benutzers'
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci;
@@ -90,7 +90,7 @@ CREATE TABLE `benutzer` (
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur für Tabelle `blogkategorien`
+-- Tabellenstruktur fÃ¼r Tabelle `blogkategorien`
 --
 
 CREATE TABLE `blogkategorien` (
@@ -106,7 +106,7 @@ CREATE TABLE `blogkategorien` (
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur für Tabelle `blogtexte`
+-- Tabellenstruktur fÃ¼r Tabelle `blogtexte`
 --
 
 CREATE TABLE `blogtexte` (
@@ -123,7 +123,7 @@ CREATE TABLE `blogtexte` (
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur für Tabelle `blog_kommentare`
+-- Tabellenstruktur fÃ¼r Tabelle `blog_kommentare`
 --
 
 CREATE TABLE `blog_kommentare` (
@@ -137,7 +137,7 @@ CREATE TABLE `blog_kommentare` (
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur für Tabelle `docu`
+-- Tabellenstruktur fÃ¼r Tabelle `docu`
 --
 
 CREATE TABLE `docu` (
@@ -150,7 +150,7 @@ CREATE TABLE `docu` (
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur für Tabelle `fahrkosten`
+-- Tabellenstruktur fÃ¼r Tabelle `fahrkosten`
 --
 
 CREATE TABLE `fahrkosten` (
@@ -162,13 +162,13 @@ CREATE TABLE `fahrkosten` (
   `ziel` varchar(250) COLLATE latin1_general_ci NOT NULL,
   `notizen` mediumtext COLLATE latin1_general_ci NOT NULL,
   `spritpreis` decimal(10,3) NOT NULL COMMENT 'Spritpreis am Tag der Eintragung',
-  `fahrrichtung` int(11) NOT NULL COMMENT 'Hin und Rückfahrt'
+  `fahrrichtung` int(11) NOT NULL COMMENT 'Hin und RÃ¼ckfahrt'
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci;
 
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur für Tabelle `fahrkostenziele`
+-- Tabellenstruktur fÃ¼r Tabelle `fahrkostenziele`
 --
 
 CREATE TABLE `fahrkostenziele` (
@@ -182,14 +182,14 @@ CREATE TABLE `fahrkostenziele` (
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur für Tabelle `fahrzeuge`
+-- Tabellenstruktur fÃ¼r Tabelle `fahrzeuge`
 --
 
 CREATE TABLE `fahrzeuge` (
   `id` int(11) NOT NULL,
   `timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   `besitzer` int(11) NOT NULL,
-  `name` varchar(250) COLLATE latin1_general_ci NOT NULL COMMENT 'Vollständiger Name des Fahrzeugs',
+  `name` varchar(250) COLLATE latin1_general_ci NOT NULL COMMENT 'VollstÃ¤ndiger Name des Fahrzeugs',
   `verbrauch` decimal(10,2) NOT NULL COMMENT 'auf 100 km',
   `name_tag` varchar(250) COLLATE latin1_general_ci NOT NULL COMMENT 'Name in der Tabelle Fahrkosten'
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci;
@@ -197,7 +197,7 @@ CREATE TABLE `fahrzeuge` (
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur für Tabelle `finanzen_jahresabschluss`
+-- Tabellenstruktur fÃ¼r Tabelle `finanzen_jahresabschluss`
 --
 
 CREATE TABLE `finanzen_jahresabschluss` (
@@ -211,7 +211,7 @@ CREATE TABLE `finanzen_jahresabschluss` (
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur für Tabelle `finanzen_konten`
+-- Tabellenstruktur fÃ¼r Tabelle `finanzen_konten`
 --
 
 CREATE TABLE `finanzen_konten` (
@@ -227,7 +227,7 @@ CREATE TABLE `finanzen_konten` (
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur für Tabelle `finanzen_monatsabschluss`
+-- Tabellenstruktur fÃ¼r Tabelle `finanzen_monatsabschluss`
 --
 
 CREATE TABLE `finanzen_monatsabschluss` (
@@ -243,7 +243,7 @@ CREATE TABLE `finanzen_monatsabschluss` (
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur für Tabelle `finanzen_umsaetze`
+-- Tabellenstruktur fÃ¼r Tabelle `finanzen_umsaetze`
 --
 
 CREATE TABLE `finanzen_umsaetze` (
@@ -261,7 +261,7 @@ CREATE TABLE `finanzen_umsaetze` (
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur für Tabelle `gwcosts`
+-- Tabellenstruktur fÃ¼r Tabelle `gwcosts`
 --
 
 CREATE TABLE `gwcosts` (
@@ -276,7 +276,7 @@ CREATE TABLE `gwcosts` (
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur für Tabelle `gwmatlist`
+-- Tabellenstruktur fÃ¼r Tabelle `gwmatlist`
 --
 
 CREATE TABLE `gwmatlist` (
@@ -291,7 +291,7 @@ CREATE TABLE `gwmatlist` (
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur für Tabelle `gwusersmats`
+-- Tabellenstruktur fÃ¼r Tabelle `gwusersmats`
 --
 
 CREATE TABLE `gwusersmats` (
@@ -306,7 +306,7 @@ CREATE TABLE `gwusersmats` (
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur für Tabelle `gw_accounts`
+-- Tabellenstruktur fÃ¼r Tabelle `gw_accounts`
 --
 
 CREATE TABLE `gw_accounts` (
@@ -320,7 +320,7 @@ CREATE TABLE `gw_accounts` (
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur für Tabelle `gw_chars`
+-- Tabellenstruktur fÃ¼r Tabelle `gw_chars`
 --
 
 CREATE TABLE `gw_chars` (
@@ -345,7 +345,7 @@ CREATE TABLE `gw_chars` (
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur für Tabelle `learnkategorie`
+-- Tabellenstruktur fÃ¼r Tabelle `learnkategorie`
 --
 
 CREATE TABLE `learnkategorie` (
@@ -360,7 +360,7 @@ CREATE TABLE `learnkategorie` (
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur für Tabelle `learnlernkarte`
+-- Tabellenstruktur fÃ¼r Tabelle `learnlernkarte`
 --
 
 CREATE TABLE `learnlernkarte` (
@@ -376,7 +376,7 @@ CREATE TABLE `learnlernkarte` (
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur für Tabelle `lernstatus`
+-- Tabellenstruktur fÃ¼r Tabelle `lernstatus`
 --
 
 CREATE TABLE `lernstatus` (
@@ -391,7 +391,7 @@ CREATE TABLE `lernstatus` (
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur für Tabelle `registercode`
+-- Tabellenstruktur fÃ¼r Tabelle `registercode`
 --
 
 CREATE TABLE `registercode` (
@@ -400,7 +400,7 @@ CREATE TABLE `registercode` (
   `code` varchar(250) COLLATE latin1_general_ci NOT NULL,
   `used` int(11) NOT NULL COMMENT 'Wurde er benutzt',
   `usageTimes` int(11) NOT NULL,
-  `usedBy` varchar(250) COLLATE latin1_general_ci NOT NULL COMMENT 'Welcher Benutzer hat ihn eingelöst.',
+  `usedBy` varchar(250) COLLATE latin1_general_ci NOT NULL COMMENT 'Welcher Benutzer hat ihn eingelÃ¶st.',
   `ipadress` varchar(15) COLLATE latin1_general_ci NOT NULL COMMENT 'Ipadress des Benutzers',
   `rights` bigint(20) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci;
@@ -408,7 +408,7 @@ CREATE TABLE `registercode` (
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur für Tabelle `rightkategorien`
+-- Tabellenstruktur fÃ¼r Tabelle `rightkategorien`
 --
 
 CREATE TABLE `rightkategorien` (
@@ -419,7 +419,7 @@ CREATE TABLE `rightkategorien` (
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur für Tabelle `rights`
+-- Tabellenstruktur fÃ¼r Tabelle `rights`
 --
 
 CREATE TABLE `rights` (
@@ -431,7 +431,7 @@ CREATE TABLE `rights` (
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur für Tabelle `uebersicht_kacheln`
+-- Tabellenstruktur fÃ¼r Tabelle `uebersicht_kacheln`
 --
 
 CREATE TABLE `uebersicht_kacheln` (
@@ -449,13 +449,13 @@ CREATE TABLE `uebersicht_kacheln` (
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur für Tabelle `userrights`
+-- Tabellenstruktur fÃ¼r Tabelle `userrights`
 --
 
 CREATE TABLE `userrights` (
   `id` int(11) NOT NULL,
   `timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'Erstellungsdatum',
-  `kategorie` int(11) NOT NULL COMMENT 'Ermöglicht eine Kategorisierung',
+  `kategorie` int(11) NOT NULL COMMENT 'ErmÃ¶glicht eine Kategorisierung',
   `recht` text COLLATE latin1_general_ci NOT NULL,
   `potenz` int(11) NOT NULL,
   `dezimalerWert` bigint(20) NOT NULL
@@ -464,7 +464,7 @@ CREATE TABLE `userrights` (
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur für Tabelle `vorschlaege`
+-- Tabellenstruktur fÃ¼r Tabelle `vorschlaege`
 --
 
 CREATE TABLE `vorschlaege` (
@@ -481,13 +481,13 @@ CREATE TABLE `vorschlaege` (
 --
 
 --
--- Indizes für die Tabelle `account_infos`
+-- Indizes fÃ¼r die Tabelle `account_infos`
 --
 ALTER TABLE `account_infos`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indizes für die Tabelle `adressbuch`
+-- Indizes fÃ¼r die Tabelle `adressbuch`
 --
 ALTER TABLE `adressbuch`
   ADD PRIMARY KEY (`id`),
@@ -495,292 +495,292 @@ ALTER TABLE `adressbuch`
   ADD KEY `id_2` (`id`);
 
 --
--- Indizes für die Tabelle `benutzer`
+-- Indizes fÃ¼r die Tabelle `benutzer`
 --
 ALTER TABLE `benutzer`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indizes für die Tabelle `blogkategorien`
+-- Indizes fÃ¼r die Tabelle `blogkategorien`
 --
 ALTER TABLE `blogkategorien`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indizes für die Tabelle `blogtexte`
+-- Indizes fÃ¼r die Tabelle `blogtexte`
 --
 ALTER TABLE `blogtexte`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indizes für die Tabelle `blog_kommentare`
+-- Indizes fÃ¼r die Tabelle `blog_kommentare`
 --
 ALTER TABLE `blog_kommentare`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indizes für die Tabelle `docu`
+-- Indizes fÃ¼r die Tabelle `docu`
 --
 ALTER TABLE `docu`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indizes für die Tabelle `fahrkosten`
+-- Indizes fÃ¼r die Tabelle `fahrkosten`
 --
 ALTER TABLE `fahrkosten`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indizes für die Tabelle `fahrkostenziele`
+-- Indizes fÃ¼r die Tabelle `fahrkostenziele`
 --
 ALTER TABLE `fahrkostenziele`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indizes für die Tabelle `fahrzeuge`
+-- Indizes fÃ¼r die Tabelle `fahrzeuge`
 --
 ALTER TABLE `fahrzeuge`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indizes für die Tabelle `finanzen_jahresabschluss`
+-- Indizes fÃ¼r die Tabelle `finanzen_jahresabschluss`
 --
 ALTER TABLE `finanzen_jahresabschluss`
   ADD PRIMARY KEY (`besitzer`,`jahr`,`konto`);
 
 --
--- Indizes für die Tabelle `finanzen_konten`
+-- Indizes fÃ¼r die Tabelle `finanzen_konten`
 --
 ALTER TABLE `finanzen_konten`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indizes für die Tabelle `finanzen_monatsabschluss`
+-- Indizes fÃ¼r die Tabelle `finanzen_monatsabschluss`
 --
 ALTER TABLE `finanzen_monatsabschluss`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indizes für die Tabelle `finanzen_umsaetze`
+-- Indizes fÃ¼r die Tabelle `finanzen_umsaetze`
 --
 ALTER TABLE `finanzen_umsaetze`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indizes für die Tabelle `gwcosts`
+-- Indizes fÃ¼r die Tabelle `gwcosts`
 --
 ALTER TABLE `gwcosts`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indizes für die Tabelle `gwmatlist`
+-- Indizes fÃ¼r die Tabelle `gwmatlist`
 --
 ALTER TABLE `gwmatlist`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indizes für die Tabelle `gwusersmats`
+-- Indizes fÃ¼r die Tabelle `gwusersmats`
 --
 ALTER TABLE `gwusersmats`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indizes für die Tabelle `gw_accounts`
+-- Indizes fÃ¼r die Tabelle `gw_accounts`
 --
 ALTER TABLE `gw_accounts`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indizes für die Tabelle `gw_chars`
+-- Indizes fÃ¼r die Tabelle `gw_chars`
 --
 ALTER TABLE `gw_chars`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indizes für die Tabelle `learnkategorie`
+-- Indizes fÃ¼r die Tabelle `learnkategorie`
 --
 ALTER TABLE `learnkategorie`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indizes für die Tabelle `learnlernkarte`
+-- Indizes fÃ¼r die Tabelle `learnlernkarte`
 --
 ALTER TABLE `learnlernkarte`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indizes für die Tabelle `lernstatus`
+-- Indizes fÃ¼r die Tabelle `lernstatus`
 --
 ALTER TABLE `lernstatus`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indizes für die Tabelle `registercode`
+-- Indizes fÃ¼r die Tabelle `registercode`
 --
 ALTER TABLE `registercode`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indizes für die Tabelle `rightkategorien`
+-- Indizes fÃ¼r die Tabelle `rightkategorien`
 --
 ALTER TABLE `rightkategorien`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indizes für die Tabelle `rights`
+-- Indizes fÃ¼r die Tabelle `rights`
 --
 ALTER TABLE `rights`
   ADD PRIMARY KEY (`besitzer`,`right_id`);
 
 --
--- Indizes für die Tabelle `uebersicht_kacheln`
+-- Indizes fÃ¼r die Tabelle `uebersicht_kacheln`
 --
 ALTER TABLE `uebersicht_kacheln`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indizes für die Tabelle `userrights`
+-- Indizes fÃ¼r die Tabelle `userrights`
 --
 ALTER TABLE `userrights`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indizes für die Tabelle `vorschlaege`
+-- Indizes fÃ¼r die Tabelle `vorschlaege`
 --
 ALTER TABLE `vorschlaege`
   ADD PRIMARY KEY (`id`);
 
 --
--- AUTO_INCREMENT für exportierte Tabellen
+-- AUTO_INCREMENT fÃ¼r exportierte Tabellen
 --
 
 --
--- AUTO_INCREMENT für Tabelle `account_infos`
+-- AUTO_INCREMENT fÃ¼r Tabelle `account_infos`
 --
 ALTER TABLE `account_infos`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 --
--- AUTO_INCREMENT für Tabelle `adressbuch`
+-- AUTO_INCREMENT fÃ¼r Tabelle `adressbuch`
 --
 ALTER TABLE `adressbuch`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 --
--- AUTO_INCREMENT für Tabelle `benutzer`
+-- AUTO_INCREMENT fÃ¼r Tabelle `benutzer`
 --
 ALTER TABLE `benutzer`
   MODIFY `id` int(10) NOT NULL AUTO_INCREMENT;
 --
--- AUTO_INCREMENT für Tabelle `blogkategorien`
+-- AUTO_INCREMENT fÃ¼r Tabelle `blogkategorien`
 --
 ALTER TABLE `blogkategorien`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 --
--- AUTO_INCREMENT für Tabelle `blogtexte`
+-- AUTO_INCREMENT fÃ¼r Tabelle `blogtexte`
 --
 ALTER TABLE `blogtexte`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Primary Key';
 --
--- AUTO_INCREMENT für Tabelle `blog_kommentare`
+-- AUTO_INCREMENT fÃ¼r Tabelle `blog_kommentare`
 --
 ALTER TABLE `blog_kommentare`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 --
--- AUTO_INCREMENT für Tabelle `docu`
+-- AUTO_INCREMENT fÃ¼r Tabelle `docu`
 --
 ALTER TABLE `docu`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Primary Key';
 --
--- AUTO_INCREMENT für Tabelle `fahrkosten`
+-- AUTO_INCREMENT fÃ¼r Tabelle `fahrkosten`
 --
 ALTER TABLE `fahrkosten`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 --
--- AUTO_INCREMENT für Tabelle `fahrkostenziele`
+-- AUTO_INCREMENT fÃ¼r Tabelle `fahrkostenziele`
 --
 ALTER TABLE `fahrkostenziele`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 --
--- AUTO_INCREMENT für Tabelle `fahrzeuge`
+-- AUTO_INCREMENT fÃ¼r Tabelle `fahrzeuge`
 --
 ALTER TABLE `fahrzeuge`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 --
--- AUTO_INCREMENT für Tabelle `finanzen_konten`
+-- AUTO_INCREMENT fÃ¼r Tabelle `finanzen_konten`
 --
 ALTER TABLE `finanzen_konten`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 --
--- AUTO_INCREMENT für Tabelle `finanzen_monatsabschluss`
+-- AUTO_INCREMENT fÃ¼r Tabelle `finanzen_monatsabschluss`
 --
 ALTER TABLE `finanzen_monatsabschluss`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 --
--- AUTO_INCREMENT für Tabelle `finanzen_umsaetze`
+-- AUTO_INCREMENT fÃ¼r Tabelle `finanzen_umsaetze`
 --
 ALTER TABLE `finanzen_umsaetze`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 --
--- AUTO_INCREMENT für Tabelle `gwcosts`
+-- AUTO_INCREMENT fÃ¼r Tabelle `gwcosts`
 --
 ALTER TABLE `gwcosts`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 --
--- AUTO_INCREMENT für Tabelle `gwmatlist`
+-- AUTO_INCREMENT fÃ¼r Tabelle `gwmatlist`
 --
 ALTER TABLE `gwmatlist`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 --
--- AUTO_INCREMENT für Tabelle `gwusersmats`
+-- AUTO_INCREMENT fÃ¼r Tabelle `gwusersmats`
 --
 ALTER TABLE `gwusersmats`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 --
--- AUTO_INCREMENT für Tabelle `gw_accounts`
+-- AUTO_INCREMENT fÃ¼r Tabelle `gw_accounts`
 --
 ALTER TABLE `gw_accounts`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 --
--- AUTO_INCREMENT für Tabelle `gw_chars`
+-- AUTO_INCREMENT fÃ¼r Tabelle `gw_chars`
 --
 ALTER TABLE `gw_chars`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 --
--- AUTO_INCREMENT für Tabelle `learnkategorie`
+-- AUTO_INCREMENT fÃ¼r Tabelle `learnkategorie`
 --
 ALTER TABLE `learnkategorie`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 --
--- AUTO_INCREMENT für Tabelle `learnlernkarte`
+-- AUTO_INCREMENT fÃ¼r Tabelle `learnlernkarte`
 --
 ALTER TABLE `learnlernkarte`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 --
--- AUTO_INCREMENT für Tabelle `lernstatus`
+-- AUTO_INCREMENT fÃ¼r Tabelle `lernstatus`
 --
 ALTER TABLE `lernstatus`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 --
--- AUTO_INCREMENT für Tabelle `registercode`
+-- AUTO_INCREMENT fÃ¼r Tabelle `registercode`
 --
 ALTER TABLE `registercode`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 --
--- AUTO_INCREMENT für Tabelle `rightkategorien`
+-- AUTO_INCREMENT fÃ¼r Tabelle `rightkategorien`
 --
 ALTER TABLE `rightkategorien`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 --
--- AUTO_INCREMENT für Tabelle `uebersicht_kacheln`
+-- AUTO_INCREMENT fÃ¼r Tabelle `uebersicht_kacheln`
 --
 ALTER TABLE `uebersicht_kacheln`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 --
--- AUTO_INCREMENT für Tabelle `userrights`
+-- AUTO_INCREMENT fÃ¼r Tabelle `userrights`
 --
 ALTER TABLE `userrights`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 --
--- AUTO_INCREMENT für Tabelle `vorschlaege`
+-- AUTO_INCREMENT fÃ¼r Tabelle `vorschlaege`
 --
 ALTER TABLE `vorschlaege`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;

@@ -1,7 +1,7 @@
 <?php
 /**
  * @author Steven
- * Führt den Logout durch, löscht die aktuelle Session durch Aufruf der entsprechenden function
+ * FÃ¼hrt den Logout durch, lÃ¶scht die aktuelle Session durch Aufruf der entsprechenden function
  * in der login class.
  */
 

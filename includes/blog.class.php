@@ -1,7 +1,7 @@
 <?php
 /**
  * @history Steven 20.08.2014 angelegt.
- * @history Steven 24.08.2014 Blog funktionalität teilweise implementiert, wie anzeigen, auswählen.
+ * @history Steven 24.08.2014 Blog funktionalitÃ¤t teilweise implementiert, wie anzeigen, auswÃ¤hlen.
  * @history Steven Irgend wann 2015: Blog in Forum umprogrammiert.
  * @author Steven
  */
@@ -24,7 +24,7 @@ class blog extends functions {
 		
 		if(isset($_GET['ursprungKategorie'])) {
 			$category = $_GET['ursprungKategorie'];
-			echo "<a href=\"/flatnet2/forum/index.php?blogcategory=$category\" class=\"highlightedLink\">Zurück </a>";
+			echo "<a href=\"/flatnet2/forum/index.php?blogcategory=$category\" class=\"highlightedLink\">ZurÃ¼ck </a>";
 			echo "<a href='/flatnet2/blog/addBlogEntry.php?blogcategory=$category' class='buttonlink'>Neues Thema</a>";
 			
 			if($getBlogEintragInfos[0]->locked != 1) {
@@ -32,7 +32,7 @@ class blog extends functions {
 			}
 		} else {
 			if($category != "") {
-				echo "<a href=\"/flatnet2/forum/index.php?blogcategory=$category\" class=\"highlightedLink\">Zurück </a>";
+				echo "<a href=\"/flatnet2/forum/index.php?blogcategory=$category\" class=\"highlightedLink\">ZurÃ¼ck </a>";
 				echo "<a href='/flatnet2/blog/addBlogEntry.php?blogcategory=$category' class='buttonlink'>Neues Thema</a>";
 				echo "<a href='/flatnet2/blog/blogentry.php?showblogid=$blogid&newComment=$blogid#antwort' class='greenLink'>Antwort erstellen</a>";
 			} else {
@@ -95,7 +95,7 @@ class blog extends functions {
 	}
 
 	/**
-	 * Zeigt die Eingabefelder zum eingeben des Textes für einen neuen Blog.
+	 * Zeigt die Eingabefelder zum eingeben des Textes fÃ¼r einen neuen Blog.
 	 */
 	function newBlogEingabe() {
 		if($this->userHasRight("20", 0) == true) {
@@ -159,18 +159,18 @@ class blog extends functions {
 	}
 
 	/**
-	 * Ermöglicht das speichern des neuen Blogs.
+	 * ErmÃ¶glicht das speichern des neuen Blogs.
 	 */
 	function newBlogFunction() {
 		if($this->userHasRight("20", 0) == true) {
 		
 			if(isset($_POST['blogtitel']) AND isset($_POST['blogtext']) AND isset($_POST['blogkategorie'])) {
 				if($_POST['blogtitel'] == "" OR $_POST['blogtext'] == "" OR $_POST['blogkategorie'] == "") {	
-					echo "<p class='info'>Bitte Titel und Text ausfüllen</p>";
+					echo "<p class='info'>Bitte Titel und Text ausfÃ¼llen</p>";
 				} else {
 					$titel = $_POST['blogtitel'];
 					
-					# ID des Benutzers auswählen:
+					# ID des Benutzers auswÃ¤hlen:
 					$autor = $_SESSION['username'];
 					$selectUserID = "SELECT id, Name FROM benutzer WHERE Name = '$autor' LIMIT 1";
 					$row = $this->getObjektInfo($selectUserID);
@@ -196,7 +196,7 @@ class blog extends functions {
 					} else {
 						echo '<p class="meldung">Das speichern ist fehlgeschlagen! 
 								Kopiere den unteren Text in einen anderen Editor 
-								um ihn zu speichern und versuche es später erneut.</p>';
+								um ihn zu speichern und versuche es spÃ¤ter erneut.</p>';
 					}
 				}
 			} 
@@ -204,7 +204,7 @@ class blog extends functions {
 	}
 
 	/**
-	 * Zeigt einen Blog eintrag mit einer besitmmten ID an und die dazugehörigen Kommentare.
+	 * Zeigt einen Blog eintrag mit einer besitmmten ID an und die dazugehÃ¶rigen Kommentare.
 	 */
 	function showBlogId($id) {
 		
@@ -248,7 +248,7 @@ class blog extends functions {
 						}
 						if(isset($_GET['del'])) {
 							echo "<form action = '#geloescht' method=post>";
-							echo "<p class='meldung'>Sicher, dass dieser Kommentar gelöscht werden soll?<br>";
+							echo "<p class='meldung'>Sicher, dass dieser Kommentar gelÃ¶scht werden soll?<br>";
 							$blogid = $_GET['showblogid'];
 							echo "<input type=submit name=sure value=Ja /><a href='?showblogid=$blogid' class='greenLink'>Nein</a></p>";
 							echo "</form>";
@@ -320,13 +320,13 @@ class blog extends functions {
 	} # Function Ende
 
 	/**
-	 * bearbeitet einen Blog mit der angewählten ID.
+	 * bearbeitet einen Blog mit der angewÃ¤hlten ID.
 	 * @param unknown $id
 	 */
 	function bearbBlogId($bearbid) {
 		if($this->userHasRight("20", 0) == true) {
 			/**
-			 * Ermöglicht das speichern der Inhalte.
+			 * ErmÃ¶glicht das speichern der Inhalte.
 			 * @param $bearbid und $update
 			 */
 			$update = isset($_GET['update']) ? $_GET['update'] : '';
@@ -337,7 +337,7 @@ class blog extends functions {
 				$editiertAm = date('d.m.Y h:i:s', time());
 				$userDerGeaendertHat = $_SESSION['username'];
 				
-				# TEXT MODIFIZIEREN UND EDITIERT VON HINZUFÜGEN
+				# TEXT MODIFIZIEREN UND EDITIERT VON HINZUFÃœGEN
 				$text = $_POST['newtext'] . "<p><span style=\"font-size:10px; padding:3px; background-Color: #e0e0e0;\">Editiert am $editiertAm von $userDerGeaendertHat</span></p>";
 				
 				$status = $_POST['status'];
@@ -349,12 +349,12 @@ class blog extends functions {
 					$sqlupdate = "UPDATE blogtexte SET titel='$titel', text='$text', kategorie='$kategorie', status='$status' WHERE id='$bearbid'";
 				}
 	
-				# Durchführung des Updates
+				# DurchfÃ¼hrung des Updates
 				
 				if($this->sql_insert_update_delete($sqlupdate) == true) {
-					echo "<p class='erfolg'>Foreneintrag <strong>$titel</strong> wurde geändert.</p>";
+					echo "<p class='erfolg'>Foreneintrag <strong>$titel</strong> wurde geÃ¤ndert.</p>";
 				} else {
-					echo "<p class='meldung'>Es ist ein Fehler aufgetreten. Kopiere den unteren Text in ein anderes Dokument um den Text nicht zu verlieren und versuche es später nochmal.</p>";
+					echo "<p class='meldung'>Es ist ein Fehler aufgetreten. Kopiere den unteren Text in ein anderes Dokument um den Text nicht zu verlieren und versuche es spÃ¤ter nochmal.</p>";
 				}
 			}
 	
@@ -370,7 +370,7 @@ class blog extends functions {
 					if(isset($_GET['bearbid'])) {
 						$category = $_GET['bearbid'];
 						echo "<a href=\"blogentry.php?showblogid=".$row[$i]->id."\"
-						class=\"buttonlink\">&#8634; zurück zum Thema</a>";
+						class=\"buttonlink\">&#8634; zurÃ¼ck zum Thema</a>";
 					}
 					
 					echo "<div class='neuerBlog'>";
@@ -434,7 +434,7 @@ class blog extends functions {
 					
 					echo "<div class='editForumEintrag'><textarea class='ckeditor' name='newtext'>".$row[$i]->text."</textarea></div>"; # Text Output #
 					
-					# Nur ein Administrator oder der Autor darf den Artikel bearbeiten oder löschen
+					# Nur ein Administrator oder der Autor darf den Artikel bearbeiten oder lÃ¶schen
 					if($this->userHasRight("29", 0) == true OR $_SESSION['username'] == $realUsername) {
 						echo "<input type='submit' name='bearbblogid' value='Speichern' />
 						<a href='?loeschid=".$row[$i]->id."' class='highlightedLink'>Beitrag entfernen</a>";
@@ -448,7 +448,7 @@ class blog extends functions {
 	}
 
 	/**
-	 * Löscht einen Blog mit der angewählten ID.
+	 * LÃ¶scht einen Blog mit der angewÃ¤hlten ID.
 	 * @param unknown $id
 	 */
 	function deleBlogId($id) {
@@ -460,12 +460,12 @@ class blog extends functions {
 			if($loeschblogid) {
 				
 	
-				# Kontrolle, ob User den Artikel löschen darf.
+				# Kontrolle, ob User den Artikel lÃ¶schen darf.
 				$select = "SELECT id, autor FROM blogtexte WHERE id=$id";
 				$ergebnis = mysql_query($select);
 				$row = mysql_fetch_object($ergebnis);
 				
-				# namen des Benutzers auswählen:
+				# namen des Benutzers auswÃ¤hlen:
 				
 				
 				if(!isset($row->autor)) {
@@ -483,13 +483,13 @@ class blog extends functions {
 	
 				if($this->userHasRight("29", 0) == true OR $_SESSION['username'] == $realUsername) {
 	
-					# Durchführung der Löschung.
+					# DurchfÃ¼hrung der LÃ¶schung.
 					$loeschQuery = "DELETE FROM `blogtexte` WHERE `id` = $loeschblogid";
 					$ergebnis = mysql_query($loeschQuery);
 	
 					if($ergebnis == true) {
 						$this->sql_insert_update_delete("DELETE FROM blog_kommentare WHERE blogid = '$loeschblogid'");
-						echo "<p class='erfolg'>Der Beitrag wurde erfolgreich gelöscht!</p>";
+						echo "<p class='erfolg'>Der Beitrag wurde erfolgreich gelÃ¶scht!</p>";
 						exit;
 					} else {
 						echo "<p class='meldung'>Es gab einen Fehler. Der Fehler war: </p>";
@@ -500,12 +500,12 @@ class blog extends functions {
 			
 			if($id > 0) { # check ob eine Zahl
 				
-				# Kontrolle, ob User den Artikel löschen darf.
+				# Kontrolle, ob User den Artikel lÃ¶schen darf.
 				$select = "SELECT id, autor FROM blogtexte WHERE id=$id";
 				$ergebnis = mysql_query($select);
 				$row = mysql_fetch_object($ergebnis);
 				
-				# namen des Benutzers auswählen:
+				# namen des Benutzers auswÃ¤hlen:
 				$autor = $row->autor;
 				$selectUsername = "SELECT id, Name FROM benutzer WHERE id = '$autor' LIMIT 1";
 				$ergebnisUsername = mysql_query($selectUsername);
@@ -514,22 +514,22 @@ class blog extends functions {
 				}
 	
 				if($this->userHasRight("29", 0) == true OR $_SESSION['username'] == $realUsername) {
-					# Abfrage, ob der User den Artikel wirklich löschen will.
+					# Abfrage, ob der User den Artikel wirklich lÃ¶schen will.
 					echo "<form method=post>";
-					echo "<p class='meldung'>Achtung, diese Aktion kann nicht Rückgängig gemacht werden. Dies löscht den Beitrag aus der Datenbank. <br>
+					echo "<p class='meldung'>Achtung, diese Aktion kann nicht RÃ¼ckgÃ¤ngig gemacht werden. Dies lÃ¶scht den Beitrag aus der Datenbank. <br>
 					  Sind Sie sicher?</p>";
 					echo "<input type = hidden value = '$id' name ='blogid' readonly />";
 					echo "<p id='meldung'><input type=submit name='jaloeschen' value='Ja! Weg damit.'/></p><p id='erfolg'><a href='/flatnet2/blog/blog.php?action=showblogyes' class='buttonlink'>Nein, vergiss es.</a></p><br><br><br>";
 					echo "</form>";
 				} else {
-					echo "<p class='meldung'>Sie sind nicht berechtigt, den Artikel zu löschen.</p>";
+					echo "<p class='meldung'>Sie sind nicht berechtigt, den Artikel zu lÃ¶schen.</p>";
 				}
 			}
 		}
 	}
 
 	/**
-	 * zeigt die Felder zum erstellen einer Antwort für einen Forenbeitrag an.
+	 * zeigt die Felder zum erstellen einer Antwort fÃ¼r einen Forenbeitrag an.
 	 */
 	function newKommentar($blogid) {
 		
@@ -618,7 +618,7 @@ class blog extends functions {
 	/**
 	 * KOMMENTAR AUSGABE
 	 * @history Steven 15.09.2014 angelegt.
-	 * Ermöglicht das betrachten von Kommentaren zu einer bestimmten BLOG ID
+	 * ErmÃ¶glicht das betrachten von Kommentaren zu einer bestimmten BLOG ID
 	 */
 	function kommentare($blogid) {
 		
@@ -667,10 +667,10 @@ class blog extends functions {
 						}
 					}
 					
-					# Löschen
+					# LÃ¶schen
 					if($getLockedInfo[0]->locked != 1) {
 						if($this->userHasRight("35", 0) == true OR $this->userHasRight("34", 0) == true) {
-							echo "<a href='?showblogid=$blogid&del=".$row[$i]->id."' class='rightRedLink'>Löschen</a>";
+							echo "<a href='?showblogid=$blogid&del=".$row[$i]->id."' class='rightRedLink'>LÃ¶schen</a>";
 						}
 					}
 					
@@ -694,7 +694,7 @@ class blog extends functions {
 	}
 	
 	/**
-	 * Ermöglicht das editieren eines Kommentars.
+	 * ErmÃ¶glicht das editieren eines Kommentars.
 	 * @param unknown $kommentarID
 	 * @stil NEUER STIL: Auf alle anderen Funktionen auch anwenden.
 	 */
@@ -751,13 +751,13 @@ class blog extends functions {
 							$editiertAm = date('d.m.Y h:i:s', time());
 							$userDerGeaendertHat = $_SESSION['username'];
 								
-							# TEXT MODIFIZIEREN UND EDITIERT VON HINZUFÜGEN
+							# TEXT MODIFIZIEREN UND EDITIERT VON HINZUFÃœGEN
 							$text = $_POST['kommentarText'] . "<p><span style=\"font-size:10px; padding:3px; background-Color: #e0e0e0;\">Editiert am $editiertAm von $userDerGeaendertHat</span></p>";
 							
 							$query = "UPDATE blog_kommentare SET text = '$text' WHERE id = '".$kommentar[0]->id."' AND autor = '$autorID'";
 							if($this->sql_insert_update_delete($query) == true) {
 								echo "<p class='erfolg'>Erfolgreich gespeichert</p>";
-								echo "<a href='/flatnet2/blog/blogentry.php?showblogid=".$kommentar[0]->blogid."' class='greenLink' > Zurück </a>";
+								echo "<a href='/flatnet2/blog/blogentry.php?showblogid=".$kommentar[0]->blogid."' class='greenLink' > ZurÃ¼ck </a>";
 							} else {
 								echo "<p class='meldung'>Fehler beim speichern</p>";
 							}
@@ -772,18 +772,18 @@ class blog extends functions {
 	}
 
 	/**
-	 * Ermöglicht das löschen von Kommentaren
+	 * ErmÃ¶glicht das lÃ¶schen von Kommentaren
 	 */
 	function delKommentar($id, $blogid) {
 	
-		# Wenn der Benutzer volle Berechtigung zum löschen hat.
+		# Wenn der Benutzer volle Berechtigung zum lÃ¶schen hat.
 		if($this->userHasRight("35", 0) == true) {
 			
 			$loeschQuery = "DELETE FROM `blog_kommentare` WHERE id=$id AND blogid ='$blogid'";
 			$ergebnis = mysql_query($loeschQuery);
 			
 			if($ergebnis == true) {
-				echo "<p class='erfolg'><a name='geloescht'>Kommentar gelöscht!</a><a href='?showblogid=$blogid' class='buttonlink'>OK</a></p>";
+				echo "<p class='erfolg'><a name='geloescht'>Kommentar gelÃ¶scht!</a><a href='?showblogid=$blogid' class='buttonlink'>OK</a></p>";
 				exit;
 			} else {
 				echo "<p class='meldung'>Fehler</p>";
@@ -798,20 +798,20 @@ class blog extends functions {
 			$ergebnis = mysql_query($loeschQuery);
 				
 			if($ergebnis == true) {
-				echo "<p class='erfolg'><a name='geloescht'>Kommentar gelöscht!</a><a href='?showblogid=$blogid' class='buttonlink'>OK</a></p>";
+				echo "<p class='erfolg'><a name='geloescht'>Kommentar gelÃ¶scht!</a><a href='?showblogid=$blogid' class='buttonlink'>OK</a></p>";
 				exit;
 			} else {
 				echo "<p class='meldung'>Fehler</p>";
 				exit;
 			}
 		} else {
-			echo "<p class='meldung'>Du hast keine Berechtigung zum löschen.</p>";
+			echo "<p class='meldung'>Du hast keine Berechtigung zum lÃ¶schen.</p>";
 		}
 		
 	}
 	
 	/**
-	 * Prüft, ob der Benutzer die Kategorie des aktuellen Beitrags anzeigen darf.
+	 * PrÃ¼ft, ob der Benutzer die Kategorie des aktuellen Beitrags anzeigen darf.
 	 * @param unknown $user
 	 * @param unknown $category
 	 */
@@ -820,7 +820,7 @@ class blog extends functions {
 		if(isset($getblogidinfos[0]->kategorie) AND $getblogidinfos[0]->kategorie != "") {
 			$kategorie = $getblogidinfos[0]->kategorie;
 			
-			# Benötigten Wert der Kategorie bekommen:
+			# BenÃ¶tigten Wert der Kategorie bekommen:
 			$getKategorieRechteWert = $this->getObjektInfo("SELECT id, rightWert FROM blogkategorien WHERE id = '$kategorie'");
 			
 			# Rechte des aktuellen Benutzers bekommen

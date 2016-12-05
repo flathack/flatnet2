@@ -15,7 +15,7 @@ include '../includes/learn.class.php';
 #Forum Function
 $learn = NEW learn;
 
-# STELLT DEN HEADER ZUR VERFÜGUNG
+# STELLT DEN HEADER ZUR VERFÃœGUNG
 $learn->header();
 
 $learn->logged_in("redirect", "index.php");
@@ -32,7 +32,7 @@ echo $learn->suche($suche, "learnlernkarte", "frage", "?frage");
 		<div class='mainbodyDark'>
 		<div class='rightOuterBody'>
 			<ul>
-				<li><a href='aufgaben.php'>Übungsaufgaben</a></li>
+				<li><a href='aufgaben.php'>Ãœbungsaufgaben</a></li>
 			</ul>
 		</div>
 		<h2>Lernbereich</h2>

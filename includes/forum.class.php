@@ -26,7 +26,7 @@ class forum extends functions {
 			
 			for ($i = 0 ; $i < sizeof($row) ; $i++) {
 				
-				# Prüfen ob der Benutzer die Rechte hat, das aktuelle Forum zu betrachten.
+				# PrÃ¼fen ob der Benutzer die Rechte hat, das aktuelle Forum zu betrachten.
 				$benutzerliste="SELECT id, Name, forumRights FROM benutzer WHERE id = '$userID' LIMIT 1";
 				
 				$row2 = $this->getObjektInfo($benutzerliste);
@@ -48,7 +48,7 @@ class forum extends functions {
 			
 			if(!isset($row[0])) {
 				echo "<tbody><td><strong>Es gibt leider noch kein Forum</strong>
-						<br>Der Administrator muss das Forum zunächst einrichten. Als Administrator klicke <a href='/flatnet2/admin/control.php?action=5'>HIER</a></td><td>x</td></tbody>";
+						<br>Der Administrator muss das Forum zunÃ¤chst einrichten. Als Administrator klicke <a href='/flatnet2/admin/control.php?action=5'>HIER</a></td><td>x</td></tbody>";
 			}
 			
 			echo "<tbody><td><a href='?publicArea'><strong>Public Area</strong></a>
@@ -68,7 +68,7 @@ class forum extends functions {
 			$row = $this->getObjektInfo($selectCategories);
 			
 			for ($i = 0 ; $i < sizeof($row) ; $i++) {
-				# Prüfen ob der Benutzer die Rechte hat, das aktuelle Forum zu betrachten.
+				# PrÃ¼fen ob der Benutzer die Rechte hat, das aktuelle Forum zu betrachten.
 				$userID = $this->getUserID($_SESSION['username']);
 				$benutzerliste="SELECT id, Name, forumRights FROM benutzer WHERE id = '$userID' LIMIT 1";
 				$row2 = $this->getObjektInfo($benutzerliste);
@@ -101,7 +101,7 @@ class forum extends functions {
 			
 			$row = $this->getObjektInfo($selectBlogEintraege);
 			
-			echo "<a href='?' class='highlightedLink'>Zurück</a> ";
+			echo "<a href='?' class='highlightedLink'>ZurÃ¼ck</a> ";
 			if(isset($_GET['blogcategory'])) {
 				$category = $_GET['blogcategory'];
 			}
@@ -162,7 +162,7 @@ class forum extends functions {
 	
 	function showPublicArea() {
 		if(isset($_GET['publicArea'])) {
-			echo "<a href='?'>Zurück</a>";
+			echo "<a href='?'>ZurÃ¼ck</a>";
 			$query = "SELECT * FROM blogtexte WHERE status=4";
 			
 			$countList = "SELECT count(*) as anzahl FROM blogtexte WHERE status=4";

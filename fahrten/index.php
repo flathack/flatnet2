@@ -1,26 +1,13 @@
-<?php echo '<'.'?xml version="1.0" encoding="utf-8"?'.'>'; ?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" id='fahrten'>
+<!DOCTYPE html>
+<html id="fahrten">
 <div id="wrapper">
-	<?php # Wrapper start ?>
-	<head>
-<?php
-header('Content-Type: text/html; charset=UTF-8');
-?>
-<?php 
-#Inclusions:
+<head>
+<?php #Inclusions:
 include '../includes/fahrten.class.php';
-
-#Forum Function
 $fahrten = NEW fahrten;
-
-# STELLT DEN HEADER ZUR VERFÜGUNG
 $fahrten->header();
-
 $fahrten->logged_in("redirect", "index.php");
-
-$fahrten->userHasRightPruefung("11");
+$fahrten->userHasRightPruefung(11);
 
 $suche = isset($_GET['suche']) ? $_GET['suche'] : '';
 echo $fahrten->suche($suche, "fahrkosten", "datum", "?edit");
@@ -38,13 +25,9 @@ echo $fahrten->suche($suche, "fahrkosten", "datum", "?edit");
 					<li><a href="monitor.php" class='' >Spritmonitor</a></li>
 				</ul>
 			</div>
-			
-			
-			
+            
 			<div class='rightBody'>
-			
 				<?php $fahrten->showStatistik(); ?>
-				
 			</div>
 			
 			<div class='innerBody'>
@@ -57,9 +40,7 @@ echo $fahrten->suche($suche, "fahrkosten", "datum", "?edit");
 				<?php $fahrten->newZiel(); ?>
 				<?php $fahrten->newFahrt(); ?>
 				<?php $fahrten->showFahrten(); ?>
-				
 			</div>
-			
 		</div>
 	</body>
 </div>

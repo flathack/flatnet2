@@ -1,6 +1,6 @@
 <?php 
 /**
- * @author Steven Schödel
+ * @author Steven SchÃ¶del
  * Flatnet2 Projekt
  */
 ?>
@@ -21,7 +21,7 @@ $admin = NEW control;
 
 #Start
 $kontakt = NEW functions();
-# STELLT DEN HEADER ZUR VERFÜGUNG
+# STELLT DEN HEADER ZUR VERFÃœGUNG
 $kontakt->header();
 $kontakt->logged_in();
 
@@ -44,7 +44,7 @@ $kontakt->userHasRightPruefung("7");
 				
 
 				<h2>Neuigkeiten</h2>
-				<p class='info'>Manchmal können Fehler auftreten. Oder du hast einen Vorschlag, dann schreibe mir bitte.</p>
+				<p class='info'>Manchmal kÃ¶nnen Fehler auftreten. Oder du hast einen Vorschlag, dann schreibe mir bitte.</p>
 				<form method=post>
 					<input type="text" name="vorschlagText" id="titel"
 						placeholder="Problembeschreibung" /> <input type="submit"

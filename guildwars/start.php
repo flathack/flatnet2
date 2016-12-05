@@ -12,7 +12,7 @@ include '../includes/gw.class.php';
 # GW start
 $guildwars = NEW gw_charakter();
 
-# STELLT DEN HEADER ZUR VERFÜGUNG
+# STELLT DEN HEADER ZUR VERFÃœGUNG
 $guildwars->header();
 
 $guildwars->logged_in("redirect", "index.php");

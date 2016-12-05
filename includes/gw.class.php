@@ -2,7 +2,7 @@
 /**
  * @history Steven 25.08.2014 angelegt.
  * @author Steven
- * Stellt die Funktionen der Guildwars-Seite zur Verfügung.
+ * Stellt die Funktionen der Guildwars-Seite zur VerfÃ¼gung.
  */
 
 include 'objekt/functions.class.php';
@@ -10,7 +10,7 @@ include 'objekt/functions.class.php';
 class guildwars extends functions {
 
 	/**
-	 * Gibt den Namen des Charakter zurück.
+	 * Gibt den Namen des Charakter zurÃ¼ck.
 	 */
 	function getCharname($id) {
 		$select = "SELECT id, name FROM gw_chars WHERE id = '$id' LIMIT 1";
@@ -24,7 +24,7 @@ class guildwars extends functions {
 	}
 
 	/**
-	 * Gibt den Besitzer des Charakters zurück.
+	 * Gibt den Besitzer des Charakters zurÃ¼ck.
 	 */
 	function getBesitzer($id) {
 		$select = "SELECT id, besitzer FROM gw_chars WHERE id = '$id' LIMIT 1";
@@ -41,12 +41,12 @@ class guildwars extends functions {
 
 
 	/**
-	 * Generiert einen zufälligen Namen, aus einer auf dem Server liegenden Liste.
+	 * Generiert einen zufÃ¤lligen Namen, aus einer auf dem Server liegenden Liste.
 	 */
 	function nameGen() {
 		srand((double)microtime() * 1000000);
 
-		// Pfade für Namenslisten
+		// Pfade fÃ¼r Namenslisten
 		$pfad_nachnamen = "namegen/names.txt";
 		$pfad_vornamen_maskulin = "namegen/names.txt";
 		$pfad_vornamen_feminin = "namegen/names.txt";
@@ -83,7 +83,7 @@ class guildwars extends functions {
 	}
 
 	/**
-	 * Erstellt für jeden Account eine Schaltfläche und ermöglicht, den Wechsel des Accounts.
+	 * Erstellt fÃ¼r jeden Account eine SchaltflÃ¤che und ermÃ¶glicht, den Wechsel des Accounts.
 	 */
 	function selectAccount() {
 		
@@ -138,7 +138,7 @@ class guildwars extends functions {
 class gw_costs extends guildwars { 
 	
 	/**
-	 * Zeigt das ausgegebene Geld für Guildwars an.
+	 * Zeigt das ausgegebene Geld fÃ¼r Guildwars an.
 	 */
 	function showCostCalcEntries() {
 		if($this->userHasRight("63", 0) == true) {
@@ -168,12 +168,12 @@ class gw_costs extends guildwars {
 				echo  "<tbody>
 						<td>".$row[$i]->tag.".".$row[$i]->monat.".".$row[$i]->jahr."</td>
 						<td>".$row[$i]->text."</td>
-						<td>".$row[$i]->wert." €</td><td><a href='?loeschen&loeschid=".$row[$i]->id."' class='highlightedLink'>X</a></td>
+						<td>".$row[$i]->wert." â‚¬</td><td><a href='?loeschen&loeschid=".$row[$i]->id."' class='highlightedLink'>X</a></td>
 					  </tbody>";
 			}
 	
 			echo  "</table>";
-			echo "<h1>Gesamt: ".$summe." €</h1>";
+			echo "<h1>Gesamt: ".$summe." â‚¬</h1>";
 		}
 	}
 	
@@ -207,7 +207,7 @@ class gw_costs extends guildwars {
 		if($this->userHasRight("63", 0) == true) {
 			# Speichert den< Eintrag in die Datenbank.
 			if($_POST['text'] == "" OR $_POST['wert'] == "" OR $_POST['kaufdat'] == "") {
-				echo "<p class='meldung'>Bitte alle Felder ausfüllen</p>";
+				echo "<p class='meldung'>Bitte alle Felder ausfÃ¼llen</p>";
 			} else {
 				$autor = $this->getUserID($_SESSION['username']);
 				$insert = "INSERT INTO gwcosts (text, wert, besitzer, kaufdat) VALUES ('$text','$wert','$autor','$kaufdat')";
@@ -225,7 +225,7 @@ class gw_costs extends guildwars {
 	}
 	
 	/**
-	 * Löscht einen Eintrag aus dem Kosten Calculator
+	 * LÃ¶scht einen Eintrag aus dem Kosten Calculator
 	 */
 	function deleteDocuEintrag() {
 		if($this->userHasRight("63", 0) == true) {
@@ -261,7 +261,7 @@ class gw_costs extends guildwars {
 				$proTag = round($summe / $differenz * 30, 2);
 			}
 	
-			echo "<br>Dein Account ist " . $differenz . " Tage alt, pro Monat hast du also " . $proTag . " € ausgegeben.";
+			echo "<br>Dein Account ist " . $differenz . " Tage alt, pro Monat hast du also " . $proTag . " â‚¬ ausgegeben.";
 	
 			echo "</div>";
 	
@@ -274,7 +274,7 @@ class gw_costs extends guildwars {
 class gw_kalender extends guildwars {
 	
 	/**
-	 * Zeigt einen Kalender für alle Guildwars Charakte an.
+	 * Zeigt einen Kalender fÃ¼r alle Guildwars Charakte an.
 	 */
 	function gwCharKalender() {
 	
@@ -320,7 +320,7 @@ class gw_kalender extends guildwars {
 	}
 	
 	/**
-	 * Zeigt alle Geburtstage aus dem gewählten Monat an.
+	 * Zeigt alle Geburtstage aus dem gewÃ¤hlten Monat an.
 	 */
 	function showMonthGesamt() {
 	
@@ -341,7 +341,7 @@ class gw_kalender extends guildwars {
 					echo "<div id='draggable' class='summe'><a class='closeSumme' href='?#gebs'>X</a>";
 					echo "<h2>Detailansicht $monthName</h2>";
 					for ($i = 0 ; $i < sizeof($row) ; $i++) {
-						# Nächsten Geb berechnen
+						# NÃ¤chsten Geb berechnen
 						$wirdalt = $row[$i]->jahr + 1;
 						echo "<div class=''>";
 						echo "<a href='charakter.php?charID=".$row[$i]->id."'><strong>". $row[$i]->tag . "." . $row[$i]->monat . ":</strong> " . $row[$i]->name . " (" . $this->getUserName($row[$i]->besitzer) .  ") wird " . $wirdalt . " Jahre alt</a>";
@@ -361,7 +361,7 @@ class gw_kalender extends guildwars {
 class gw_charakter extends guildwars {
 	
 	/**
-	 * Auswahlwerkzeug zum Auswählen des Benutzers, dessen Charakter angezeigt werden sollen.
+	 * Auswahlwerkzeug zum AuswÃ¤hlen des Benutzers, dessen Charakter angezeigt werden sollen.
 	 */
 	function selectUser() {
 		if($this->userHasRight("3", 0) == true) {
@@ -450,8 +450,8 @@ class gw_charakter extends guildwars {
 	}
 	
 	/**
-	 * Zeigt die Charakter der verschiedenen Benutzer an. Diese werden in einem Raster von 3 x Y Blöcke
-	 * angezeigt. Dabei wird für jede Klasse ein verschiedenes Hintergrundbild angezeigt.
+	 * Zeigt die Charakter der verschiedenen Benutzer an. Diese werden in einem Raster von 3 x Y BlÃ¶cke
+	 * angezeigt. Dabei wird fÃ¼r jede Klasse ein verschiedenes Hintergrundbild angezeigt.
 	 */
 	function showChars() {
 		if($this->userHasRight("3", 0) == true) {
@@ -521,7 +521,7 @@ class gw_charakter extends guildwars {
 				# Erstelldatum in Variable ziehen
 				$gebdat = date("$tyear/m/d", strtotime($dsatz[$i]->geboren));
 	
-				# Wenn ein Geb schon vergangen ist, den fürs nächste Jahr ausrechnen
+				# Wenn ein Geb schon vergangen ist, den fÃ¼rs nÃ¤chste Jahr ausrechnen
 				if(strtotime($gebdat) < strtotime($today)) {
 					$gebdat = date("Y/m/d", strtotime("+1 year", strtotime($gebdat)));
 				}
@@ -556,17 +556,17 @@ class gw_charakter extends guildwars {
 				$ausgabe .= "<div class='IconPlacement'>
 						<img height=60px width=60px src='../images/Icons/" . $dsatz[$i]->klasse . "Ico.png'></img></div>";
 					
-				# Klasse für CSS selektieren
+				# Klasse fÃ¼r CSS selektieren
 				$ausgabe .= "<div id=";
 				if($dsatz[$i]->klasse == "Krieger") 		{	$ausgabe .= "'gwkrieger'";			}
-				if($dsatz[$i]->klasse == "Wächter") 		{	$ausgabe .= "'gwwaechter'";			}
+				if($dsatz[$i]->klasse == "WÃ¤chter") 		{	$ausgabe .= "'gwwaechter'";			}
 				if($dsatz[$i]->klasse == "Dieb")			{ 	$ausgabe .= "'gwdieb'"; 			}
-				if($dsatz[$i]->klasse == "Waldläufer") 		{	$ausgabe .= "'gwwaldlaeufer'";		}
+				if($dsatz[$i]->klasse == "WaldlÃ¤ufer") 		{	$ausgabe .= "'gwwaldlaeufer'";		}
 				if($dsatz[$i]->klasse == "Ingenieur") 		{	$ausgabe .= "'gwengineer'";			}
 				if($dsatz[$i]->klasse == "Elementarmagier") {	$ausgabe .= "'gwelementarmagier'";	}
 				if($dsatz[$i]->klasse == "Nekromant") 		{	$ausgabe .= "'gwnekromant'";		}
 				if($dsatz[$i]->klasse == "Mesmer") 			{	$ausgabe .= "'gwmesmer'";			}
-				if($dsatz[$i]->klasse == "Widergänger") 	{	$ausgabe .= "'gwwidergaenger'";		}
+				if($dsatz[$i]->klasse == "WidergÃ¤nger") 	{	$ausgabe .= "'gwwidergaenger'";		}
 				$ausgabe .= ">";
 	
 				$ausgabe .= "<h3><a href='charakter.php?charID=" . $id . "'>" . substr($name, 0, 19) . " <br>[" . $stufe . "]</a></h3>";
@@ -626,9 +626,9 @@ class gw_charakter extends guildwars {
 					</style> ";
 					$stern = "";
 				}
-				# Style für Erkundung: Ende
+				# Style fÃ¼r Erkundung: Ende
 	
-				# Ausgabe für Erkundung:
+				# Ausgabe fÃ¼r Erkundung:
 				$ausgabe .= "<div id='erkundungAussen'>" . $dsatz[$i]->erkundung . " % Erkundet <strong>$stern</strong>" . "</div><p class='StyleGW". $dsatz[$i]->id ."'></p>";
 	
 				# Bearbeitet am:
@@ -655,7 +655,7 @@ class gw_charakter extends guildwars {
 	}
 	
 	/**
-	 * Zeigt eine einfache Liste von den Charaktern, die dem angemeldeten User gehören.
+	 * Zeigt eine einfache Liste von den Charaktern, die dem angemeldeten User gehÃ¶ren.
 	 */
 	function ListOfChars() {
 		if($this->userHasRight("61", 0) == true) {
@@ -701,7 +701,7 @@ class gw_charakter extends guildwars {
 	
 		# Abfangen, wenn kein Charakter gefunden wurde und die Variable leer ist.
 		if(!isset($row[0]->besitzer)) {
-			echo "<p class='meldung'>Hör auf in der Adressleiste rumzuspielen!!!</p>";
+			echo "<p class='meldung'>HÃ¶r auf in der Adressleiste rumzuspielen!!!</p>";
 			exit;
 		}
 		$charOwner = $row[0]->besitzer;
@@ -711,14 +711,14 @@ class gw_charakter extends guildwars {
 		}
 	
 		if($row == "") {
-			echo "<p class='meldung'>Hör auf in der Adressleiste rumzuspielen!!!</p>";
+			echo "<p class='meldung'>HÃ¶r auf in der Adressleiste rumzuspielen!!!</p>";
 			exit;
 		}
 	}
 	
 	
 	/**
-	 * Ermöglicht das erstellen eines neuen Chars.
+	 * ErmÃ¶glicht das erstellen eines neuen Chars.
 	 */
 	function newChar() {
 		# Ausgabe initialiseren:
@@ -727,7 +727,7 @@ class gw_charakter extends guildwars {
 		# Fehlermeldungen initialiseren:
 		$fehlermeldung = "";
 	
-		# Prüfen ob ein neuer Char erstellt werden soll.
+		# PrÃ¼fen ob ein neuer Char erstellt werden soll.
 		if(isset($_GET['createNewChar'])) {
 	
 			# Wenn das JA ist:
@@ -735,7 +735,7 @@ class gw_charakter extends guildwars {
 	
 	
 	
-				# Check ob User Aktion durchführen darf.
+				# Check ob User Aktion durchfÃ¼hren darf.
 				if($this->userHasRight("9", 0) == true) {
 	
 					# Username zuweisen
@@ -744,12 +744,12 @@ class gw_charakter extends guildwars {
 	
 					$ausgabe.= "<div id='draggable' class='newChar'>";
 					if($username != $_SESSION['username']) {
-						$ausgabe.= "<p class='info'>Achtung, du legst einen Charakter für <strong>$username</strong> an.</p>";
+						$ausgabe.= "<p class='info'>Achtung, du legst einen Charakter fÃ¼r <strong>$username</strong> an.</p>";
 					}
 					$ausgabe.= "<form method=post>";
 					$ausgabe.= "<div id='right'>
 				
-							<a href='?#charErstellen' class='highlightedLink'>Schließen</a></div>";
+							<a href='?#charErstellen' class='highlightedLink'>SchlieÃŸen</a></div>";
 					$ausgabe.= "<h2><a name='charErstellen'>Charaktererstellung</a></h2>";
 	
 					$ausgabe.= "<div>";
@@ -758,7 +758,7 @@ class gw_charakter extends guildwars {
 	
 						
 	
-					$ausgabe.= "<td colspan = '4'>Charaktererstellung für: <input type=text name='besitzer' value='$username' readonly />";
+					$ausgabe.= "<td colspan = '4'>Charaktererstellung fÃ¼r: <input type=text name='besitzer' value='$username' readonly />";
 						
 					# Accounts der Besitzer anzeigen
 					$ausgabe.= "<select name='account' value=''>";
@@ -786,7 +786,7 @@ class gw_charakter extends guildwars {
 					$ausgabe.= "<td><input type=text name='newCharName' value=''
 							required
 							autofocus
-							pattern='[ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyzÀÁÂÄÆÇÈÉÊËÍÎÑÓÔÖŒÙÚÛÜàáâäæçèéêëíîñóôöœùúûüß ]{3,19}'
+							pattern='[ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyzÃ€ÃÃ‚Ã„Ã†Ã‡ÃˆÃ‰ÃŠÃ‹ÃÃŽÃ‘Ã“Ã”Ã–Å’Ã™ÃšÃ›ÃœÃ Ã¡Ã¢Ã¤Ã¦Ã§Ã¨Ã©ÃªÃ«Ã­Ã®Ã±Ã³Ã´Ã¶Å“Ã¹ÃºÃ»Ã¼ÃŸ ]{3,19}'
 							/></td>";
 	
 					$ausgabe.= "<td>Stufe</td><td><input type=number name='newstufe' value='' placeholder='0 - 80' /></td>";
@@ -808,14 +808,14 @@ class gw_charakter extends guildwars {
 					$ausgabe.= "<td>Klasse</td>";
 					$ausgabe.= "<td><select name='newklasse' value='' />";
 					$ausgabe.= "<option>Krieger</option>";
-					$ausgabe.= "<option>Wächter</option>";
+					$ausgabe.= "<option>WÃ¤chter</option>";
 					$ausgabe.= "<option>Dieb</option>";
-					$ausgabe.= "<option>Waldläufer</option>";
+					$ausgabe.= "<option>WaldlÃ¤ufer</option>";
 					$ausgabe.= "<option>Ingenieur</option>";
 					$ausgabe.= "<option>Elementarmagier</option>";
 					$ausgabe.= "<option>Nekromant</option>";
 					$ausgabe.= "<option>Mesmer</option>";
-					$ausgabe.= "<option>Widergänger</option>";
+					$ausgabe.= "<option>WidergÃ¤nger</option>";
 					$ausgabe.= "</select></td>";
 					$ausgabe.= "</tr>";
 	
@@ -835,7 +835,7 @@ class gw_charakter extends guildwars {
 					$ausgabe.= "<option>Lederer</option>";
 					$ausgabe.= "<option>Schneider</option>";
 					$ausgabe.= "<option>Koch</option>";
-					$ausgabe.= "<option>Rüstungsschmied</option>";
+					$ausgabe.= "<option>RÃ¼stungsschmied</option>";
 					$ausgabe.= "<option>Waffenschmied</option>";
 					$ausgabe.= "<option>Waidmann</option>";
 					$ausgabe.= "<option>Konstukteur</option>";
@@ -852,7 +852,7 @@ class gw_charakter extends guildwars {
 					$ausgabe.= "<option>Lederer</option>";
 					$ausgabe.= "<option>Schneider</option>";
 					$ausgabe.= "<option>Koch</option>";
-					$ausgabe.= "<option>Rüstungsschmied</option>";
+					$ausgabe.= "<option>RÃ¼stungsschmied</option>";
 					$ausgabe.= "<option>Waffenschmied</option>";
 					$ausgabe.= "<option>Waidmann</option>";
 					$ausgabe.= "<option>Konstukteur</option>";
@@ -891,7 +891,7 @@ class gw_charakter extends guildwars {
 			if($this->userHasRight("9", 0) == true) {
 	
 				if($_POST['charerstellen'] != "") {
-					# Check ob alle Felder ausgefüllt sind.
+					# Check ob alle Felder ausgefÃ¼llt sind.
 					if($_POST['newCharName'] == "") {
 						$fehlermeldung .= "<p class='meldung'>Es muss mindestens der Charaktername eingetragen werden.</p>";
 					} else {
@@ -939,7 +939,7 @@ class gw_charakter extends guildwars {
 							}
 	
 							if($stufe > 80 OR $handwerk1stufe > 500 OR $handwerk2stufe > 500) {
-								$fehlermeldung .= "<p class='meldung'>Beachte die maximalen möglichen Stufen!</p>";
+								$fehlermeldung .= "<p class='meldung'>Beachte die maximalen mÃ¶glichen Stufen!</p>";
 							}
 	
 							$insert="INSERT INTO gw_chars (name, besitzer, geboren, rasse,
@@ -969,15 +969,15 @@ class gw_charakter extends guildwars {
 	}
 	
 	/**
-	 * Speichert die Änderungen in der Charakter.php
-	 * oder löscht den entsprechenden Char aus der Datenbank
+	 * Speichert die Ã„nderungen in der Charakter.php
+	 * oder lÃ¶scht den entsprechenden Char aus der Datenbank
 	 */
 	function bearbChar() {
 	
 		if(isset($_POST['action'])) {
 			if($_POST['action'] == "speichern") {
 	
-				# Check ob User Aktion durchführen darf.
+				# Check ob User Aktion durchfÃ¼hren darf.
 				if(isset($_POST['besitzer'])) {
 					$PostBesitzer = $_POST['besitzer'];
 					$charID = (isset($_GET['charID'])) ? $_GET['charID'] : '';
@@ -992,7 +992,7 @@ class gw_charakter extends guildwars {
 				}
 	
 				if($this->userHasRight("9", 0) == true AND $this->getUserID($_SESSION['username']) == $besitzer OR $this->userHasRight("21", 0) == true) {
-					# Übernahme der POST Variablen
+					# Ãœbernahme der POST Variablen
 					$stufe = (isset($_POST['stufeChar'])) ? $_POST['stufeChar'] : '';
 					$geboren = (isset($_POST['geboren'])) ? $_POST['geboren'] : '';
 					$stunden = (isset($_POST['stunden'])) ? $_POST['stunden'] : '';
@@ -1016,18 +1016,18 @@ class gw_charakter extends guildwars {
 					WHERE id='$charID'";
 					
 					if($this->sql_insert_update_delete($charUpdate) == true) {
-						echo "<p class='erfolg'>Der Charakter wurde geändert!</p>";
+						echo "<p class='erfolg'>Der Charakter wurde geÃ¤ndert!</p>";
 					}
 				} else {
 					echo "<p class='meldung'>Du bist nicht der Besitzer
-							oder hast keine Berechtigung Charakter zu ändern.</p>";
+							oder hast keine Berechtigung Charakter zu Ã¤ndern.</p>";
 				}
 	
-			} else if($_POST['action'] == "löschen") {
-				# Check ob User Aktion durchführen darf.
+			} else if($_POST['action'] == "lÃ¶schen") {
+				# Check ob User Aktion durchfÃ¼hren darf.
 				if($this->userHasRight("9", 0) == true OR $this->userHasRight("21", 0) == true) {
 	
-					# Löschung an andere Funktion übergeben
+					# LÃ¶schung an andere Funktion Ã¼bergeben
 					$charID = (isset($_GET['charID'])) ? $_GET['charID'] : '';
 					$this->delChar($charID, "gw_chars");
 	
@@ -1042,26 +1042,26 @@ class gw_charakter extends guildwars {
 	}
 	
 	/**
-	 * Löscht den ausgewählten Charakter aus der Datenbank, vorher wird eine Bestätigung eingeholt.
+	 * LÃ¶scht den ausgewÃ¤hlten Charakter aus der Datenbank, vorher wird eine BestÃ¤tigung eingeholt.
 	 * @param unknown $id (INT)
 	 */
 	function delChar($id, $tabelle) {
 	
 		if($this->userHasRight("9", 0) == true AND $this->getUserID($_SESSION['username']) == $this->getBesitzer($id) OR $this->userHasRight("21", 0) == true) {
-			echo "<p class='meldung'>Sicher, dass der Charakter <strong>" . $this->getCharname($id) . "</strong> gelöscht werden soll?</p>";
+			echo "<p class='meldung'>Sicher, dass der Charakter <strong>" . $this->getCharname($id) . "</strong> gelÃ¶scht werden soll?</p>";
 			echo "<form method=post>";
 			echo "<input type=hidden value='$id' name='loeschid' readonly />";
-			echo "<input type=hidden value='löschen' name='action' readonly />";
+			echo "<input type=hidden value='lÃ¶schen' name='action' readonly />";
 			echo "<input type=submit value='Ja' name='loeschen' />";
 			echo "</form>";
 		} else {
-			echo "<p class='meldung'>Du darfst diesen Charakter nicht löschen.</p>";
+			echo "<p class='meldung'>Du darfst diesen Charakter nicht lÃ¶schen.</p>";
 		}
 	
 	
 	
 		/*
-		 * Führt die Löschung durch.
+		 * FÃ¼hrt die LÃ¶schung durch.
 			*/
 		$jaloeschen = isset($_POST['loeschen']) ? $_POST['loeschen'] : '';
 		$loeschid = isset($_POST['loeschid']) ? $_POST['loeschid'] : '';
@@ -1076,17 +1076,17 @@ class gw_charakter extends guildwars {
 				$loeschQuery = "DELETE FROM `$tabelle` WHERE `id` = $loeschid";
 	
 				if($this->sql_insert_update_delete($loeschQuery) == true) {
-					echo "<p class='erfolg'>Der Charakter wurde gelöscht!</p>";
+					echo "<p class='erfolg'>Der Charakter wurde gelÃ¶scht!</p>";
 					exit;
 				} else {
-					echo "<p id='meldung'>Es gab einen Fehler. <a href='start.php'>Zurück</a></p>";
+					echo "<p id='meldung'>Es gab einen Fehler. <a href='start.php'>ZurÃ¼ck</a></p>";
 				}
 			}
 		}
 	}
 	
 	/**
-	 * Sichert die Stunden des zu löschenden Charakters in der Tabelle account_infos.
+	 * Sichert die Stunden des zu lÃ¶schenden Charakters in der Tabelle account_infos.
 	 * @param unknown $id
 	 */
 	function saveCharakterStunden($id) {
@@ -1096,12 +1096,12 @@ class gw_charakter extends guildwars {
 		# Charakterstunden bekommen
 		$charInfos = $this->getObjektInfo("SELECT * FROM gw_chars WHERE besitzer = '$userID' AND id = '$id' LIMIT 1");
 		$charAccount = $charInfos[0]->account;
-		# bisherige gelöschte Stunden bekommen:
+		# bisherige gelÃ¶schte Stunden bekommen:
 		$bisherigeStunden = $this->getObjektInfo("SELECT * FROM account_infos WHERE besitzer = '$userID' AND attribut = 'gw_geloschte_stunden' AND account = '$charAccount' LIMIT 1");
 		# Neuen Wert ausrechnen
 		$neuerWert = $bisherigeStunden[0]->wert + $charInfos[0]->spielstunden;
 	
-		# Update oder Insert durchführen.
+		# Update oder Insert durchfÃ¼hren.
 		if(!isset($bisherigeStunden[0]->wert) OR $bisherigeStunden[0]->wert == "") {
 			$this->sql_insert_update_delete("INSERT INTO account_infos (besitzer, attribut, wert, account) VALUES ('$userID','gw_geloschte_stunden','0','$charAccount')");
 			# jetzt updaten
@@ -1113,12 +1113,12 @@ class gw_charakter extends guildwars {
 	
 	/**
 	 * Erzeugt eine Kachel an der rechten Seite des Bildschirms.
-	 * Hier tauchen Informationen zum Account auf, darunter fällt:
+	 * Hier tauchen Informationen zum Account auf, darunter fÃ¤llt:
 	 * Spielstunden,
-	 * davon gelöscht,
+	 * davon gelÃ¶scht,
 	 * Welt erkundet,
 	 * Anzahl der Chars,
-	 * und wer demnächst Geburtstag hat.
+	 * und wer demnÃ¤chst Geburtstag hat.
 	 */
 	function globalCharInfos() {
 	
@@ -1147,11 +1147,11 @@ class gw_charakter extends guildwars {
 			$alleEigenenStunden = $this->getObjektInfo("SELECT sum(spielstunden) as summe FROM gw_chars WHERE besitzer = '$userID' AND account = '$aktuellerAccount'");
 			$alleSpielstunden = $this->getObjektInfo("SELECT sum(spielstunden) as summe FROM gw_chars");
 				
-			$gelöschteStundenGesamt = $this->getObjektInfo("SELECT sum(wert) as summe FROM account_infos WHERE attribut = 'gw_geloschte_stunden'");
-			$EigeneGelöschteStunden = $this->getObjektInfo("SELECT sum(wert) as summe FROM account_infos WHERE besitzer = '$userID' AND attribut = 'gw_geloschte_stunden' AND account = '$aktuellerAccount'");
-			$eigeneStundenGesamt = $EigeneGelöschteStunden[0]->summe + $alleEigenenStunden[0]->summe;
-			$allePlusGelöschte = $alleSpielstunden[0]->summe + $gelöschteStundenGesamt[0]->summe;
-			if($allePlusGelöschte > 0) {
+			$gelÃ¶schteStundenGesamt = $this->getObjektInfo("SELECT sum(wert) as summe FROM account_infos WHERE attribut = 'gw_geloschte_stunden'");
+			$EigeneGelÃ¶schteStunden = $this->getObjektInfo("SELECT sum(wert) as summe FROM account_infos WHERE besitzer = '$userID' AND attribut = 'gw_geloschte_stunden' AND account = '$aktuellerAccount'");
+			$eigeneStundenGesamt = $EigeneGelÃ¶schteStunden[0]->summe + $alleEigenenStunden[0]->summe;
+			$allePlusGelÃ¶schte = $alleSpielstunden[0]->summe + $gelÃ¶schteStundenGesamt[0]->summe;
+			if($allePlusGelÃ¶schte > 0) {
 				$prozent = round($alleEigenenStunden[0]->summe / $alleSpielstunden[0]->summe * 100, 2);
 			} else {
 				$prozent = 0;
@@ -1163,13 +1163,13 @@ class gw_charakter extends guildwars {
 			echo "<table id='table'>";
 				
 			echo "<tr><td>Spielstunden:<br> <strong>" . $eigeneStundenGesamt . " [$prozent %] </strong><br>
-			davon gelöscht:<br> <strong>" . $EigeneGelöschteStunden[0]->summe  . "</strong> <br>
-			von insgesamt <strong><br> " . $allePlusGelöschte . "</strong> Stunden</td></tr>";
+			davon gelÃ¶scht:<br> <strong>" . $EigeneGelÃ¶schteStunden[0]->summe  . "</strong> <br>
+			von insgesamt <strong><br> " . $allePlusGelÃ¶schte . "</strong> Stunden</td></tr>";
 				
 			echo "<tr><td>Welt erkundet:<br> " . $eigeneErkundung . "x von " . $alleErkundung . "x</td></tr>";
 			echo "<tr><td>Anzahl Chars: " . $summeChars[0]->anzahl . " Stk.</td></tr>";
 				
-			# Der Nächste Geburtstag:
+			# Der NÃ¤chste Geburtstag:
 				
 			$timestamp = time();
 			$monat = date("m", $timestamp);
@@ -1178,7 +1178,7 @@ class gw_charakter extends guildwars {
 				
 			$query = "SELECT *, day(geboren) as tag FROM `gw_chars` WHERE month(geboren) = '$currentMonth' AND day(geboren) >= '$tag' ORDER BY `tag` ASC ";
 			if($this->getObjektInfo($query) == true) {
-				echo "<tr><td>Nächster Geb.:</td></tr>";
+				echo "<tr><td>NÃ¤chster Geb.:</td></tr>";
 				$naechsterGeb = $this->getObjektInfo($query);
 				echo "<tr><td><p class='erfolg'>" . $naechsterGeb[0]->name . " am " .$naechsterGeb[0]->tag.".$currentMonth</p></td></tr>";
 			}
@@ -1219,7 +1219,7 @@ class gw_handwerk extends guildwars {
 			
 			/* Neue Materialien */
 			
-			$katNames = ["Gewöhnliche Handwerksmaterialien"
+			$katNames = ["GewÃ¶hnliche Handwerksmaterialien"
 					, "Edle Handwerksmaterialien"
 					, "Seltene Handwerksmaterialien"
 					, "Aufgestiegene Handwerksmaterialien"
@@ -1237,14 +1237,14 @@ class gw_handwerk extends guildwars {
 				# Materialien dieser Kategorie rausfiltern:
 				$kat = $i +1;
 				$matsDieserKat = $this->getObjektInfo("SELECT * FROM gwmatlist WHERE kategorie = '$kat' ORDER BY matID");
-				$zähler = 0;
+				$zÃ¤hler = 0;
 				echo "<tbody>";
 				for ($j = 0 ; $j < sizeof($matsDieserKat); $j++) {
 					
-					if($zähler == 10) {
+					if($zÃ¤hler == 10) {
 						echo "</tbody>";
 						echo "<tbody>";
-						$zähler = 0;
+						$zÃ¤hler = 0;
 					}
 					
 					$name = $matsDieserKat[$j]->matID;					
@@ -1256,7 +1256,7 @@ class gw_handwerk extends guildwars {
 						echo "<td>";
 					}
 					echo "" .$matsDieserKat[$j]->matName. "<br>". "<input type=number name='name[$name]' value='$matAnzahl' placeholder='" .$matsDieserKat[$j]->matName. "' />" ."</td>";
-					$zähler = $zähler + 1;
+					$zÃ¤hler = $zÃ¤hler + 1;
 					
 				}
 				
@@ -1272,7 +1272,7 @@ class gw_handwerk extends guildwars {
 
 	
 	/**
-	 * Ermöglicht es, neue Mats zu erstellen
+	 * ErmÃ¶glicht es, neue Mats zu erstellen
 	 */
 	function createNewMats() {
 		if($this->userHasRight("21", 0) == true) { # Nur wenn er GW Admin ist.
@@ -1283,7 +1283,7 @@ class gw_handwerk extends guildwars {
 			
 			if(isset($_POST['saveNewMats'])) {
 				
-				# Übername
+				# Ãœbername
 				$matName = $_POST['newMatName'];
 				$matKat = $_POST['newMatKat'];
 				$matPrice = $_POST['newMatPrice'];
@@ -1310,7 +1310,7 @@ class gw_handwerk extends guildwars {
 				
 			}
 			
-			$katNames = ["Gewöhnliche Handwerksmaterialien"
+			$katNames = ["GewÃ¶hnliche Handwerksmaterialien"
 					, "Edle Handwerksmaterialien"
 					, "Seltene Handwerksmaterialien"
 					, "Aufgestiegene Handwerksmaterialien"
@@ -1323,7 +1323,7 @@ class gw_handwerk extends guildwars {
 			echo "<h2><a name='newMats'>Neue Materialien erstellen</a></h2>";
 			echo "<a href='?reload#newMats' class='buttonlink' >Seite neu laden</a>";
 			
-			echo "<p>Hier können neue Materialien erstellt werden.</p>";
+			echo "<p>Hier kÃ¶nnen neue Materialien erstellt werden.</p>";
 			
 			# Infos:
 			echo "<h3>Informationen</h3>";
@@ -1356,7 +1356,7 @@ class gw_handwerk extends guildwars {
 	}
 	
 	/**
-	 * Gibt den Namen des Materials zurück
+	 * Gibt den Namen des Materials zurÃ¼ck
 	 * @param unknown $id
 	 * @return string
 	 */
@@ -1398,7 +1398,7 @@ class gw_handwerk extends guildwars {
 	}
 	
 	/**
-	 * Speichert alle Materialien für diesen Benutzer.
+	 * Speichert alle Materialien fÃ¼r diesen Benutzer.
 	 * @param unknown $gesamtzahl
 	 */
 	function saveAllMats($gesamtzahl) {
@@ -1425,12 +1425,12 @@ class gw_handwerk extends guildwars {
 					$matID = $i;
 					$account = $_SESSION['gw_account'];
 						
-					# Hier wird geprüft, ob der Wert größer oder gleich Null ist.
-					# Früher wurden die Einträge nur gespeichert, wenn die Anzahl größer als Null ist,
-					# aber das führte dazu, dass man seine Einträge nicht wieder auf Null setzen konnte ...
+					# Hier wird geprÃ¼ft, ob der Wert grÃ¶ÃŸer oder gleich Null ist.
+					# FrÃ¼her wurden die EintrÃ¤ge nur gespeichert, wenn die Anzahl grÃ¶ÃŸer als Null ist,
+					# aber das fÃ¼hrte dazu, dass man seine EintrÃ¤ge nicht wieder auf Null setzen konnte ...
 					if($matAnzahl >= 0) {
 	
-						# Schauen ob es die MAT ID Schon gibt für diesen User:
+						# Schauen ob es die MAT ID Schon gibt fÃ¼r diesen User:
 						if($this->matIDexistsForUser($matID) == true) {
 							$query = "UPDATE gwusersmats
 							SET matAnzahl='$matAnzahl'
@@ -1442,7 +1442,7 @@ class gw_handwerk extends guildwars {
 							VALUES ('$user','$matID','$matAnzahl','$account')";
 						}
 	
-						# Extrawurst für das Handwerk, weil sonst das Log vollgespammt wird.
+						# Extrawurst fÃ¼r das Handwerk, weil sonst das Log vollgespammt wird.
 						if($this->sql_insert_update_delete_hw($query) == true) {
 							$erfolg = $erfolg + 1;
 						} else {
@@ -1451,12 +1451,12 @@ class gw_handwerk extends guildwars {
 					}
 				}
 				if($fehler > 0) {
-					echo "<p class='dezentInfo'>Übersprungene Felder: " . $fehler . " (wurden nicht geändert)</p>";
+					echo "<p class='dezentInfo'>Ãœbersprungene Felder: " . $fehler . " (wurden nicht geÃ¤ndert)</p>";
 					if($erfolg > 0) {
-						echo "<p class='erfolg'>Erfolgreich gespeicherte Änderungen: " . $erfolg . "</p>";
-						$this->logme("Handwerksmats gespeichert, gespeicherte Änderungen: $erfolg, nicht gespeicherte Änderungen: $fehler");
+						echo "<p class='erfolg'>Erfolgreich gespeicherte Ã„nderungen: " . $erfolg . "</p>";
+						$this->logme("Handwerksmats gespeichert, gespeicherte Ã„nderungen: $erfolg, nicht gespeicherte Ã„nderungen: $fehler");
 					} else {
-						echo "<p class='dezentInfo'>Du hast keine Ändeurngen vorgenommen.</p>";
+						echo "<p class='dezentInfo'>Du hast keine Ã„ndeurngen vorgenommen.</p>";
 					}
 				} else {
 					echo "<p class='erfolg'>Deine Materialien wurden alle gespeichert!</p>";
@@ -1467,7 +1467,7 @@ class gw_handwerk extends guildwars {
 	}
 	
 	/**
-	 * Prüft, ob der Benutzer dieses Material bereits in seiner Liste hat.
+	 * PrÃ¼ft, ob der Benutzer dieses Material bereits in seiner Liste hat.
 	 * @param unknown $id
 	 * @return boolean
 	 */
@@ -1508,7 +1508,7 @@ class gw_handwerk extends guildwars {
 		if($this->userHasRight("3", 0) == true) {
 	
 			echo "<table class='flatnetTable'>";
-			echo "<thead><td>Benötigt</td><td></td><td></td><td>Vorhanden</td><td><strong>Du benötigst</strong></td><td></td></thead>";
+			echo "<thead><td>BenÃ¶tigt</td><td></td><td></td><td>Vorhanden</td><td><strong>Du benÃ¶tigst</strong></td><td></td></thead>";
 			for ($i = 1 ; $i < sizeof($matids) ; $i++) {
 					
 				if(isset($matids[$i]) AND isset($matAnzahl[$i]) AND isset($matNames[$i])) {
@@ -1518,7 +1518,7 @@ class gw_handwerk extends guildwars {
 						echo "<tbody>";
 						echo "<td>$matNames[$i] </td>
 						<td><strong>(Achtung - Name fehlt in Tabelle)</strong> </td>
-						<td>$matAnzahl[$i]</td><td>nicht möglich</td>
+						<td>$matAnzahl[$i]</td><td>nicht mÃ¶glich</td>
 						<td>$matAnzahl[$i]</td>
 						<td><input type='checkbox' name='HabIch' value='habich'></td>";
 						echo "</tbody>";
@@ -1548,7 +1548,7 @@ class gw_handwerk extends guildwars {
 	}
 	
 	/**
-	 * Gibt die MatID zurück.
+	 * Gibt die MatID zurÃ¼ck.
 	 * @param unknown $name
 	 * @return number
 	 */
@@ -1567,11 +1567,11 @@ class gw_handwerk extends guildwars {
 	}
 	
 	/**
-	 * gibt die Anzahl der vorhandenen Mats zurück.
+	 * gibt die Anzahl der vorhandenen Mats zurÃ¼ck.
 	 * @param unknown $matID
 	 */
 	function getMatAnzahl($matName) {
-		# Berechnet die benötigten Mats.
+		# Berechnet die benÃ¶tigten Mats.
 		$user = $this->getUserID($_SESSION['username']);
 		$matID = $this->getMatID($matName);
 		$account = $_SESSION['gw_account'];
@@ -1589,13 +1589,13 @@ class gw_handwerk extends guildwars {
 	
 	/**
 	 * Gibt aus, ob der Benutzer einen Char hat, der diesen Beruf erlernt hat.
-	 * Dabei wird der gerade ausgewählte Account berücksichtigt.
+	 * Dabei wird der gerade ausgewÃ¤hlte Account berÃ¼cksichtigt.
 	 * @param integer $user
 	 * @param string $beruf
 	 */
 	function userHasACharWithHandwerkOverMax($user, $beruf) {
 	
-		# gerade gewählter Account:
+		# gerade gewÃ¤hlter Account:
 		$account = $_SESSION['gw_account'];
 	
 		# Select
@@ -1614,7 +1614,7 @@ class gw_handwerk extends guildwars {
 	}
 	
 	/**
-	 * Gibt die Berufeinformationen zurück.
+	 * Gibt die Berufeinformationen zurÃ¼ck.
 	 */
 	function getBerufInfo() {
 		if(isset($_GET['berufInfo'])) {
@@ -1642,7 +1642,7 @@ class gw_handwerk extends guildwars {
 				$this->berufInfoWaffenschmied();
 			}
 	
-			if($_GET['berufInfo'] == "Rüstungsschmied") {
+			if($_GET['berufInfo'] == "RÃ¼stungsschmied") {
 				$this->berufInfoRuestungsschmied();
 			}
 	
@@ -1653,10 +1653,10 @@ class gw_handwerk extends guildwars {
 	}
 	
 	/**
-	 * Zeigt die Handwerksberufe-Links an. Jenachdem ob der Beruf bereits erlernt wurde, erscheint der Link grün.
+	 * Zeigt die Handwerksberufe-Links an. Jenachdem ob der Beruf bereits erlernt wurde, erscheint der Link grÃ¼n.
 	 */
 	function showBerufLinks() {
-		echo "<p>Einen Beruf auswählen, um die benötigten Materialien anzuzeigen. Wird der Knopf in grün angezeigt, dann hast du bereits einen Charakter der über Stufe 400 ist.</p>";
+		echo "<p>Einen Beruf auswÃ¤hlen, um die benÃ¶tigten Materialien anzuzeigen. Wird der Knopf in grÃ¼n angezeigt, dann hast du bereits einen Charakter der Ã¼ber Stufe 400 ist.</p>";
 		echo "<a href='?berufInfo=Lederer#einkaufslisten'";
 	
 		if($this->userHasACharWithHandwerkOverMax($this->getUserID($_SESSION['username']),"Lederer") == true) {
@@ -1697,14 +1697,14 @@ class gw_handwerk extends guildwars {
 			echo " class='buttonlink'";
 		}
 		echo ">Waffenschmied</a>";
-		echo "<a href='?berufInfo=Rüstungsschmied#einkaufslisten'";
+		echo "<a href='?berufInfo=RÃ¼stungsschmied#einkaufslisten'";
 	
-		if($this->userHasACharWithHandwerkOverMax($this->getUserID($_SESSION['username']),"Rüstungsschmied") == true) {
+		if($this->userHasACharWithHandwerkOverMax($this->getUserID($_SESSION['username']),"RÃ¼stungsschmied") == true) {
 			echo " class='greenLink'";
 		} else {
 			echo " class='buttonlink'";
 		}
-		echo ">Rüstungsschmied</a>";
+		echo ">RÃ¼stungsschmied</a>";
 		echo "<a href='?berufInfo=Juwelier#einkaufslisten'";
 	
 		if($this->userHasACharWithHandwerkOverMax($this->getUserID($_SESSION['username']),"Juwelier") == true) {
@@ -1724,7 +1724,7 @@ class gw_handwerk extends guildwars {
 	}
 	
 	/**
-	 * Zeigt, welche Charakter einen bestimmten Beruf ausüben
+	 * Zeigt, welche Charakter einen bestimmten Beruf ausÃ¼ben
 	 * @param unknown $beruf: Den Namen des Berufs, so wie er in der Datenbank steht.
 	 */
 	function charInBeruf($beruf) {
@@ -1774,12 +1774,12 @@ class gw_handwerk extends guildwars {
 	}
 	
 	/**
-	 * Beinhaltet die benötigten Mats für den Beruf.
+	 * Beinhaltet die benÃ¶tigten Mats fÃ¼r den Beruf.
 	 */
 	function berufInfoWaidmann() {
-		# Benötigte Mats:
+		# BenÃ¶tigte Mats:
 		$matids[0] = 0; $matAnzahl[0] = 0; $matNames[0] = "";
-		$matids[1] = 1; $matAnzahl[1] = 279; $matNames[1] = "Grüner Holzblock";
+		$matids[1] = 1; $matAnzahl[1] = 279; $matNames[1] = "GrÃ¼ner Holzblock";
 		$matids[2] = 2; $matAnzahl[2] = 440; $matNames[2] = "Geschmeidiger Holzblock";
 		$matids[3] = 3; $matAnzahl[3] = 330; $matNames[3] = "Abgelagerter Holzblock";
 		$matids[4] = 3; $matAnzahl[4] = 330; $matNames[4] = "Harter Holzblock";
@@ -1788,11 +1788,11 @@ class gw_handwerk extends guildwars {
 		$matids[7] = 3; $matAnzahl[7] = 306; $matNames[7] = "Eisenerz";
 		$matids[8] = 3; $matAnzahl[8] = 120; $matNames[8] = "Platinerz";
 		$matids[9] = 3; $matAnzahl[9] = 174; $matNames[9] = "Mithrilerz";
-		$matids[10] = 3; $matAnzahl[10] = 32; $matNames[10] = "Rohlederstücke";
-		$matids[11] = 3; $matAnzahl[11] = 48; $matNames[11] = "Dünnes Lederstück";
-		$matids[12] = 3; $matAnzahl[12] = 48; $matNames[12] = "Raues Lederstück";
-		$matids[13] = 3; $matAnzahl[13] = 48; $matNames[13] = "Robustes Lederstück";
-		$matids[14] = 3; $matAnzahl[14] = 72; $matNames[14] = "Dickes Lederstück";
+		$matids[10] = 3; $matAnzahl[10] = 32; $matNames[10] = "RohlederstÃ¼cke";
+		$matids[11] = 3; $matAnzahl[11] = 48; $matNames[11] = "DÃ¼nnes LederstÃ¼ck";
+		$matids[12] = 3; $matAnzahl[12] = 48; $matNames[12] = "Raues LederstÃ¼ck";
+		$matids[13] = 3; $matAnzahl[13] = 48; $matNames[13] = "Robustes LederstÃ¼ck";
+		$matids[14] = 3; $matAnzahl[14] = 72; $matNames[14] = "Dickes LederstÃ¼ck";
 		$matids[15] = 3; $matAnzahl[15] = 10; $matNames[15] = "Zinnbrocken";
 		$matids[16] = 3; $matAnzahl[16] = 50; $matNames[16] = "Holzkohlebrocken";
 		$matids[17] = 3; $matAnzahl[17] = 60; $matNames[17] = "Primordiumbrocken";
@@ -1818,8 +1818,8 @@ class gw_handwerk extends guildwars {
 		$matids[37] = 3; $matAnzahl[37] = 12; $matNames[37] = "Glatte Schuppen";
 		$matids[38] = 3; $matAnzahl[38] = 56; $matNames[38] = "Wirkungsvolle Giftbeutel";
 		$matids[39] = 3; $matAnzahl[39] = 12; $matNames[39] = "Verziertes Totem";
-		$matids[40] = 3; $matAnzahl[40] = 54; $matNames[40] = "Großer Knochen";
-		$matids[41] = 3; $matAnzahl[41] = 42; $matNames[41] = "Große Klaue";
+		$matids[40] = 3; $matAnzahl[40] = 54; $matNames[40] = "GroÃŸer Knochen";
+		$matids[41] = 3; $matAnzahl[41] = 42; $matNames[41] = "GroÃŸe Klaue";
 	
 		echo "<h2>Waidmann</h2>";
 	
@@ -1827,13 +1827,13 @@ class gw_handwerk extends guildwars {
 		$this->einkaufsliste($matids, $matAnzahl, $matNames);
 	}
 	/**
-	 * Beinhaltet die benötigten Mats für den Beruf.
+	 * Beinhaltet die benÃ¶tigten Mats fÃ¼r den Beruf.
 	 */
 	function berufInfoWaffenschmied() {
-		# Benötigte Mats:
+		# BenÃ¶tigte Mats:
 		$matids[0] = 0; $matAnzahl[0] = 0; $matNames[0] = "";
 		$matids[1] = 1; $matAnzahl[1] = 280; $matNames[1] = "Kupfererz";
-		$matids[2] = 2; $matAnzahl[2] = 216; $matNames[2] = "Grüner Holzblock";
+		$matids[2] = 2; $matAnzahl[2] = 216; $matNames[2] = "GrÃ¼ner Holzblock";
 		$matids[3] = 3; $matAnzahl[3] = 28; $matNames[3] = "Zinnbrocken";
 		$matids[4] = 3; $matAnzahl[4] = 71; $matNames[4] = "Phiole mit Schwachem Blut";
 		$matids[5] = 3; $matAnzahl[5] = 372; $matNames[5] = "Alter Holzblock";
@@ -1865,21 +1865,21 @@ class gw_handwerk extends guildwars {
 		$matids[37] = 3; $matAnzahl[37] = 6; $matNames[37] = "Glatte Schuppen";
 		$matids[38] = 3; $matAnzahl[38] = 68; $matNames[38] = "Wirkungsvolle Giftbeutel";
 		$matids[39] = 3; $matAnzahl[39] = 9; $matNames[39] = "Verziertes Totem";
-		$matids[40] = 3; $matAnzahl[40] = 45; $matNames[40] = "Großer Fangzahn";
-		$matids[41] = 3; $matAnzahl[41] = 12; $matNames[41] = "Große Klaue";
-		$matids[42] = 3; $matAnzahl[42] = 36; $matNames[42] = "Große Schuppe";
+		$matids[40] = 3; $matAnzahl[40] = 45; $matNames[40] = "GroÃŸer Fangzahn";
+		$matids[41] = 3; $matAnzahl[41] = 12; $matNames[41] = "GroÃŸe Klaue";
+		$matids[42] = 3; $matAnzahl[42] = 36; $matNames[42] = "GroÃŸe Schuppe";
 	
 		echo "<h2>Waffenschmied</h2>";
-		echo "<p class='dezentInfo'>Nicht mit Rüstungsschmied kombinieren, da hier die gleichen Materialien verwendet werden
+		echo "<p class='dezentInfo'>Nicht mit RÃ¼stungsschmied kombinieren, da hier die gleichen Materialien verwendet werden
 				und man sich so gegenseitig die Mats wegschnappt.</p>";
 		# Ausgabe der Liste
 		$this->einkaufsliste($matids, $matAnzahl, $matNames);
 	}
 	/**
-	 * Beinhaltet die benötigten Mats für den Beruf.
+	 * Beinhaltet die benÃ¶tigten Mats fÃ¼r den Beruf.
 	 */
 	function berufInfoRuestungsschmied() {
-		# Benötigte Mats:
+		# BenÃ¶tigte Mats:
 		$matids[0] = 0; $matAnzahl[0] = 0; $matNames[0] = "";
 		$matids[1] = 1; $matAnzahl[1] = 40; $matNames[1] = "Juterest";
 		$matids[2] = 2; $matAnzahl[2] = 200; $matNames[2] = "Kupfererz";
@@ -1917,27 +1917,27 @@ class gw_handwerk extends guildwars {
 		$matids[41] = 3; $matAnzahl[41] = 189; $matNames[41] = "Seidenrest";
 		$matids[42] = 3; $matAnzahl[42] = 128; $matNames[42] = "Mithrilerz";
 		$matids[43] = 3; $matAnzahl[43] = 26; $matNames[43] = "Spule Seidenfaden";
-		$matids[44] = 3; $matAnzahl[44] = 38; $matNames[44] = "Großer Fangzahn";
-		$matids[45] = 3; $matAnzahl[45] = 12; $matNames[45] = "Große Klauen";
+		$matids[44] = 3; $matAnzahl[44] = 38; $matNames[44] = "GroÃŸer Fangzahn";
+		$matids[45] = 3; $matAnzahl[45] = 12; $matNames[45] = "GroÃŸe Klauen";
 		$matids[46] = 3; $matAnzahl[46] = 72; $matNames[46] = "Verziertes Totem";
 		$matids[47] = 3; $matAnzahl[47] = 57; $matNames[47] = "Wirkungsvoller Giftbeutel";
-		$matids[48] = 3; $matAnzahl[48] = 24; $matNames[48] = "Großer Knochen";
+		$matids[48] = 3; $matAnzahl[48] = 24; $matNames[48] = "GroÃŸer Knochen";
 	
 		# Bis LVL 500
 		$matidslvl500[1] = 0; $matAnzahllvl500[1] = 80; $matNameslvl500[1] = "Orichalcumerz";
 		$matidslvl500[2] = 0; $matAnzahllvl500[2] = 304; $matNameslvl500[2] = "Gazerest";
 		$matidslvl500[3] = 0; $matAnzahllvl500[3] = 504; $matNameslvl500[3] = "Spule Gazefaden";
 		$matidslvl500[4] = 0; $matAnzahllvl500[4] = 120; $matNameslvl500[4] = "Ektoplasmakugel";
-		$matidslvl500[5] = 0; $matAnzahllvl500[5] = 15; $matNameslvl500[5] = "Scheußliche Klaue";
+		$matidslvl500[5] = 0; $matAnzahllvl500[5] = 15; $matNameslvl500[5] = "ScheuÃŸliche Klaue";
 		$matidslvl500[6] = 0; $matAnzahllvl500[6] = 15; $matNameslvl500[6] = "Kunstvolles Totem";
-		$matidslvl500[7] = 0; $matAnzahllvl500[7] = 15; $matNameslvl500[7] = "Scheußlicher Fangzahn";
+		$matidslvl500[7] = 0; $matAnzahllvl500[7] = 15; $matNameslvl500[7] = "ScheuÃŸlicher Fangzahn";
 		$matidslvl500[8] = 0; $matAnzahllvl500[8] = 15; $matNameslvl500[8] = "Kraftvoller Giftbeutel";
 		$matidslvl500[9] = 0; $matAnzahllvl500[9] = 15; $matNameslvl500[9] = "Anktiker Knochen";
 		$matidslvl500[10] = 0; $matAnzahllvl500[10] = 15; $matNameslvl500[10] = "Phiole mit kraftvollem Blut";
 		$matidslvl500[11] = 0; $matAnzahllvl500[11] = 15; $matNameslvl500[11] = "Gepanzerte Schuppe";
 		$matidslvl500[12] = 0; $matAnzahllvl500[12] = 90; $matNameslvl500[12] = "Karka-Panzer";
 	
-		echo "<h2>Rüstungsschmied</h2>";
+		echo "<h2>RÃ¼stungsschmied</h2>";
 		echo "<p class='dezentInfo'>Nicht mit Waffenschmied kombinieren, da hier die gleichen Materialien verwendet werden
 				und man sich so gegenseitig die Mats wegschnappt.</p>";
 	
@@ -1945,7 +1945,7 @@ class gw_handwerk extends guildwars {
 		$this->einkaufsliste($matids, $matAnzahl, $matNames);
 	}
 	/**
-	 * Beinhaltet die benötigten Mats für den Beruf.
+	 * Beinhaltet die benÃ¶tigten Mats fÃ¼r den Beruf.
 	 */
 	function berufInfoJuwelier() {
 		$matids[0] = 0; $matAnzahl[0] = 0; $matNames[0] = "";
@@ -1956,7 +1956,7 @@ class gw_handwerk extends guildwars {
 		$matids[5] = 3; $matAnzahl[5] = 240; $matNames[5] = "Mithrilerz";
 		$matids[6] = 3; $matAnzahl[6] = 3; $matNames[6] = "Bernsteinkiesel";
 		$matids[7] = 3; $matAnzahl[7] = 3; $matNames[7] = "Granatkiesel";
-		$matids[8] = 3; $matAnzahl[8] = 3; $matNames[8] = "Türkiskiesel";
+		$matids[8] = 3; $matAnzahl[8] = 3; $matNames[8] = "TÃ¼rkiskiesel";
 		$matids[9] = 3; $matAnzahl[9] = 3; $matNames[9] = "Tigeraugenkiesel";
 		$matids[10] = 3; $matAnzahl[10] = 13; $matNames[10] = "Malachitkiesel";
 		$matids[11] = 3; $matAnzahl[11] = 3; $matNames[11] = "Perlen";
@@ -1980,38 +1980,38 @@ class gw_handwerk extends guildwars {
 	
 		# Zusatzinfo:
 		echo "<h2>Juwelier</h2>";
-		echo "<p class='dezentInfo'>Kiesel, Klumpen, Brocken und Splitter, also alle Edelsteine können aus den jeweils niedrigeren hergestellt werden,
+		echo "<p class='dezentInfo'>Kiesel, Klumpen, Brocken und Splitter, also alle Edelsteine kÃ¶nnen aus den jeweils niedrigeren hergestellt werden,
 				falls welche fehlen sollten.</p>";
 		echo "<p class='dezentInfo'>Abgesehen von den Erzen ein sehr billiger Handwerksberuf.</p>";
 		# Ausgabe der Liste
 		$this->einkaufsliste($matids, $matAnzahl, $matNames);
 	}
 	/**
-	 * Beinhaltet die benötigten Mats für den Beruf.
+	 * Beinhaltet die benÃ¶tigten Mats fÃ¼r den Beruf.
 	 */
 	function berufInfoKonstrukteur() {
-		# Benötigte Mats:
+		# BenÃ¶tigte Mats:
 		$matids[0] = 0; $matAnzahl[0] = 0; $matNames[0] = "";
 		$matids[1] = 1; $matAnzahl[1] = 198; $matNames[1] = "Haufen glitzernden Staubs";
 		$matids[2] = 2; $matAnzahl[2] = 200; $matNames[2] = "Haufen funkelnder Staub";
 		$matids[3] = 3; $matAnzahl[3] = 199; $matNames[3] = "Haufen strahlenden Staub";
 		$matids[4] = 3; $matAnzahl[4] = 200; $matNames[4] = "Haufen Leuchtenden Staub";
-		$matids[5] = 3; $matAnzahl[5] = 212; $matNames[5] = "Haufen weißglühenden Staub";
+		$matids[5] = 3; $matAnzahl[5] = 212; $matNames[5] = "Haufen weiÃŸglÃ¼henden Staub";
 		$matids[6] = 3; $matAnzahl[6] = 24; $matNames[6] = "Kupfererz";
 		$matids[7] = 3; $matAnzahl[7] = 50; $matNames[7] = "Eisenerz";
 		$matids[8] = 3; $matAnzahl[8] = 24; $matNames[8] = "Silbererz";
 		$matids[9] = 3; $matAnzahl[9] = 52; $matNames[9] = "Golderz";
 		$matids[10] = 3; $matAnzahl[10] = 70; $matNames[10] = "Platinerz";
 		$matids[11] = 3; $matAnzahl[11] = 96; $matNames[11] = "Mithrilerz";
-		$matids[16] = 3; $matAnzahl[16] = 26; $matNames[16] = "Dünnes Lederstück";
-		$matids[17] = 3; $matAnzahl[17] = 23; $matNames[17] = "Raues Lederstück";
-		$matids[18] = 3; $matAnzahl[18] = 24; $matNames[18] = "Robustes Lederstück";
-		$matids[19] = 3; $matAnzahl[19] = 24; $matNames[19] = "Dickes Lederstück";
+		$matids[16] = 3; $matAnzahl[16] = 26; $matNames[16] = "DÃ¼nnes LederstÃ¼ck";
+		$matids[17] = 3; $matAnzahl[17] = 23; $matNames[17] = "Raues LederstÃ¼ck";
+		$matids[18] = 3; $matAnzahl[18] = 24; $matNames[18] = "Robustes LederstÃ¼ck";
+		$matids[19] = 3; $matAnzahl[19] = 24; $matNames[19] = "Dickes LederstÃ¼ck";
 		$matids[20] = 3; $matAnzahl[20] = 97; $matNames[20] = "Karotte";
 		$matids[21] = 3; $matAnzahl[21] = 25; $matNames[21] = "Salatkopf";
 		$matids[22] = 3; $matAnzahl[22] = 25; $matNames[22] = "Spinatblatt";
 		$matids[24] = 3; $matAnzahl[24] = 25; $matNames[24] = "Winziger Giftbeutel";
-		$matids[26] = 3; $matAnzahl[26] = 60; $matNames[26] = "Großer Knochen";
+		$matids[26] = 3; $matAnzahl[26] = 60; $matNames[26] = "GroÃŸer Knochen";
 		$matids[27] = 3; $matAnzahl[27] = 30; $matNames[27] = "Zinnbrocken";
 		$matids[29] = 3; $matAnzahl[29] = 102; $matNames[29] = "Alter Holzblock";
 		$matids[30] = 3; $matAnzahl[30] = 270; $matNames[30] = "Krug Wasser";
@@ -2020,9 +2020,9 @@ class gw_handwerk extends guildwars {
 		$matidslvl500[1] = 0; $matAnzahllvl500[1] = 840; $matNameslvl500[1] = "Orichalcumerz";
 		$matidslvl500[2] = 0; $matAnzahllvl500[2] = 1218; $matNameslvl500[2] = "Antiker Holzblock";
 		$matidslvl500[3] = 0; $matAnzahllvl500[3] = 140; $matNameslvl500[3] = "Ektoplasmakugel";
-		$matidslvl500[4] = 0; $matAnzahllvl500[4] = 20; $matNameslvl500[4] = "Scheußliche Klaue";
+		$matidslvl500[4] = 0; $matAnzahllvl500[4] = 20; $matNameslvl500[4] = "ScheuÃŸliche Klaue";
 		$matidslvl500[5] = 0; $matAnzahllvl500[5] = 20; $matNameslvl500[5] = "Kunstvolles Totem";
-		$matidslvl500[6] = 0; $matAnzahllvl500[6] = 20; $matNameslvl500[6] = "Scheußlicher Fangzahn";
+		$matidslvl500[6] = 0; $matAnzahllvl500[6] = 20; $matNameslvl500[6] = "ScheuÃŸlicher Fangzahn";
 		$matidslvl500[7] = 0; $matAnzahllvl500[7] = 20; $matNameslvl500[7] = "Kraftvoller Giftbeutel";
 		$matidslvl500[8] = 0; $matAnzahllvl500[8] = 20; $matNameslvl500[8] = "Anktiker Knochen";
 		$matidslvl500[9] = 0; $matAnzahllvl500[9] = 20; $matNameslvl500[9] = "Gepanzerte Schuppe";
@@ -2035,12 +2035,12 @@ class gw_handwerk extends guildwars {
 	}
 	
 	/**
-	 * Beinhaltet die benötigten Mats für den Beruf.
+	 * Beinhaltet die benÃ¶tigten Mats fÃ¼r den Beruf.
 	 */
 	function berufInfoLederer() {
-		# Benötigte Mats:
+		# BenÃ¶tigte Mats:
 		$matids[0] = 0; $matAnzahl[0] = 0; $matNames[0] = "";
-		$matids[1] = 1; $matAnzahl[1] = 260; $matNames[1] = "Rohlederstücke";
+		$matids[1] = 1; $matAnzahl[1] = 260; $matNames[1] = "RohlederstÃ¼cke";
 		$matids[2] = 2; $matAnzahl[2] = 29; $matNames[2] = "Knochensplitter";
 		$matids[3] = 3; $matAnzahl[3] = 18; $matNames[3] = "Winziger Giftbeutel";
 		$matids[4] = 3; $matAnzahl[4] = 18; $matNames[4] = "Phiole mit Schwachem Blut";
@@ -2050,16 +2050,16 @@ class gw_handwerk extends guildwars {
 		$matids[8] = 3; $matAnzahl[8] = 18; $matNames[8] = "Winzige Totem";
 		$matids[9] = 3; $matAnzahl[9] = 3; $matNames[9] = "Haufen glitzernden Staubs";
 		$matids[10] = 3; $matAnzahl[10] = 86; $matNames[10] = "Wollrest";
-		$matids[11] = 3; $matAnzahl[11] = 92; $matNames[11] = "Dünnes Lederstück";
+		$matids[11] = 3; $matAnzahl[11] = 92; $matNames[11] = "DÃ¼nnes LederstÃ¼ck";
 		$matids[16] = 3; $matAnzahl[16] = 56; $matNames[16] = "Spule Wollfaden";
 		$matids[17] = 3; $matAnzahl[17] = 6; $matNames[17] = "Knochenscherbe";
 		$matids[18] = 3; $matAnzahl[18] = 12; $matNames[18] = "Kleiner Fangzahn";
 		$matids[19] = 3; $matAnzahl[19] = 36; $matNames[19] = "Kleine Schuppen";
-		$matids[20] = 3; $matAnzahl[20] = 12; $matNames[20] = "Phiole mit Dünnem Blut";
+		$matids[20] = 3; $matAnzahl[20] = 12; $matNames[20] = "Phiole mit DÃ¼nnem Blut";
 		$matids[21] = 3; $matAnzahl[21] = 32; $matNames[21] = "Kleine Klaue";
 		$matids[22] = 3; $matAnzahl[22] = 56; $matNames[22] = "Spule Baumwollfaden";
 		$matids[24] = 3; $matAnzahl[24] = 88; $matNames[24] = "Baumwollrest";
-		$matids[26] = 3; $matAnzahl[26] = 88; $matNames[26] = "Raues Lederstück";
+		$matids[26] = 3; $matAnzahl[26] = 88; $matNames[26] = "Raues LederstÃ¼ck";
 		$matids[27] = 3; $matAnzahl[27] = 6; $matNames[27] = "Klaue";
 		$matids[29] = 3; $matAnzahl[29] = 12; $matNames[29] = "Totem";
 		$matids[30] = 3; $matAnzahl[30] = 12; $matNames[30] = "Schuppen";
@@ -2067,30 +2067,30 @@ class gw_handwerk extends guildwars {
 		$matids[32] = 3; $matAnzahl[32] = 44; $matNames[32] = "Phiole mit Blut";
 		$matids[15] = 3; $matAnzahl[15] = 56; $matNames[15] = "Spule Leinenfaden";
 		$matids[34] = 3; $matAnzahl[34] = 88; $matNames[34] = "Leinenrest";
-		$matids[35] = 3; $matAnzahl[35] = 88; $matNames[35] = "Robustes Lederstück";
+		$matids[35] = 3; $matAnzahl[35] = 88; $matNames[35] = "Robustes LederstÃ¼ck";
 		$matids[36] = 3; $matAnzahl[36] = 30; $matNames[36] = "Glatte Schuppen";
 		$matids[37] = 3; $matAnzahl[37] = 12; $matNames[37] = "Graviertes Totem";
 		$matids[38] = 3; $matAnzahl[38] = 12; $matNames[38] = "Phiole mit Dickem Blut";
 		$matids[39] = 3; $matAnzahl[39] = 44; $matNames[39] = "Voller Giftbeutel";
 		$matids[40] = 3; $matAnzahl[40] = 111; $matNames[40] = "Spule Seidenfaden";
 		$matids[41] = 3; $matAnzahl[41] = 171; $matNames[41] = "Seidenrest";
-		$matids[42] = 3; $matAnzahl[42] = 150; $matNames[42] = "Dickes Lederstück";
-		$matids[43] = 3; $matAnzahl[43] = 6; $matNames[43] = "Großer Fangzahn";
+		$matids[42] = 3; $matAnzahl[42] = 150; $matNames[42] = "Dickes LederstÃ¼ck";
+		$matids[43] = 3; $matAnzahl[43] = 6; $matNames[43] = "GroÃŸer Fangzahn";
 		$matids[44] = 3; $matAnzahl[44] = 12; $matNames[44] = "Wirkungsvoller Giftbeutel";
 		$matids[45] = 3; $matAnzahl[45] = 12; $matNames[45] = "Verziertes Totem";
 		$matids[46] = 3; $matAnzahl[46] = 42; $matNames[46] = "Phiole mit Wirkungsvollem Blut";
-		$matids[47] = 3; $matAnzahl[47] = 32; $matNames[47] = "Große Klaue";
-		$matids[48] = 3; $matAnzahl[48] = 54; $matNames[48] = "Große Schuppe";
+		$matids[47] = 3; $matAnzahl[47] = 32; $matNames[47] = "GroÃŸe Klaue";
+		$matids[48] = 3; $matAnzahl[48] = 54; $matNames[48] = "GroÃŸe Schuppe";
 		$matids[49] = 0; $matAnzahl[49] = 180; $matNames[49] = "Juterest";
 	
 		# Bis LVL 500
-		$matidslvl500[1] = 0; $matAnzahllvl500[1] = 80; $matNameslvl500[1] = "Gehärtetes Lederstück";
+		$matidslvl500[1] = 0; $matAnzahllvl500[1] = 80; $matNameslvl500[1] = "GehÃ¤rtetes LederstÃ¼ck";
 		$matidslvl500[2] = 0; $matAnzahllvl500[2] = 304; $matNameslvl500[2] = "Gazerest";
 		$matidslvl500[3] = 0; $matAnzahllvl500[3] = 504; $matNameslvl500[3] = "Spule Gazefaden";
 		$matidslvl500[4] = 0; $matAnzahllvl500[4] = 120; $matNameslvl500[4] = "Ektoplasmakugel";
-		$matidslvl500[5] = 0; $matAnzahllvl500[5] = 15; $matNameslvl500[5] = "Scheußliche Klaue";
+		$matidslvl500[5] = 0; $matAnzahllvl500[5] = 15; $matNameslvl500[5] = "ScheuÃŸliche Klaue";
 		$matidslvl500[6] = 0; $matAnzahllvl500[6] = 15; $matNameslvl500[6] = "Kunstvolles Totem";
-		$matidslvl500[7] = 0; $matAnzahllvl500[7] = 15; $matNameslvl500[7] = "Scheußlicher Fangzahn";
+		$matidslvl500[7] = 0; $matAnzahllvl500[7] = 15; $matNameslvl500[7] = "ScheuÃŸlicher Fangzahn";
 		$matidslvl500[8] = 0; $matAnzahllvl500[8] = 15; $matNameslvl500[8] = "Kraftvoller Giftbeutel";
 		$matidslvl500[9] = 0; $matAnzahllvl500[9] = 15; $matNameslvl500[9] = "Anktiker Knochen";
 		$matidslvl500[10] = 0; $matAnzahllvl500[10] = 15; $matNameslvl500[10] = "Phiole mit kraftvollem Blut";
@@ -2104,11 +2104,11 @@ class gw_handwerk extends guildwars {
 	}
 	
 	function berufInfoSchneider() {
-		# Benötigte Mats:
+		# BenÃ¶tigte Mats:
 		$matids[0] = 0; $matAnzahl[0] = 0; $matNames[0] = "";
 		$matids[1] = 1; $matAnzahl[1] = 66; $matNames[1] = "Spule Jutefaden";
 		$matids[2] = 2; $matAnzahl[2] = 270; $matNames[2] = "Juterest";
-		$matids[3] = 3; $matAnzahl[3] = 60; $matNames[3] = "Rohlederstücke";
+		$matids[3] = 3; $matAnzahl[3] = 60; $matNames[3] = "RohlederstÃ¼cke";
 		$matids[4] = 3; $matAnzahl[4] = 21; $matNames[4] = "Knochensplitter";
 		$matids[5] = 3; $matAnzahl[5] = 26; $matNames[5] = "Phiole mit Schwachem Blut";
 		$matids[6] = 3; $matAnzahl[6] = 18; $matNames[6] = "Winziger Giftbeutel";
@@ -2118,14 +2118,14 @@ class gw_handwerk extends guildwars {
 		$matids[10] = 3; $matAnzahl[10] = 3; $matNames[10] = "Haufen glitzernden Staubs";
 		$matids[11] = 3; $matAnzahl[11] = 59; $matNames[11] = "Spule Wollfaden";
 		$matids[16] = 3; $matAnzahl[16] = 140; $matNames[16] = "Wollrest";
-		$matids[17] = 3; $matAnzahl[17] = 70; $matNames[17] = "Dünnes Lederstück";
+		$matids[17] = 3; $matAnzahl[17] = 70; $matNames[17] = "DÃ¼nnes LederstÃ¼ck";
 		$matids[18] = 3; $matAnzahl[18] = 38; $matNames[18] = "Kleiner Giftbeutel";
-		$matids[20] = 3; $matAnzahl[20] = 12; $matNames[20] = "Phiole mit Dünnem Blut";
+		$matids[20] = 3; $matAnzahl[20] = 12; $matNames[20] = "Phiole mit DÃ¼nnem Blut";
 		$matids[19] = 3; $matAnzahl[19] = 12; $matNames[19] = "Kleiner Fangzahn";
 		$matids[21] = 3; $matAnzahl[21] = 12; $matNames[21] = "Kleines Totem";
 		$matids[22] = 3; $matAnzahl[22] = 24; $matNames[22] = "Knochenscherbe";
 		$matids[24] = 3; $matAnzahl[24] = 56; $matNames[24] = "Spule Baumwollfaden";
-		$matids[26] = 3; $matAnzahl[26] = 60; $matNames[26] = "Raues Lederstück";
+		$matids[26] = 3; $matAnzahl[26] = 60; $matNames[26] = "Raues LederstÃ¼ck";
 		$matids[26] = 3; $matAnzahl[26] = 140; $matNames[26] = "Baumwollrest";
 		$matids[27] = 3; $matAnzahl[27] = 6; $matNames[27] = "Giftbeutel";
 		$matids[29] = 3; $matAnzahl[29] = 12; $matNames[29] = "Totem";
@@ -2134,7 +2134,7 @@ class gw_handwerk extends guildwars {
 		$matids[32] = 3; $matAnzahl[32] = 32; $matNames[32] = "Knochen";
 		$matids[15] = 3; $matAnzahl[15] = 24; $matNames[15] = "Klaue";
 		$matids[34] = 3; $matAnzahl[34] = 56; $matNames[34] = "Spule Leinenfaden";
-		$matids[35] = 3; $matAnzahl[35] = 70; $matNames[35] = "Robustes Lederstück";
+		$matids[35] = 3; $matAnzahl[35] = 70; $matNames[35] = "Robustes LederstÃ¼ck";
 		$matids[36] = 3; $matAnzahl[36] = 140; $matNames[36] = "Leinenrest";
 		$matids[37] = 3; $matAnzahl[37] = 6; $matNames[37] = "Scharfer Fangzahn";
 		$matids[38] = 3; $matAnzahl[38] = 12; $matNames[38] = "Voller Giftbeutel";
@@ -2143,14 +2143,14 @@ class gw_handwerk extends guildwars {
 		$matids[41] = 3; $matAnzahl[41] = 32; $matNames[41] = "Glatte Schuppen";
 		$matids[42] = 3; $matAnzahl[42] = 24; $matNames[42] = "Dicker Knochen";
 		$matids[43] = 3; $matAnzahl[43] = 60; $matNames[43] = "Spule Seidenfaden";
-		$matids[44] = 3; $matAnzahl[44] = 105; $matNames[44] = "Dickes Lederstück";
+		$matids[44] = 3; $matAnzahl[44] = 105; $matNames[44] = "Dickes LederstÃ¼ck";
 		$matids[45] = 3; $matAnzahl[45] = 210; $matNames[45] = "Seidenrest";
-		$matids[46] = 3; $matAnzahl[46] = 6; $matNames[46] = "Großer Fangzahn";
+		$matids[46] = 3; $matAnzahl[46] = 6; $matNames[46] = "GroÃŸer Fangzahn";
 		$matids[47] = 3; $matAnzahl[47] = 12; $matNames[47] = "Wirkungsvoller Giftbeutel";
-		$matids[48] = 3; $matAnzahl[48] = 12; $matNames[48] = "Große Klaue";
+		$matids[48] = 3; $matAnzahl[48] = 12; $matNames[48] = "GroÃŸe Klaue";
 		$matids[49] = 0; $matAnzahl[49] = 12; $matNames[49] = "Phiole mit Wirkungsvollem Blut";
-		$matids[50] = 0; $matAnzahl[50] = 12; $matNames[50] = "Großer Fangzahn";
-		$matids[51] = 0; $matAnzahl[51] = 12; $matNames[51] = "Großer Knochen";
+		$matids[50] = 0; $matAnzahl[50] = 12; $matNames[50] = "GroÃŸer Fangzahn";
+		$matids[51] = 0; $matAnzahl[51] = 12; $matNames[51] = "GroÃŸer Knochen";
 	
 		echo "<h2>Schneider</h2>";
 	
@@ -2160,23 +2160,23 @@ class gw_handwerk extends guildwars {
 	}
 	
 	function berufInfoKoch() {
-		# Benötigte Mats:
+		# BenÃ¶tigte Mats:
 		$matids[0] = 0; $matAnzahl[0] = 0; $matNames[0] = "";
 		$matids[1] = 1; $matAnzahl[1] = 75; $matNames[1] = "Krug Wasser";
-		$matids[2] = 2; $matAnzahl[2] = 15; $matNames[2] = "Krug Pflanzenöl";
+		$matids[2] = 2; $matAnzahl[2] = 15; $matNames[2] = "Krug PflanzenÃ¶l";
 		$matids[3] = 3; $matAnzahl[3] = 180; $matNames[3] = "Beutel Mehl";
 		$matids[4] = 3; $matAnzahl[4] = 68; $matNames[4] = "Paket Salz";
 		$matids[5] = 3; $matAnzahl[5] = 15; $matNames[5] = "Flasche Essig";
 		$matids[6] = 3; $matAnzahl[6] = 257; $matNames[6] = "Sack Zucker";
 		$matids[7] = 3; $matAnzahl[7] = 25; $matNames[7] = "Paket Backpulver";
-		$matids[8] = 3; $matAnzahl[8] = 52; $matNames[8] = "Beutel mit Stärke";
-		$matids[9] = 3; $matAnzahl[9] = 255; $matNames[9] = "Stück Butter";
+		$matids[8] = 3; $matAnzahl[8] = 52; $matNames[8] = "Beutel mit StÃ¤rke";
+		$matids[9] = 3; $matAnzahl[9] = 255; $matNames[9] = "StÃ¼ck Butter";
 		$matids[10] = 3; $matAnzahl[10] = 43; $matNames[10] = "Schwarzes Pfefferkorn";
 		$matids[11] = 3; $matAnzahl[11] = 75; $matNames[11] = "Ei";
 		$matids[16] = 3; $matAnzahl[16] = 25; $matNames[16] = "Erdbeere";
 		$matids[17] = 3; $matAnzahl[17] = 25; $matNames[17] = "Schoko-Riegel";
 		$matids[18] = 3; $matAnzahl[18] = 80; $matNames[18] = "Brombeere";
-		$matids[19] = 3; $matAnzahl[19] = 28; $matNames[19] = "Stück Wildfleisch";
+		$matids[19] = 3; $matAnzahl[19] = 28; $matNames[19] = "StÃ¼ck Wildfleisch";
 		$matids[20] = 3; $matAnzahl[20] = 28; $matNames[20] = "Spargelstange";
 		$matids[21] = 3; $matAnzahl[21] = 25; $matNames[21] = "Birne";
 		$matids[22] = 3; $matAnzahl[22] = 55; $matNames[22] = "Zitrone";
@@ -2184,8 +2184,8 @@ class gw_handwerk extends guildwars {
 		$matids[26] = 3; $matAnzahl[26] = 75; $matNames[26] = "Pfirsich";
 	
 		echo "<h2>Koch</h2>";
-		echo "<p class='dezentInfo'>Billigster Handwerksberuf überhaupt. Einziger Nachteil: Es werden Accountgebundene Handwerksmaterialien
-				benötigt. Also muss man durch die Gegend laufen und diese gegen Karma eintauschen. </p>";
+		echo "<p class='dezentInfo'>Billigster Handwerksberuf Ã¼berhaupt. Einziger Nachteil: Es werden Accountgebundene Handwerksmaterialien
+				benÃ¶tigt. Also muss man durch die Gegend laufen und diese gegen Karma eintauschen. </p>";
 	
 		# Ausgabe der Liste
 		$this->einkaufsliste($matids, $matAnzahl, $matNames);

@@ -28,7 +28,7 @@ class usermanager extends functions {
 					echo "<p class='buttonlink'>Name: ".$row[$i]->Name."</p>";
 					if(isset($row[$i]->titel)) { echo "<p class='highlightedLink'>Titel: ".$row[$i]->titel."</p>"; }
 					echo "<p class='erfolg'>" . $row[$i]->Name . " ist Mitglied seit dem " . $row[$i]->timestamp . " </p>";
-					echo "<h2>Beiträge von ".$row[$i]->Name."</h2>";
+					echo "<h2>BeitrÃ¤ge von ".$row[$i]->Name."</h2>";
 					echo "<table class='flatnetTable'>";
 					echo "<thead><td colspan='2'>Titel</td></thead>";
 					
@@ -52,7 +52,7 @@ class usermanager extends functions {
 						if($row2[$j]->locked == 1) {
 							echo "id = 'illegal' ";
 						}
-						# Wenn der Eintrag für andere Benutzer gesperrt ist
+						# Wenn der Eintrag fÃ¼r andere Benutzer gesperrt ist
 						if($row2[$j]->status != 1) {
 							echo "id = 'login'";
 						}
@@ -89,7 +89,7 @@ class usermanager extends functions {
 	}
 	
 	/**
-	 * Zeigt seine eigenen Informationen bezüglich Anzahl verschiedener Einträge in der Datenbank.
+	 * Zeigt seine eigenen Informationen bezÃ¼glich Anzahl verschiedener EintrÃ¤ge in der Datenbank.
 	 */
 	function userInfo() {
 		
@@ -129,34 +129,34 @@ class usermanager extends functions {
 		$menge = $mengeGrund[0]->anzahl;
 		echo "<div id=''>";
 		echo "<h2>Dokumentation</h2>";
-		echo "<p>Anzahl der Einträge in der Dokumentation: " . $menge;
+		echo "<p>Anzahl der EintrÃ¤ge in der Dokumentation: " . $menge;
 		echo "</div>";
 
-		# Vorschläge Account Information
+		# VorschlÃ¤ge Account Information
 		$select = "SELECT count(*) as anzahl FROM vorschlaege WHERE autor = '$user'";
 		$mengeGrund = $this->getObjektInfo($select);
 		$menge = $mengeGrund[0]->anzahl;
 		echo "<div id=''>";
 		echo "</div>";
 		
-		# Vorschläge Account Information
+		# VorschlÃ¤ge Account Information
 		$select = "SELECT count(*) as anzahl FROM blogtexte WHERE autor = '$user'";
 		$mengeGrund = $this->getObjektInfo($select);
 		$menge = $mengeGrund[0]->anzahl;
 		echo "<div id=''>";
-		echo "<h2>Foreneinträge</h2>";
+		echo "<h2>ForeneintrÃ¤ge</h2>";
 		echo "<p>Anzahl: " . $menge;
 		echo "</div>";
 		echo "</div>";
 	}
 
 	/**
-	 * Zeigt die Blogeinträge des Benutzers an.
+	 * Zeigt die BlogeintrÃ¤ge des Benutzers an.
 	 */
 	function userBlogTexte() {
 		$user = $this->getUserID($_SESSION['username']);
 		if(!isset($_GET['passChange'])) {  
-		echo "<div class='mainbody'><h2>Deine Blog Einträge</h2>";
+		echo "<div class='mainbody'><h2>Deine Blog EintrÃ¤ge</h2>";
 		echo "<div id='left'>";
 		$selectBlog = "SELECT * 
 		, year(timestamp) AS jahr
@@ -184,7 +184,7 @@ class usermanager extends functions {
 		}
 		echo "</div>";
 		if($menge == 0) {
-			echo "<div class='adresseintrag'>Es gibt leider keine Eintrage die angezeigt werden können. :(</div>";
+			echo "<div class='adresseintrag'>Es gibt leider keine Eintrage die angezeigt werden kÃ¶nnen. :(</div>";
 		}
 		
 		echo "</div>";
@@ -192,7 +192,7 @@ class usermanager extends functions {
 	}
 	
 	/**
-	 * Ermöglicht dem Nutzer sein Passwort zu ändern.
+	 * ErmÃ¶glicht dem Nutzer sein Passwort zu Ã¤ndern.
 	 */
 	function changePass() {
 		$user = $_SESSION['username'];
@@ -243,22 +243,22 @@ class usermanager extends functions {
 					}
 					else {
 						if($neuesPass != $neuesPass2) {
-							echo "<p class='meldung'>Die beiden Passwörte stimmen nicht überein.</p>";
+							echo "<p class='meldung'>Die beiden PasswÃ¶rte stimmen nicht Ã¼berein.</p>";
 						} else {
 							$hashedPass = md5($neuesPass);
 							$sqlupdate="UPDATE benutzer SET Passwort='$hashedPass' WHERE Name='$user' LIMIT 1";
 							
 							if($this->sql_insert_update_delete($sqlupdate) == true) {
-								echo "<p class='erfolg'>Passwort geändert</p>";
+								echo "<p class='erfolg'>Passwort geÃ¤ndert</p>";
 							} else {
-								echo "<p class='meldung'>Das Passwort wurde nicht geändert (hast du etwa das gleiche wieder genommen?)</p>";
+								echo "<p class='meldung'>Das Passwort wurde nicht geÃ¤ndert (hast du etwa das gleiche wieder genommen?)</p>";
 							}
 								
 						}
 					}
 				}
 			} else {
-				echo "<p class='info'>Du hast für diesen Bereich keine Berechtigung</p>";
+				echo "<p class='info'>Du hast fÃ¼r diesen Bereich keine Berechtigung</p>";
 				return false;
 			}
 		}
@@ -299,7 +299,7 @@ class usermanager extends functions {
 			$ergebnis = mysql_query($select);
 			$menge = mysql_num_rows($ergebnis);
 			if($menge == 0) {
-				echo "<p class='erfolg'>Lieber Administrator, es gibt keine Dokumentareinträge!.</p>";
+				echo "<p class='erfolg'>Lieber Administrator, es gibt keine DokumentareintrÃ¤ge!.</p>";
 			}	
 		}
 		
@@ -309,14 +309,14 @@ class usermanager extends functions {
 			$ergebnis = mysql_query($select);
 			$menge = mysql_num_rows($ergebnis);
 			if($menge == 0) {
-				echo "<p class='erfolg'>Mache doch ein paar Blogeinträge wenn du Lust hast, klicke
+				echo "<p class='erfolg'>Mache doch ein paar BlogeintrÃ¤ge wenn du Lust hast, klicke
 					hierzu auf <a href='/flatnet2/blog/addBlogEntry.php' class='buttonlink'>Blogeintrag verfassen</a>!</p>";
 			}		
 		}
 	}
 	
 	/**
-	 * Ermöglicht das Speichern des realen Benutzernamens in die Datenbank.
+	 * ErmÃ¶glicht das Speichern des realen Benutzernamens in die Datenbank.
 	 */
 	function addRealName() {
 		$user = $_SESSION['username'];
@@ -326,12 +326,12 @@ class usermanager extends functions {
 		
 		if($row->realName == "" AND !isset($_GET['addRealName'])) {
 			echo "<div class='gwstart1'><div id='gwwaechter'>";
-			echo "<a href='?addRealName=1' class='highlightedLink'>Realnamen hinzufügen</a>";
+			echo "<a href='?addRealName=1' class='highlightedLink'>Realnamen hinzufÃ¼gen</a>";
 			echo "</div></div>";
 		}
 		
 		if(isset($_GET['addRealName'])) {
-			# Wurde link gedrückt?
+			# Wurde link gedrÃ¼ckt?
 			echo "<div class='gwstart1'><div id='gwwaechter'>
 				<form method=post>
 					<input type='text' name='realUserName' placeholder='Vorname Nachname' />
@@ -347,7 +347,7 @@ class usermanager extends functions {
 					$sqlupdate="UPDATE benutzer SET realName='$realName' WHERE Name='$user' LIMIT 1";
 					$ergebnis = mysql_query($sqlupdate);
 					if($ergebnis == true) {
-						echo "<div class='newChar'><p class='erfolg'>Realname hinzugefügt <a href='?'>OK</a></p></div>";
+						echo "<div class='newChar'><p class='erfolg'>Realname hinzugefÃ¼gt <a href='?'>OK</a></p></div>";
 					} else {
 						echo "<div class='newChar'><p class='meldung'>Es ist ein Fehler aufgetreten</p></div>";
 					}
@@ -365,7 +365,7 @@ class usermanager extends functions {
 			$this->changePass();
 			
 			echo "<div class='gwEinstellungen'>
-							<h2>Passwort ändern</h2>
+							<h2>Passwort Ã¤ndern</h2>
 							<form method='post'>
 								<input type='password' name='oldPass' placeholder='Altes Passwort' />
 								<input type='password' name='newPass' placeholder='Neues Passwort' />
@@ -380,7 +380,7 @@ class usermanager extends functions {
 	}
 	
 	/**
-	 * Ermöglicht das verwalten von Guildwars Accounts.
+	 * ErmÃ¶glicht das verwalten von Guildwars Accounts.
 	 */
 	function manageGWAccounts() {
 		# Rechtecheck
@@ -438,13 +438,13 @@ class usermanager extends functions {
 					
 					
 					
-					# nächste Acc Nr bekommen:
+					# nÃ¤chste Acc Nr bekommen:
 					$accnummer = "SELECT MAX(account) AS max FROM gw_accounts WHERE besitzer = '$user'";
 					$row = $this->getObjektInfo($accnummer);
 					$nextAccNo = $row[0]->max + 1;
 					
 					if($mail == "" OR $nextAccNo == "") {
-						echo "<p class='meldung'>Bitte alle Felder ausfüllen</p>";
+						echo "<p class='meldung'>Bitte alle Felder ausfÃ¼llen</p>";
 						return false;
 					} else {
 						$query="INSERT INTO gw_accounts (besitzer, account, mail) VALUES ('$user','$nextAccNo','$mail')";
@@ -474,7 +474,7 @@ class usermanager extends functions {
 				$query = "SELECT * FROM gw_accounts WHERE besitzer = '$user' AND account = '$nummer' LIMIT 1";
 				$row = $this->getObjektInfo($query);
 				
-				# Gelöschte Stunden bekommen:
+				# GelÃ¶schte Stunden bekommen:
 				$stunden = $this->getObjektInfo("SELECT * FROM account_infos WHERE besitzer = '$user' AND account = '$nummer' AND attribut = 'gw_geloschte_stunden' LIMIT 1");
 				
 				if(!isset($stunden[0]->wert)) {
@@ -489,7 +489,7 @@ class usermanager extends functions {
 							echo "<div class='gwEinstellungen'>";
 								
 								echo "<p class='erfolg'>Dein Account wurde einmalig konfiguriert. Du kannst hier jetzt mehrere Accounts
-										anlegen, falls du mehrere besitzt, und diese dann später in der Charakterübersicht wechseln!</p>";
+										anlegen, falls du mehrere besitzt, und diese dann spÃ¤ter in der CharakterÃ¼bersicht wechseln!</p>";
 								echo "<a href='?passChange' class='buttonlink'/>OK</a>";
 					
 							echo "</div>";
@@ -499,8 +499,8 @@ class usermanager extends functions {
 					echo "<h2>" .$row[0]->mail . "</h2>";
 					echo "<form action='?passChange' method=post>";
 					echo "<strong>Accountname</strong><br> <input type=text name='newAccName' value='".$row[0]->mail."' />";
-					echo "<p class=''>Hier kannst du die gespeicherten gelöschten Spielstunden selbst anpassen: </p>";
-					echo "<strong>Gelöschte Stunden</strong><br> <input type=text name='newStunden' value='$stundenWert' />";
+					echo "<p class=''>Hier kannst du die gespeicherten gelÃ¶schten Spielstunden selbst anpassen: </p>";
+					echo "<strong>GelÃ¶schte Stunden</strong><br> <input type=text name='newStunden' value='$stundenWert' />";
 					echo "<input type=hidden name='nummer' value='$nummer' />";
 					echo "<br><input type=submit name='newAccNameSubmit' value='OK' />";
 					echo "</form>";
@@ -524,18 +524,18 @@ class usermanager extends functions {
 			
 			$sqlupdate= "UPDATE gw_accounts SET mail='$mail' WHERE besitzer='$user' AND account='$nummer'";
 						
-			# Gelöschte Stunden bekommen:
+			# GelÃ¶schte Stunden bekommen:
 			$stundenOld = $this->getObjektInfo("SELECT * FROM account_infos WHERE besitzer = '$user' AND account = '$nummer' AND attribut = 'gw_geloschte_stunden' LIMIT 1");
 			
 			
 			if($this->sql_insert_update_delete($sqlupdate) == true) {
 							
 				echo "<div class='erfolg'>";
-					echo "<p >Eintrag geändert</p>";
+					echo "<p >Eintrag geÃ¤ndert</p>";
 				echo "</div>";
 			} else {
 				
-					echo "<p>Accountname nicht geändert, </p>";
+					echo "<p>Accountname nicht geÃ¤ndert, </p>";
 			}
 			
 			# Stunden speichern:
@@ -544,31 +544,31 @@ class usermanager extends functions {
 				# Neuen Eintrag erstellen:
 				
 				if($this->sql_insert_update_delete("INSERT INTO account_infos (besitzer, attribut, wert, account) VALUES ('$user','gw_geloschte_stunden','$stunden','$nummer')") == true) {
-					echo "<p class='erfolg'>Der Eintrag für gelöschte Stunden wurde erstellt.</p>";
+					echo "<p class='erfolg'>Der Eintrag fÃ¼r gelÃ¶schte Stunden wurde erstellt.</p>";
 				} else {
-					echo "<p class=''>Der Eintrag für die gelöschten Stunden wurde nicht erstellt.</p>";
+					echo "<p class=''>Der Eintrag fÃ¼r die gelÃ¶schten Stunden wurde nicht erstellt.</p>";
 				}
 			} else {
-				# Bestehenden Eintrag ändern:
+				# Bestehenden Eintrag Ã¤ndern:
 				
 				if($this->sql_insert_update_delete("UPDATE account_infos SET wert='$stunden' WHERE besitzer='$user' AND account='$nummer' AND attribut = 'gw_geloschte_stunden'") == true) {
-					echo "<p class='erfolg'>Die gelöschten Stunden wurden abgeändert.</p>";
+					echo "<p class='erfolg'>Die gelÃ¶schten Stunden wurden abgeÃ¤ndert.</p>";
 				} else {
-					echo "<p class=''>Die gelöschten Stunden wurden nicht geändert.</p>";
+					echo "<p class=''>Die gelÃ¶schten Stunden wurden nicht geÃ¤ndert.</p>";
 				}
 			}
 		}
 	}
 	
 	/**
-	 * Löscht einen bestehenden Account.
+	 * LÃ¶scht einen bestehenden Account.
 	 */
 	function deleteGWAcc() {
 		if(isset($_GET['delete'])) {
 			if($_GET['delete'] != "" AND $_GET['delete'] != 1) {
 				$nummer = $_GET['delete'];
 				$user = $this->getUserID($_SESSION['username']);
-				# nächste Acc Nr bekommen:
+				# nÃ¤chste Acc Nr bekommen:
 				$query = "SELECT * FROM gw_accounts WHERE besitzer = '$user' AND account = '$nummer' LIMIT 1";
 				
 				$row = $this->getObjektInfo($query);
@@ -581,43 +581,43 @@ class usermanager extends functions {
 							
 							$getAmountOfChars = $this->getAmount($sqlupdate);
 							
-							# Löschen, wenn die Charakter verschoben wurden, oder aber die Anzahl der Charakter ist gleich 0.
+							# LÃ¶schen, wenn die Charakter verschoben wurden, oder aber die Anzahl der Charakter ist gleich 0.
 							if($this->sql_insert_update_delete($sqlupdate) == true OR $getAmountOfChars == 0) {
 								
 								$sql = "DELETE FROM gw_accounts WHERE account='$nummer' AND besitzer = '$user'";
 								
 								if($this->sql_insert_update_delete($sql) == true) {
 									
-									# Löscht die Informationen zum account in der Tabelle Account Infos:
+									# LÃ¶scht die Informationen zum account in der Tabelle Account Infos:
 									if($this->sql_insert_update_delete("DELETE FROM account_infos WHERE besitzer = '$user' AND account = '$nummer'") == true) {
-										echo "Accountinfos für Accountnummer $nummer gelöscht.";
+										echo "Accountinfos fÃ¼r Accountnummer $nummer gelÃ¶scht.";
 									} else {
-										echo "Accountinfos wurden nicht gelöscht.";
+										echo "Accountinfos wurden nicht gelÃ¶scht.";
 									}
 									
-									# Löscht alle Informationen in der gwusersmats
+									# LÃ¶scht alle Informationen in der gwusersmats
 									if($this->sql_insert_update_delete("DELETE FROM gwusersmats WHERE besitzer = '$user' AND account = '$nummer'") == true) {
-										echo "Handwerksmaterialien für diesen Accountg gelöscht.";
+										echo "Handwerksmaterialien fÃ¼r diesen Accountg gelÃ¶scht.";
 									} else {
-										echo "Handwerksmaterialien wurden nicht gelöscht.";
+										echo "Handwerksmaterialien wurden nicht gelÃ¶scht.";
 									}
 									
 																	
 									echo "<div class='erfolg'>";
 									echo "<h2>Erfolg</h2>";
-									echo "<p>Account gelöscht</p>";
+									echo "<p>Account gelÃ¶scht</p>";
 									echo "</div>";
 								} else {
 									echo "<div class='meldung'>";
 									echo "<h2>Fehler</h2>";
-									echo "<p>Konnte nicht gelöscht werden</p>";
+									echo "<p>Konnte nicht gelÃ¶scht werden</p>";
 									echo "</div>";
 								}
 							}
 						} else {
 							echo "<div class='meldung'>";
 							echo "<h2>Fehler</h2>";
-							echo "<p>Konnte nicht gelöscht werden</p>";
+							echo "<p>Konnte nicht gelÃ¶scht werden</p>";
 							echo "</div>";
 						}
 					}
@@ -625,7 +625,7 @@ class usermanager extends functions {
 					if($this->userHasRight("9", 0) == true AND $row[0]->besitzer == $user) {
 						echo "<div class='rightSpacer'>";
 							echo "<h2>" .$row[0]->mail . "</h2>";
-							echo "Willst du diesen Account wirklich löschen? ";
+							echo "Willst du diesen Account wirklich lÃ¶schen? ";
 							echo "<a href='?delete=$nummer&passChange&Sure=1' class='highlightedLink'/> JA </a>";
 							echo "<p class='info'>Die Charakter werden zum Hauptaccount geschoben.</p>";
 						echo "</div>";
@@ -635,14 +635,14 @@ class usermanager extends functions {
 			} else {
 				echo "<div class='meldung'>";
 				echo "<h2>Fehler</h2>";
-				echo "<p class=''>Der Hauptaccount kann nicht gelöscht werden</p>";
+				echo "<p class=''>Der Hauptaccount kann nicht gelÃ¶scht werden</p>";
 				echo "</div>";
 			}
 		}
 	}
 	
 	/**
-	 * Zeigt eine Kachel für den gewählten Account an.
+	 * Zeigt eine Kachel fÃ¼r den gewÃ¤hlten Account an.
 	 */
 	function getInfoGWAcc() {
 		if(isset($_GET['getInfo'])) {
@@ -651,7 +651,7 @@ class usermanager extends functions {
 			$user = $this->getUserID($_SESSION['username']);
 			$menge = $this->getAmount("SELECT id, besitzer FROM gw_chars WHERE besitzer = '$user' AND account = '$nummer'");
 			
-			# nächste Acc Nr bekommen:
+			# nÃ¤chste Acc Nr bekommen:
 			$row = $this->getObjektInfo("SELECT * FROM gw_accounts WHERE besitzer = '$user' AND account = '$nummer' LIMIT 1");
 			$stundenThisAcc = $this->getObjektInfo("SELECT sum(spielstunden) as summe FROM gw_chars WHERE besitzer = '$user' AND account = '$nummer' LIMIT 1");
 			$geloschteStundenCurrentAccount = $this->getObjektInfo("SELECT besitzer, attribut, wert, account FROM account_infos WHERE besitzer = '$user' AND attribut = 'gw_geloschte_stunden' AND account = '$nummer'");
@@ -667,7 +667,7 @@ class usermanager extends functions {
 					echo "<h2>" .$row[0]->mail . "</h2>";
 					echo "Informationen:<br><strong>" . $menge . "</strong> Charakter,";
 					echo "<br>gespielte Stunden: <strong>" . $stundenThisAcc[0]->summe . " </strong>";
-					echo "<br>und <strong> ". $geloschteStunden ." </strong> gelöschte Stunden.";
+					echo "<br>und <strong> ". $geloschteStunden ." </strong> gelÃ¶schte Stunden.";
 				echo "</div>";
 			}
 		}

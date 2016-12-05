@@ -1,9 +1,9 @@
 <?php
 /**
- * @author: Steven Schödel
+ * @author: Steven SchÃ¶del
  * Projekt Flatnet
  *
- * Diese Klasse enthält Funktionen die allgemein genutzt werden können, d. h. unabhängig sind.
+ * Diese Klasse enthÃ¤lt Funktionen die allgemein genutzt werden kÃ¶nnen, d. h. unabhÃ¤ngig sind.
  */
 
 include 'mysql.class.php';
@@ -22,9 +22,9 @@ class functions extends sql {
 		if($this->userHasRight(23, 0) == true) {
 			if($suchWort) {
 	
-				$ursprünglicheSuche = $suchWort;
+				$ursprÃ¼nglicheSuche = $suchWort;
 				$ergebnis_der_suche = "";
-				# Suche mit Wildcards bestücken
+				# Suche mit Wildcards bestÃ¼cken
 				$suchWort = "%" . $suchWort . "%";
 	
 				# Spalten der Tabelle selektieren:
@@ -40,14 +40,14 @@ class functions extends sql {
 				for ($i = 0 ; $i < sizeof($rowSpalten) ; $i++) {
 					$querySuche .= " OR " . $rowSpalten[$i]->Field . " LIKE '$suchWort'";
 				}
-				# Klammer am Ende schließen-
+				# Klammer am Ende schlieÃŸen-
 				$querySuche .= ")";
 	
-				# Query für die Suche
+				# Query fÃ¼r die Suche
 				$suchfeld = $this->getObjektInfo($querySuche);
 				
 				# Ausgabe der Suche
-				$ergebnis_der_suche .= "<h2>Suchergebnis (= $ursprünglicheSuche)</h2>";
+				$ergebnis_der_suche .= "<h2>Suchergebnis (= $ursprÃ¼nglicheSuche)</h2>";
 				for ($i = 0; $i < sizeof($suchfeld); $i++) {
 					$ergebnis_der_suche .= "<div class='invSuchErgeb'>";
 					$ergebnis_der_suche .= "<a href='".$pfad=$suchfeld[$i]->id."'>" . substr($suchfeld[$i]->$name, 0, 20) . "..</a>";
@@ -87,7 +87,7 @@ class functions extends sql {
 	}
 	
 	/**
-	 * Zeigt alle Verfügbaren Seiten an.
+	 * Zeigt alle VerfÃ¼gbaren Seiten an.
 	 */
 	function seitenAnzeigen($proSeite) {
 		# VON BIS HERAUSFINDEN:
@@ -113,7 +113,7 @@ class functions extends sql {
 	 * @return int
 	 */
 	function getUserID($username) {
-		# namen des Benutzers auswählen:
+		# namen des Benutzers auswÃ¤hlen:
 	
 		$userInfo = $this->getObjektInfo("SELECT id, Name FROM benutzer WHERE Name = '$username' LIMIT 1");
 		
@@ -133,7 +133,7 @@ class functions extends sql {
 	 * @return int
 	 */
 	function getUserName($userid) {
-		# namen des Benutzers auswählen:
+		# namen des Benutzers auswÃ¤hlen:
 		$selectUsername = "SELECT id, Name FROM benutzer WHERE id = '$userid' LIMIT 1";
 		$rowUsername = $this->getObjektInfo($selectUsername);
 		if(isset($rowUsername[0]->Name)) {
@@ -194,10 +194,10 @@ class functions extends sql {
 		$benutzerrechte = $row[0]->rights;
 		$rechte = array();
 		
-		# Menge der Rechte prüfen:
+		# Menge der Rechte prÃ¼fen:
 		$selectAnzahl = "SELECT count(*) as anzahl FROM userrights";
 		$menge = $this->getObjektInfo($selectAnzahl);
-		# Anzahl prüfen Ende
+		# Anzahl prÃ¼fen Ende
 
 		for($i = $menge[0]->anzahl; $i >= 0; $i--) {
 			$wert = pow(2, $i);
@@ -220,8 +220,8 @@ class functions extends sql {
 	}
 	
 	/**
-	 * Neue PrüfungsFunktion
-	 * Nimmt den aktuellen Benutzer und prüft, ob der Benutzer die Seite sehen darf oder nicht. 
+	 * Neue PrÃ¼fungsFunktion
+	 * Nimmt den aktuellen Benutzer und prÃ¼ft, ob der Benutzer die Seite sehen darf oder nicht. 
 	 * @param unknown $rightID
 	 * @return boolean
 	 */
@@ -248,8 +248,8 @@ class functions extends sql {
 	}
 	
 	/**
-	 * Prüft, ob der Benutzer das Recht besitzt oder nicht.
-	 * Gibt TRUE oder FALSE zurück.
+	 * PrÃ¼ft, ob der Benutzer das Recht besitzt oder nicht.
+	 * Gibt TRUE oder FALSE zurÃ¼ck.
 	 * @param unknown $id
 	 * @param unknown $user
 	 * @return boolean
@@ -295,11 +295,11 @@ class functions extends sql {
 
 		$rechte = array();
 
-		# Anzahl der Rechte prüfen
+		# Anzahl der Rechte prÃ¼fen
 		$selectAnzahl = "SELECT count(*) as anzahl FROM userrights";
 		$menge = $this->getObjektInfo($selectAnzahl);
 		$menge = $menge[0]->anzahl;
-		# Anzahl prüfen Ende
+		# Anzahl prÃ¼fen Ende
 
 		for($i = $menge; $i >= 0; $i--) {
 			$wert = pow(2, $i);
@@ -320,7 +320,7 @@ class functions extends sql {
 	}
 
 	/**
-	 * Prüft, ob der User eingeloggt ist. Dabei ist es möglich nur abzufragen,
+	 * PrÃ¼ft, ob der User eingeloggt ist. Dabei ist es mÃ¶glich nur abzufragen,
 	 * ob der User eingeloggt ist oder ob er zu einem $pfad geschickt werden soll.
 	 */
 	public function logged_in($redirect = "redirect", $pfad = "/flatnet2/index.php" ) {
@@ -397,7 +397,7 @@ class functions extends sql {
 		}
 
 		if($number == 3) {
-			$monat = "März";
+			$monat = "MÃ¤rz";
 		}
 
 		if($number == 4) {
@@ -523,7 +523,7 @@ class functions extends sql {
 			
 			if($this->userHasRight(8, 0) == true) {
 				echo "<li><a href='/flatnet2/informationen/hilfe.php'";
-				echo ">Ankündigungen</a></li>";
+				echo ">AnkÃ¼ndigungen</a></li>";
 			}
 			
 			if($this->userHasRight(67, 0) == true) {
@@ -539,7 +539,7 @@ class functions extends sql {
 		if($site == "informationen") {
 			echo '
 					<li><a href="kontakt.php" id="kontakt">Kontakt</a></li>
-					<li><a href="hilfe.php" id="doku">Ankündigungen</a></li>
+					<li><a href="hilfe.php" id="doku">AnkÃ¼ndigungen</a></li>
 					<li><a href="quellen.php" id="quellen">Quellen</a></li>
 					<li><a href="impressum.php" id="impressum">Impressum</a></li>';
 		}
@@ -551,36 +551,21 @@ class functions extends sql {
 	 */
 	function header() {
 		
-		echo '<link rel="apple-touch-icon" sizes="57x57" href="/apple-icon-57x57.png">
-				<link rel="apple-touch-icon" sizes="60x60" href="/apple-icon-60x60.png">
-				<link rel="apple-touch-icon" sizes="72x72" href="/apple-icon-72x72.png">
-				<link rel="apple-touch-icon" sizes="76x76" href="/apple-icon-76x76.png">
-				<link rel="apple-touch-icon" sizes="114x114" href="/apple-icon-114x114.png">
-				<link rel="apple-touch-icon" sizes="120x120" href="/apple-icon-120x120.png">
-				<link rel="apple-touch-icon" sizes="144x144" href="/apple-icon-144x144.png">
-				<link rel="apple-touch-icon" sizes="152x152" href="/apple-icon-152x152.png">
-				<link rel="apple-touch-icon" sizes="180x180" href="/apple-icon-180x180.png">
-				<link rel="icon" type="image/png" sizes="192x192"  href="/android-icon-192x192.png">
-				<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
-				<link rel="icon" type="image/png" sizes="96x96" href="/favicon-96x96.png">
-				<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
-				<link rel="manifest" href="/manifest.json">
-				<meta name="msapplication-TileColor" content="#ffffff">
-				<meta name="msapplication-TileImage" content="/ms-icon-144x144.png">
-				<meta http-equiv="X-UA-Compatible" content="IE=edge" />
-				<meta name="theme-color" content="#ffffff">';
+		echo '<link rel="apple-touch-icon" sizes="57x57" href="/apple-icon-57x57.png">';
+		echo '<link rel="apple-touch-icon" sizes="60x60" href="/apple-icon-60x60.png">';
+		echo '<link rel="apple-touch-icon" sizes="72x72" href="/apple-icon-72x72.png">';
+		echo '<link rel="apple-touch-icon" sizes="76x76" href="/apple-icon-76x76.png">';
 		echo '<script src="/flatnet2/tools/ckeditor/ckeditor.js"></script>';
 		echo '<link href="/flatnet2/css/style.css" type="text/css" rel="stylesheet" />';
 		
-		# Quellen für JQUERY Scripte
+		# Quellen fÃ¼r JQUERY Scripte
 		echo "<script src='//code.jquery.com/jquery-1.10.2.js'></script>";
 		echo "<script src='//code.jquery.com/ui/1.11.4/jquery-ui.js'></script>";
 		echo "<script src='/flatnet2/Chart.min.js'></script>";
 		
 		# Verschiebbare Fenster
 		echo '<script> $(function() { $( "#draggable" ).draggable(); }); </script>';
-			
-		header('Content-Type: text/html; charset=ISO-8859-1');
+
 		session_start();
 		echo "<header class='header'>";
 			
@@ -590,7 +575,7 @@ class functions extends sql {
 			echo "<p>Willkommen " . "<strong><a href='/flatnet2/usermanager/usermanager.php'>" . $_SESSION['username'] . "</a></strong> | ";
 			echo "<a href='/flatnet2/includes/logout.php'> Abmelden </a></p>";
 		} else {
-			echo "<p class='info'>Du hast versucht auf eine Seite zuzugreifen, für die du nicht angemeldet bist. Bitte melde dich an und versuche es erneut<br>
+			echo "<p class='info'>Du hast versucht auf eine Seite zuzugreifen, fÃ¼r die du nicht angemeldet bist. Bitte melde dich an und versuche es erneut<br>
 					<a class='rightBlueLink' href='/flatnet2/index.php'>Hauptseite</a></p>
 					</div></header>";
 			exit;
@@ -620,7 +605,7 @@ class functions extends sql {
 		
 		echo"<div id='ueberschrift'><h1><a href='/flatnet2/uebersicht.php'>Steven.NET</a></h1></div>";
 		
-		# Zeigt die Ankündigung an:
+		# Zeigt die AnkÃ¼ndigung an:
 		$this->ankuendigung();
 		echo "</header>";
 	}
@@ -650,7 +635,7 @@ class functions extends sql {
 	}
 	
 	/**
-	 * Zeigt eine Ankündigung an
+	 * Zeigt eine AnkÃ¼ndigung an
 	 */
 	function ankuendigung() {
 		if($this->userHasRight(24, 0) == true) {
@@ -687,10 +672,10 @@ class functions extends sql {
 			
 			echo "<a href=\"#\" class='$class' onclick=\"document.getElementById('BenCenter').style.display = 'block'\">$linkname</a>";
 			echo "<div class='benCenter' style=\"display: none;\" id=\"BenCenter\">";
-			echo "<a href=\"#\"  class='highlightedLink' onclick=\"document.getElementById('BenCenter').style.display = 'none'\">Schließen</a>";
-			echo "<p class='spacer'>Grüne Links sind NEU und graue sind ALT! (max 5 Tage alt)</p>";
+			echo "<a href=\"#\"  class='highlightedLink' onclick=\"document.getElementById('BenCenter').style.display = 'none'\">SchlieÃŸen</a>";
+			echo "<p class='spacer'>GrÃ¼ne Links sind NEU und graue sind ALT! (max 5 Tage alt)</p>";
 			
-			# Antworten auf eigene Beiträge suchen
+			# Antworten auf eigene BeitrÃ¤ge suchen
 			
 			$query = "SELECT *
 			, day(timestamp) as tag
