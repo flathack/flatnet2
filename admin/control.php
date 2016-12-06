@@ -11,7 +11,7 @@
 		#Start 
 		$admin = NEW control;
 		
-		# STELLT DEN HEADER ZUR VERFÜGUNG
+		# STELLT DEN HEADER ZUR VERFÃœGUNG
 		$admin->header();
 		
 		$admin->logged_in("redirect", "index.php");

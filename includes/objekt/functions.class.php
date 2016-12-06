@@ -550,7 +550,8 @@ class functions extends sql {
 	 * Gibt den Header wieder.
 	 */
 	function header() {
-		
+        header("Content-type:text/html; charset=utf-8");
+        echo '<meta http-equiv="content-type" content="text/html; charset=utf-8" />';
 		echo '<link rel="apple-touch-icon" sizes="57x57" href="/apple-icon-57x57.png">';
 		echo '<link rel="apple-touch-icon" sizes="60x60" href="/apple-icon-60x60.png">';
 		echo '<link rel="apple-touch-icon" sizes="72x72" href="/apple-icon-72x72.png">';
