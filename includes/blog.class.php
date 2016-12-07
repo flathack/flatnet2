@@ -448,81 +448,87 @@ class blog extends functions {
 	}
 
 	/**
-	 * LÃ¶scht einen Blog mit der angewÃ¤hlten ID.
+	 * Löscht einen Blog mit der angewählten ID.
+	 * Update vom 07.12.2016: Aktualisierung auf neue PDO Mysql Klassen
 	 * @param unknown $id
 	 */
 	function deleBlogId($id) {
 		
-		if($this->userHasRight("28", 0) == true OR $this->userHasRight("29", 0) == true) {
+		if($this->userHasRight(28, 0) == true OR $this->userHasRight(29, 0) == true) {
 
 			$jaloeschen = isset($_POST['jaloeschen']) ? $_POST['jaloeschen'] : '';
 			$loeschblogid = isset($_POST['blogid']) ? $_POST['blogid'] : '';
 			if($loeschblogid) {
 				
-	
-				# Kontrolle, ob User den Artikel lÃ¶schen darf.
-				$select = "SELECT id, autor FROM blogtexte WHERE id=$id";
-				$ergebnis = mysql_query($select);
-				$row = mysql_fetch_object($ergebnis);
-				
-				# namen des Benutzers auswÃ¤hlen:
-				
-				
-				if(!isset($row->autor)) {
+				$row = $this->getObjektInfo("SELECT id, autor FROM blogtexte WHERE id=$id LIMIT 1");
+				# namen des Benutzers auswählen:	
+				if(!isset($row[0]->autor)) {
 					echo "<p class='info'>Beitrag exisitert nicht!</p>";
 					exit;
 				} else {
-					$autor = $row->autor;
+					$autor = $row[0]->autor;
 				}
 				
-				$selectUsername = "SELECT id, Name FROM benutzer WHERE id = '$autor' LIMIT 1";
-				$ergebnisUsername = mysql_query($selectUsername);
-				while ($rowUsername = mysql_fetch_object($ergebnisUsername)) {
-					$realUsername = $rowUsername->Name;
+				$realUsername_select = $this->getObjektInfo("SELECT id, Name FROM benutzer WHERE id=$autor LIMIT 1");
+				
+				if(isset($realUsername_select[0]->Name)) {
+					$realUsername = $realUsername_select[0]->Name;
+				} else {
+					echo "<p class='meldung'>Benutzer existiert nicht.</p>";
+					exit;
 				}
+				
 	
-				if($this->userHasRight("29", 0) == true OR $_SESSION['username'] == $realUsername) {
+				if($this->userHasRight(29, 0) == true OR $_SESSION['username'] == $realUsername) {
 	
-					# DurchfÃ¼hrung der LÃ¶schung.
-					$loeschQuery = "DELETE FROM `blogtexte` WHERE `id` = $loeschblogid";
-					$ergebnis = mysql_query($loeschQuery);
-	
-					if($ergebnis == true) {
-						$this->sql_insert_update_delete("DELETE FROM blog_kommentare WHERE blogid = '$loeschblogid'");
-						echo "<p class='erfolg'>Der Beitrag wurde erfolgreich gelÃ¶scht!</p>";
-						exit;
+					# Durchführung der Löschung.
+					$loeschQuery = "DELETE FROM blogtexte WHERE id=$loeschblogid";
+					
+					if($this->sql_insert_update_delete($loeschQuery) == true) {
+						echo "<p class='erfolg'>Der Beitrag wurde erfolgreich gelöscht!</p>";
+						if($this->sql_insert_update_delete("DELETE FROM blog_kommentare WHERE blogid=$loeschblogid") == true) {
+							echo "<p class='erfolg'>Der Beitrag wurde erfolgreich gelöscht!</p>";
+							exit;
+						}
 					} else {
-						echo "<p class='meldung'>Es gab einen Fehler. Der Fehler war: </p>";
-						echo mysql_error();
+						echo "<p class='meldung'>Beitrag konnte nicht gelöscht werden.</p>";
 					}
 				}
 			}
 			
 			if($id > 0) { # check ob eine Zahl
 				
-				# Kontrolle, ob User den Artikel lÃ¶schen darf.
-				$select = "SELECT id, autor FROM blogtexte WHERE id=$id";
-				$ergebnis = mysql_query($select);
-				$row = mysql_fetch_object($ergebnis);
+				# Kontrolle, ob User den Artikel löschen darf.
+				$select = "SELECT id, autor FROM blogtexte WHERE id=$id LIMIT 1";
+				$row = $this->getObjektInfo($select);
 				
-				# namen des Benutzers auswÃ¤hlen:
-				$autor = $row->autor;
-				$selectUsername = "SELECT id, Name FROM benutzer WHERE id = '$autor' LIMIT 1";
-				$ergebnisUsername = mysql_query($selectUsername);
-				while ($rowUsername = mysql_fetch_object($ergebnisUsername)) {
-					$realUsername = $rowUsername->Name;
+				# namen des Benutzers auswählen:
+				if(isset($row[0]->autor)) {
+					$autor = $row[0]->autor;
+					$selectUsername = "SELECT id, Name FROM benutzer WHERE id=$autor LIMIT 1";
+					$realUsername_select = $this->getObjektInfo($selectUsername);
+					if(isset($realUsername_select[0]->Name)) {
+						$realUsername = $realUsername_select[0]->Name;
+					} else {
+						echo "<p class='meldung'>Benutzer existiert nicht.</p>";
+						exit;
+					}
+				} else {
+					exit;
 				}
+				
+				
 	
-				if($this->userHasRight("29", 0) == true OR $_SESSION['username'] == $realUsername) {
-					# Abfrage, ob der User den Artikel wirklich lÃ¶schen will.
+				if($this->userHasRight(29, 0) == true OR $_SESSION['username'] == $realUsername) {
+					# Abfrage, ob der User den Artikel wirklich löschen will.
 					echo "<form method=post>";
-					echo "<p class='meldung'>Achtung, diese Aktion kann nicht RÃ¼ckgÃ¤ngig gemacht werden. Dies lÃ¶scht den Beitrag aus der Datenbank. <br>
+					echo "<p class='meldung'>Achtung, diese Aktion kann nicht Rückgängig gemacht werden. Dies löscht den Beitrag aus der Datenbank. <br>
 					  Sind Sie sicher?</p>";
 					echo "<input type = hidden value = '$id' name ='blogid' readonly />";
 					echo "<p id='meldung'><input type=submit name='jaloeschen' value='Ja! Weg damit.'/></p><p id='erfolg'><a href='/flatnet2/blog/blog.php?action=showblogyes' class='buttonlink'>Nein, vergiss es.</a></p><br><br><br>";
 					echo "</form>";
 				} else {
-					echo "<p class='meldung'>Sie sind nicht berechtigt, den Artikel zu lÃ¶schen.</p>";
+					echo "<p class='meldung'>Sie sind nicht berechtigt, den Artikel zu löschen.</p>";
 				}
 			}
 		}
@@ -533,13 +539,13 @@ class blog extends functions {
 	 */
 	function newKommentar($blogid) {
 		
-		if($this->userHasRight("30", 0) == true) {
+		if($this->userHasRight(30, 0) == true) {
 		
 			$blogIDInfos = $this->getObjektInfo("SELECT id, locked FROM blogtexte WHERE id = '$blogid'");
 			if($blogIDInfos[0]->locked != 1) {
 			
 				if(!isset($_POST['absenden'])) {
-					if($this->userHasRight("20", 0) == true) {
+					if($this->userHasRight(20, 0) == true) {
 						echo "<div class='newForumPost'>";
 						echo "<form method=post>";
 						# Edit mit Inline Editing
@@ -626,7 +632,7 @@ class blog extends functions {
 			$this->newKommentar($blogid);
 		}
 		
-		if($this->userHasRight("31", 0) == true) {
+		if($this->userHasRight(31, 0) == true) {
 			# SQL Befehle
 			$select = "SELECT 
 						id, timestamp, autor, text
@@ -699,12 +705,7 @@ class blog extends functions {
 	 * @stil NEUER STIL: Auf alle anderen Funktionen auch anwenden.
 	 */
 	function editKommentar($kommentarID) {
-		
-	#	$blogIDInfos = $this->getObjektInfo("SELECT id, locked FROM blogtexte WHERE id = '$blogid'");
-	#	if($blogIDInfos->locked != 1) {
-			# @todo 
-	#	}
-	
+
 		if(isset($kommentarID) AND $kommentarID > 0 AND $kommentarID != "") {
 			
 			# Autor des Kommentars bekommen:
@@ -713,10 +714,10 @@ class blog extends functions {
 			$autorID = $kommentarAutor[0]->autor;
 			$angemeldeterUserID = $this->getUserID($_SESSION['username']);
 			
-			if($this->userHasRight("32", 0) == true OR $this->userHasRight("33", 0) == true) {
+			if($this->userHasRight(32, 0) == true OR $this->userHasRight(33, 0) == true) {
 				$kommentar = $this->getObjektInfo("SELECT * FROM blog_kommentare WHERE id ='$kommentarID' AND autor = '$autorID' LIMIT 1");
 				if(!isset($kommentar) OR $kommentar == "") {
-					echo "<p class='meldung'>Kommentar kann nicht editiert werden</p>";
+					echo "<p class='meldung'>Kommentar kann nicht editiert werden.</p>";
 				} else {
 					if(!isset($_POST['saveKomment'])) {
 				
@@ -777,13 +778,12 @@ class blog extends functions {
 	function delKommentar($id, $blogid) {
 	
 		# Wenn der Benutzer volle Berechtigung zum lÃ¶schen hat.
-		if($this->userHasRight("35", 0) == true) {
+		if($this->userHasRight(35, 0) == true) {
 			
 			$loeschQuery = "DELETE FROM `blog_kommentare` WHERE id=$id AND blogid ='$blogid'";
-			$ergebnis = mysql_query($loeschQuery);
 			
-			if($ergebnis == true) {
-				echo "<p class='erfolg'><a name='geloescht'>Kommentar gelÃ¶scht!</a><a href='?showblogid=$blogid' class='buttonlink'>OK</a></p>";
+			if($this->sql_insert_update_delete($loeschQuery) == true) {
+				echo "<p class='erfolg'><a name='geloescht'>Kommentar gelöscht!</a><a href='?showblogid=$blogid' class='buttonlink'>OK</a></p>";
 				exit;
 			} else {
 				echo "<p class='meldung'>Fehler</p>";
@@ -791,7 +791,7 @@ class blog extends functions {
 			}
 			
 		# Wenn der Benutzer nur einfache Berechtigung hat.
-		} else if ($this->userHasRight("34", 0) == true) {
+		} else if ($this->userHasRight(34, 0) == true) {
 			
 			$currentUser = $this->getUserID($_SESSION['username']);
 			$loeschQuery = "DELETE FROM `blog_kommentare` WHERE id=$id AND autor = '$currentUser' AND blogid ='$blogid'";
