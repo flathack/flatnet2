@@ -1134,7 +1134,7 @@ class finanzenNEW extends functions {
 						$mark = "Konto";
 					}
 					echo "<div class='$mark'>";
-					echo "<p><a href='detail.php?editKonto=" . $konten [$i]->id . "'>" . $konten [$i]->konto . "</a><br>Saldo: ";
+					echo "<p>" .$konten [$i]->id. ": <a href='detail.php?editKonto=" . $konten [$i]->id . "'>" . $konten [$i]->konto . "</a><br>Saldo: ";
 					echo $umsaetze [0]->summe . " €</p>";
 					echo "</div>";
 				}
@@ -1156,7 +1156,7 @@ class finanzenNEW extends functions {
 						$mark = "Konto";
 					}
 					echo "<div class='$mark'>";
-					echo "<p><a href='detail.php?editKonto=" . $konten [$i]->id . "'>" . $konten [$i]->konto . "</a><br>Saldo: ";
+					echo "<p>" .$konten [$i]->id. ": <a href='detail.php?editKonto=" . $konten [$i]->id . "'>" . $konten [$i]->konto . "</a><br>Saldo: ";
 					echo $umsaetze [0]->summe . " €</p>";
 					echo "</div>";
 				}

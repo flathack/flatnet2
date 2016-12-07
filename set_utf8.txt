@@ -27,4 +27,3 @@ alter table rights convert to character set utf8 collate utf8_bin;
 alter table uebersicht_kacheln convert to character set utf8 collate utf8_bin;
 alter table userrights convert to character set utf8 collate utf8_bin;
 alter table vorschlaege convert to character set utf8 collate utf8_bin;
-
