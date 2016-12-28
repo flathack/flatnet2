@@ -58,6 +58,7 @@ class finanzenNEW extends functions {
 		
 		// KontoÃ¼bersicht:
 		$this->showKontoUebersicht ( $besitzer );
+		
 	}
 	function mainKontoDetail() {
 		$besitzer = $this->getUserID ( $_SESSION ['username'] );
@@ -688,9 +689,8 @@ class finanzenNEW extends functions {
 			echo "<div class='newChar'>";
 			echo "Achtung, es wurde ein Fehler in mindestens einer Buchung entdeckt.
 				Die Werte innerhalb einer Buchungsnummer sind unterschiedlich,
-				dies kann verschiedene GrÃ¼nde haben. Der Administrator wurde Ã¼ber
-				dieses Problem informiert, doch falls dir die Buchungsnummer bekannt
-				ist, kannst du diesen Fehler auch selbst Ã¼ber einen EDIT korrigieren.";
+				dies kann verschiedene Gründe haben. Der Administrator wurde über
+				dieses Problem informiert. Die betroffene Buchung wird jetzt gelöscht!";
 			
 			$selectProblem = "SELECT max(buchungsnr) as max FROM finanzen_umsaetze";
 			$max = $this->getObjektInfo ( $selectProblem );
@@ -701,17 +701,18 @@ class finanzenNEW extends functions {
 			for($i = 0; $i <= $max; $i ++) {
 				$select = "SELECT * FROM finanzen_umsaetze WHERE buchungsnr = $i ";
 				
-				// ANZAHL ÃœBERPRÃœFEN:
+				// ANZAHL ÜBERPRÜFEN:
 				$selectAnzahl = "SELECT * FROM finanzen_umsaetze WHERE buchungsnr = $i";
 				$anzahl = $this->getAmount ( $selectAnzahl );
+				$infos = $this->getObjektInfo($select);
 				
 				if ($anzahl != 2 and $anzahl != 0) {
-					echo "<p class='meldung'>Es wurde eine UnvollstÃ¤ndige Buchung entdeckt, diese wird jetzt automatisch gelÃ¶scht...</p>";
+					echo "<p class='meldung'>Unvollständige Buchung: " .$infos[0]->umsatzName. ", ".$infos[0]->umsatzWert."</p>";
 					$delete = "DELETE FROM finanzen_umsaetze
 					WHERE buchungsnr = '$i' LIMIT 1";
 					if ($this->sql_insert_update_delete ( $delete ) == true) {
-						$this->logEintrag ( true, "Buchung $i wurde wegen UnvollstÃ¤ndigkeit gelÃ¶scht.", "Error" );
-						echo "<p class='erfolg'>Fehlerhafte Buchung gelÃ¶scht</p>";
+						$this->logEintrag ( true, "Buchung $i wurde wegen UnvollstÃ¤ndigkeit gelöscht.", "Error" );
+						echo "<p class='erfolg'>Fehlerhafte Buchung gelöscht</p>";
 					}
 				}
 				
@@ -726,7 +727,7 @@ class finanzenNEW extends functions {
 					}
 				}
 			}
-			echo "Wenn du fertig bist, klicke hier: <a href='?' class='buttonlink'>OK</a>";
+			echo "Klicke OK um Fortzufahren <a href='?' class='buttonlink'>OK</a>";
 			echo "</div>";
 			if (! isset ( $_GET ['surpress'] )) {
 				exit ();
@@ -846,7 +847,44 @@ class finanzenNEW extends functions {
 		}
 	}
     
-    function nextBuchungsnummer() {
+	/**
+	 * Gibt die nächste freie Buchungsnummer wieder, verwendet auch alte, freie Nummern, welche kleiner als MAX sind.
+	 * @return nextnumber
+	 */
+	function nextBuchungsnummer() {
+		$allBNRs = $this->getObjektInfo("SELECT buchungsnr FROM finanzen_umsaetze ORDER BY buchungsnr");
+		$maxbuchung = $this->getObjektInfo("SELECT max(buchungsnr) as max FROM finanzen_umsaetze");
+		$maxnummer = $maxbuchung[0]->max + 0;
+		
+		$counter = 0;		
+		for ($i = 1 ; $i <= $maxnummer; $i++) {
+			$stop = 0;
+			for($j = 0 ; $j < sizeof($allBNRs) ; $j++) {
+				if($i == $allBNRs[$j]->buchungsnr) {
+					$stop = 1;
+				}
+			}
+				
+			if($stop == 0) {
+				$counter += 1;
+				$nextnumber = $i;
+			}
+		}
+		
+		if($counter == 0) {
+			$nextnumber = $maxnummer + 1;
+		}
+				
+		return $nextnumber;
+		
+	}
+	
+	/**
+	 * Gibt immer die nächste MAX nummer zurück.
+	 * WIRD NICHT MEHR VERWENDET.
+	 * @return $buchungsnummer
+	 */
+    function nextBuchungsnummerOLD() {
         $nextBuchungsnummer = $this->getObjektInfo ( "SELECT max(buchungsnr) as max FROM finanzen_umsaetze" );
 		$buchungsnummer = $nextBuchungsnummer [0]->max;
 		if (!isset($buchungsnummer)) {
@@ -866,7 +904,7 @@ class finanzenNEW extends functions {
 			VALUES ('$buchungsnummer','$besitzer','$nach','$von','$text','$betrag','$datum')";
 									
 		if ($this->sql_insert_update_delete ( $query ) == true and $this->sql_insert_update_delete ( $query2 ) == true) {
-            echo "<p class='erfolg'>Ãœberweisung von $text durchgefÃ¼hrt</p>";
+            echo "<p class='erfolg'>Überweisung von $text durchgeführt (Buchungsnummer: $buchungsnummer)</p>";
 		}
     }
 	
@@ -892,12 +930,12 @@ class finanzenNEW extends functions {
 					
 					// Wenn Absender und Ziel gleich ist:
 					if ($von == $nach) {
-						echo "<p class='meldung'>Absende und Zielkonto ist gleich. Keine Buchung mÃ¶glich.</p>";
+						echo "<p class='meldung'>Absende und Zielkonto ist gleich. Keine Buchung möglich.</p>";
 						exit ();
 					}
                     
                     if($datum < $maxpast) {
-                        echo "<p class='meldung'>Keine Buchung vor $maxpast mÃ¶glich!</p>";
+                        echo "<p class='meldung'>Keine Buchung vor $maxpast möglich!</p>";
                         exit();
                     }
 										
@@ -918,7 +956,7 @@ class finanzenNEW extends functions {
                                     for ($x = 1 ; $x <= $number ; $x++) {
                                         $newdate = new DateTime($datum);
                                         $newdate->modify("+$x month");
-                                        echo "<p class='dezentInfo'>${x}: Buchung fÃ¼r Monat " . $newdate->format("Y-m-d") . "</p>";
+                                        echo "<p class='dezentInfo'>${x}: Buchung für Monat " . $newdate->format("Y-m-d") . "</p>";
                                         
                                         $this->createUeberweisung($besitzer, $von, $nach, $text, $betrag, $newdate->format("Y-m-d"));
                                         
@@ -935,7 +973,7 @@ class finanzenNEW extends functions {
 							$j = 0;
 							for($j = 0; $j < $anzahlWeitereFelder; $j ++) {
 								
-								// Nur gefÃ¼llte Inputfelder verwenden.
+								// Nur gefüllte Inputfelder verwenden.
 								if ($dates [$j] != "") {
                                     $this->createUeberweisung($besitzer, $von, $nach, $text, $betrag, $dates[$j]);
 								}
@@ -953,7 +991,7 @@ class finanzenNEW extends functions {
                 echo "<a href='?konto=$kontoID&monat=$monat&jahr=$jahr' target='_self' class='highlightedLink'>ZurÃ¼ck</a>";
 				
                 echo "<p class='dezentInfo'>Du kommst von hier: Konto: $kontoID, Monat: $monat, Jahr: $jahr</p>";
-				echo "<h2>Eine Buchung durchfÃ¼hren</h2>";
+				echo "<h2>Eine Buchung durchführen</h2>";
 				
 				echo "<form method=post>";
 				echo "<table class='kontoTable'>";

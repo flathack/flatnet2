@@ -73,8 +73,12 @@ class control extends functions {
 			$this->rechtekategorienVerwaltung();
 		}
 		
+		
+		/*
+		 * Finanzbereich
+		 */
 		if ($action == 7) {
-			
+			$this->FinanzVerwaltung();
 		}
 	}
 	
@@ -2304,6 +2308,71 @@ class control extends functions {
 			
 			echo "</div>";
 		
+		}
+	}
+	
+	/**
+	 * Ermöglicht die Administration der Finanzen für mehrere Benutzer und ermöglicht die Problembehandlung von verschiedenen Buchungen.
+	 */
+	function FinanzVerwaltung() {
+		echo "<h2>Finanzverwaltung</h2>";
+		
+		# Selektion von Benutzern mit Konten:
+		echo "<div class='newFahrt'>";
+		$this->users_with_content();
+		echo "</div>";
+		
+		
+		
+	}
+	
+	/**
+	 * Zeigt Nutzer an, welche Konten über das Finanzsystem angelegt haben.
+	 */
+	function users_with_content() {
+		$user_with_content = $this->getObjektInfo("SELECT * FROM finanzen_konten GROUP BY besitzer");
+		echo "<h2>Benutzer mit Konten</h2>";
+		echo "<ul>";
+		for($i = 0 ; $i < sizeof($user_with_content) ; $i++) {
+			$username = $this->getUserName($user_with_content[$i]->besitzer);
+			echo "<li><a href='?action=7&userid=".$user_with_content[$i]->besitzer."'>" . $username . "</a></li>";
+		}
+		echo "</ul>";
+		
+		$this->show_accounts_for_user();
+	}
+	
+	function show_accounts_for_user() {
+		if(isset($_GET['userid'])) {
+			$id = $_GET['userid'];
+			$selectuserInfos = $this->getObjektInfo("SELECT * FROM benutzer WHERE id=$id");
+			
+			if(isset($selectuserInfos[0]->id)) {
+				# USER INFOS
+				echo "<h2>" .$selectuserInfos[0]->Name. " (" .$selectuserInfos[0]->id. ")</h2>";
+				
+				$konten = $this->getObjektInfo("SELECT * FROM finanzen_konten WHERE besitzer=$id");
+				
+				echo "<ul>";
+				for($i = 0 ; $i < sizeof($konten) ; $i++) {
+					echo "<li><a href='?action=7&userid=$id&konto=" . $konten[$i]->id . "'>" . $konten[$i]->id . " - " . $konten[$i]->konto . "</a></li>";
+				}
+				echo "<ul>";
+				
+				$this->show_konto_details();
+				
+			} else {
+				echo "<p class='meldung'>Benutzer existiert nicht in der Datenbank.</p>";
+			}
+		}
+	}
+	
+	/**
+	 * Zeigt Informationen zum betroffenen Konto an.
+	 */
+	function show_konto_details() {
+		if(isset($_GET['konto'])) {
+			$kontoid = $_GET['konto'];
 		}
 	}
 }
