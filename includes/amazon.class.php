@@ -155,7 +155,7 @@ class amazon extends functions {
 		if($this->userHasRight(80, 0) == true) {
 			
 			
-			$queryusers = "SELECT * FROM amazon_infos GROUP BY autor ORDER BY autor";
+			$queryusers = "SELECT * FROM amazon_infos GROUP BY autor HAVING hide=0 ORDER BY autor";
 			$usersWithArticles = $this->getObjektInfo($queryusers);
 			for ($i = 0 ; $i < sizeof($usersWithArticles) ; $i++) {
 				
@@ -192,7 +192,7 @@ class amazon extends functions {
 				}
 				echo "</p>";
 				
-				$query = "SELECT * FROM amazon_infos WHERE autor=$userid AND hide=0 ORDER BY payed, date_of_order, date_of_faelligkeit, date_of_payment";
+				$query = "SELECT * FROM amazon_infos WHERE autor=$userid AND hide=0 ORDER BY date_of_order DESC, payed";
 				$adminArticles = $this->getObjektInfo($query);
 				
 				echo "<table class='kontoTable'>";
@@ -201,9 +201,9 @@ class amazon extends functions {
 					echo "<td" ." id='' ". ">" . "Name" . "</td>";
 					echo "<td" ." id='small' ". ">" . "Preis" . "</td>";
 					echo "<td" ." id='date' ". ">" . "Kaufdatum" . "</td>";
-					echo "<td" ." id='date' ". ">" . "FÃ¤llig am" . "</td>";
+					echo "<td" ." id='date' ". ">" . "Fällig am" . "</td>";
 					echo "<td" ." id='date' ". ">" . "bezahlt" . "</td>";
-					echo "<td" ." id='width70px' ". ">" . "RÃ¼cksendung" . "</td>";
+					echo "<td" ." id='width70px' ". ">" . "Rücksendung" . "</td>";
 					echo "<td" ." id='small' ". ">" . "Erstattet" . "</td>";
 					echo "<td" ." id='width140px' ". ">" . "Optionen" . "</td>";
 				echo "</thead>";
