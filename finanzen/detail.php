@@ -14,7 +14,7 @@ echo $finanzen->suche($suche, "adressbuch", "nachname", "eintrag.php?bearbeiten"
 <title>Steven.NET Finanzen</title>
 	</head>
 	<body>
-		<div class='mainbodyDark'>
+		<div class='mainbodyDark' id="konten">
 		
 			<?php $finanzen->showNavigation(); ?>
 					

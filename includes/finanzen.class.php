@@ -220,10 +220,10 @@ class finanzenNEW extends functions {
 					
 					// Wenn der Umsatz ausgewählt wurde, dann wird er rot markiert.
 					if (isset ( $_GET ['selected'] )) { if ($_GET ['selected'] == $umsaetze [$i]->buchungsnr) {
-						$selected = "id='rot'"; } else { $selected = ""; } } else { $selected = ""; }
+						$selected = "id='yellow'"; } else { $selected = ""; } } else { $selected = ""; }
 					
 					echo "<tbody $selected>";
-					echo "<td>" . $umsaetze [$i]->buchungsnr . "</td>";
+					echo "<td><a href='?konto=$kontoID&monat=$monat&jahr=$currentYear&selected=" . $umsaetze [$i]->buchungsnr . "'>" . $umsaetze [$i]->buchungsnr . "</a></td>";
 					// Name des Gegenkontos bekommen
 					$nameGegenkonto = $this->getObjektInfo ( "SELECT * FROM finanzen_konten WHERE besitzer = $besitzer AND id = " . $umsaetze [$i]->gegenkonto . " LIMIT 1" );
 					echo "<td>" . $nameGegenkonto [0]->konto . "</td>";
@@ -353,8 +353,8 @@ class finanzenNEW extends functions {
 		
 		echo "<div class='finanzNAV'>";
 				echo "<ul>";
-					echo "<li><a href='index.php' >Finanzverwaltung - Startseite</a></li>";
-					echo "<li><a href='konten.php' >Konten</a></li>";
+					echo "<li id='monate'><a href='index.php' >Finanzverwaltung - Startseite</a></li>";
+					echo "<li id='konten'><a href='konten.php' >Konten</a></li>";
 					echo "<li><a href='?konto=$kontoID&monat=$monat&jahr=$jahr&newUeberweisung' >Neue Buchung</a></li>";
 					echo "<li><a href='?konto=$kontoID&monat=$monat&jahr=$jahr&checkJahresabschluesse' >Jahresabschlusscheck</a></li>";
 				echo "</ul>";
@@ -415,7 +415,7 @@ class finanzenNEW extends functions {
 		if ($monat == 3) {
 			echo " id='selected' ";
 		}
-		echo "><a href='?konto=$konto&monat=3&jahr=$jahr'>März</a></li>";
+		echo "><a href='?konto=$konto&monat=3&jahr=$jahr'>M&auml;rz</a></li>";
 		echo "<li ";
 		if ($monat == 4) {
 			echo " id='selected' ";
@@ -489,54 +489,16 @@ class finanzenNEW extends functions {
 		}
 		
 		echo "<ul class='FinanzenMonate'>";
-		echo "<li ";
-		if ($jahr == 2013) {
-			echo " id='selected' ";
-		}
-		echo "><a href='?konto=$konto&monat=$monat&jahr=2013'>2013</a></li>";
-		echo "<li ";
-		if ($jahr == 2014) {
-			echo " id='selected' ";
-		}
-		echo "><a href='?konto=$konto&monat=$monat&jahr=2014'>2014</a></li>";
-		echo "<li ";
-		if ($jahr == 2015) {
-			echo " id='selected' ";
-		}
-		echo "><a href='?konto=$konto&monat=$monat&jahr=2015'>2015</a></li>";
-		echo "<li ";
-		if ($jahr == 2016) {
-			echo " id='selected' ";
-		}
-		echo "><a href='?konto=$konto&monat=$monat&jahr=2016'>2016</a></li>";
-		echo "<li ";
-		if ($jahr == 2017) {
-			echo " id='selected' ";
-		}
-		echo "><a href='?konto=$konto&monat=$monat&jahr=2017'>2017</a></li>";
-		echo "<li ";
-		if ($jahr == 2018) {
-			echo " id='selected' ";
-		}
-		echo "><a href='?konto=$konto&monat=$monat&jahr=2018'>2018</a></li>";
-		echo "<li ";
-		if ($jahr == 2019) {
-			echo " id='selected' ";
-		}
-		echo "><a href='?konto=$konto&monat=$monat&jahr=2019'>2019</a></li>";
-        echo "<li ";
-		if ($jahr == 2020) {
-			echo " id='selected' ";
-		}
-		echo "><a href='?konto=$konto&monat=$monat&jahr=2020'>2020</a></li>";
 		
-        echo "<li ";
-		if ($jahr == 2021) {
-			echo " id='selected' ";
-		}
-		echo "><a href='?konto=$konto&monat=$monat&jahr=2021'>2021</a></li>";
-        
-        echo "</ul>";
+		$currentYear = date ("Y");
+		
+		# Previous Year:
+		$jahrprev = $jahr - 1;
+		$jahrforw = $jahr + 1;
+		echo "<li id=''><a href='?konto=$konto&monat=$monat&jahr=$jahrprev'>$jahrprev</a></li>";
+		echo "<li id='selected'><a href='?konto=$konto&monat=$monat&jahr=$jahr'>$jahr</a></li>";
+		echo "<li id=''><a href='?konto=$konto&monat=$monat&jahr=$jahrforw'>$jahrforw</a></li>";
+		echo "</ul>";
 	}
 	
 	/**
