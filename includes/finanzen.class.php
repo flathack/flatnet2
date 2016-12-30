@@ -129,7 +129,7 @@ class finanzenNEW extends functions {
 	private $shows;
 	
 	/**
-	 * Zeigt den aktuellen Monat an.
+	 * Zeigt den aktuellen Monat in der Finanz�bersicht an.
 	 * 
 	 * @param unknown $besitzer        	
 	 */
@@ -171,8 +171,25 @@ class finanzenNEW extends functions {
 			$zwischensumme = $startsaldo;
 			echo "<table class='kontoTable'>";
 			
+			# Update vom 30.12.2016:
+			# Bei Konten Art 2 wird kein Saldo angezeigt ...
+			$kontoinfos = $this->getObjektInfo("SELECT * FROM finanzen_konten WHERE id = $kontoID");
+				
+			if($kontoinfos[0]->art == 2) {
+				echo "<thead><td colspan=8 id='notOK'>Dieses Konto hat keinen Saldo!</td></thead>";
+			}
+			if($kontoinfos[0]->art == 1) {
+				echo "<thead><td colspan=8 id='ok'>Guthabenkonto</td></thead>";
+			}
+			
+			# Keinen Startsaldo anzeigen: 
+			if($kontoinfos[0]->art == 2) {
+				$saldotext = "";
+			} else {
+				$saldotext = "/ Startsaldo diesen Monat: <strong>$startsaldo €";
+			}
 			echo "<thead>";
-			echo "<td colspan=7>Monat:<strong> $currentMonth </strong>im Jahr <strong>$currentYear</strong> / Startsaldo diesen Monat: <strong>$startsaldo €</strong></td>";
+			echo "<td colspan=7>Monat:<strong> $currentMonth </strong>im Jahr <strong>$currentYear</strong> $saldotext </td>";
 			echo "</thead>";
 			
 			echo "<thead>";
@@ -184,7 +201,7 @@ class finanzenNEW extends functions {
 			echo "<td>Saldo</td>";
 			echo "<td>Optionen</td>";
 			echo "</thead>";
-			
+					
 			if (isset ( $umsaetze [0]->id )) {
 				
 				// Zeilengeneration #
@@ -214,7 +231,13 @@ class finanzenNEW extends functions {
 					echo "<td>" . $umsaetze [$i]->tag . "</td>";
 					$ausgabeZwischensumme = round($zwischensumme, 2);
 					echo "<td $zelle>" . $umsaetze [$i]->umsatzWert . "</td>";
-					echo "<td id='$spaltenFarbe'>" . $ausgabeZwischensumme . "</td>";
+					if($kontoinfos[0]->art == 2) {
+						$spaltenFarbe = "";
+						echo "<td id='$spaltenFarbe'>" . "-" . "</td>";
+					} else {
+						echo "<td id='$spaltenFarbe'>" . $ausgabeZwischensumme . "</td>";
+					}
+					
 					echo "<td>" . "<a class='rightBlueLink' href='?konto=$kontoID&monat=$monat&jahr=$currentYear&edit=" . $umsaetze [$i]->id . "'>edit</a>" . "</td>";
 					echo "</tbody>";
 					
@@ -246,7 +269,11 @@ class finanzenNEW extends functions {
 				}
 			}
 			$differenz = $zwischensumme - $startsaldo;
-			echo "<tfoot><td colspan=5 id='rightAlign'>Endsaldo: </td><td id='rightAlign'>$zwischensumme</td><td></td></tfoot>";
+			if($kontoinfos[0]->art == 2) {
+				echo "<tfoot><td colspan=5 id='rightAlign'>Endsaldo: </td><td id='rightAlign'> - </td><td></td></tfoot>";
+			} else {
+				echo "<tfoot><td colspan=5 id='rightAlign'>Endsaldo: </td><td id='rightAlign'>$zwischensumme</td><td></td></tfoot>";
+			}
 			
 			echo "</table>";
 			echo "<p class='info'>Kontostandveränderung: $differenz €</p>";
@@ -271,8 +298,9 @@ class finanzenNEW extends functions {
 			$konto = $_GET ['konto'];
 			
 			$jahr = $_GET ['jahr'];
-			echo "<a class='buttonlink' href='?kontoOpt=$konto&jahr=$jahr&gesamtesJahr'>Jahr anzeigen</a>";
-			echo "<a class='buttonlink' href='?kontoOpt=$konto&alles'>Alles anzeigen</a>";
+		#	echo "<a class='buttonlink' href='?kontoOpt=$konto&jahr=$jahr&gesamtesJahr'>Jahr anzeigen</a>";
+		#	echo "<a class='buttonlink' href='?kontoOpt=$konto&alles'>Alles anzeigen</a>";
+			echo "<a class='buttonlink' href='/flatnet2/finanzen/detail.php?editKonto=$konto'>Konto-Einstellungen</a>";
 			echo "</div>";
 		}
 		
@@ -348,11 +376,31 @@ class finanzenNEW extends functions {
 		if (isset ( $_GET ['monat'] )) {
 			$monat = $_GET ['monat'];
 		} else {
-			$monat = "";
+			$monat = date ( "M" );
 		}
 		
 		echo "<ul class='FinanzenMonate'>";
 		
+		if($monat == 1) {
+			$monatzurueck = 12;
+			$jahrzurueck = $jahr - 1;
+		} else {
+			$jahrzurueck = $jahr;
+			$monatzurueck = $monat - 1;
+		}
+		
+		if($monat == 12) {
+			$monatvor = 1;
+			$jahrvor = $jahr + 1;
+		} else {
+			$monatvor = $monat + 1;
+			$jahrvor = $jahr;
+		}
+
+		echo "<li>";
+		echo "<a href='?konto=$konto&monat=$monatzurueck&jahr=$jahrzurueck'> &laquo; </a>";
+		echo "</li>";
+				
 		echo "<li ";
 		if ($monat == 1) {
 			echo " id='selected' ";
@@ -413,7 +461,13 @@ class finanzenNEW extends functions {
 			echo " id='selected' ";
 		}
 		echo "><a href='?konto=$konto&monat=12&jahr=$jahr'>Dezember</a></li>";
+		
+		echo "<li>";
+		echo "<a href='?konto=$konto&monat=$monatvor&jahr=$jahrvor'> &raquo; </a>";
+		echo "</li>";
+		
 		echo "</ul>";
+		
 	}
 	function showJahreLinks() {
 		if (isset ( $_GET ['konto'] )) {
@@ -991,7 +1045,7 @@ class finanzenNEW extends functions {
                 echo "<a href='?konto=$kontoID&monat=$monat&jahr=$jahr' target='_self' class='highlightedLink'>Zurück</a>";
 				
                 echo "<p class='dezentInfo'>Du kommst von hier: Konto: $kontoID, Monat: $monat, Jahr: $jahr</p>";
-				echo "<h2>Eine Buchung durchf�hren</h2>";
+				echo "<h2>Eine Buchung durchf&uuml;hren</h2>";
 				
 				echo "<form method=post>";
 				echo "<table class='kontoTable'>";
@@ -1012,6 +1066,8 @@ class finanzenNEW extends functions {
 					echo "<option";
 					if (isset ( $_POST ['zielKonto'] ) and $absenderKonten [$i]->id == $_POST ['zielKonto']) {
 						echo " selected ";
+					} elseif(isset($_GET['konto']) AND $absenderKonten [$i]->id == $_GET['konto']) {
+						echo " selected ";
 					} else {
 						echo "";
 					}
@@ -1025,6 +1081,8 @@ class finanzenNEW extends functions {
 					
 					echo "<option ";
 					if (isset ( $_POST ['absenderKonto'] ) and $absenderKonten [$i]->id == $_POST ['absenderKonto']) {
+						echo " selected ";
+					} elseif(isset($_GET['konto']) AND $absenderKonten [$i]->id == $_GET['konto']) {
 						echo " selected ";
 					} else {
 						echo "";
@@ -1150,7 +1208,11 @@ class finanzenNEW extends functions {
 	}
 	
 	/**
-	 * Zeigt eine Übersicht aller Konten des besitzers in einer Auflistung an.
+	 * Zeigt eine �bersicht aller Konten des besitzers in einer Auflistung an.
+	 * Beschreibung Konto-Art:
+	 * 0 normales Konto
+	 * 1 gr�nes Konto
+	 * 2 Konto ohne Saldo
 	 * 
 	 * @param unknown $besitzer        	
 	 */
@@ -1168,12 +1230,21 @@ class finanzenNEW extends functions {
 					$umsaetze = $this->getObjektInfo ( $select2 );
 					if ($konten [$i]->art == 1) {
 						$mark = "Guthabenkonto";
+					} elseif($konten [$i]->art == 2) {
+						$mark = "nolimit";
 					} else {
 						$mark = "Konto";
 					}
 					echo "<div class='$mark'>";
-					echo "<p>" .$konten [$i]->id. ": <a href='detail.php?editKonto=" . $konten [$i]->id . "'>" . $konten [$i]->konto . "</a><br>Saldo: ";
-					echo $umsaetze [0]->summe . " €</p>";
+					echo "<p>" .$konten [$i]->id. ": <a href='index.php?konto=" . $konten [$i]->id . "'>" . $konten [$i]->konto . "</a><br>";
+					echo "<a href='detail.php?editKonto=" . $konten [$i]->id . "'>Einstellungen</a><br>";
+					if($konten[$i]->art == 2) {
+						echo "x</p>";
+					} else {
+						$summe = $umsaetze [0]->summe + 0;
+						echo $summe . " €</p>";
+					}
+					
 					echo "</div>";
 				}
 			}
@@ -1190,12 +1261,20 @@ class finanzenNEW extends functions {
 				if ($konten [$i]->aktiv == 0) {
 					if ($konten [$i]->art == 1) {
 						$mark = "Guthabenkonto";
+					} elseif($konten [$i]->art == 2) {
+						$mark = "nolimit";
 					} else {
 						$mark = "Konto";
 					}
 					echo "<div class='$mark'>";
-					echo "<p>" .$konten [$i]->id. ": <a href='detail.php?editKonto=" . $konten [$i]->id . "'>" . $konten [$i]->konto . "</a><br>Saldo: ";
-					echo $umsaetze [0]->summe . " €</p>";
+					echo "<p>" .$konten [$i]->id. ": <a href='index.php?konto=" . $konten [$i]->id . "'>" . $konten [$i]->konto . "</a><br>";
+					echo "<a href='detail.php?editKonto=" . $konten [$i]->id . "'>Einstellungen</a><br>";
+					if($konten[$i]->art == 2) {
+						echo "x</p>";
+					} else {
+						$summe = $umsaetze [0]->summe + 0;
+						echo $summe . " €</p>";
+					}
 					echo "</div>";
 				}
 			}
@@ -1318,6 +1397,8 @@ class finanzenNEW extends functions {
 			echo "<tr><td><input type=submit name=absenden value=Speichern /></td></tr>";
 			
 			echo "</table>";
+			
+			echo "<div>Beschreibung Kontoart: 0 = normales Konto, 1 = Konto mit gr&uuml;ner Umrandung, 2 = Konto ohne Saldo</div>";
 			
 			echo "<div class='scrollContainer'>";
 			echo "<p>Übersicht vorhandener Buchungen</p>";
