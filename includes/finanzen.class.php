@@ -601,19 +601,19 @@ class finanzenNEW extends functions {
 	 */
 	function showFuturePastMonat() {
 		if (isset ( $_GET ['monat'] )) {
-			$monat = $_GET ['monat'];
-			$currentMonat = date ("m");
+			#$monat = $_GET ['monat'];
+			#$currentMonat = date ("m");
 			
-			$jahr = $_GET['jahr'];
-			$currentJahr = date ("Y");
+			#$jahr = $_GET['jahr'];
+			#$currentJahr = date ("Y");
 			
-			if ($this->checkIfMonatIsInFuture ( $currentMonat, $monat ) == true) {
-				echo "<p class='info'>Der Monat liegt in der Zukunft";
-			}
+			#if ($this->checkIfMonatIsInFuture ( $currentMonat, $monat ) == true) {
+			#	echo "<p class='info'>Der Monat liegt in der Zukunft";
+			#}
 			
-			if ($this->checkIfMonatIsInPast ( $currentMonat, $monat, $currentJahr, $jahr ) == true) {
-				echo "<p class='dezentInfo'>Der Monat liegt in der Vergangenheit.";
-			}
+			#if ($this->checkIfMonatIsInPast ( $currentMonat, $monat, $currentJahr, $jahr ) == true) {
+			#	echo "<p class='dezentInfo'>Der Monat liegt in der Vergangenheit.";
+			#}
 		}
 	}
 	
