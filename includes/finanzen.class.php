@@ -798,6 +798,47 @@ class finanzenNEW extends functions {
 	}
 	private $umsaetze;
 	
+	function regelmaessigeZahlung($umsatz, $besitzer) {
+		
+		# �hnliche Zahlungen vom Nutzer suchen ...
+		$konto = $umsatz[0]->konto;
+		$name = $umsatz[0]->umsatzName;
+		$gegenkonto = $umsatz[0]->gegenkonto;
+		$datum = $umsatz[0]->datum;
+		$select = "SELECT * FROM finanzen_umsaetze WHERE besitzer=$besitzer AND konto=$konto AND gegenkonto=$gegenkonto AND umsatzName='$name' AND datum > '$datum'";
+		$ergebnis = $this->getObjektInfo($select);
+		
+		if(isset($ergebnis[0]->id)) {
+			$count = sizeof($ergebnis);
+			$allowed = 5;
+			if($count > $allowed) {
+				$max = $allowed;
+			} else {
+				$max = $count;
+			}
+			echo "<table class='flatnetTable'>";
+			echo "<h2>$count &auml;hnliche Zahlungen gefunden (Konto, Gegenkonto und Name gleich)</h2>";
+			for ($i = 0 ;$i < $max;$i++) {
+				echo "<tbody><td>" .$ergebnis[$i]->buchungsnr. "</td>
+						<td>" .$ergebnis[$i]->umsatzName. "</td>
+						<td>" .$ergebnis[$i]->datum. "</td>
+						<td>" .$ergebnis[$i]->umsatzWert. "</td>
+						<td>" ."<a href='?edit=" .$ergebnis[$i]->id. "'>edit</a>". "</td></tbody>";
+			}
+			if($count > $max) {
+				echo "<tbody id=''><td colspan=5>weitere Zahlungen vorhanden ... </td></tbody>";
+			}
+			echo "</table>";
+		}
+		
+	}
+	
+	function validateDate($date, $format = 'Y-m-d')
+	{
+		$d = DateTime::createFromFormat($format, $date);
+		return $d && $d->format($format) == $date;
+	}
+	
 	/**
 	 * Ermöglicht das modifizieren eines Umsatzes.
 	 */
@@ -813,37 +854,30 @@ class finanzenNEW extends functions {
 				$besitzer = $this->getUserID ($_SESSION ['username']);
 				$umsatzInfo = $this->getObjektInfo("SELECT * FROM finanzen_umsaetze WHERE id = '$id' and besitzer = '$besitzer'");
 				
-				echo "<div id='' class='alterUmsatz'>";
-				echo "<a href='?konto=$kontoLink&monat=$monat&jahr=$jahr' class=''>schließen</a>";
-				echo "<form method=post>";
-				echo "<h2><a name=umsatz>Umsatz Nr. " . $umsatzInfo [0]->id . "</a></h2>";
-				echo "<input type=text name=umsatzName value='" . $umsatzInfo [0]->umsatzName . "' /><br>";
-				$kontoID = $umsatzInfo [0]->gegenkonto;
-				$konto2ID = $umsatzInfo [0]->konto . "<br>";
-				$gegenkonto = $this->getObjektInfo ( "SELECT * FROM finanzen_konten WHERE id = '$kontoID'" );
-				$konto = $this->getObjektInfo ( "SELECT * FROM finanzen_konten WHERE id = '$konto2ID'" );
-				echo "Buchung auf: " . $konto [0]->konto . " ";
-				echo " - " . $gegenkonto [0]->konto . "<br>";
-				echo "<input type=text name=umsatzWert value='" . $umsatzInfo [0]->umsatzWert . "' /><br>";
-				echo "<input type=date name=umsatzDatum value='" . $umsatzInfo [0]->datum . "'  /><br>";
-				echo "<input type=submit name=alterUmsatz value=Speichern />";
-				echo "<input type=submit name=loeschUmsatz value=Löschen />";
-				echo "</form>";
-				echo "</div>";
-				
 				if (isset ( $_POST ['alterUmsatz'] )) {
 					$text = $_POST ['umsatzName'];
+						
+					# Komma durch punkt ersetzen
 					$wert = str_replace ( ',', '.', $_POST ['umsatzWert'] );
+						
 					$datum = $_POST ['umsatzDatum'];
+					if($this->validateDate($datum, "Y-m-d") == 0) {
+						// Date Variable füllen:
+						$timestamp = time ();
+						$beispieldate = date ( "Y-m-d", $timestamp );
+						echo "<p class='meldung'>Achtung, der Umsatz kann nicht gespeichert werden, <br>
+						Grund: Falsches Format im Datum! Bitte das Datum wie folgt angeben: z. B. $beispieldate</p>";
+						exit;
+					}
 					$besitzer = $this->getUserID ( $_SESSION ['username'] );
 					$id = $_GET ['edit'];
-					
+						
 					// Buchungsnummer herausfinden;
 					$objektBuchungsNr = $this->getObjektInfo ( "SELECT id, buchungsnr FROM finanzen_umsaetze WHERE id = '$id'" );
 					$buchungsnr = $objektBuchungsNr [0]->buchungsnr;
-					
+						
 					// Werte errechnen:
-					
+						
 					if ($wert > 0) {
 						$minusWert = $wert * (- 1);
 						$plusWert = $wert;
@@ -851,34 +885,63 @@ class finanzenNEW extends functions {
 						$minusWert = $wert;
 						$plusWert = $wert * (- 1);
 					}
-					
+						
 					if ($minusWert > 0 or $plusWert < 0) {
+						echo "<p class='meldung'>Achtung, das Vorzeichen eines Umsatzes darf nicht ver�ndert werden!</p>";
 						exit ();
 					}
-					
+						
 					// ID mit Minuswert herausfinden:
 					$minusObjekt = $this->getObjektInfo ( "SELECT * FROM finanzen_umsaetze WHERE buchungsnr = '$buchungsnr' AND umsatzWert < 0 LIMIT 1" );
 					$minusID = $minusObjekt [0]->id;
-					
+						
 					// ID mit Minuswert herausfinden:
 					$plusObjekt = $this->getObjektInfo ( "SELECT id, buchungsnr, umsatzWert FROM finanzen_umsaetze WHERE buchungsnr = '$buchungsnr' AND umsatzWert > 0 LIMIT 1" );
 					$plusID = $plusObjekt [0]->id;
-					
+						
 					if ($text != "" and $wert != "" and $besitzer != "" and $id != "" and $buchungsnr != "") {
 						$plusQuery = "UPDATE finanzen_umsaetze set umsatzName='$text',umsatzWert='$plusWert' ,datum='$datum' WHERE besitzer='$besitzer' and id = '$plusID'";
-						
+				
 						$minusQuery = "UPDATE finanzen_umsaetze set umsatzName='$text',umsatzWert='$minusWert' ,datum='$datum' WHERE besitzer='$besitzer' and id = '$minusID'";
 						if ($this->userHasRight ( "18", 0 ) == true) {
 							if ($this->sql_insert_update_delete ( $plusQuery ) == true and $this->sql_insert_update_delete ( $minusQuery ) == true) {
 								echo "<p class='erfolg'>Umsatz gespeichert</p>";
 							} else {
-								echo "<p class='erfolg'>Fehler</p>";
+								echo "<p class='info'>Fehler</p>";
 							}
 						} else {
 							echo "<p class='meldung'>Keine Berechtigung</p>";
 						}
 					}
 				}
+				
+				if(isset($umsatzInfo[0]->id)) {
+					echo "<div id='' class='alterUmsatz'>";
+					echo "<a href='?konto=$kontoLink&monat=$monat&jahr=$jahr' class='rightRedLink'>schließen</a>";
+					echo "<form method=post>";
+					echo "<h2><a name=umsatz>Umsatz Nr. " . $umsatzInfo [0]->id . "</a></h2>";
+					echo "<input type=text name=umsatzName value='" . $umsatzInfo [0]->umsatzName . "' /><br>";
+					$kontoID = $umsatzInfo [0]->gegenkonto;
+					$konto2ID = $umsatzInfo [0]->konto . "<br>";
+					$gegenkonto = $this->getObjektInfo ( "SELECT * FROM finanzen_konten WHERE id = '$kontoID'" );
+					$konto = $this->getObjektInfo ( "SELECT * FROM finanzen_konten WHERE id = '$konto2ID'" );
+					echo "Buchung auf: " . $konto [0]->konto . " ";
+					echo " - " . $gegenkonto [0]->konto . "<br>";
+					echo "<input type=text name=umsatzWert value='" . $umsatzInfo [0]->umsatzWert . "' /><br>";
+					echo "<input type=date name=umsatzDatum value='" . $umsatzInfo [0]->datum . "'  /><br>";
+					echo "<input type=submit name=alterUmsatz value=Speichern />";
+					echo "<input type=submit name=loeschUmsatz value=Löschen />";
+					
+					$this->regelmaessigeZahlung($umsatzInfo, $besitzer);
+					
+					echo "</form>";
+					echo "</div>";
+				} else {
+					echo "<div id='' class='alterUmsatz'>";
+					echo "<p>Diese Umsatznummer existiert nicht!</p>";
+					echo "</div>";
+				}
+				
 				if (isset ( $_POST ['loeschUmsatz'] )) {
 					$text = $_POST ['umsatzName'];
 					$wert = $_POST ['umsatzWert'];
@@ -980,7 +1043,7 @@ class finanzenNEW extends functions {
                 
                 $anzahlWeitereFelder = 12;
                 
-                $maxpast = "2010-01-01";
+                $maxpast = "2008-01-01";
 				
 				if (isset ( $_POST ['sendnewUeberweisung'] ) and isset ( $_POST ['valueUeberweisung'] ) and isset ( $_POST ['textUeberweisung'] ) and isset ( $_POST ['dateUeberweisung'] ) and isset ( $_POST ['zielKonto'] ) and isset ( $_POST ['absenderKonto'] )) {
 					$von = $_POST ['absenderKonto'];
