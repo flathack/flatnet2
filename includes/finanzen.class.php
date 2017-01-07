@@ -12,8 +12,7 @@ class finanzenNEW extends functions {
 		
 		if (!isset ($_GET['newUeberweisung'])) {
 			
-			// automatische Jahresabschluss-Generation.
-			$this->erstelleJahresabschluesseFromOldEintraegen ();
+			
 			
 			// Navigationslinks
 			$this->showKontenInSelect ( $besitzer );
@@ -33,6 +32,8 @@ class finanzenNEW extends functions {
 			// Hauptansicht Monat
 			$this->showCurrentMonthInKonto ( $besitzer );
 			$this->diagrammOptionen ( $besitzer );
+			// automatische Jahresabschluss-Generation.
+			$this->erstelleJahresabschluesseFromOldEintraegen ();
 			
 		}
 	}
