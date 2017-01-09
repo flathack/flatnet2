@@ -11,29 +11,27 @@ class finanzenNEW extends functions {
 		$this->showCreateNewUeberweisung ();
 		
 		if (!isset ($_GET['newUeberweisung'])) {
-			
-			
-			
+			$this->showKontoHinweis();
 			// Navigationslinks
-			$this->showKontenInSelect ( $besitzer );
-			$this->showJahreLinks ();
-			$this->showMonateLinks ();
+			$this->showKontenInSelect($besitzer);
+			$this->showJahreLinks();
+			$this->showMonateLinks();
 			
 			// Informationsmeldungen
-			$this->showErrors ();
-			$this->showFuturePastJahr ();
-			$this->showFuturePastMonat ();
-			$this->checkJahresabschluss ();
+			$this->showErrors();
+			$this->showFuturePastJahr();
+			$this->showFuturePastMonat();
+			$this->checkJahresabschluss();
             $this->showJahresabschlussIfAvailable();
             
 			// UmsatzverÃ¤nderungen
 			$this->alterUmsatz ();
 			
 			// Hauptansicht Monat
-			$this->showCurrentMonthInKonto ( $besitzer );
-			$this->diagrammOptionen ( $besitzer );
+			$this->showCurrentMonthInKonto($besitzer);
+			$this->diagrammOptionen($besitzer);
 			// automatische Jahresabschluss-Generation.
-			$this->erstelleJahresabschluesseFromOldEintraegen ();
+			$this->erstelleJahresabschluesseFromOldEintraegen();
 			
 		}
 	}
@@ -42,23 +40,37 @@ class finanzenNEW extends functions {
      * Stellt Funktionen auf der finanzen/konten.php bereit
      */
 	function mainKontoFunction() {
-		// Besitzer:
-		$besitzer = $this->getUserID ( $_SESSION ['username'] );
+		if ($this->userHasRight (18, 0 ) == true) {
+			// Besitzer:
+			$besitzer = $this->getUserID ( $_SESSION ['username'] );
+			
+			// Buttons
+			echo "<a href='?neuesKonto' class='rightBlueLink'>Neues Konto</a>";
+			
+			// Kontomanipulationen
+			$this->showCreateNewUeberweisung ();
+			$this->showCreateNewKonto ( $besitzer );
+			
+			// KontoÃ¼bersicht:
+			$this->showKontoUebersicht ( $besitzer );
+		} else {
+			echo "<p class='info'>Du besitzt keine Schreibrechte in diesem Bereich.</p>";
+		}
 		
-		// Buttons
-		echo "<a href='?neuesKonto' class='rightBlueLink'>Neues Konto</a>";
-	#	echo "<a href='?Salden' class='rightBlueLink'>Salden</a>";
-		
-		// SaldenÃ¼bersicht:
-	#	$this->saldenUebersicht ( $besitzer );
-		
-		// Kontomanipulationen
-		$this->showCreateNewUeberweisung ();
-		$this->showCreateNewKonto ( $besitzer );
-		
-		// KontoÃ¼bersicht:
-		$this->showKontoUebersicht ( $besitzer );
-		
+	}
+	/**
+	 * Stellt die Funktionalitäten für das teilen von Konten zur Verfügung
+	 */
+	function mainShareFunction() {
+		if ($this->userHasRight (18, 0 ) == true) {
+			$besitzer = $this->getUserID ( $_SESSION ['username'] );
+			$this->sharenav($besitzer);
+			$this->createKontoShare($besitzer);
+			$this->deleteKontoShare($besitzer);
+			$this->showAllShares($besitzer);
+		} else {
+			echo "<p class='info'>Du besitzt keine Schreibrechte in diesem Bereich.</p>";
+		}
 	}
 	function mainKontoDetail() {
 		$besitzer = $this->getUserID ( $_SESSION ['username'] );
@@ -75,7 +87,7 @@ class finanzenNEW extends functions {
 	}
 	private $suche;
 	function FinanzSuche($suchWort) {
-		if ($this->userHasRight ( "23", 0 ) == true) {
+		if ($this->userHasRight (23, 0) == true) {
 			if (isset ( $suchWort ) and $suchWort != "") {
 				
 				$besitzer = $this->getUserID ( $_SESSION ['username'] );
@@ -87,7 +99,7 @@ class finanzenNEW extends functions {
 				// Spalten der Tabelle selektieren:
 				$colums = "SHOW COLUMNS FROM finanzen_umsaetze";
 				
-				$rowSpalten = $this->getObjektInfo ( $colums );
+				$rowSpalten = $this->getObjektInfo($colums);
 				
 				// SuchQuery bauen:
 				// Start String:
@@ -112,7 +124,7 @@ class finanzenNEW extends functions {
 				echo "<div class='mainbody'>";
 				echo "<table class='flatnetTable'>";
 				echo "<thead><td>Konto</td><td>Umsatzname</td><td>Wert</td><td>Datum</td></thead>";
-				for($i = 0; $i < sizeof ( $suchfeld ); $i ++) {
+				for($i=0;$i<sizeof($suchfeld );$i++) {
 					
 					$kontoname = $this->getObjektInfo ( "SELECT * FROM finanzen_konten WHERE id=" . $suchfeld [$i]->konto . " LIMIT 1" );
 					$kontoname = $kontoname [0]->konto;
@@ -134,6 +146,7 @@ class finanzenNEW extends functions {
 			$currentuser = $this->getUserID($_SESSION['username']);
 						
 			$kontoinfos = $this->getObjektInfo("SELECT * FROM finanzen_konten WHERE id=$kontoid");
+			$getshareInfos = $this->getObjektInfo("SELECT * FROM finanzen_shares WHERE target_user=$currentuser AND konto_id=$kontoid");
 			
 			if(!isset($kontoinfos[0]->id)) {
 				$error = 1;
@@ -145,15 +158,29 @@ class finanzenNEW extends functions {
 			if(isset($kontoinfos[0]->besitzer) AND $kontoinfos[0]->besitzer == $currentuser) {
 				$error = 3;
 			}
+			
+			# Checken ob ein Share für diesen Benutzer vorhanden ist ...
+			if(isset($getshareInfos[0]->konto_id)) {
+				$error = 5;
+			}
 		} else {
 			$error = 4;
 		}
 		
 		if($error == 1 OR $error == 2 OR $error == 4) {
-			echo "<p class='newChar'>Um die Konto&uuml;bersicht zu sehen, muss ein g&uuml;ltiges Konto angegeben werden.</p>";
+			echo "<p class='dezentInfo'>Bitte ein g&uuml;ltiges Konto angeben.</p>";
 			exit;
 		}
-		if($error = 3) {
+		if($error == 3) {
+			#echo "Du darfst! Du bist der Besitzer!";
+		}
+		if($error == 5) {
+			$getusername = $this->getUserName($kontoinfos[0]->besitzer);
+			if($currentuser == $kontoinfos[0]->besitzer) {
+				echo "<p class='dezentInfo'>Du hast dieses Konto geteilt.</p>";
+			} else {
+				echo "<p class='dezentInfo'>Dieses Konto geh&ouml;rt: $getusername. </p>";
+			}
 			
 		}
 		
@@ -176,26 +203,24 @@ class finanzenNEW extends functions {
 		$this->checkKontoSicherheit($kontoID);
 		
 		if ($kontoID > 0) {
-			$umsaetze = $this->getUmsaetzeMonthFromKonto ( $besitzer, $currentMonth, $currentYear, $kontoID );
+			$umsaetze = $this->getUmsaetzeMonthFromKonto ($currentMonth, $currentYear, $kontoID );
 			
 			// Jahresanfangssaldo bekommen:
 			$letztesJahr = $currentYear - 1;
-			$summeJahresabschluesseBisJetzt = $this->getJahresabschluesseBISJETZT ( $besitzer, $kontoID, $currentYear );
+			$summeJahresabschluesseBisJetzt = $this->getJahresabschluesseBISJETZT ($kontoID, $currentYear );
 			$summeUmsaetzeDiesesJahr = $this->getObjektInfo ( "SELECT sum(umsatzWert) as summe 
 					FROM finanzen_umsaetze
-					WHERE besitzer = $besitzer
-					AND konto = $kontoID
+					WHERE konto = $kontoID
 					AND year(datum) = $currentYear
 					AND month(datum) < $currentMonth" );
 			
 			// Wenn das Jahr in der Zukunft liegt, werden alle
 			// UmsÃ¤tze der Vergangenheit einzeln addiert.
-			$diesesJahr = date ( "Y" );
+			$diesesJahr = date ("Y");
 			if ($this->checkIfJahrIsInFuture ( $diesesJahr, $currentYear ) == true) {
 				$getSaldoUntilNow = $this->getObjektInfo ( "SELECT sum(umsatzWert) as summe 
 					FROM finanzen_umsaetze
-					WHERE besitzer = $besitzer
-					AND konto = $kontoID
+					WHERE konto = $kontoID
 					AND year(datum) < $currentYear" );
 				$startsaldo = $getSaldoUntilNow [0]->summe + $summeUmsaetzeDiesesJahr [0]->summe;
 			} else {
@@ -206,7 +231,7 @@ class finanzenNEW extends functions {
 			
 			# Update vom 30.12.2016:
 			# Bei Konten Art 2 wird kein Saldo angezeigt ...
-			$kontoinfos = $this->getObjektInfo("SELECT * FROM finanzen_konten WHERE id = $kontoID");
+			$kontoinfos = $this->getObjektInfo("SELECT * FROM finanzen_konten WHERE id=$kontoID");
 				
 			if($kontoinfos[0]->art == 2) {
 				echo "<thead><td colspan=8 id='notOK'>Dieses Konto hat keinen Saldo!</td></thead>";
@@ -258,7 +283,7 @@ class finanzenNEW extends functions {
 					echo "<tbody $selected>";
 					echo "<td><a href='?konto=".$umsaetze [$i]->gegenkonto."&monat=$monat&jahr=$currentYear&selected=" . $umsaetze [$i]->buchungsnr . "'>" . $umsaetze [$i]->buchungsnr . "</a></td>";
 					// Name des Gegenkontos bekommen
-					$nameGegenkonto = $this->getObjektInfo ( "SELECT * FROM finanzen_konten WHERE besitzer = $besitzer AND id = " . $umsaetze [$i]->gegenkonto . " LIMIT 1" );
+					$nameGegenkonto = $this->getObjektInfo ( "SELECT * FROM finanzen_konten WHERE id=" . $umsaetze [$i]->gegenkonto . " LIMIT 1" );
 					echo "<td>" . $nameGegenkonto [0]->konto . "</td>";
 					echo "<td>" . $umsaetze [$i]->umsatzName . "</td>";
 					echo "<td>" . $umsaetze [$i]->tag . "</td>";
@@ -400,8 +425,9 @@ class finanzenNEW extends functions {
 		
 		echo "<div class='finanzNAV'>";
 				echo "<ul>";
-					echo "<li id='monate'><a href='index.php' >Finanzverwaltung - Startseite</a></li>";
-					echo "<li id='konten'><a href='konten.php' >Konten</a></li>";
+					echo "<li id='monate'><a href='index.php'>Finanzverwaltung - Startseite</a></li>";
+					echo "<li id='konten'><a href='konten.php'>Konten</a></li>";
+					echo "<li id='shares'><a href='shares.php'>Freigegebene Konten</a></li>";
 					echo "<li><a href='?konto=$kontoID&monat=$monat&jahr=$jahr&newUeberweisung' >Neue Buchung</a></li>";
 				#	echo "<li><a href='?konto=$kontoID&monat=$monat&jahr=$jahr&checkJahresabschluesse' >Jahresabschlusscheck</a></li>";
 				echo "</ul>";
@@ -548,23 +574,30 @@ class finanzenNEW extends functions {
 		echo "</ul>";
 	}
 	
+	function ShowKontoHinweis() {
+		if(!isset($_GET['konto'])) {
+			echo "<p class='dezentInfo'>Um Fortzufahren, musst du ein Konto unterhalb dieser Box ausw&auml;hlen.</p>";
+		}
+	}
+	
 	/**
 	 * Zeigt ein Select mit den Konten des Nutzers an.
 	 * 
 	 * @param unknown $besitzer        	
 	 */
 	function showKontenInSelect($besitzer) {
-		$monat = $this->getMonatFromGet ();
-		$jahr = $this->getJahrFromGet ();
+		$monat = $this->getMonatFromGet();
+		$jahr = $this->getJahrFromGet();
 		
-		$konten = $this->getAllKonten ( $besitzer );
+		$konten = $this->getAllKonten ($besitzer);
+		$shared = $this->getObjektInfo("SELECT konto_id, target_user FROM finanzen_shares WHERE target_user=$besitzer");
 		
-		if (isset ( $_GET ['konto'] )) {
+		if (isset ($_GET ['konto'])) {
 			$konto = $_GET ['konto'];
 		} else {
 			$konto = "";
 		}
-		if (isset ( $konten [0]->id ) and $konten [0]->id != "") {
+		if (isset ( $konten [0]->id ) and $konten [0]->id != "" OR isset($shared[0]->konto_id)) {
 			echo "<ul class='FinanzenKonten'>";
 			for($i = 0; $i < sizeof ( $konten ); $i ++) {
 				
@@ -575,6 +608,15 @@ class finanzenNEW extends functions {
 					}
 					echo "><a href='?konto=" . $konten [$i]->id . "&monat=$monat&jahr=$jahr'>" . $konten [$i]->konto . "</a></li>";
 				}
+			}
+			for($j = 0;$j<sizeof($shared);$j++) {
+				echo "<li ";
+				if ($konto == $shared[$j]->konto_id) {
+					echo " id='selected' ";
+				}
+				$sharedid=$shared[$j]->konto_id;
+				$name = $this->getObjektInfo("SELECT id, konto FROM finanzen_konten WHERE id=$sharedid");
+				echo "><a href='?konto=" . $shared[$j]->konto_id . "&monat=$monat&jahr=$jahr'>" . $name[0]->konto . " (shared)</a></li>";
 			}
 			echo "</ul>";
 		}
@@ -938,9 +980,14 @@ class finanzenNEW extends functions {
 					echo "</form>";
 					echo "</div>";
 				} else {
-					echo "<div id='' class='alterUmsatz'>";
-					echo "<p>Diese Umsatznummer existiert nicht!</p>";
-					echo "</div>";
+				#	echo "<div id='' class='alterUmsatz'>";
+					$isshared=$this->getObjektInfo("SELECT * FROM finanzen_shares WHERE konto_id=$kontoLink AND target_user=$besitzer");
+					if(isset($isshared[0]->target_user)) {
+						echo "<p class='meldung'>Du darfst ein fremdes Konto nicht bearbeiten!</p>";
+					} else {
+						echo "<p class='meldung'>Diese Umsatznummer existiert nicht oder du bist nicht der Besitzer dieses Kontos!</p>";
+					}
+				#	echo "</div>";
 				}
 				
 				if (isset ( $_POST ['loeschUmsatz'] )) {
@@ -1213,14 +1260,13 @@ class finanzenNEW extends functions {
 	 * @param unknown $konto        	
 	 * @return unknown|boolean
 	 */
-	function getUmsaetzeMonthFromKonto($besitzer, $monat, $jahr, $konto) {
+	function getUmsaetzeMonthFromKonto($monat, $jahr, $konto) {
 		$umsaetze = "SELECT *
 		, day(datum) as tag
 		, year(datum) as jahr
 		, month(datum) as monat 
 		FROM finanzen_umsaetze
-		WHERE besitzer = $besitzer
-		AND konto = $konto
+		WHERE konto = $konto
 		HAVING jahr = $jahr
 		AND monat = $monat
 		ORDER BY tag, id";
@@ -1735,6 +1781,106 @@ class finanzenNEW extends functions {
 			echo "</div>";
 		}
 	}
+	
+	private $shares;
+	
+	function sharenav($besitzer) {
+		echo "<div class='newFahrt'>";
+			echo "<ul>";
+				echo "<li><a href='?newShare'>" ."Neues Share erstellen". "</a></li>";
+			echo "</ul>";
+		echo "</div>";
+	}
+	
+	function createKontoShare($besitzer) {
+		if(isset($_GET['newShare']))  {
+			
+			# $j
+			$getusers = $this->getObjektInfo("SELECT * FROM benutzer ORDER BY Name");
+			# $i
+			$getkonten = $this->getObjektInfo("SELECT * FROM finanzen_konten WHERE besitzer=$besitzer ORDER BY konto");
+			
+			echo "<div class='newFahrt'>";
+				echo "<h2>Share erstellen</h2>";
+				echo "<form method=post>";
+				echo "<select name=konto>";
+					echo "<option>Konto ausw&auml;hlen ...</option>";
+					
+					for($i = 0 ; $i < sizeof($getkonten) ; $i++) {
+						echo "<option value='" .$getkonten[$i]->id. "'>";
+							echo $getkonten[$i]->konto;
+						echo "</option>";
+					}
+					
+				echo "</select>";
+				echo "<select name=user>";
+					echo "<option>Benutzer ausw&auml;hlen ...</option>";
+					
+					for($j = 0 ; $j < sizeof($getusers) ; $j++) {
+						echo "<option value='" .$getusers[$j]->id. "'>";
+							echo $getusers[$j]->Name;
+						echo "</option>";
+					}
+					
+				echo "</select>";
+				echo "<br><input type=submit name=absenden value=Absenden>";
+				echo "</form>";
+				
+				# Speichern der Inhalte
+				if(isset($_POST['absenden'])) {
+					if(isset($_POST['konto']) AND isset($_POST['user'])) {
+						$konto = $_POST['konto'];
+						$user = $_POST['user'];
+						
+						if($konto > 0 AND $user > 0) {
+							if($this->sql_insert_update_delete("INSERT INTO finanzen_shares (besitzer, konto_id, target_user) VALUES ($besitzer, $konto, $user) ")) {
+								echo "<p class='erfolg'>Share wurde gespeichert.</p>";
+							} else {
+								echo "<p class='meldung'>Share konnte nicht gespeichert werden, m&ouml;glicherweise existiert der Share bereits!</p>";
+							}
+						}
+					}
+				}
+			echo "</div>";
+		}
+	}
+	
+	/**
+	 * Löscht ein Kontoshare.
+	 * @param unknown $besitzer
+	 */
+	function deleteKontoShare($besitzer) {
+		if(isset($_GET['del']) AND isset($_GET['user']) AND isset($_GET['konto'])) {
+			$user = $_GET['user'];
+			$konto = $_GET['konto'];
+			if($this->sql_insert_update_delete("DELETE FROM finanzen_shares WHERE besitzer=$besitzer AND konto_id=$konto AND target_user=$user")) {
+				echo "<p class='erfolg'>Share entfernt!</p>";
+			} else {
+				echo "<p class='meldung'>Share kann nicht entfernt werden, m&ouml;glicherweise existiert der Share nicht mehr.</p>";
+			}
+		}
+	}
+	
+	function showAllShares($besitzer) {
+		
+		$shares = $this->getObjektInfo("SELECT * FROM finanzen_shares WHERE besitzer=$besitzer");
+		
+		echo "<table class='kontoTable'>";
+		echo "<thead><td>Konto</td><td>Freigegeben f&uuml;r</td><td></td></thead>";
+		for ($i = 0 ; $i < sizeof($shares) ; $i++) {
+			$id = $shares[$i]->target_user;
+			$username = $this->getObjektInfo("SELECT id, Name FROM benutzer WHERE id=$id LIMIT 1");
+			$kontoid = $shares[$i]->konto_id;
+			$kontoname = $this->getObjektInfo("SELECT id, konto FROM finanzen_konten WHERE id=$kontoid LIMIT 1");
+			echo "<tbody>";
+				echo "<td>" .$kontoname[0]->konto. "</td>";
+				echo "<td>" .$username[0]->Name. "</td>";
+				echo "<td>" . "<a class='rightRedLink' href='?del&konto=" .$kontoid. "&user=" .$id. "'>X</a>" . "</td>";
+			echo "</tbody>";
+		}
+		echo "</table>";
+	}
+	
 	private $abschluesse;
 	
 	/**
@@ -1784,11 +1930,10 @@ class finanzenNEW extends functions {
 	 * @param unknown $konto        	
 	 * @return unknown
 	 */
-	function getJahresabschluesseBISJETZT($besitzer, $konto, $jetzigesJahr) {
+	function getJahresabschluesseBISJETZT($konto, $jetzigesJahr) {
 		$query = "SELECT sum(wert) as summe 
 		FROM finanzen_jahresabschluss 
-		WHERE besitzer = $besitzer 
-		AND konto = $konto 
+		WHERE konto = $konto 
 		AND jahr < $jetzigesJahr";
 		$summe = $this->getObjektInfo ( $query );
 		

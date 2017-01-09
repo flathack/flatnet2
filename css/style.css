@@ -1932,7 +1932,8 @@ input[type=password]:focus {
     text-decoration: none;
 }
 #konten #konten
-, #monate #monate {
+, #monate #monate
+, #shares #shares {
 	display: inline-block;
     margin: 0px 0px 0px 0px;
     border-bottom: 1px solid #000079;
