@@ -228,6 +228,7 @@ blockquote {
 #guildwars #guildwars,
 #forum #forum,
 #fahrten #fahrten,
+#toyota #toyota,
 #amazon #amazon,
 #gesundheit #gesundheit,
 #starcitizen #starcitizen,
@@ -312,6 +313,7 @@ blockquote {
 .bereichforum h2,
 .bereichfinanzen h2,
 .bereichfahrten h2,
+.bereichtoyota h2,
 .bereichamazon h2,
 .bereichlernen h2,
 .bereichadministration h2,
@@ -327,6 +329,7 @@ blockquote {
 .bereichforum p,
 .bereichfinanzen p,
 .bereichfahrten p,
+.bereichtoyota p,
 .bereichamazon p,
 .bereichlernen p,
 .bereichadministration p,
@@ -384,6 +387,17 @@ blockquote {
     width: 46%;
     display: inline-block;
 }
+.bereichtoyota {
+    background-color: white;
+    box-shadow: 0px 0px 5px grey;
+    border: 1px solid grey;
+    margin-bottom: 10px;
+    margin-right: 10px;
+    padding: 5px;
+    min-height: 120px;
+    width: 46%;
+    display: inline-block;
+}
 .bereichgesundheit {
     background-color: white;
     box-shadow: 0px 0px 5px grey;
@@ -409,65 +423,7 @@ blockquote {
     width: 46%;
     display: inline-block;
 }
-.bereichprofil {
-    background-color: #e4e4e4;
-    border: 1px solid grey;
-    box-shadow: 0px 0px 5px grey;
-    margin-bottom: 10px;
-    margin-right: 10px;
-    padding: 5px;
-    min-height: 120px;
-    width: 46%;
-    display: inline-block;
-}
-.bereichfahrten {
-    background-color: #ffffff;
-    border: 1px solid #c0c0c0;
-    box-shadow: 0px 0px 5px #c0c0c0;
-    margin-bottom: 10px;
-    margin-right: 10px;
-    padding: 5px;
-    min-height: 120px;
-    width: 46%;
-    display: inline-block;
-}
-.bereichamazon {
-    background-color: #ffffff;
-    border: 1px solid #c0c0c0;
-    box-shadow: 0px 0px 5px #c0c0c0;
-    margin-bottom: 10px;
-    margin-right: 10px;
-    padding: 5px;
-    min-height: 120px;
-    width: 46%;
-    display: inline-block;
-}
-.bereichlernen {
-    background-color: #fffce8;
-    border: 1px solid grey;
-    box-shadow: 0px 0px 5px grey;
-    margin-bottom: 10px;
-    margin-right: 10px;
-    padding: 5px;
-    min-height: 120px;
-    width: 46%;
-    display: inline-block;
-}
-.bereichadministration {
-    background-color: white;
-    /*	background-image: url(../images/tiles/administration.png);
-	background-position: right;
-	background-repeat: y-repeat; */
-    
-    border: 1px solid grey;
-    box-shadow: 0px 0px 5px grey;
-    margin-bottom: 10px;
-    margin-right: 10px;
-    padding: 5px;
-    min-height: 120px;
-    width: 46%;
-    display: inline-block;
-}
+
 .adminKachel {
     background-color: white;
     border: 1px solid grey;
@@ -498,7 +454,7 @@ blockquote {
 }
 .bereichfinanzen {
     background-color: #f7f7f7;
-    background-image: url(../images/tiles/finanzen.png);
+    background-image: url(../images/tiles/schwein.png);
     background-position: right;
     background-repeat: no-repeat;
     border: 1px solid #8080ff;
