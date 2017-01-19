@@ -45,8 +45,9 @@ class finanzenNEW extends functions {
 			$besitzer = $this->getUserID ( $_SESSION ['username'] );
 			
 			// Buttons
+			echo "<div class='innerBody'>";
 			echo "<a href='?neuesKonto' class='rightBlueLink'>Neues Konto</a>";
-			
+			echo "</div>";
 			// Kontomanipulationen
 			$this->showCreateNewUeberweisung ();
 			$this->showCreateNewKonto ( $besitzer );
@@ -57,6 +58,28 @@ class finanzenNEW extends functions {
 			echo "<p class='info'>Du besitzt keine Schreibrechte in diesem Bereich.</p>";
 		}
 		
+	}
+	
+	function mainStatistikFunction() {
+		if ($this->userHasRight (18, 0 ) == true) {
+			$besitzer = $this->getUserID($_SESSION['username']);
+			echo "<h2>Statistiken</h2>";
+			
+			$anzahlKonten=$this->getAmount("SELECT * FROM finanzen_konten WHERE besitzer=$besitzer") + 0;
+			$anzahlGuthabenK=$this->getAmount("SELECT * FROM finanzen_konten WHERE besitzer=$besitzer AND art=1") + 0;
+			$anzahlAktiveK=$this->getAmount("SELECT * FROM finanzen_konten WHERE besitzer=$besitzer AND aktiv=1") + 0;
+			
+			$summe = $anzahlAktiveK + $anzahlGuthabenK + $anzahlKonten;
+			if($summe > 0) {
+				
+				echo "<div>";
+					echo "<p>Du hast $anzahlKonten Konten <br>";
+					echo "Davon sind $anzahlAktiveK Aktiv. <br>";
+					echo "Guthabenkonten: $anzahlGuthabenK</p>";
+				echo "</div>";
+				
+			}			
+		}
 	}
 	/**
 	 * Stellt die Funktionalitäten für das teilen von Konten zur Verfügung
