@@ -15,8 +15,9 @@ echo $toyota->suche($suche);
 	</head>
 	<body>
 		<div class='mainbodyDark' id="">
-							
-			<?php $toyota->mainMuepFunction(); ?>
+
+			<?php $toyota->navigation(); ?>
+			<?php $toyota->showMuepTable(); ?>
 			
 		</div>
 	</body>
