@@ -42,21 +42,28 @@ $indexlogin = NEW login();
 		
 		</div>
 		
-		<div style="display: none;" id="DatenschutzInfos">
-			<?php include 'informationen/datenschutz.html'; ?>
-		</div>
-		
-		<div style="display: none;" id="Impressum">
-			<?php include 'informationen/impressum.html'; ?>
-		</div>
-		
-		<div style="display: none;" id="zweck">
-			<?php include 'informationen/zweck.html'; ?>
-		</div>
-		
 		<div id="loginFelder">
+			<p id='loginTitel'>Login</p>
 			<?php echo $indexlogin->anmeldeCheck(); ?>
 		</div>
+		
+		<div class="logininfos">
+			<div style="display: none;" id="DatenschutzInfos">
+				<a href="?" class="rightRedLink">OK</a>
+				<?php include 'informationen/datenschutz.html'; ?>
+			</div>
+			
+			<div style="display: none;" id="Impressum">
+				<a href="?" class="rightRedLink">OK</a>
+				<?php include 'informationen/impressum.html'; ?>
+			</div>
+			
+			<div style="display: none;" id="zweck">
+				<a href="?" class="rightRedLink">OK</a>
+				<?php include 'informationen/zweck.html'; ?>
+			</div>
+		</div>
+		
 		
 		<div id="register">
 			<?php $indexlogin->registerNewUser(); ?>

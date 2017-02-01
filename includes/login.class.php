@@ -124,7 +124,7 @@ class login extends functions {
 	 */
 	public function anmeldeCheck() {
 		$ausgabe = "";
-		$notLoggedIn = "<p id='loginTitel'>Accountname</p>";
+		$notLoggedIn = "";
 
 		if(!isset($_SESSION['angemeldet'])) {
 			$ausgabe .= $notLoggedIn;
@@ -230,7 +230,7 @@ class login extends functions {
 							$codeExists = $this->getObjektInfo("SELECT * FROM registercode WHERE code = '$code' LIMIT 1 ");
 							
 							if(!isset($codeExists[0]->code)) {
-								echo "<p class='meldung'>Code gibts nicht</p>";
+								#echo "<p class='meldung'>Code gibts nicht</p>";
 								echo "<p class='meldung'>Es gibt Probleme mit dem Code, kontaktiere den Administrator.</p>";
 								# Logeintrag
 								$this->logEintrag(true, "hat den Code $code benutzt, dieser existiert aber nicht.", "Error");
