@@ -13,7 +13,7 @@ header('Content-Type: text/html; charset=UTF-8');
 include '../includes/fahrten.class.php';
 
 #Forum Function
-$ANPASSEN = NEW ANPASSEN;
+#$ANPASSEN = NEW ANPASSEN;
 
 # STELLT DEN HEADER ZUR VERFÜGUNG
 $ANPASSEN->header();
