@@ -1879,19 +1879,26 @@ input[type=password]:focus {
     display: inline-block;
     margin: 0px 0px 0px 0px;
     padding: 5px;
+    color: #b30004;
+    border-bottom: 1px solid #820003;
 }
 .finanzNAV li:hover {
-    background-color: #b7b7ff;
+    background-color: #820003;
+    color: white;
 }
-.finanzNAV li a:hover {
+.finanzNAV li a {
+    color: #820003;
+}
+.finanzNAV li a:hover, .finanzNAV li a:visited:hover {
     text-decoration: none;
+    color: white;
 }
 #konten #konten
 , #monate #monate
 , #shares #shares {
 	display: inline-block;
     margin: 0px 0px 0px 0px;
-    background-color: #000079;
+    background-color: #820003;
     color: white;
     padding: 5px;
 }
@@ -1906,53 +1913,29 @@ input[type=password]:focus {
     color: black;
 }
 .FinanzenMonate #selected {
-    background-color: #000079;
+    background-color: #820003;
     color: white;
-    border: 1px solid #000079;
+    border: 1px solid #820003;
 }
 .FinanzenMonate #selected a {
     color: white;
 }
 .FinanzenMonate li {
     display: inline-block;
-    background-color: #ddddff;
+    background-color: #ebebeb;
     padding: 5px;
     margin: 0px 5px 0px 0px;
     border: 1px solid transparent;
+    border-bottom: 1px solid #820003;
 }
-.FinanzenMonate li:hover,
-.FinanzenKonten li:hover {
-    background-color: #8c8cff;
-    border: 1px solid #000079;
+.FinanzenMonate li:hover {
+    background-color: white;
+    border: 1px solid #820003;
 }
-.FinanzenKonten {
-    margin: 0px;
-    border-bottom: 1px solid grey;
-    padding-bottom: 2px;
+.FinanzenMonate a:hover {
+	text-decoration: none;
 }
-.FinanzenKonten a {
-    color: black;
-}
-.FinanzenKonten #selected {
-    background-color: #000079;
-    border: 1px solid #000079;
-    color: white;
-}
-.FinanzenKonten #selected a {
-    color: white;
-}
-.FinanzenKonten #selected a:hover,
-.FinanzenKonten a:hover {
-    text-decoration: none;
-    color: white;
-}
-.FinanzenKonten li {
-    display: inline-block;
-    margin: 0px 5px 0px 0px;
-    border: 1px solid transparent;
-    background-color: #ddddff;
-    padding: 5px;
-}
+
 .Guthabenkonto {
     padding: 5px;
     border: 1px solid green;
