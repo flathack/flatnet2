@@ -1714,7 +1714,7 @@ class finanzenNEW extends functions {
 						echo "<thead><td colspan=10>GUTSCHRIFT</td></thead>";
 						echo "<tbody><td>" . $buchInfos [$i]->umsatzName . " " . $buchInfos [$i]->umsatzWert . "</td></tbody>";
 						echo "<tbody>";
-						$selectKonten = "SELECT * FROM finanzen_konten WHERE besitzer = $besitzer";
+						$selectKonten = "SELECT * FROM finanzen_konten WHERE besitzer = $besitzer ORDER BY konto";
 						$konten = $this->getObjektInfo ( $selectKonten );
 						echo "<td>";
 						echo "<select name=gutschriftKonto />";
@@ -1739,7 +1739,7 @@ class finanzenNEW extends functions {
 						echo "<tbody><td>" . $buchInfos [$i]->umsatzName . " " . $buchInfos [$i]->umsatzWert . "</td></tbody>";
 						
 						echo "<tbody>";
-						$selectKonten = "SELECT * FROM finanzen_konten WHERE besitzer = $besitzer";
+						$selectKonten = "SELECT * FROM finanzen_konten WHERE besitzer = $besitzer ORDER BY konto";
 						$konten = $this->getObjektInfo ( $selectKonten );
 						echo "<td>";
 						echo "<select name=absenderKonto />";
