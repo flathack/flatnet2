@@ -1855,8 +1855,11 @@ input[type=password]:focus {
 }
 .alterUmsatz {
     padding: 10px;
-    box-shadow: 0px 0px 20px black;
-    border: 1px solid #800000;
+    box-shadow: 0px 0px 10px #4f4f4f;
+    border: 1px solid black;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    background-color: #dfdfdf;
 }
 .alterUmsatz h2 a {
     color: #2e2e2e;
@@ -1871,9 +1874,9 @@ input[type=password]:focus {
 }
 .alterUmsatz input[type=text]:focus,
 .alterUmsatz input[type=date]:focus {
-    border: 1px solid green;
-    color: green;
-    background-color: #d2ffbe;
+    border: 1px solid red;
+    color: red;
+    background-color: #ffd7d8;
 }
 .finanzNAV li {
     display: inline-block;
@@ -2081,6 +2084,7 @@ input[type=password]:focus {
 }
 .kontoTable #yellow {
 	background-color: #ffffd2;
+	font-weight: bold;
 }
 .kontoTable tbody {
     border: 1px solid #c0c0c0;

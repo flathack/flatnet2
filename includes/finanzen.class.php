@@ -396,12 +396,56 @@ class finanzenNEW extends functions {
 	}
 	
 	/**
+	 * Löscht markierte Zeilen / Ums&auml;tze in der showWholeYear Funktion
+	 */
+	function deleteMarkedUmsaetze($besitzer) {
+	    
+	    if(isset($_POST['numbers'])) {
+	        $numbers = $_POST['numbers'];
+	        
+	        echo "<div class='alterUmsatz'><h2>L&ouml;sche ... </h2>";
+	        $i = 0;
+	        foreach ($numbers as $buchungsnr) {
+	            echo "<p>$i - Buchungsnummer: <input type=number name=numbers[$i] value=$buchungsnr readonly /> </p>";
+	            $query = "DELETE FROM finanzen_umsaetze WHERE buchungsnr=$buchungsnr AND besitzer=$besitzer";
+	            if($this->sql_insert_update_delete($query) == true) {
+	                echo "<p class='erfolg'>$buchungsnr gel&ouml;scht!</p>";
+	            }
+	            $i++;
+	        }
+	        echo "</div>";
+	        
+	    }
+	    
+	    if(isset($_POST['marked'])) {
+	        $marked = $_POST['marked'];
+            
+	        echo "<div class='alterUmsatz'><h2>Zum l&ouml;schen ausgew&auml;hlt</h2>";
+	        echo "<form method=post>";
+	        $i = 0;
+	        foreach ($marked as $buchungsnr) {
+	            echo "<p>$i - Buchungsnummer: <input type=number name=numbers[$i] value=$buchungsnr readonly /> </p>";
+	            $i++;
+	        }
+	        echo "<p class='info'>Die angegebenen Buchungen wirklich l&ouml;schen? Der Vorgang kann nicht R&uuml;ckg&auml;ngig gemacht werden! <input type=submit value='Ja l&ouml;schen' /></p>";
+	        echo "</form>";
+	        echo "</div>";
+
+	        
+	    } else {
+	        $marked = "";
+	    }
+	}
+	
+	/**
 	 * Zeigt alle Ums&auml;tze des Jahres an.
 	 */
 	function showWholeYear($besitzer) {
 	    if(isset($_GET['konto']) AND isset($_GET['ganzesJahr'])) {
 	        $jahr = $_GET['ganzesJahr'];
 	        $konto = $_GET['konto'];
+	        
+	        $this->deleteMarkedUmsaetze($besitzer);
 	        
 	        $query="SELECT *, day(datum) as tag, year(datum) as jahr, month(datum) as monat
             FROM finanzen_umsaetze	WHERE konto = $konto HAVING jahr=$jahr ORDER BY monat,tag,id";
@@ -410,21 +454,22 @@ class finanzenNEW extends functions {
 	        $startSaldo = $this->getJahresabschluesseBISJETZT ($konto, $jahr);
 	        
 	        $zwischensumme = round($startSaldo,4);
+	        echo "<form method=post>";
 	        echo "<table class='kontoTable'>";
-	        echo "<thead>" ."<td>Buchungsnr</td>"."<td>Gegenkonto</td>"."<td>Umsatz</td>"."<td>Wert</td>"."<td>Tag</td>"."<td>Saldo</td>". "</thead>";
-	        echo "<thead>" ."<td colspan=6>"."Startsaldo: $startSaldo"."</td>". "</thead>";
+	        echo "<thead>" ."<td>Mark</td>"."<td>Buchungsnr</td>"."<td>Gegenkonto</td>"."<td>Umsatz</td>"."<td>Wert</td>"."<td>Tag</td>"."<td>Saldo</td>". "</thead>";
+	        echo "<thead>"."<td><input type=submit name=delete value=delete /></td>"."<td colspan=6>"."Startsaldo: $startSaldo"."</td>". "</thead>";
 	        
 	        if(!isset($umsaetze[0]->id)) {
 	            echo "<tbody><td id='minus' colspan=6>F&uuml;r das Jahr $jahr sind keine Ums&auml;tze verf&uuml;gbar</td></tbody>";
 	        }
-	        
+	           
 	           for($i = 0 ; $i < sizeof($umsaetze) ; $i++) {
 	               
 	               
 	               # Monatszeilen einfügen
 	               if(isset($umsaetze[$i-1]->monat)) {
 	                   if($umsaetze[$i-1]->monat != $umsaetze[$i]->monat) {
-	                       echo "<thead><td colspan=5><a href='#".$this->getMonthName($umsaetze[$i]->monat)."'>".$this->getMonthName($umsaetze[$i]->monat)."</a></td><td>$zwischensumme</td></thead>";
+	                       echo "<thead><td></td><td colspan=5><a href='#".$this->getMonthName($umsaetze[$i]->monat)."'>".$this->getMonthName($umsaetze[$i]->monat)."</a></td><td>$zwischensumme</td></thead>";
 	                   }
 	               }
 	               
@@ -432,6 +477,11 @@ class finanzenNEW extends functions {
 	               echo "<tbody>";
 	               
 	               if ($umsaetze [$i]->umsatzWert < 0) { $zelle = " id='minus' "; } else { $zelle = " id='plus' "; }
+	               
+	               # Radio Button
+	               echo "<td>";
+	                   echo "<input type=checkbox id=" . $umsaetze [$i]->buchungsnr . " name=marked[$i] value=" . $umsaetze [$i]->buchungsnr . ">";
+	               echo "</td>";
 	               
 	               echo "<td><a href='?konto=".$umsaetze [$i]->gegenkonto."&monat=" . $umsaetze[$i]->monat . "&jahr=$jahr&selected=" . $umsaetze [$i]->buchungsnr . "'>" . $umsaetze[$i]->buchungsnr . "</a></td>";
 	                   echo "<td>" . $nameGegenkonto[0]->konto . "</td>";
@@ -446,8 +496,9 @@ class finanzenNEW extends functions {
 	                   echo "<td>" . $zwischensumme . "</td>";
 	               echo "</tbody>";
 	           }
-	           echo "<tfoot><td colspan=7>Endsaldo: $zwischensumme</td></tfoot>";
+	           echo "<tfoot><td><input type=submit name=delete value=delete /></td><td colspan=6>Endsaldo: $zwischensumme</td></tfoot>";
 	        echo "</table>";
+	        echo "</form>";
 	    }
 	   
 	}
@@ -729,7 +780,8 @@ class finanzenNEW extends functions {
 			
 			return $kontoID;
 		} else {
-			return false;
+		    $kontoID = 0;
+		    return $kontoID;
 		}
 	}
 	
@@ -1063,7 +1115,7 @@ class finanzenNEW extends functions {
 					echo "<div id='' class='alterUmsatz'>";
 					echo "<a href='?konto=$kontoLink&monat=$monat&jahr=$jahr' class='rightRedLink'>schlieÃŸen</a>";
 					echo "<form method=post>";
-					echo "<h2><a name=umsatz>Umsatz Nr. " . $umsatzInfo [0]->id . "</a></h2>";
+					echo "<h2><a name=umsatz>" . $umsatzInfo [0]->umsatzName . "</a></h2>";
 					echo "<input type=text name=umsatzName value='" . $umsatzInfo [0]->umsatzName . "' /><br>";
 					$kontoID = $umsatzInfo [0]->gegenkonto;
 					$konto2ID = $umsatzInfo [0]->konto . "<br>";
@@ -1491,7 +1543,7 @@ class finanzenNEW extends functions {
 			echo "<div class='innerBody'>";
 			echo "<h3>Nicht sichtbare Konten</h3>";
 			echo "<table class='flatnetTable'>";
-			echo "<thead><td>ID</td><td>Name</td><td>Eisntellungen</td><td>Saldo</td><td>Mail</td></thead>";
+			echo "<thead><td>ID</td><td>Name</td><td>Konto Details</td><td>Saldo</td><td>Mail</td></thead>";
 			for($i = 0; $i < sizeof ( $konten ); $i ++) {
 				$select2 = "SELECT sum(umsatzWert) as summe FROM finanzen_umsaetze WHERE konto=" . $konten [$i]->id . " AND datum <= CURDATE()";
 				$umsaetze = $this->getObjektInfo ( $select2 );
@@ -1506,7 +1558,7 @@ class finanzenNEW extends functions {
 					#echo "<div class='$mark'>";
 					echo "<tbody>";
 					echo "<td>" .$konten [$i]->id. ":</td><td> <a href='index.php?konto=" . $konten [$i]->id . "'>" . $konten [$i]->konto . "</a></td>";
-					echo "<td><a href='detail.php?editKonto=" . $konten [$i]->id . "'>Einstellungen</a></td><td>";
+					echo "<td><a class='rightBlueLink' href='detail.php?editKonto=" . $konten [$i]->id . "'>Details</a></td><td>";
 					if($konten[$i]->art == 2) {
 						echo "x";
 					} else {
@@ -1647,8 +1699,8 @@ class finanzenNEW extends functions {
 			echo "<div>Beschreibung Kontoart: 0 = normales Konto, 1 = Konto mit gr&uuml;ner Umrandung, 2 = Konto ohne Saldo</div>";
 			
 			echo "<div class='scrollContainer'>";
-			echo "<p>Ãœbersicht vorhandener Buchungen</p>";
-			echo "<table class='flatnetTable'>";
+			echo "<p>&Uuml;bersicht vorhandener Buchungen</p>";
+			echo "<table class='kontoTable'>";
 			
 			$selectKonten = "SELECT *
 			, year(datum) as jahr
@@ -1793,14 +1845,15 @@ class finanzenNEW extends functions {
 			if ($this->objectExists ( $query ) == true) {
 				$buchInfos = $this->getObjektInfo ( $query );
 				
-				echo "<div class='newChar'><form method=post>";
+				echo "<div class='newCharWIDE'><form method=post>";
 				
 				$this->umbuchungDurchfuehren ( $buchungsnr );
 				
 				echo "<h2>Umsatzinformationen</h2>";
+				echo "<table class='kontoTable'>";
 				for($i = 0; $i < sizeof ( $buchInfos ); $i ++) {
 					if ($buchInfos [$i]->umsatzWert > 0) {
-						echo "<table class='flatnetTable'>";
+						
 						echo "<thead><td colspan=10>GUTSCHRIFT</td></thead>";
 						echo "<tbody><td>" . $buchInfos [$i]->umsatzName . " " . $buchInfos [$i]->umsatzWert . "</td></tbody>";
 						echo "<tbody>";
@@ -1824,7 +1877,6 @@ class finanzenNEW extends functions {
 					}
 					
 					if ($buchInfos [$i]->umsatzWert < 0) {
-						echo "<table class='flatnetTable'>";
 						echo "<thead><td colspan=10>ABSENDER</td></thead>";
 						echo "<tbody><td>" . $buchInfos [$i]->umsatzName . " " . $buchInfos [$i]->umsatzWert . "</td></tbody>";
 						
@@ -1849,9 +1901,9 @@ class finanzenNEW extends functions {
 						echo "</tbody>";
 					}
 					
-					echo "</table>";
+					
 				}
-				
+				echo "</table>";
 				echo "<input type=submit name=absenden value=speichern />";
 				
 				echo "</form></div>";
