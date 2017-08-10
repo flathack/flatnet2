@@ -1993,11 +1993,9 @@ input[type=password]:focus {
     color: black;
 }
 .kontoTable {
-    border-collapse: collapse;
     border: 2px solid white;
     width: 100%;
     color: black;
-   /* font-family: sans-serif;*/
 }
 .kontoTable #width140px {
     width: 140px;
@@ -2011,9 +2009,7 @@ input[type=password]:focus {
 .kontoTable #small {
     width: 50px;
 }
-.kontoTable a {
-    color: black;
-}
+
 .kontoTable input[type=text],
 .kontoTable input[type=date] {
     width: 90%;
@@ -2036,15 +2032,15 @@ input[type=password]:focus {
     border-right: 1px solid grey;
 }
 .kontoTable a {
-    text-decoration: underline;
-    padding: 2px;
-    border-radius: 5px;
+    padding: 2px 20px 2px 20px;
+    color: #4a4a4a;
+    background-color: #e0e0e0;
     border: 1px solid transparent;
 }
 .kontoTable a:hover {
-    text-decoration: none;
-    background-color: #d5d5ff;
-    border: 1px solid blue;
+	text-decoration: none;
+    background-color: #e8ffea;
+    border: 1px solid #4a4a4a;
 }
 .kontoTable tfoot td,
 .logTable tfoot td {

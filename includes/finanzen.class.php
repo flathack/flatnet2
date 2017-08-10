@@ -28,7 +28,12 @@ class finanzenNEW extends functions {
 			$this->alterUmsatz ();
 			
 			// Hauptansicht Monat
-			$this->showCurrentMonthInKonto($besitzer);
+			if(isset($_GET['ganzesJahr'])) {
+			    $this->showWholeYear($besitzer);
+			} else {
+			    $this->showCurrentMonthInKonto($besitzer);
+			}
+			
 			$this->diagrammOptionen($besitzer);
 			// automatische Jahresabschluss-Generation.
 			$this->erstelleJahresabschluesseFromOldEintraegen();
@@ -316,7 +321,12 @@ class finanzenNEW extends functions {
 					// Name des Gegenkontos bekommen
 					$nameGegenkonto = $this->getObjektInfo ( "SELECT * FROM finanzen_konten WHERE id=" . $umsaetze [$i]->gegenkonto . " LIMIT 1" );
 					echo "<td>" . $nameGegenkonto [0]->konto . "</td>";
-					echo "<td>" . $umsaetze [$i]->umsatzName . "</td>";
+					
+					echo "<td>" . $umsaetze [$i]->umsatzName;
+					if(isset($umsaetze [$i]->link) AND $umsaetze [$i]->link != "") {
+					    echo "<a href='" . $umsaetze [$i]->link . "'>link</a>";
+					}
+					echo "</td>";
 					echo "<td>" . $umsaetze [$i]->tag . "</td>";
 					$ausgabeZwischensumme = round($zwischensumme, 4);
 					echo "<td $zelle>" . $umsaetze [$i]->umsatzWert . "</td>";
@@ -327,7 +337,7 @@ class finanzenNEW extends functions {
 						echo "<td id='$spaltenFarbe'>" . $ausgabeZwischensumme . "</td>";
 					}
 					
-					echo "<td>" . "<a class='rightBlueLink' href='?konto=$kontoID&monat=$monat&jahr=$currentYear&edit=" . $umsaetze [$i]->id . "'>edit</a>" . "</td>";
+					echo "<td>" . "<a class='' href='?konto=$kontoID&monat=$monat&jahr=$currentYear&edit=" . $umsaetze [$i]->id . "'>edit</a>" . "</td>";
 					echo "</tbody>";
 					
 					// HEUTE Zeile anzeigen
@@ -381,9 +391,65 @@ class finanzenNEW extends functions {
 			}
 		} else {
 			echo "<div class='newCharWIDE'><h3>Um Fortzufahren musst du ein Konto ausw&auml;hlen</h3>";
-			// echo "<img width=950px height=150px src='/flatnet2/images/waiting.gif' />";
 			echo "</div>";
 		}
+	}
+	
+	/**
+	 * Zeigt alle Ums&auml;tze des Jahres an.
+	 */
+	function showWholeYear($besitzer) {
+	    if(isset($_GET['konto']) AND isset($_GET['ganzesJahr'])) {
+	        $jahr = $_GET['ganzesJahr'];
+	        $konto = $_GET['konto'];
+	        
+	        $query="SELECT *, day(datum) as tag, year(datum) as jahr, month(datum) as monat
+            FROM finanzen_umsaetze	WHERE konto = $konto HAVING jahr=$jahr ORDER BY monat,tag,id";
+	        $umsaetze = $this->getObjektInfo($query);
+
+	        $startSaldo = $this->getJahresabschluesseBISJETZT ($konto, $jahr);
+	        
+	        $zwischensumme = round($startSaldo,4);
+	        echo "<table class='kontoTable'>";
+	        echo "<thead>" ."<td>Buchungsnr</td>"."<td>Gegenkonto</td>"."<td>Umsatz</td>"."<td>Wert</td>"."<td>Tag</td>"."<td>Saldo</td>". "</thead>";
+	        echo "<thead>" ."<td colspan=6>"."Startsaldo: $startSaldo"."</td>". "</thead>";
+	        
+	        if(!isset($umsaetze[0]->id)) {
+	            echo "<tbody><td id='minus' colspan=6>F&uuml;r das Jahr $jahr sind keine Ums&auml;tze verf&uuml;gbar</td></tbody>";
+	        }
+	        
+	           for($i = 0 ; $i < sizeof($umsaetze) ; $i++) {
+	               
+	               
+	               # Monatszeilen einf�gen
+	               if(isset($umsaetze[$i-1]->monat)) {
+	                   if($umsaetze[$i-1]->monat != $umsaetze[$i]->monat) {
+	                       echo "<thead><td colspan=5><a href='#".$this->getMonthName($umsaetze[$i]->monat)."'>".$this->getMonthName($umsaetze[$i]->monat)."</a></td><td>$zwischensumme</td></thead>";
+	                   }
+	               }
+	               
+	               $nameGegenkonto = $this->getObjektInfo ( "SELECT * FROM finanzen_konten WHERE id=" . $umsaetze [$i]->gegenkonto . " LIMIT 1" );
+	               echo "<tbody>";
+	               
+	               if ($umsaetze [$i]->umsatzWert < 0) { $zelle = " id='minus' "; } else { $zelle = " id='plus' "; }
+	               
+	               echo "<td><a href='?konto=".$umsaetze [$i]->gegenkonto."&monat=" . $umsaetze[$i]->monat . "&jahr=$jahr&selected=" . $umsaetze [$i]->buchungsnr . "'>" . $umsaetze[$i]->buchungsnr . "</a></td>";
+	                   echo "<td>" . $nameGegenkonto[0]->konto . "</td>";
+	                   echo "<td>" . $umsaetze[$i]->umsatzName . "</td>";
+	                   echo "<td $zelle>" . $umsaetze[$i]->umsatzWert . "</td>";
+	                #   echo "<td>" . $umsaetze[$i]->monat . "</td>";
+	                   echo "<td>" . $umsaetze[$i]->tag . "</td>";
+	                   
+	                   # Berechnung Zwischensumme:
+	                   $zwischensumme = round($zwischensumme + $umsaetze[$i]->umsatzWert,4);
+	                   
+	                   echo "<td>" . $zwischensumme . "</td>";
+	               echo "</tbody>";
+	           }
+	           echo "<tfoot><td colspan=7>Endsaldo: $zwischensumme</td></tfoot>";
+	        echo "</table>";
+	    }
+	   
 	}
 	
 	/**
@@ -562,6 +628,11 @@ class finanzenNEW extends functions {
 		
 		echo "<li>";
 		echo "<a href='?konto=$konto&monat=$monatvor&jahr=$jahrvor'> &raquo; </a>";
+		echo "</li>";
+		
+		/* Ganzes Jahr anzeigen*/
+		echo "<li>";
+		echo "<a href='?konto=$konto&ganzesJahr=$jahr'>JAHR $jahr</a>";
 		echo "</li>";
 		
 		echo "</ul>";
@@ -924,7 +995,12 @@ class finanzenNEW extends functions {
 				
 				if (isset ( $_POST ['alterUmsatz'] )) {
 					$text = $_POST ['umsatzName'];
-						
+					if(isset($_POST ['link'])) {
+					    $link = $_POST ['link'];
+					} else {
+					    $link = "";
+					}
+					
 					# Komma durch punkt ersetzen
 					$wert = str_replace ( ',', '.', $_POST ['umsatzWert'] );
 						
@@ -939,7 +1015,7 @@ class finanzenNEW extends functions {
 					}
 					$besitzer = $this->getUserID ( $_SESSION ['username'] );
 					$id = $_GET ['edit'];
-						
+											
 					// Buchungsnummer herausfinden;
 					$objektBuchungsNr = $this->getObjektInfo ( "SELECT id, buchungsnr FROM finanzen_umsaetze WHERE id = '$id'" );
 					$buchungsnr = $objektBuchungsNr [0]->buchungsnr;
@@ -968,9 +1044,9 @@ class finanzenNEW extends functions {
 					$plusID = $plusObjekt [0]->id;
 						
 					if ($text != "" and $wert != "" and $besitzer != "" and $id != "" and $buchungsnr != "") {
-						$plusQuery = "UPDATE finanzen_umsaetze set umsatzName='$text',umsatzWert='$plusWert' ,datum='$datum' WHERE besitzer='$besitzer' and id = '$plusID'";
+						$plusQuery = "UPDATE finanzen_umsaetze set umsatzName='$text',umsatzWert='$plusWert',datum='$datum',link='$link' WHERE besitzer='$besitzer' and id = '$plusID'";
 				
-						$minusQuery = "UPDATE finanzen_umsaetze set umsatzName='$text',umsatzWert='$minusWert' ,datum='$datum' WHERE besitzer='$besitzer' and id = '$minusID'";
+						$minusQuery = "UPDATE finanzen_umsaetze set umsatzName='$text',umsatzWert='$minusWert',datum='$datum',link='$link' WHERE besitzer='$besitzer' and id = '$minusID'";
 						if ($this->userHasRight ( "18", 0 ) == true) {
 							if ($this->sql_insert_update_delete ( $plusQuery ) == true and $this->sql_insert_update_delete ( $minusQuery ) == true) {
 								echo "<p class='erfolg'>Umsatz gespeichert</p>";
@@ -997,6 +1073,7 @@ class finanzenNEW extends functions {
 					echo " - " . $gegenkonto [0]->konto . "<br>";
 					echo "<input type=text name=umsatzWert value='" . $umsatzInfo [0]->umsatzWert . "' /><br>";
 					echo "<input type=date name=umsatzDatum value='" . $umsatzInfo [0]->datum . "'  /><br>";
+					echo "<input type=text name=link value='" . $umsatzInfo [0]->link . "'  /><br>";
 					echo "<input type=submit name=alterUmsatz value=Speichern />";
 					echo "<input type=submit name=loeschUmsatz value=L&ouml;schen />";
 					
@@ -1092,17 +1169,17 @@ class finanzenNEW extends functions {
         return $buchungsnummer;
     }
     
-    function createUeberweisung($besitzer, $von, $nach, $text, $betrag, $datum) {
+    function createUeberweisung($besitzer, $von, $nach, $text, $betrag, $datum, $link) {
         $buchungsnummer = $this->nextBuchungsnummer();
         $betragMinus = $betrag * (-1);
         
-		$query = "INSERT INTO finanzen_umsaetze (buchungsnr, besitzer, konto, gegenkonto, umsatzName, umsatzWert, datum)
-			VALUES ('$buchungsnummer','$besitzer','$von','$nach','$text','$betragMinus','$datum')";
-		$query2 = "INSERT INTO finanzen_umsaetze (buchungsnr, besitzer, konto, gegenkonto, umsatzName, umsatzWert, datum)
-			VALUES ('$buchungsnummer','$besitzer','$nach','$von','$text','$betrag','$datum')";
+		$query = "INSERT INTO finanzen_umsaetze (buchungsnr, besitzer, konto, gegenkonto, umsatzName, umsatzWert, datum, link)
+			VALUES ('$buchungsnummer','$besitzer','$von','$nach','$text','$betragMinus','$datum','$link')";
+		$query2 = "INSERT INTO finanzen_umsaetze (buchungsnr, besitzer, konto, gegenkonto, umsatzName, umsatzWert, datum, link)
+			VALUES ('$buchungsnummer','$besitzer','$nach','$von','$text','$betrag','$datum','$link')";
 									
 		if ($this->sql_insert_update_delete ( $query ) == true and $this->sql_insert_update_delete ( $query2 ) == true) {
-            echo "<p class='erfolg'>&Uuml;berweisung von $text durchgef&uuml;hrt (Buchungsnummer: $buchungsnummer, $von, $nach)</p>";
+            echo "<p class='erfolg'>&Uuml;berweisung von $text durchgef&uuml;hrt (Buchungsnummer: $buchungsnummer)</p>";
 		}
     }
 	
@@ -1118,10 +1195,17 @@ class finanzenNEW extends functions {
                 
                 $maxpast = "2008-01-01";
 				
-				if (isset ( $_POST ['sendnewUeberweisung'] ) and isset ( $_POST ['valueUeberweisung'] ) and isset ( $_POST ['textUeberweisung'] ) and isset ( $_POST ['dateUeberweisung'] ) and isset ( $_POST ['zielKonto'] ) and isset ( $_POST ['absenderKonto'] )) {
+				if (isset ( $_POST ['sendnewUeberweisung'] ) 
+				    and isset ( $_POST ['valueUeberweisung'] ) 
+				    and isset ( $_POST ['textUeberweisung'] ) 
+				    and isset ( $_POST ['dateUeberweisung'] ) 
+				    and isset ( $_POST ['zielKonto'] ) 
+				    and isset ( $_POST ['absenderKonto'] )) {
 					$von = $_POST ['absenderKonto'];
 					$datum = $_POST ['dateUeberweisung'];
 					$nach = $_POST ['zielKonto'];
+					if(isset($_POST['link'])) { $link = $_POST['link']; } else { $link = ""; }
+					
 					$betrag = str_replace ( ',', '.', $_POST ['valueUeberweisung'] );
 					
 					$betragMinus = $betrag * (- 1);
@@ -1143,7 +1227,7 @@ class finanzenNEW extends functions {
 					if ($von != "" and $nach != "" and isset ( $besitzer ) and $betrag != "" and $betrag > 0 and $datum != "" and $text != "") {
                         
                         # Normale Buchung durchf&uuml;hren: 
-                        $this->createUeberweisung($besitzer, $von, $nach, $text, $betrag, $datum);
+                        $this->createUeberweisung($besitzer, $von, $nach, $text, $betrag, $datum, $link);
                                                 
                         # Weitere Buchungen anhand Anzahl der n&auml;chsten Monate:
                         if(isset($_POST['weiterenumber'])) {
@@ -1156,7 +1240,7 @@ class finanzenNEW extends functions {
                                         $newdate->modify("+$x month");
                                         echo "<p class='dezentInfo'>${x}: Buchung f&uuml;r Monat " . $newdate->format("Y-m-d") . "</p>";
                                         
-                                        $this->createUeberweisung($besitzer, $von, $nach, $text, $betrag, $newdate->format("Y-m-d"));
+                                        $this->createUeberweisung($besitzer, $von, $nach, $text, $betrag, $newdate->format("Y-m-d"), $link);
                                         
                                     }
                                     
@@ -1173,7 +1257,7 @@ class finanzenNEW extends functions {
 								
 								// Nur gef&uuml;llte Inputfelder verwenden.
 								if ($dates [$j] != "") {
-                                    $this->createUeberweisung($besitzer, $von, $nach, $text, $betrag, $dates[$j]);
+                                    $this->createUeberweisung($besitzer, $von, $nach, $text, $betrag, $dates[$j], $link);
 								}
 							}
 						}
@@ -1247,7 +1331,13 @@ class finanzenNEW extends functions {
 				echo "<tbody><td>Datum</td><td><input type=date value='$date' placeholder='Datum' name='dateUeberweisung'/></td></tbody>";
 				echo "<tbody><td colspan='2'><input type=submit name=sendnewUeberweisung value='Absenden' /></td></tbody>";
 				
-                # WEITERE BUCHUNGEN DURCHFÜHREN
+                # LINK PRO BUCHUNG
+                
+				echo "<tbody>";
+				echo "<td>Link</td><td><input type=text name=link placeholder=Link /></td>";
+				echo "</tbody>";
+				
+				# WEITERE BUCHUNGEN DURCHFÜHREN
                 
                 # ENTWEDER PER ANZAHL DER MONATE
                 echo "<tbody><td colspan='2'>";
@@ -1439,7 +1529,7 @@ class finanzenNEW extends functions {
 	 * @return object|boolean
 	 */
 	function getAllKonten($besitzer) {
-		$konten = $this->getObjektInfo ( "SELECT id, timestamp, konto, besitzer, aktiv, art, notizen, mail FROM finanzen_konten WHERE besitzer = '$besitzer' ORDER BY konto" );
+		$konten = $this->getObjektInfo ( "SELECT id, timestamp, konto, besitzer, aktiv, art, notizen, mail FROM finanzen_konten WHERE besitzer=$besitzer ORDER BY konto" );
 		
 		if (isset ( $konten )) {
 			return $konten;
