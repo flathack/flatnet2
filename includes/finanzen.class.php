@@ -278,7 +278,8 @@ class finanzenNEW extends functions {
 				$saldotext = "/ Startsaldo diesen Monat: <strong>$startsaldo â‚¬";
 			}
 			echo "<thead>";
-			if($kontoinformation[0]->mail == "") {
+			
+			if(!isset($kontoinformation[0]->mail) OR $kontoinformation[0]->mail == "") {
 			    $mailinfo = "| Keine Mail";
 			} else {
 			    $mailinfo = "| Send <a href='mailto:".$kontoinformation[0]->mail."'>MAIL</a>";
@@ -399,18 +400,25 @@ class finanzenNEW extends functions {
 	 * Löscht markierte Zeilen / Ums&auml;tze in der showWholeYear Funktion
 	 */
 	function deleteMarkedUmsaetze($besitzer) {
-	    
+	    	    
 	    if(isset($_POST['numbers'])) {
 	        $numbers = $_POST['numbers'];
 	        
 	        echo "<div class='alterUmsatz'><h2>L&ouml;sche ... </h2>";
 	        $i = 0;
 	        foreach ($numbers as $buchungsnr) {
-	            echo "<p>$i - Buchungsnummer: <input type=number name=numbers[$i] value=$buchungsnr readonly /> </p>";
-	            $query = "DELETE FROM finanzen_umsaetze WHERE buchungsnr=$buchungsnr AND besitzer=$besitzer";
-	            if($this->sql_insert_update_delete($query) == true) {
-	                echo "<p class='erfolg'>$buchungsnr gel&ouml;scht!</p>";
+	            $ownerofUmsatz = $this->getObjektInfo("SELECT id, besitzer FROM finanzen_umsaetze WHERE buchungsnr=$buchungsnr LIMIT 1");
+	            $ownerofUmsatzBesitzer = $ownerofUmsatz[0]->besitzer;
+	            if($ownerofUmsatzBesitzer != $besitzer) {
+	                echo "<p class='meldung'>Du darfst diese Aktion nicht ausf&uuml;hren.</p>";
+	            } else {
+	                echo "<p>$i - Buchungsnummer: <input type=number name=numbers[$i] value=$buchungsnr readonly /> </p>";
+	                $query = "DELETE FROM finanzen_umsaetze WHERE buchungsnr=$buchungsnr AND besitzer=$besitzer";
+	                if($this->sql_insert_update_delete($query) == true) {
+	                    echo "<p class='erfolg'>$buchungsnr gel&ouml;scht!</p>";
+	                }
 	            }
+	            
 	            $i++;
 	        }
 	        echo "</div>";
@@ -1633,11 +1641,104 @@ class finanzenNEW extends functions {
 	}
 	
 	/**
+	 * Bucht meherere Umsätze um. Hierfür wird der POST Befehl und die Checkboxen verwendet.
+	 * @param unknown $besitzer
+	 */
+	function umbuchenMehrere($besitzer) {
+	   if(isset($_POST['saveUmbuchung']) AND isset($_POST['absender']) AND isset($_POST['ziel']) AND isset($_POST['umbuchenNumbers'])) {
+	       $von = $_POST['absender'];
+	       $nach = $_POST['ziel'];
+	       $buchungsnummern = $_POST['umbuchenNumbers'];
+	       
+	       if($von > 0 AND $nach > 0) {
+	           
+	           if($von == $nach) {
+	               echo "<p class='meldung'>Absender und Zielkonto ist gleich!</p>";
+	           } else {
+	               foreach ($buchungsnummern as $buchungsnummer) {
+	                   
+	                   # Info über diese Buchung bekommen:
+	                   $getBuchungInfos = $this->getObjektInfo("SELECT * FROM finanzen_umsaetze WHERE buchungsnr=$buchungsnummer" );
+	                   
+	                   echo "Neues Absenderkonto $von, neues Gutschriftkonto = $nach";
+	                   
+	                   for($i = 0; $i < sizeof ( $getBuchungInfos ); $i ++) {
+	                       // Ã„nderung f&uuml;r den ABSENDER
+	                       if ($getBuchungInfos [$i]->umsatzWert < 0) {
+	                           $update = "UPDATE finanzen_umsaetze SET konto=$von, gegenkonto=$nach WHERE buchungsnr=$buchungsnummer AND umsatzWert < 0";
+	                           
+	                           if ($this->sql_insert_update_delete ($update) == true) {
+	                               echo "<p class='erfolg'>Umbuchung erfolgt</p>";
+	                           } else {
+	                               echo "<p class='meldung'>Es gab einen Fehler.</p>";
+	                           }
+	                       }
+	                       
+	                       // Ã„NDERUNG f&uuml;r die GUTSCHRIFT
+	                       if ($getBuchungInfos [$i]->umsatzWert > 0) {
+	                           
+	                           $update = "UPDATE finanzen_umsaetze SET konto=$nach, gegenkonto=$von WHERE buchungsnr=$buchungsnummer AND umsatzWert > 0";
+	                           
+	                           if ($this->sql_insert_update_delete($update) == true) {
+	                               echo "<p class='erfolg'>Umbuchung für $buchungsnummer erfolgt</p>";
+	                           } else {
+	                               echo "<p class='meldung'>Es gab einen Fehler.</p>";
+	                           }
+	                       }
+	                   }
+                  }
+	           }
+	       }
+	   }
+	        
+	        
+	   
+	    
+	    if(isset($_POST['umbuchen'])) {
+	        if(isset($_POST['marked'])) {
+	            $marked = $_POST['marked'];
+	            
+	            echo "<div class='alterUmsatz'>";
+	            echo "<form method=post>";
+	            echo "<h2>Ums&auml;tze umbuchen</h2>";
+	            $i = 0;
+	            foreach ($marked as $buchung) {
+	                
+	                echo "<p>Buchungsnummer: <input type=number name=umbuchenNumbers[$i] value='$buchung' readonly /></p>";
+	                $i++;
+	            }
+	            
+	            $getallkonten = $this->getAllKonten($besitzer);
+	            
+	            echo "<p>Absender: <select name=absender>";
+	               for($j=0;$j<sizeof($getallkonten);$j++){
+	                   echo "<option value='".$getallkonten[$j]->id."'>".$getallkonten[$j]->konto."</option>";
+	               }
+	            echo "</select></p>";
+	            echo "<p>Ziel: <select name=ziel>";
+	            for($j=0;$j<sizeof($getallkonten);$j++){
+	                echo "<option value='".$getallkonten[$j]->id."'>".$getallkonten[$j]->konto."</option>";
+	            }
+	            echo "</select></p>";
+	            
+	            echo "<input type=submit name=saveUmbuchung value='Sicher' />";
+	            echo "</form>";
+	            echo "</div>";
+	        }
+	    }
+	}
+	
+	/**
 	 * Erm&ouml;glicht das editieren von Konten
 	 * 
 	 * @param unknown $besitzer        	
 	 */
 	function showEditKonto($besitzer) {
+	    
+	    
+	    $this->umbuchenMehrere($besitzer);
+	    
+	    
 	    if (isset ( $_POST ['absenden'] ) and isset ( $_GET ['editKonto'] ) and isset ( $_POST ['kontoname'] ) and isset ( $_POST ['notizen'] ) and isset ( $_POST ['art'] ) and isset ( $_POST ['mail'] )) {
 			if ($_POST ['kontoname'] != "") {
 				$name = $_POST ['kontoname'];
@@ -1699,6 +1800,9 @@ class finanzenNEW extends functions {
 			echo "<div>Beschreibung Kontoart: 0 = normales Konto, 1 = Konto mit gr&uuml;ner Umrandung, 2 = Konto ohne Saldo</div>";
 			
 			echo "<div class='scrollContainer'>";
+			
+			
+			
 			echo "<p>&Uuml;bersicht vorhandener Buchungen</p>";
 			echo "<table class='kontoTable'>";
 			
@@ -1746,9 +1850,12 @@ class finanzenNEW extends functions {
 				
 				$getKontoName = $this->getObjektInfo ( "SELECT * FROM finanzen_konten WHERE id=" . $getKonten [$j]->gegenkonto . " " );
 				$kontoname = $getKontoName [0]->konto;
-				
+								
+				echo "<form method=post>";
 				echo "<thead>";
-				echo "<td colspan=10>";
+				echo "<td><input type=submit name=umbuchen value='Umbuchen' /></td>";
+				echo "<td></td>";
+				echo "<td colspan=11>";
 				echo $kontoname;
 				echo "</td>";
 				echo "</thead>";
@@ -1763,16 +1870,17 @@ class finanzenNEW extends functions {
 					}
 					
 					echo "<tbody>";
+					echo "<td><input type=checkbox name=marked[$i] value='" . $getKontoBuchungen [$i]->buchungsnr . "'/></td>";
 					$gegenkonto = $this->getObjektInfo ( "SELECT * FROM finanzen_konten WHERE id = '" . $getKontoBuchungen [$i]->gegenkonto . "'" );
 					echo "<td><a href='index.php?konto=" . $getKontoBuchungen [$i]->konto . "&jahr=" . $getKontoBuchungen [$i]->jahr . "&monat=" . $getKontoBuchungen [$i]->monat . "&selected=" . $getKontoBuchungen [$i]->buchungsnr . "'>" . $getKontoBuchungen [$i]->buchungsnr . "</a></td>
 						<td>" . $getKontoBuchungen [$i]->umsatzName . "</td>
-						<td>" . $getKontoBuchungen [$i]->umsatzWert . "</td>
-					";
-				#	echo "<td>AN <a href='?editKonto=" . $gegenkonto [0]->id . "'>" . $gegenkonto [0]->konto . "</a></td>";
+						<td>" . $getKontoBuchungen [$i]->umsatzWert . "</td>";
 					echo "<td>" . $getKontoBuchungen [$i]->datum . "</td>
 						<td>" . "<a href='?umbuchungBuchNr=" . $getKontoBuchungen [$i]->buchungsnr . "&editKonto=$id'>Umbuchen</a>" . "</td>";
 					echo "</tbody>";
 				}
+				
+				echo "</form>";
 			}
 			
 			if (! isset ( $getKontoBuchungen [0]->buchungsnr )) {
@@ -1847,7 +1955,7 @@ class finanzenNEW extends functions {
 				
 				echo "<div class='newCharWIDE'><form method=post>";
 				
-				$this->umbuchungDurchfuehren ( $buchungsnr );
+				$this->umbuchungDurchfuehren($buchungsnr);
 				
 				echo "<h2>Umsatzinformationen</h2>";
 				echo "<table class='kontoTable'>";
