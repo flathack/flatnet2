@@ -11,7 +11,7 @@ class finanzenNEW extends functions {
 		$this->showCreateNewUeberweisung ();
 		
 		if (!isset ($_GET['newUeberweisung'])) {
-			$this->showKontoHinweis();
+			$this->showKontoHinweis($besitzer);
 			// Navigationslinks
 			$this->showKontenInSelect($besitzer);
 			$this->showJahreLinks();
@@ -392,6 +392,7 @@ class finanzenNEW extends functions {
 			}
 		} else {
 			echo "<div class='newCharWIDE'><h3>Um Fortzufahren musst du ein Konto ausw&auml;hlen</h3>";
+			
 			echo "</div>";
 		}
 	}
@@ -577,30 +578,17 @@ class finanzenNEW extends functions {
 				echo "<ul>";
 					echo "<li id='monate'><a href='index.php'>Finanzverwaltung - Startseite</a></li>";
 					echo "<li id='konten'><a href='konten.php'>Konten</a></li>";
-					echo "<li id='shares'><a href='shares.php'>Freigegebene Konten</a></li>";
+					echo "<li id='shares'><a href='shares.php'>Shared Konten</a></li>";
 					echo "<li><a href='?konto=$kontoID&monat=$monat&jahr=$jahr&newUeberweisung' >Neue Buchung</a></li>";
 				#	echo "<li><a href='?konto=$kontoID&monat=$monat&jahr=$jahr&checkJahresabschluesse' >Jahresabschlusscheck</a></li>";
 				echo "</ul>";
 			echo "</div>";
 	}
 	function showMonateLinks() {
-		if (isset ( $_GET ['konto'] )) {
-			$konto = $_GET ['konto'];
-		} else {
-			$konto = 0;
-		}
-		
-		if (isset ( $_GET ['jahr'] )) {
-			$jahr = $_GET ['jahr'];
-		} else {
-			$jahr = date ( "Y" );
-		}
-		
-		if (isset ( $_GET ['monat'] )) {
-			$monat = $_GET ['monat'];
-		} else {
-			$monat = date ( "M" );
-		}
+	    
+	    $jahr = $this->validateJahr();
+	    $konto = $this->validateKonto();
+	    $monat = $this->validateMonat();
 		
 		echo "<ul class='FinanzenMonate'>";
 		
@@ -697,25 +685,58 @@ class finanzenNEW extends functions {
 		echo "</ul>";
 		
 	}
+	
+	function validateKonto() {
+	    if (isset ( $_GET ['konto'] )) {
+	        
+	        if(is_numeric($_GET['konto']) == true) {
+	            $konto = $_GET ['konto'];
+	        } else {
+	            $konto = 0;
+	        }
+	    } else {
+	        $konto = 0;
+	    }
+	    
+	    return $konto;
+	}
+	
+	function validateMonat() {
+	    if (isset ( $_GET ['monat'] )) {
+	        
+	        if(is_numeric($_GET ['monat']) == true) {
+	            $monat = $_GET ['monat'];
+	        } else {
+	            $monat = date ( "M" );
+	        }
+	    } else {
+	        $monat = date ( "M" );
+	    }
+	    
+	    return $monat;
+	}
+	
+	function validateJahr() {
+	    if (isset ( $_GET ['jahr'] )) {
+	        if(is_numeric($_GET ['jahr']) == true) {
+	            $jahr = $_GET ['jahr'];
+	        } else {
+	            $jahr = date ( "Y" );
+	        }
+	        
+	    } else {
+	        $jahr = date ( "Y" );
+	    }
+	    
+	    return $jahr;
+	}
+	
 	function showJahreLinks() {
-		if (isset ( $_GET ['konto'] )) {
-			$konto = $_GET ['konto'];
-		} else {
-			$konto = 0;
-		}
-		
-		if (isset ( $_GET ['monat'] )) {
-			$monat = $_GET ['monat'];
-		} else {
-			$monat = date ( "m" );
-		}
-		
-		if (isset ( $_GET ['jahr'] )) {
-			$jahr = $_GET ['jahr'];
-		} else {
-			$jahr = date ( "Y" );
-		}
-		
+	    
+	    $jahr = $this->validateJahr();
+	    $konto = $this->validateKonto();
+	    $monat = $this->validateMonat();
+	    
 		echo "<ul class='FinanzenMonate'>";
 		
 		$currentYear = date ("Y");
@@ -729,9 +750,13 @@ class finanzenNEW extends functions {
 		echo "</ul>";
 	}
 	
-	function ShowKontoHinweis() {
+	function ShowKontoHinweis($besitzer) {
 		if(!isset($_GET['konto'])) {
 			echo "<p class='dezentInfo'>Um Fortzufahren, musst du ein Konto unterhalb dieser Box ausw&auml;hlen.</p>";
+			$umsatzVorhanden = $this->getObjektInfo("SELECT id FROM finanzen_umsaetze WHERE besitzer=$besitzer");
+			if(!isset($umsatzVorhanden[0]->id)) {
+			    echo "<p class='hinweis'>Du hast noch keine Buchungen auf deinen Konten! Erstelle mit einem Klick auf <strong>Neue Buchung</strong> eine neue Buchung. Bei Problemen werde dich an das Forum oder an einen Administrator.</p>";
+			}
 		}
 	}
 	
@@ -745,6 +770,13 @@ class finanzenNEW extends functions {
 		$jahr = $this->getJahrFromGet();
 		
 		$konten = $this->getAllKonten ($besitzer);
+		
+		# Überprüfen, ob der Nutzer konten hat (Update vom 11.08.2017)
+		if(!isset($konten[0]->id)) {
+		    $nokonto = 1;
+		} else {
+		    $nokonto = 0;
+		}
 		$shared = $this->getObjektInfo("SELECT konto_id, target_user FROM finanzen_shares WHERE target_user=$besitzer");
 		
 		if (isset ($_GET ['konto'])) {
@@ -752,8 +784,18 @@ class finanzenNEW extends functions {
 		} else {
 			$konto = "";
 		}
+		
+		echo "<ul class='FinanzenMonate'>";
+		
+		# Wenn Nutzer kein Konto hat:
+		if($nokonto==1) {
+		    echo "<li><a href='konten.php?neuesKonto'>Du hast keine eigenen Konten! Kick hier f&uuml;r Hilfe</a></li>";
+		}
+		
 		if (isset ( $konten [0]->id ) and $konten [0]->id != "" OR isset($shared[0]->konto_id)) {
-			echo "<ul class='FinanzenMonate'>";
+			
+			
+			
 			for($i = 0; $i < sizeof ( $konten ); $i ++) {
 				
 				if ($konten [$i]->aktiv == 1) {
@@ -773,8 +815,9 @@ class finanzenNEW extends functions {
 				$name = $this->getObjektInfo("SELECT id, konto FROM finanzen_konten WHERE id=$sharedid");
 				echo "><a href='?konto=" . $shared[$j]->konto_id . "&monat=$monat&jahr=$jahr'>" . $name[0]->konto . " (shared)</a></li>";
 			}
-			echo "</ul>";
+			
 		}
+		echo "</ul>";
 	}
 	
 	/**
@@ -783,14 +826,18 @@ class finanzenNEW extends functions {
 	 * @return unknown|boolean
 	 */
 	function getKontoIDFromGet() {
+	    $kontoID = 0;
 		if (isset ( $_GET ['konto'] )) {
-			$kontoID = $_GET ['konto'];
-			
-			return $kontoID;
+		    if(is_numeric($_GET ['konto']) == true) {
+		        $kontoID = $_GET ['konto'];
+		    } else {
+		        $kontoID = 0;
+		    }
 		} else {
 		    $kontoID = 0;
-		    return $kontoID;
 		}
+		
+		return $kontoID;
 	}
 	
 	/**
@@ -800,7 +847,12 @@ class finanzenNEW extends functions {
 	 */
 	function getMonatFromGet() {
 		if (isset ( $_GET ['monat'] )) {
-			$monat = $_GET ['monat'];
+		    if(is_numeric($_GET ['monat']) == true) {
+		        $monat = $_GET ['monat'];
+		    } else {
+		        $monat = date ( "m" );
+		    }
+			
 		} else {
 			$monat = date ( "m" );
 		}
@@ -811,11 +863,16 @@ class finanzenNEW extends functions {
 	/**
 	 * Gibt das Jahr zur&uuml;ck.
 	 * 
-	 * @return unknown|boolean
+	 * @return int|numeric
 	 */
 	function getJahrFromGet() {
 		if (isset ( $_GET ['jahr'] )) {
-			$jahr = $_GET ['jahr'];
+		    if(is_numeric($_GET ['jahr']) == true) {
+		        $jahr = $_GET ['jahr'];
+		    } else {
+		        $jahr = date ( "Y" );
+		    }
+			
 		} else {
 			$jahr = date ( "Y" );
 		}
@@ -828,7 +885,13 @@ class finanzenNEW extends functions {
 	 */
 	function showFuturePastJahr() {
 		if (isset ( $_GET ['jahr'] )) {
-			$jahr = $_GET ['jahr'];
+			
+			if(is_numeric($_GET['jahr']) == true) {
+			    $jahr = $_GET ['jahr'];
+			} else {
+			    $jahr = date ( "Y" );
+			}
+			
 			$currentJahr = date ( "Y" );
 			
 			if ($this->checkIfJahrIsInFuture ( $currentJahr, $jahr ) == true) {
@@ -1603,8 +1666,29 @@ class finanzenNEW extends functions {
 	 */
 	function showCreateNewKonto($besitzer) {
 		if (isset ( $_GET ['neuesKonto'] )) {
-			echo "<div class='newChar'><form method=post><input type=text name=newKonto value='' placeholder='Kontoname' />";
-			echo "<input type=text name=mail value='' placeholder=Mail />";
+		    
+		    
+		    
+			echo "<div class='newChar'>";
+			
+			$konten=$this->getAllKonten($besitzer);
+			if(!isset($konten[0]->id) AND !isset($konten[1]->id)) {
+			    echo "<p class='hinweis'>HILFE: Um das Finanzprodukt normal benutzen zu k&ouml;nnen, 
+                        brauchst du mindestens zwei Konten, als Beispiel:<br>";
+                echo "Ein Konto mit dem Namen Girokonto und ein Arbeitgeber-Konto. 
+                        Im Anschluss an die Kontoerstellung, k&ouml;nntest du eine Buchung erstellen, welche 
+                        lautet: Gehalt 2500 Euro vom Arbeitgeberkonto auf dein Girokonto. Nach diesem Prinzip 
+                        l&auml;sst sich eine eigene Finanzverwaltung realisieren, welche dir Hilft, den 
+                        finanziellen &Uuml;berblick zu behalten. F&uuml;r weitere Hilfe, schau dir im Forum die komplette Dokumentation
+                        dieses Produktes an.<br><br>
+                        Erstelle nun zwei Konten, die Mailadresse kannst du erstmal leer lassen.</p>";
+			    
+			}
+			
+			
+			
+			echo "Kontoname: <br><form method=post><input type=text name=newKonto value='' placeholder='Kontoname' /><br>";
+			echo "Mailadresse f&uuml;r das Konto: <br><input type=text name=mail value='' placeholder=Mail /><br>";
 			echo "<input type=submit name=insertNewKonto value=Speichern />";
 			echo "</form></div>";
 			
@@ -2073,10 +2157,8 @@ class finanzenNEW extends functions {
 	private $shares;
 	
 	function sharenav($besitzer) {
-		echo "<div class='newFahrt'>";
-			echo "<ul>";
-				echo "<li><a href='?newShare'>" ."Neues Share erstellen". "</a></li>";
-			echo "</ul>";
+		echo "<div class='innerBody'>";
+				echo "<a class='greenLink' href='?newShare'>" ."Share erstellen". "</a>";
 		echo "</div>";
 	}
 	
@@ -2090,6 +2172,7 @@ class finanzenNEW extends functions {
 			
 			echo "<div class='newFahrt'>";
 				echo "<h2>Share erstellen</h2>";
+				echo "<p class='hinweis'>Beachte: Der Nutzer bekommt nach Freigabe Leserechte auf das Konto. Shares k&ouml;nnen jederzeit wieder gel&ouml;scht werden.</p>";
 				echo "<form method=post>";
 				echo "<select name=konto>";
 					echo "<option>Konto ausw&auml;hlen ...</option>";
@@ -2155,6 +2238,15 @@ class finanzenNEW extends functions {
 		
 		echo "<table class='kontoTable'>";
 		echo "<thead><td>Konto</td><td>Freigegeben f&uuml;r</td><td></td></thead>";
+		
+		# Wenn kein Share vorhanden ist:
+		if(!isset($shares[0]->id)) {
+		    echo "<tbody><td colspan=3>Du hast keine Shares erstellt, zum erstellen eines Shares, klicke auf <strong><a href='?newShare'>Share erstellen</a></strong></td></tbody>";
+		    echo "<tbody><td colspan=3></td></tbody>";
+		    echo "<tbody><td colspan=3></td></tbody>";
+		    echo "<tbody><td colspan=3></td></tbody>";
+		}
+		
 		for ($i = 0 ; $i < sizeof($shares) ; $i++) {
 			$id = $shares[$i]->target_user;
 			$username = $this->getObjektInfo("SELECT id, Name FROM benutzer WHERE id=$id LIMIT 1");
@@ -2195,8 +2287,9 @@ class finanzenNEW extends functions {
      */
 	function showJahresabschlussIfAvailable() {
         if(isset($_GET['konto']) AND isset($_GET['jahr'])) {
-            $konto = $_GET['konto'];
-            $jahr= $_GET['jahr'];
+            
+            $konto = $this->validateKonto();
+            $jahr= $this->validateJahr();
             $besitzer = $this->GetUserID($_SESSION['username']);
             $query = "SELECT besitzer, jahr, wert, konto FROM finanzen_jahresabschluss WHERE besitzer=$besitzer AND $konto=$konto AND jahr=$jahr";
             $jahresabschlussFuerDiesesJahr=$this->getObjektInfo($query);

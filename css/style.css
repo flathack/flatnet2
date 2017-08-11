@@ -2230,6 +2230,7 @@ input[type=password]:focus {
     padding: 5px;
     display: inline-block;
     margin-top: 5px;
+    color: black !important;
 }
 .spacer {
     margin-top: 10px;

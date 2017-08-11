@@ -134,7 +134,7 @@ class login extends functions {
 			$ausgabe .= '<input type="submit" value="Einloggen" />';
 			$ausgabe .= '</form>';
 		} else {
-			$ausgabe .= "<p id='loginTitel'>Du bist angemeldet<br><a href='uebersicht.php' class=''>Gehe zur Übersicht</a></p>";
+			$ausgabe .= "<p id='loginTitel'><p class='hinweis'>Du bist angemeldet</p><br><a href='uebersicht.php' class=''>Gehe zur &Uuml;bersicht</a></p>";
 		}
 		if(!isset($_GET['createUser'])) { return $ausgabe; }
 	}

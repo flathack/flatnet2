@@ -872,9 +872,7 @@ class control extends functions {
 				echo "</form>";
 			}
 			echo "</table>";
-		} else {
-			echo "<p class=''>Du darfst die Uservorschläge nicht anzeigen.</p>";
-		}
+		} 
 	}
 	
 	/**
@@ -1021,7 +1019,10 @@ class control extends functions {
 			$benutzerlisteUser = "SELECT id, Name FROM benutzer ORDER BY name";
 			$rowUser = $this->getObjektInfo($benutzerlisteUser);
 			
-			echo "<a href='?action=5&user=".$rowUser[0]->id."#forumRechte' class='buttonlink'>".$rowUser[0]->Name."</a>";
+			for($i = 0 ; $i < sizeof($rowUser) ; $i++) {
+			    echo "<a href='?action=5&user=".$rowUser[$i]->id."#forumRechte' class='buttonlink'>".$rowUser[$i]->Name."</a>";
+			}
+			
 			
 			echo "</table>" . "</div>";
 			
@@ -1118,7 +1119,7 @@ class control extends functions {
 		if($this->userHasRight(48, 0) == true) {
 			
 			echo "<table class='flatnetTable'>";
-			echo "<thead><td>Kategorie</td><td>Erstellungsdatum</td><td>Rechte</td><td>Optionen</td></thead>";
+			echo "<thead><td>Kategorie</td><td>Rechte</td><td>Optionen</td></thead>";
 			$selectCategories = "SELECT *
 					, year(timestamp) AS jahr
 					, month(timestamp) as monat
@@ -1132,7 +1133,6 @@ class control extends functions {
 			for ($i = 0 ; $i < sizeof($row) ; $i++) {
 				echo "<tbody><td>";
 				echo "<a href='/flatnet2/forum/index.php?blogcategory=".$row[$i]->id."'>" . $row[$i]->kategorie . "</a></td>";
-				echo "<td><a href='?action=5'>" . $row[$i]->tag . "." . $row[$i]->monat . "." . $row[$i]->jahr . "</a></td>";
 				echo "<td><a href='?action=5'>" . $row[$i]->rightPotenz . " / " . $row[$i]->rightWert . "</a></td>";
 				echo "<td><a href='?action=5&editid=".$row[$i]->id."' class='buttonlink'>Edit</a>";
 				echo "<a href='?action=5&loeschid=".$row[$i]->id."' class='buttonlink'>X</a></td></tbody>";
@@ -1162,14 +1162,18 @@ class control extends functions {
 					$max = $getMaxPotenz[0]->max + 1;
 				}
 				
-				echo "<h2>Neue Kategorie:</h2>";
+				echo "<div class='newChar'>";
+				echo "<h2>Kategorie erstellen</h2>";
 				echo "<form method=post>";
-				echo "<input type=text value='' placeholder='Kategoriename' name='nameNewCat' required />";
-				echo "<input type=text value='' placeholder='Beschreibung' name='description' required />";
-				echo "<input type=number value='$max' placeholder='Potenz' name='potenz' required />";
-				echo "<input type=number value='100' placeholder='Sortierung' name='sortierung' required />";
-				echo "<input type=submit name=absenden value='speichern' />";
+				echo "<table>";
+				echo "<tbody>" . "<td>Kategoriename</td><td> <input type=text value='' placeholder='Kategoriename' name='nameNewCat' required /></td>" . "</tbody>";
+				echo "<tbody>" . "<td>Beschreibung</td><td> <input type=text value='' placeholder='Beschreibung' name='description' required /></td>" . "</tbody>";
+				echo "<tbody>" . "<td>Potenz</td><td> <input type=number value='$max' placeholder='Potenz' name='potenz' required /> (Standard ausgef&uuml;llt lassen)</td>" . "</tbody>";
+				echo "<tbody>" . "<td>Sortierung</td><td> <input type=number value='100' placeholder='Sortierung' name='sortierung' required /></td>" . "</tbody>";
+				echo "<tbody>" . "<td><input type=submit name=absenden value='speichern' /></td>" . "</tbody>";
+				echo "</table>";
 				echo "</form>";
+				echo "</div>";
 				
 				// Category hinzufügen:
 				if (isset ( $_POST ['absenden'] )) {
@@ -1312,7 +1316,7 @@ class control extends functions {
 					$select = "SELECT * FROM blogkategorien WHERE id = '$editid'";
 					$row = $this->getObjektInfo($select);
 					for($i = 0 ; $i < sizeof($row) ; $i++) {
-						echo "<div class='innerBody'>";
+						echo "<div class='newChar'>";
 						echo "<form method=post>";
 						echo "<input type=text name=newCatName value='".$row[$i]->kategorie."' placeholder='Kategoriename' /><br>";
 						echo "<input type=text id='long' name=newCatDescription value='".$row[$i]->beschreibung."' placeholder='Beschreibung' /><br>";

@@ -1,12 +1,4 @@
-<?php 
-/**
- * @author Steven Schödel
- * Flatnet2 Projekt
- */
-?>
-<?php echo '<'.'?xml version="1.0" encoding="utf-8"?'.'>'; ?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" id='kontakt'>
 <div id="wrapper">
 	<?php # Wrapper start ?>
@@ -27,7 +19,7 @@ $kontakt->logged_in();
 
 
 #Check ob User Seite betrachten darf:
-$kontakt->userHasRightPruefung("7");
+#$kontakt->userHasRightPruefung("7");
 
 ?>
 <title>Kontakt</title>
@@ -42,14 +34,14 @@ $kontakt->userHasRightPruefung("7");
 
 			<div class="docuEintrag">
 				
-
-				<h2>Neuigkeiten</h2>
-				<p class='info'>Manchmal können Fehler auftreten. Oder du hast einen Vorschlag, dann schreibe mir bitte.</p>
-				<form method=post>
-					<input type="text" name="vorschlagText" id="titel"
-						placeholder="Problembeschreibung" /> <input type="submit"
-						name="Absenden" value="SENDEN" />
-				</form>
+				<div class="newChar">
+    				<h2>Anfrage an den Administrator senden...</h2>
+    				<form method=post>
+    					<input type="text" name="vorschlagText" id="titel"
+    						placeholder="Problembeschreibung" /> <input type="submit"
+    						name="Absenden" value="SENDEN" />
+    				</form>
+				</div>
 				<?php 			
 				if(isset($_POST['vorschlagText'])) {
 					if($_POST['vorschlagText'] == "") {

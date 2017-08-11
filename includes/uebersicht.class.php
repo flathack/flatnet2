@@ -241,8 +241,12 @@ class uebersicht extends functions {
 		$kachelnGesperrt = $this->getObjektInfo("SELECT * FROM uebersicht_kacheln WHERE active=2 ORDER BY sortierung, name, id");
 		
 		# Normale Kacheln
+		# Counter zum erkennen von Nutzern ohne Berechtigungen für eine Seite
+		$counter = 0;
 		for($i = 0; $i < sizeof($kacheln); $i++) {
+		    
 			if($this->userHasRight($kacheln[$i]->rightID, 0) == true) {
+			    $counter++;
 				echo "<div class=bereich".$kacheln[$i]->cssID.">";
 				echo "<a href='".$kacheln[$i]->link."'><h2>".$kacheln[$i]->name."</h2></a>";
 					
@@ -253,6 +257,17 @@ class uebersicht extends functions {
 				echo "</div>";
 			
 			}
+		}
+		
+		if($counter == 0) {
+		    echo "<div class=bereichfinanzen>";
+		    echo "<h2> Oh ... ein neuer ! </h2>";
+		    echo "<p>";
+		      echo "Du hast noch keine Zug&auml;nge freigeschaltet, wende dich bitte an einen Administrator der Seite um f&uuml;r einen Bereich freigeschaltet zu werden.";
+		      echo "<a href='/flatnet2/informationen/kontakt.php'>Klicke hier</a>";
+		    echo "</p>";
+		    
+		    echo "</div>";
 		}
 		
 		# Bereiche, welche fÃ¼r den Benutzer nicht sichtbar sind.
