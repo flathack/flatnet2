@@ -712,6 +712,9 @@ blockquote {
 }
 .scrollContainer {
     padding: 10px;
+    border: 1px solid grey;
+    overflow:scroll;
+    max-height: 800px;
 }
 .kleineBox {
     display: inline-block;
@@ -1136,6 +1139,15 @@ input[type=radio]:not(old):checked + label > span > span {
     background: white;
     color: black;
     position: relative;
+}
+
+.newCharWIDE #plus {
+	background-color: #ffb9b9;
+	border-radius: 5px;
+}
+.newCharWIDE #minus {
+	background-color: #e8ffe8;
+	border-radius: 5px;
 }
 .publicInfo {
     border-left: 1px solid grey;
@@ -1976,6 +1988,13 @@ input[type=password]:focus {
     margin: 5px;
     display: inline-block;
     box-shadow: 0px 0px 3px #0080ff;
+}
+.Ford {
+    padding: 5px;
+    border: 1px solid red;
+    margin: 5px;
+    display: inline-block;
+    box-shadow: 0px 0px 3px red;
 }
 .Guthabenkonto:hover {
     box-shadow: 0px 0px 5px grey;

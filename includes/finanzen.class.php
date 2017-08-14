@@ -65,6 +65,9 @@ class finanzenNEW extends functions {
 		
 	}
 	
+	/**
+	 * Zeigt Statisken zu seinen eigenen Konten an.
+	 */
 	function mainStatistikFunction() {
 		if ($this->userHasRight (18, 0 ) == true) {
 			$besitzer = $this->getUserID($_SESSION['username']);
@@ -73,17 +76,44 @@ class finanzenNEW extends functions {
 			$anzahlKonten=$this->getAmount("SELECT * FROM finanzen_konten WHERE besitzer=$besitzer") + 0;
 			$anzahlGuthabenK=$this->getAmount("SELECT * FROM finanzen_konten WHERE besitzer=$besitzer AND art=1") + 0;
 			$anzahlAktiveK=$this->getAmount("SELECT * FROM finanzen_konten WHERE besitzer=$besitzer AND aktiv=1") + 0;
+			$query = "SELECT * FROM finanzen_konten WHERE besitzer=$besitzer AND art=3";
+			$anzahlForderungsK=$this->getAmount($query) + 0;
 			
-			$summe = $anzahlAktiveK + $anzahlGuthabenK + $anzahlKonten;
+			$summe = $anzahlAktiveK + $anzahlGuthabenK + $anzahlKonten + $anzahlForderungsK;
 			if($summe > 0) {
 				
-				echo "<div>";
+				echo "<div class='newCharWIDE'>";
 					echo "<p>Du hast $anzahlKonten Konten <br>";
 					echo "Davon sind $anzahlAktiveK Aktiv. <br>";
-					echo "Guthabenkonten: $anzahlGuthabenK</p>";
+					echo "Guthabenkonten: $anzahlGuthabenK<br>";
+					echo "Forderungen: $anzahlForderungsK</p>";
 				echo "</div>";
 				
-			}			
+			}
+			
+			
+			# Forderungen anzeigen (Art = 3)
+			$getForderungskonten=$this->getObjektInfo($query);
+			$anzahlForderungsK=$this->getAmount($query) + 0;
+			if($anzahlForderungsK > 0) {
+			    
+			    echo "<div class='newCharWIDE'>";
+			     echo "<p>Forderungen</p>";
+			     for ($i = 0 ; $i < sizeof($getForderungskonten) ; $i++) {
+			         $summe = "SELECT sum(umsatzWert) as summe FROM finanzen_umsaetze WHERE konto=" . $getForderungskonten[$i]->id . " AND datum <= CURDATE()";
+			         $umsaetze = $this->getObjektInfo ($summe);
+			         $wert = round($umsaetze[0]->summe + 0,2);
+			         
+			         if($wert > 0) {
+			             $classCSS = "plus";
+			         } else {
+			             $classCSS = "minus";
+			         }
+			         
+			         echo "<li id='$classCSS'>" .$getForderungskonten[$i]->konto. " - " .$wert. " &euro;</li>";
+			     }
+			    echo "</div>";
+			}
 		}
 	}
 	/**
@@ -304,12 +334,13 @@ class finanzenNEW extends functions {
 				for($i = 0; $i < sizeof ( $umsaetze ); $i ++) {
 					$zwischensumme = $zwischensumme + $umsaetze [$i]->umsatzWert;
 					
+					$zs_farbe = round($zwischensumme,2);
 					// Daten in Array laden:
 					$zahlen [$i] = $zwischensumme;
 					
-					if ($zwischensumme < 0) { $spaltenFarbe = "rot"; } else { $spaltenFarbe = "rightAlign"; }
+					if ($zs_farbe < 0) { $spaltenFarbe = "rot"; } else { $spaltenFarbe = "rightAlign"; }
 					
-					if ($zwischensumme < 0) { $zeile = " id='minus' "; } else { $zeile = ""; }
+					if ($zs_farbe < 0) { $zeile = " id='minus' "; } else { $zeile = ""; }
 					
 					if ($umsaetze [$i]->umsatzWert < 0) { $zelle = " id='minus' "; } else { $zelle = " id='plus' "; }
 					
@@ -331,6 +362,7 @@ class finanzenNEW extends functions {
 					echo "<td>" . $umsaetze [$i]->tag . "</td>";
 					$ausgabeZwischensumme = round($zwischensumme, 4);
 					echo "<td $zelle>" . $umsaetze [$i]->umsatzWert . "</td>";
+					
 					if($kontoinfos[0]->art == 2) {
 						$spaltenFarbe = "";
 						echo "<td id='$spaltenFarbe'>" . "-" . "</td>";
@@ -373,7 +405,7 @@ class finanzenNEW extends functions {
 			if($kontoinfos[0]->art == 2) {
 				echo "<tfoot><td colspan=5 id='rightAlign'>Endsaldo: </td><td id='rightAlign'> - </td><td></td></tfoot>";
 			} else {
-				echo "<tfoot><td colspan=5 id='rightAlign'>Endsaldo: </td><td id='rightAlign'>" . round($zwischensumme,4) . "</td><td></td></tfoot>";
+				echo "<tfoot><td colspan=5 id='rightAlign'>Endsaldo: </td><td id='rightAlign'>" . round($zwischensumme,2) . "</td><td></td></tfoot>";
 			}
 			
 			echo "</table>";
@@ -1313,6 +1345,9 @@ class finanzenNEW extends functions {
 	function showCreateNewUeberweisung() {
 		if (isset ( $_GET ['newUeberweisung'] )) {
 			if ($this->userHasRight (18, 0) == true) {
+			    
+			    $min= 1 ;
+			    $max = 60;
                 
                 $anzahlWeitereFelder = 12;
                 
@@ -1358,15 +1393,19 @@ class finanzenNEW extends functions {
                                 if(is_numeric($_POST['monthweitere']) == true) {
                                     $number = $_POST['monthweitere'];
                                     
-                                    for ($x = 1 ; $x <= $number ; $x++) {
-                                        $newdate = new DateTime($datum);
-                                        $newdate->modify("+$x month");
-                                        echo "<p class='dezentInfo'>${x}: Buchung f&uuml;r Monat " . $newdate->format("Y-m-d") . "</p>";
-                                        
-                                        $this->createUeberweisung($besitzer, $von, $nach, $text, $betrag, $newdate->format("Y-m-d"), $link);
-                                        
+                                    # Maximal 5 Jahre pro Buchung erlaubt.
+                                    if ($number > $max OR $number < $min) {
+                                        echo "<p class='meldung'>Zu viele Buchungen, maximal 60 Buchungen erlaubt.</p>";
+                                    } else {
+                                        for ($x = 1 ; $x <= $number ; $x++) {
+                                            $newdate = new DateTime($datum);
+                                            $newdate->modify("+$x month");
+                                            echo "<p class='dezentInfo'>${x}: Buchung f&uuml;r Monat " . $newdate->format("Y-m-d") . "</p>";
+                                            
+                                            $this->createUeberweisung($besitzer, $von, $nach, $text, $betrag, $newdate->format("Y-m-d"), $link);
+                                            
+                                        }
                                     }
-                                    
                                 }
                             }
                         }
@@ -1395,8 +1434,8 @@ class finanzenNEW extends functions {
 			#	echo "<a href='#' onclick='window.history.go(-1)' target='_self' class='highlightedLink'>Zur&uuml;ck</a>";
                 echo "<a href='?konto=$kontoID&monat=$monat&jahr=$jahr' target='_self' class='highlightedLink'>Zur&uuml;ck</a>";
 				
-                echo "<p class='dezentInfo'>Du kommst von hier: Konto: $kontoID, Monat: $monat, Jahr: $jahr</p>";
-				echo "<h2>Eine Buchung durchf&uuml;hren</h2>";
+                #echo "<p class='dezentInfo'>Du kommst von hier: Konto: $kontoID, Monat: $monat, Jahr: $jahr</p>";
+				echo "<h2>Buchen</h2>";
 				
 				echo "<form method=post>";
 				echo "<table class='kontoTable'>";
@@ -1405,7 +1444,7 @@ class finanzenNEW extends functions {
 				} else {
 					$textInput = "";
 				}
-				echo "<tbody><td>Beschreibung</td><td><input type=text value='$textInput' placeholder='Text' name='textUeberweisung'/></td></tbody>";
+				echo "<tbody><td>Beschreibung</td><td><input type=text value='$textInput' placeholder='Text' name='textUeberweisung' required /></td></tbody>";
 				
 				$besitzer = $this->getUserID ( $_SESSION ['username'] );
 				$select = "SELECT * FROM finanzen_konten WHERE besitzer = '$besitzer' ORDER BY konto";
@@ -1450,8 +1489,8 @@ class finanzenNEW extends functions {
 					$date = date ( "Y-m-d", $timestamp );
 				}
 				
-				echo "<tbody><td>Betrag</td><td><input type=text value='' placeholder='Betrag' name='valueUeberweisung'/></td></tbody>";
-				echo "<tbody><td>Datum</td><td><input type=date value='$date' placeholder='Datum' name='dateUeberweisung'/></td></tbody>";
+				echo "<tbody><td>Betrag</td><td><input type=text value='' placeholder='Betrag' name='valueUeberweisung' required /></td></tbody>";
+				echo "<tbody><td>Datum</td><td><input type=date value='$date' placeholder='Datum' name='dateUeberweisung' required /></td></tbody>";
 				echo "<tbody><td colspan='2'><input type=submit name=sendnewUeberweisung value='Absenden' /></td></tbody>";
 				
                 # LINK PRO BUCHUNG
@@ -1468,7 +1507,7 @@ class finanzenNEW extends functions {
 				echo "<label for='weiterenumber'>weitere Monate ausf&uuml;hren: </label>";
                 echo "</td></tbody>";
                 echo "<tbody><td colspan='2'>";
-                echo "<input type=number name=monthweitere value='' /> <span><br>(z.B: 1 bedeutet, dass die Buchung auch im n&auml;chsten Monat ausgef&uuml;hrt wird)</span>";
+                echo "<input type=number name=monthweitere value='' min=$min max=$max /> <span><br>(z.B: 1 bedeutet, dass die Buchung auch im n&auml;chsten Monat ausgef&uuml;hrt wird)</span>";
                 echo "</td></tbody>";
                 
                 # ODER ALS GENAUES DATUM
@@ -1569,6 +1608,7 @@ class finanzenNEW extends functions {
 	 * 0 normales Konto
 	 * 1 gr&uuml;nes Konto
 	 * 2 Konto ohne Saldo
+	 * 3 Forderungskonto
 	 * 
 	 * @param unknown $besitzer        	
 	 */
@@ -1588,6 +1628,8 @@ class finanzenNEW extends functions {
 						$mark = "Guthabenkonto";
 					} elseif($konten [$i]->art == 2) {
 						$mark = "nolimit";
+					} elseif($konten[$i]->art == 3) {
+					    $mark = "Ford";
 					} else {
 						$mark = "Konto";
 					}
@@ -1871,9 +1913,17 @@ class finanzenNEW extends functions {
 			echo "<form method=post>";
 			echo "<table>";
 			echo "<tr><td>Name: </td><td><input type=text value='" . $kontoInfo [0]->konto . "' name=kontoname /></td>";
-			echo "<td><input value=1 type=checkbox " . $checked . " name=aktiv /><label for=aktiv>Aktiv</label>" . "</td>";
+			echo "<td><input value=1 type=checkbox " . $checked . " name=aktiv /><label for=aktiv>Konto in &Uuml;bersicht anzeigen</label>" . "</td></tr>";
 			
-			echo "<td>" . "<input type=number value=" . $kontoInfo [0]->art . " name=art placeholder=Kontoart /><td>Kontoart</td>" . "</tr>";
+			#echo "<td>" . "<input type=number value=" . $kontoInfo [0]->art . " name=art placeholder=Kontoart /><td>Kontoart</td>";
+			echo "<tr><td>Kontoart</td><td>" . "<select name=art>";
+			echo "<option value=0"; if($kontoInfo [0]->art == 0) { echo " selected "; } echo ">Standard</option>";
+			 echo "<option value=1"; if($kontoInfo [0]->art == 1) { echo " selected "; } echo ">Guthabenkonto</option>";
+			 echo "<option value=2"; if($kontoInfo [0]->art == 2) { echo " selected "; } echo ">Kein Saldo</option>";
+			 echo "<option value=3"; if($kontoInfo [0]->art == 3) { echo " selected "; } echo ">Forderungskonto</option>";
+			echo "</select>";
+			
+			echo "</tr>";
 			
 			echo "<tr><td>Mail:</td><td><input type=text value='" . $kontoInfo [0]->mail . "' name=mail /></td></tr>";
 			
@@ -1881,11 +1931,7 @@ class finanzenNEW extends functions {
 			
 			echo "</table>";
 			
-			echo "<div>Beschreibung Kontoart: 0 = normales Konto, 1 = Konto mit gr&uuml;ner Umrandung, 2 = Konto ohne Saldo</div>";
-			
 			echo "<div class='scrollContainer'>";
-			
-			
 			
 			echo "<p>&Uuml;bersicht vorhandener Buchungen</p>";
 			echo "<table class='kontoTable'>";
@@ -2188,9 +2234,11 @@ class finanzenNEW extends functions {
 					echo "<option>Benutzer ausw&auml;hlen ...</option>";
 					
 					for($j = 0 ; $j < sizeof($getusers) ; $j++) {
-						echo "<option value='" .$getusers[$j]->id. "'>";
-							echo $getusers[$j]->Name;
-						echo "</option>";
+					    if($getusers[$j]->id != $besitzer) {
+					        echo "<option value='" .$getusers[$j]->id. "'>";
+					        echo $getusers[$j]->Name;
+					        echo "</option>";
+					    }
 					}
 					
 				echo "</select>";
@@ -2235,15 +2283,14 @@ class finanzenNEW extends functions {
 	function showAllShares($besitzer) {
 		
 		$shares = $this->getObjektInfo("SELECT * FROM finanzen_shares WHERE besitzer=$besitzer");
+		$sharesAmount = $this->getAmount("SELECT * FROM finanzen_shares WHERE besitzer=$besitzer") + 0;
 		
 		echo "<table class='kontoTable'>";
 		echo "<thead><td>Konto</td><td>Freigegeben f&uuml;r</td><td></td></thead>";
 		
 		# Wenn kein Share vorhanden ist:
-		if(!isset($shares[0]->id)) {
+		if($sharesAmount == 0) {
 		    echo "<tbody><td colspan=3>Du hast keine Shares erstellt, zum erstellen eines Shares, klicke auf <strong><a href='?newShare'>Share erstellen</a></strong></td></tbody>";
-		    echo "<tbody><td colspan=3></td></tbody>";
-		    echo "<tbody><td colspan=3></td></tbody>";
 		    echo "<tbody><td colspan=3></td></tbody>";
 		}
 		
