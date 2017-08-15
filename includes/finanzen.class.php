@@ -155,7 +155,7 @@ class finanzenNEW extends functions {
 			$queryGH = "SELECT * FROM finanzen_konten WHERE besitzer=$besitzer AND art=1";
 			$getGuthaben=$this->getObjektInfo($queryGH);
 			$sumofGuthaben = 0;
-			echo "<div class='newCharWIDE'>";
+			echo "<div class='publicInfo'>";
 			echo "<h3>Guthaben</h3>";
 			
 			for ($i = 0 ; $i < sizeof($getGuthaben) ; $i++) {
