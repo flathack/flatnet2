@@ -71,51 +71,138 @@ class finanzenNEW extends functions {
 	function mainStatistikFunction() {
 		if ($this->userHasRight (18, 0 ) == true) {
 			$besitzer = $this->getUserID($_SESSION['username']);
-			echo "<h2>Statistiken</h2>";
+			
 			
 			$anzahlKonten=$this->getAmount("SELECT * FROM finanzen_konten WHERE besitzer=$besitzer") + 0;
 			$anzahlGuthabenK=$this->getAmount("SELECT * FROM finanzen_konten WHERE besitzer=$besitzer AND art=1") + 0;
 			$anzahlAktiveK=$this->getAmount("SELECT * FROM finanzen_konten WHERE besitzer=$besitzer AND aktiv=1") + 0;
-			$query = "SELECT * FROM finanzen_konten WHERE besitzer=$besitzer AND art=3";
-			$anzahlForderungsK=$this->getAmount($query) + 0;
+			
+			$queryFK = "SELECT * FROM finanzen_konten WHERE besitzer=$besitzer AND art=3";
+			$anzahlForderungsK=$this->getAmount($queryFK) + 0;
+			
+			$queryVK = "SELECT * FROM finanzen_konten WHERE besitzer=$besitzer AND art=4";
+			$anzahlVerbK=$this->getAmount($queryVK) + 0;
 			
 			$summe = $anzahlAktiveK + $anzahlGuthabenK + $anzahlKonten + $anzahlForderungsK;
 			if($summe > 0) {
 				
-				echo "<div class='newCharWIDE'>";
+				echo "<div class='publicInfo'>";
+				    echo "<h2>Statistiken</h2>";
 					echo "<p>Du hast $anzahlKonten Konten <br>";
 					echo "Davon sind $anzahlAktiveK Aktiv. <br>";
 					echo "Guthabenkonten: $anzahlGuthabenK<br>";
 					echo "Forderungen: $anzahlForderungsK</p>";
+					echo "Verbindlichkeiten: $anzahlVerbK</p>";
 				echo "</div>";
 				
 			}
 			
 			
 			# Forderungen anzeigen (Art = 3)
-			$getForderungskonten=$this->getObjektInfo($query);
-			$anzahlForderungsK=$this->getAmount($query) + 0;
+			$getForderungskonten=$this->getObjektInfo($queryFK);
+			$anzahlForderungsK=$this->getAmount($queryFK) + 0;
 			if($anzahlForderungsK > 0) {
-			    
-			    echo "<div class='newCharWIDE'>";
-			     echo "<p>Forderungen</p>";
+			    $sumofFord = 0;
+			    echo "<div class='publicInfo'>";
+			     echo "<h3>Forderungen</h3>";
 			     for ($i = 0 ; $i < sizeof($getForderungskonten) ; $i++) {
 			         $summe = "SELECT sum(umsatzWert) as summe FROM finanzen_umsaetze WHERE konto=" . $getForderungskonten[$i]->id . " AND datum <= CURDATE()";
 			         $umsaetze = $this->getObjektInfo ($summe);
 			         $wert = round($umsaetze[0]->summe + 0,2);
 			         
+			         $sumofFord = $sumofFord + $wert;
 			         if($wert > 0) {
 			             $classCSS = "plus";
 			         } else {
 			             $classCSS = "minus";
 			         }
 			         
-			         echo "<li id='$classCSS'>" .$getForderungskonten[$i]->konto. " - " .$wert. " &euro;</li>";
+			         echo "<li id='$classCSS'>" .$getForderungskonten[$i]->konto. " : " .$wert. " &euro;</li>";
 			     }
+			     echo "<strong>Gesamt: $sumofFord &euro;</strong>";
 			    echo "</div>";
 			}
+			
+			# Verbindlichkeiten anzeigen (Art = 4)
+			$getVerbindK=$this->getObjektInfo($queryVK);
+			$anzahlVerbK=$this->getAmount($queryVK) + 0;
+			
+			if($anzahlVerbK > 0) {
+			    $sumofVerbind = 0;
+			    
+			    echo "<div class='publicInfo'>";
+			    echo "<h3>Verbindlichkeiten</h3>";
+			    for ($i = 0 ; $i < sizeof($getVerbindK) ; $i++) {
+			        $summe = "SELECT sum(umsatzWert) as summe FROM finanzen_umsaetze WHERE konto=" . $getVerbindK[$i]->id . " AND datum <= CURDATE()";
+			        $umsaetze = $this->getObjektInfo ($summe);
+			        $wert = round($umsaetze[0]->summe + 0,2);
+			        
+			        $sumofVerbind = $sumofVerbind + $wert;
+			        
+			        if($wert > 0) {
+			            $classCSS = "minus";
+			        } else {
+			            $classCSS = "plus";
+			        }
+			        
+			        echo "<li id='$classCSS'>" .$getVerbindK[$i]->konto. " : " .$wert. " &euro;</li>";
+			    }
+			    echo "<strong>Gesamt: $sumofVerbind &euro;</strong>";
+			    echo "</div>";
+			}
+			
+			# Guthaben anzeigen (Art = 1)
+			$queryGH = "SELECT * FROM finanzen_konten WHERE besitzer=$besitzer AND art=1";
+			$getGuthaben=$this->getObjektInfo($queryGH);
+			$sumofGuthaben = 0;
+			echo "<div class='newCharWIDE'>";
+			echo "<h3>Guthaben</h3>";
+			
+			for ($i = 0 ; $i < sizeof($getGuthaben) ; $i++) {
+			    $summe = "SELECT sum(umsatzWert) as summe FROM finanzen_umsaetze WHERE konto=" . $getGuthaben[$i]->id . " AND datum <= CURDATE()";
+			    $umsaetze = $this->getObjektInfo ($summe);
+			    $wert = round($umsaetze[0]->summe + 0,2);
+			    
+			    $sumofGuthaben = $sumofGuthaben + $wert;
+			    
+			    if($wert > 0) {
+			        $classCSS = "minus";
+			    } else {
+			        $classCSS = "plus";
+			    }
+			    
+			    echo "<li id='$classCSS'>" .$getGuthaben[$i]->konto. " : " .$wert. " &euro;</li>";
+			}
+			echo "<strong>Gesamt: $sumofGuthaben &euro;</strong>";
+			echo "</div>";
+			
+			# Gesamtauswertung
+			
+			echo "<div class='publicInfo'>";
+			echo "<h3>Gesamt</h3>";
+			
+			$ergebnis = round($sumofVerbind + $sumofFord,2);
+			$ergebnis2 = round($sumofVerbind + $sumofFord + $sumofGuthaben,2);
+			
+			echo "<h3>nach Forderungen</h3>";
+			if($ergebnis >= 0) {
+			    echo "<p class='erfolg'>&Uuml;berschuss: $ergebnis</p>";
+			} else {
+			    echo "<p class='hinweis'>Differenz: $ergebnis &euro;</p>";
+			}
+			
+			echo "<h3>nach Guthaben</h3>";
+			if($ergebnis2 >= 0) {
+			    echo "<p class='hinweis'>&Uuml;berschuss: $ergebnis2</p>";
+			} else {
+			    echo "<p class='hinweis'>Schulden: $ergebnis2 &euro;</p>";
+			}
+			
+			echo "</div>";
+			
 		}
 	}
+	
 	/**
 	 * Stellt die Funktionalitäten für das teilen von Konten zur Verfügung
 	 */
@@ -1656,7 +1743,7 @@ class finanzenNEW extends functions {
 			echo "<div class='innerBody'>";
 			echo "<h3>Nicht sichtbare Konten</h3>";
 			echo "<table class='flatnetTable'>";
-			echo "<thead><td>ID</td><td>Name</td><td>Konto Details</td><td>Saldo</td><td>Mail</td></thead>";
+			echo "<thead><td>ID</td><td>Name</td><td>Art</td><td>Konto Details</td><td>Saldo</td><td>Mail</td></thead>";
 			for($i = 0; $i < sizeof ( $konten ); $i ++) {
 				$select2 = "SELECT sum(umsatzWert) as summe FROM finanzen_umsaetze WHERE konto=" . $konten [$i]->id . " AND datum <= CURDATE()";
 				$umsaetze = $this->getObjektInfo ( $select2 );
@@ -1670,7 +1757,7 @@ class finanzenNEW extends functions {
 					}
 					#echo "<div class='$mark'>";
 					echo "<tbody>";
-					echo "<td>" .$konten [$i]->id. ":</td><td> <a href='index.php?konto=" . $konten [$i]->id . "'>" . $konten [$i]->konto . "</a></td>";
+					echo "<td>" .$konten [$i]->id. ":</td><td> <a href='index.php?konto=" . $konten [$i]->id . "'>" . $konten [$i]->konto . "</td><td>" . $konten [$i]->art . "</a></td>";
 					echo "<td><a class='rightBlueLink' href='detail.php?editKonto=" . $konten [$i]->id . "'>Details</a></td><td>";
 					if($konten[$i]->art == 2) {
 						echo "x";
@@ -1918,9 +2005,10 @@ class finanzenNEW extends functions {
 			#echo "<td>" . "<input type=number value=" . $kontoInfo [0]->art . " name=art placeholder=Kontoart /><td>Kontoart</td>";
 			echo "<tr><td>Kontoart</td><td>" . "<select name=art>";
 			echo "<option value=0"; if($kontoInfo [0]->art == 0) { echo " selected "; } echo ">Standard</option>";
-			 echo "<option value=1"; if($kontoInfo [0]->art == 1) { echo " selected "; } echo ">Guthabenkonto</option>";
-			 echo "<option value=2"; if($kontoInfo [0]->art == 2) { echo " selected "; } echo ">Kein Saldo</option>";
-			 echo "<option value=3"; if($kontoInfo [0]->art == 3) { echo " selected "; } echo ">Forderungskonto</option>";
+			     echo "<option value=1"; if($kontoInfo [0]->art == 1) { echo " selected "; } echo ">Guthabenkonto</option>";
+			     echo "<option value=2"; if($kontoInfo [0]->art == 2) { echo " selected "; } echo ">Kein Saldo</option>";
+			     echo "<option value=3"; if($kontoInfo [0]->art == 3) { echo " selected "; } echo ">Forderungskonto</option>";
+			     echo "<option value=4"; if($kontoInfo [0]->art == 4) { echo " selected "; } echo ">Verbindlichkeitskonto</option>";
 			echo "</select>";
 			
 			echo "</tr>";

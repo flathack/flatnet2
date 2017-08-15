@@ -1141,11 +1141,11 @@ input[type=radio]:not(old):checked + label > span > span {
     position: relative;
 }
 
-.newCharWIDE #plus {
+.publicInfo #plus {
 	background-color: #ffb9b9;
 	border-radius: 5px;
 }
-.newCharWIDE #minus {
+.publicInfo #minus {
 	background-color: #e8ffe8;
 	border-radius: 5px;
 }
