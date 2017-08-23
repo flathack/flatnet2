@@ -122,7 +122,7 @@
 				<button  onclick="document.getElementById('forum').style.display = 'none'">verstecken</button>
 				<p id="forum" style="display:none;">Das Forum ist eine einfache M&ouml;glichkeit sich mit anderen Personen auszutauschen. Grundfunktionalit&auml;ten
 				sind hierf&uuml;r gegeben. F&uuml;r fast alle Funktionen sind eigene Rechtebereiche eingerichtet und erm&ouml;glicht so,
-				theoretisch, eine gro�e Anzahl von Benutzern.</p>
+				theoretisch, eine gro�e Anzahl von Benutzern.</p>
 				
 			</div>
 			<div class="publicInfo">
@@ -171,7 +171,10 @@
 			<button  onclick="document.getElementById('profil').style.display = 'block'">anzeigen</button>
 			<button  onclick="document.getElementById('profil').style.display = 'none'">verstecken</button>
 				<div id="profil" style="display:none;">
-					<p>Hilfetext</p>
+					<h2>Passwort &auml;ndern</h2>
+					<p>Um ein Passwort zu ändern, klicken Sie rechts oben auf Ihren Namen. Im oberen Bereich der Webseite klicken Sie nun auf
+						"Benutzereinstellungen". Hier können Sie Ihr Passwort &auml;ndern.
+					</p>
 				</div>
 				
 		
