@@ -237,8 +237,10 @@ class finanzenNEW extends functions {
 	    echo "<li><a href='index.php?konto=$konto&monat=$monat'>Zur&uuml;ck</a></li>";
 	    echo "<li><a href=\"javascript:window.print();\">Drucken</a></li>";
 	    echo "</ul>";
-	    echo "<h2>Abrechnung</h2>";
-	    echo "<p>Konto $konto, Monat = $monat</p>";
+	    $monthname = $this->getMonthName($monat);
+	    $kontoname = $this->getKontoname($konto);
+	    echo "<h3>$kontoname Abrechnung f&uuml;r $monthname</h3>";
+	    
 	    $this->showCurrentMonthInKonto($besitzer);
 	    
 	}
@@ -346,7 +348,7 @@ class finanzenNEW extends functions {
 	/**
 	 * Zeigt den aktuellen Monat in der Finanz&uuml;bersicht an.
 	 * 
-	 * @param unknown $besitzer        	
+	 * @param unknown $besitzer     	
 	 */
 	function showCurrentMonthInKonto($besitzer) {
 		// Kontoinfo bekommen:
@@ -426,6 +428,7 @@ class finanzenNEW extends functions {
 			echo "<td>Wert</td>";
 			echo "<td>Saldo</td>";
 			echo "<td>Optionen</td>";
+			
 			echo "</thead>";
 					
 			if (isset ( $umsaetze [0]->id )) {
@@ -517,10 +520,8 @@ class finanzenNEW extends functions {
 			} else if($differenz == 0) {
 				echo "<p class='dezentInfo'>Keine Saldo Ver&auml;nderung</p>";
 			}
-			
-			
 			// Zeigt das Diagramm an
-			if (isset ( $zahlen )) {
+			if (isset($zahlen)) {
 				$this->showDiagramme ( $zahlen, "970", "200" );
 			}
 		} else {
@@ -2300,6 +2301,26 @@ class finanzenNEW extends functions {
 			}
 			echo "</div>";
 		}
+	}
+	
+	/**
+	 * Gibt den Kontonamen einer ID zurück.
+	 * @param unknown $kontoid
+	 * @return unknown|boolean
+	 */
+	function getKontoname($kontoid) {
+	    if(is_numeric($kontoid)) {
+	        $kontoinfo = $this->getObjektInfo("SELECT * FROM finanzen_konten WHERE id=$kontoid");
+	        
+	        if(isset($kontoinfo[0]->konto)) {
+	            return $kontoinfo[0]->konto;
+	        } else {
+	            return "n/a";
+	        }
+	    } else {
+	        return "n/a";
+	    }
+	    
 	}
 	
 	private $shares;
