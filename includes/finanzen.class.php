@@ -230,6 +230,18 @@ class finanzenNEW extends functions {
 		// Hauptfunktion
 		$this->showEditKonto ( $besitzer );
 	}
+	
+	function mainAbrechnung($monat, $konto) {
+	    $besitzer = $this->getUserID ( $_SESSION ['username'] );
+	    echo "<ul class='finanzNAV'>";
+	    echo "<li><a href='index.php?konto=$konto&monat=$monat'>Zur&uuml;ck</a></li>";
+	    echo "<li><a href=\"javascript:window.print();\">Drucken</a></li>";
+	    echo "</ul>";
+	    echo "<h2>Abrechnung</h2>";
+	    echo "<p>Konto $konto, Monat = $monat</p>";
+	    $this->showCurrentMonthInKonto($besitzer);
+	    
+	}
 	private $suche;
 	function FinanzSuche($suchWort) {
 		if ($this->userHasRight (23, 0) == true) {
@@ -401,7 +413,9 @@ class finanzenNEW extends functions {
 			} else {
 			    $mailinfo = "| Send <a href='mailto:".$kontoinformation[0]->mail."'>MAIL</a>";
 			}
-			echo "<td colspan=7>Monat:<strong> $currentMonth </strong>im Jahr <strong>$currentYear</strong> $saldotext $mailinfo </td>";
+			
+			$abrechnung = "<a href='abrechnung.php?month=".$currentMonth."&konto=".$kontoinformation[0]->id."'>Abrechnung</a>";
+			echo "<td colspan=7>Monat:<strong> $currentMonth </strong>im Jahr <strong>$currentYear</strong> $saldotext $mailinfo $abrechnung </td>";
 			echo "</thead>";
 			
 			echo "<thead>";
