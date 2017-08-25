@@ -1,7 +1,7 @@
 <?php
 include 'objekt/functions.class.php';
 class finanzenNEW extends functions {
-	
+    
     /**
      * Stellt Funktionen auf der finanzen/index.php bereit
      */
@@ -9,7 +9,7 @@ class finanzenNEW extends functions {
 		$besitzer = $this->getUserID ( $_SESSION ['username'] );
 		
 		$this->showCreateNewUeberweisung ();
-		
+	
 		if (!isset ($_GET['newUeberweisung'])) {
 			$this->showKontoHinweis($besitzer);
 			// Navigationslinks

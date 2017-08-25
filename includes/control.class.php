@@ -1372,53 +1372,7 @@ class control extends functions {
 		}
 	}
 	
-	/**
-	 * Gibt die Spalten einer Tabelle zurück.
-	 * 
-	 * @param unknown $table        	
-	 * @return unknown
-	 */
-	function getColumns($table) {
-		// COLUMNS SPEICHERN;
-		$select1 = "SHOW COLUMNS FROM $table";
-		$row = $this->getObjektInfo($select1);
-		for ($i = 0 ; $i < sizeof($row) ; $i++) {
-			$columns [$i] = $row[$i]->Field;
-		}
-		
-		return $columns;
-	}
 	
-	/**
-	 * Gibt die Spalten einer Query zurück.
-	 * 
-	 * @param unknown $query        	
-	 */
-	function getColumnsFromQuery($query) {
-		$createTempTable = "CREATE TEMPORARY TABLE IF NOT EXISTS tempTable AS ($query);";
-		$this->sql_insert_update_delete($createTempTable);
-		
-		$select1 = "SHOW COLUMNS FROM tempTable";
-		$row = $this->getObjektInfo($select1);
-		for ($i = 0 ; $i < sizeof($row) ; $i++) {
-			$columns[$i]=$row[$i]->Field;
-		}
-		
-		return $columns;
-	}
-	
-	
-	function getColumnAnzahl($query) {
-		$createTempTable = "
-		CREATE TEMPORARY TABLE
-		IF NOT EXISTS tempTable AS ($query);";
-		$this->sql_insert_update_delete($createTempTable);
-		
-		$select1 = "SHOW COLUMNS FROM tempTable";
-		
-		$row = $this->getAmount($select1);
-		return $row;
-	}
 	
 	/**
 	 * Gibt die Kommentare der Spalten einer Tabelle wieder und speichert diese in einem Array.

@@ -167,6 +167,32 @@ class sql {
 		}
 	}
 	
+	function sql_db_check($relation_name, $structure) {
+	    
+	    echo "<li>$relation_name</li>";
+	    try {
+	        $columns = $this->getColumns($relation_name);
+	        if(!$columns) {
+	            throw new Exception('Error');
+	        }
+	        
+	        $start = 0;
+	        foreach ($structure as $c) {
+	            
+	            if($c == $columns[$start]) {
+	               # echo "<li>$start : $c ist ok</li>";
+	            } else {
+	                echo "<li class='hinweis'>$start : $c ist FEHLERHAFT - erforderlicher Name : " . $columns[$start] . "</li>";
+	            }
+	            
+	            $start++;
+	        }
+	        
+	    } catch (Exception $e) {
+	        echo "<p class='meldung'>Caught Exception $e</p>";
+	    }
+	}
+	
 	/**
 	 * Loggt transaktionen auf der Datenbank
 	 * @param unknown $received_query
@@ -255,6 +281,54 @@ class sql {
 		} else {
 			return false;
 		}
+	}
+	
+	/**
+	 * Gibt die Spalten einer Tabelle zurück.
+	 *
+	 * @param unknown $table
+	 * @return unknown
+	 */
+	function getColumns($table) {
+	    // COLUMNS SPEICHERN;
+	    $select1 = "SHOW COLUMNS FROM $table";
+	    $row = $this->getObjektInfo($select1);
+	    for ($i = 0 ; $i < sizeof($row) ; $i++) {
+	        $columns [$i] = $row[$i]->Field;
+	    }
+	    
+	    return $columns;
+	}
+	
+	/**
+	 * Gibt die Spalten einer Query zurück.
+	 *
+	 * @param unknown $query
+	 */
+	function getColumnsFromQuery($query) {
+	    $createTempTable = "CREATE TEMPORARY TABLE IF NOT EXISTS tempTable AS ($query);";
+	    $this->sql_insert_update_delete($createTempTable);
+	    
+	    $select1 = "SHOW COLUMNS FROM tempTable";
+	    $row = $this->getObjektInfo($select1);
+	    for ($i = 0 ; $i < sizeof($row) ; $i++) {
+	        $columns[$i]=$row[$i]->Field;
+	    }
+	    
+	    return $columns;
+	}
+	
+	
+	function getColumnAnzahl($query) {
+	    $createTempTable = "
+		CREATE TEMPORARY TABLE
+		IF NOT EXISTS tempTable AS ($query);";
+	    $this->sql_insert_update_delete($createTempTable);
+	    
+	    $select1 = "SHOW COLUMNS FROM tempTable";
+	    
+	    $row = $this->getAmount($select1);
+	    return $row;
 	}
 
 }

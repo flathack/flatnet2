@@ -531,6 +531,10 @@ class functions extends sql {
 				<li><a href='https://bernd.php-friends.de:4443/' target='_blank' class='extern'>Verwaltungskonsole</a></li>";
 				
 			}
+			if($this->userHasRight(67, 0) == true) {
+			    echo "<li><a href='/flatnet2/admin/sqlcheck.php' target='_blank' class='extern'>SQL Checker</a></li>";
+			    
+			}
 			
 			# Abschluss 
 			echo "</ul></div>";
