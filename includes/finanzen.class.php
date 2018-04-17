@@ -580,6 +580,25 @@ class finanzenNEW extends functions {
 	    }
 	}
 	
+	function export() {
+	    
+	    # Sicherheitscheck:
+	    $currentuser = $this->getUserID($_SESSION['username']);
+	    $konto = $_GET['konto'];
+	    
+	    $kontouser = $this->getObjektInfo("SELECT id,konto,besitzer FROM finanzen_konten WHERE id=$konto LIMIT 1");
+	    
+	    if($kontouser[0]->besitzer == $currentuser) {
+	        echo "das Konto gehört dir!";
+	        
+	        
+	        
+	    } else {
+	        echo "FALSCH";
+	    }
+	    
+	}
+	
 	/**
 	 * Zeigt alle Ums&auml;tze des Jahres an.
 	 */
@@ -601,6 +620,11 @@ class finanzenNEW extends functions {
 	        echo "<table class='kontoTable'>";
 	        echo "<thead>" ."<td>Mark</td>"."<td>Buchungsnr</td>"."<td>Gegenkonto</td>"."<td>Umsatz</td>"."<td>Wert</td>"."<td>Tag</td>"."<td>Saldo</td>". "</thead>";
 	        echo "<thead>"."<td><input type=submit name=delete value=delete /></td>"."<td colspan=6>"."Startsaldo: $startSaldo"."</td>". "</thead>";
+	        # EXPORT to CSV
+	        
+	        echo "<thead>";
+	        echo "<td colspan=5><a href='export.php?year=$jahr&konto=$konto'>EXPORT TO CSV</a></td>";
+	        echo "</thead>";
 	        
 	        if(!isset($umsaetze[0]->id)) {
 	            echo "<tbody><td id='minus' colspan=6>F&uuml;r das Jahr $jahr sind keine Ums&auml;tze verf&uuml;gbar</td></tbody>";
@@ -617,6 +641,7 @@ class finanzenNEW extends functions {
 	               }
 	               
 	               $nameGegenkonto = $this->getObjektInfo ( "SELECT * FROM finanzen_konten WHERE id=" . $umsaetze [$i]->gegenkonto . " LIMIT 1" );
+	               
 	               echo "<tbody>";
 	               
 	               if ($umsaetze [$i]->umsatzWert < 0) { $zelle = " id='minus' "; } else { $zelle = " id='plus' "; }
