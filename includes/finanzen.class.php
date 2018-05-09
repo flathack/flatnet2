@@ -426,6 +426,7 @@ class finanzenNEW extends functions {
 			echo "<td>Umsatz</td>";
 			echo "<td>Tag</td>";
 			echo "<td>Wert</td>";
+			echo "<td>Kategorien</td>";
 			echo "<td>Saldo</td>";
 			echo "<td>Optionen</td>";
 			
@@ -452,21 +453,35 @@ class finanzenNEW extends functions {
 					if (isset ( $_GET ['selected'] )) { if ($_GET ['selected'] == $umsaetze [$i]->buchungsnr) {
 						$selected = "id='yellow'"; } else { $selected = ""; } } else { $selected = ""; }
 					
+					# START
 					echo "<tbody $selected>";
+					
+					# BuchungsNR
 					echo "<td><a href='?konto=".$umsaetze [$i]->gegenkonto."&monat=$monat&jahr=$currentYear&selected=" . $umsaetze [$i]->buchungsnr . "'>" . $umsaetze [$i]->buchungsnr . "</a></td>";
+					
+					# Gegenkonto
 					// Name des Gegenkontos bekommen
 					$nameGegenkonto = $this->getObjektInfo ( "SELECT * FROM finanzen_konten WHERE id=" . $umsaetze [$i]->gegenkonto . " LIMIT 1" );
 					echo "<td>" . $nameGegenkonto [0]->konto . "</td>";
 					
+					# Umsatz
 					echo "<td>" . $umsaetze [$i]->umsatzName;
 					if(isset($umsaetze [$i]->link) AND $umsaetze [$i]->link != "") {
 					    echo "<a href='" . $umsaetze [$i]->link . "'>link</a>";
 					}
 					echo "</td>";
+					
+					# TAG
 					echo "<td>" . $umsaetze [$i]->tag . "</td>";
 					$ausgabeZwischensumme = round($zwischensumme, 4);
+					
+					# WERT
 					echo "<td $zelle>" . $umsaetze [$i]->umsatzWert . "</td>";
 					
+					# Kategorie
+					echo "<td>#cat</td>";
+					
+					# SALDO
 					if($kontoinfos[0]->art == 2) {
 						$spaltenFarbe = "";
 						echo "<td id='$spaltenFarbe'>" . "-" . "</td>";
@@ -474,6 +489,7 @@ class finanzenNEW extends functions {
 						echo "<td id='$spaltenFarbe'>" . $ausgabeZwischensumme . "</td>";
 					}
 					
+					# OPTIONEN
 					echo "<td>" . "<a class='' href='?konto=$kontoID&monat=$monat&jahr=$currentYear&edit=" . $umsaetze [$i]->id . "'>edit</a>" . "</td>";
 					echo "</tbody>";
 					
@@ -755,6 +771,7 @@ class finanzenNEW extends functions {
 			$monatzurueck = 12;
 			$jahrzurueck = $jahr - 1;
 		} else {
+
 			$jahrzurueck = $jahr;
 			$monatzurueck = $monat - 1;
 		}
@@ -763,6 +780,7 @@ class finanzenNEW extends functions {
 			$monatvor = 1;
 			$jahrvor = $jahr + 1;
 		} else {
+
 			$monatvor = $monat + 1;
 			$jahrvor = $jahr;
 		}
