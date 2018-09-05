@@ -1,34 +1,68 @@
 <?php
-include '../includes/objekt/functions.class.php';
-class sqlcheck extends functions {
-    
-    function mainSQLCheck() {
+/**
+ * Datei beeinhaltet die Klasse: SQLChecker
+ * 
+ * PHP Version 7
+ * 
+ * @category   Documents
+ * @package    Flatnet2
+ * @subpackage NONE
+ * @author     Steven Sch√∂del <steven.schoedel@outlook.com>
+ * @license    https://www.gnu.org/licenses/gpl-3.0.txt GNU/GPLv3
+ * @link       none
+ */
+require '../includes/objekt/functions.class.php';
+/**
+ * SQLChecker
+ * Checkt ob die Datenbank richtig konfiguriert ist.
+ *
+ * PHP Version 7
+ * 
+ * @category   Classes
+ * @package    Flatnet2
+ * @subpackage NONE
+ * @author     Steven Sch√∂del <steven.schoedel@outlook.com>
+ * @license    https://www.gnu.org/licenses/gpl-3.0.txt GNU/GPLv3
+ * @link       none
+ */
+class Sqlcheck extends functions
+{
+    /**
+     * MAIN
+     * 
+     * @return void
+     */
+    function mainSQLCheck() 
+    {
         echo "<h4>Finanzbereich</h4>";
-        $this->finanzsqlcheck();
+        $this->finanzCheck();
         
         echo "<h4>Guildwars</h4>";
-        $this->gw_check();
+        $this->gwCheck();
         
         echo "<h4>Administrationsbereich</h4>";
-        $this->admin_check();
+        $this->adminCheck();
         
         echo "<h4>Forum</h4>";
-        $this->forum_check();
+        $this->forumCheck();
         
         echo "<h4>Adressbuch</h4>";
-        $this->adressbuch_check();
+        $this->adressbuchCheck();
         
         echo "<h4>Profil</h4>";
-        $this->profil_check();
+        $this->profileCheck();
         
         echo "<h4>Quiz</h4>";
-        $this->quiz_check();
+        $this->quizCheck();
     }
     
     /**
      * Checkt den Bereich Finanzen
+     * 
+     * @return void
      */
-    function finanzsqlcheck() {
+    function finanzCheck() 
+    {
         $relation_name = "finanzen_umsaetze";
         $structure = array (
             "id",
@@ -90,9 +124,12 @@ class sqlcheck extends functions {
     }
     
     /**
-     * Check f¸r Guildwars
+     * Check fuer Guildwars
+     * 
+     * @return void
      */
-    function gw_check() {
+    function gwCheck() 
+    {
         $relation_name = "account_infos";
         $structure = array (
             "id",
@@ -106,23 +143,32 @@ class sqlcheck extends functions {
     }
     
     /**
-     * Check f¸r Administrationsbereich
+     * Check fuer Administrationsbereich
+     * 
+     * @return void
      */
-    function admin_check() {
-        
+    function adminCheck() 
+    {
+        echo "Nothing Inside";
     }
     
     /**
-     * Check f¸r Forum
+     * Check fuer Forum
+     * 
+     * @return void
      */
-    function forum_check() {
-        
+    function forumCheck() 
+    {
+        echo "Nothing Inside";
     }
     
     /**
-     * Check f¸r Adressbuch
+     * Check fuer Adressbuch
+     * 
+     * @return void
      */
-    function adressbuch_check() {
+    function adressbuchCheck() 
+    {
         $relation_name = "adressbuch";
         $structure = array (
             "id",
@@ -153,10 +199,24 @@ class sqlcheck extends functions {
         );
         $this->sql_db_check($relation_name, $structure);
     }
-    function profil_check() {
+
+    /**
+     * Check fuer Profil
+     * 
+     * @return void
+     */
+    function profileCheck() 
+    {
         
     }
-    function quiz_check() {
+
+    /**
+     * Check fuer Quiz
+     * 
+     * @return void
+     */
+    function quizCheck() 
+    {
         
     }
 }
@@ -174,11 +234,11 @@ $admin->header();
 
 </header>
 <body>
-	<div class="mainbody">
-	<h4>SQL - Checker</h4>
-	
-	<?php $admin->mainSQLCheck();?>
-	</div>
+    <div class="mainbody">
+    <h4>SQL - Checker</h4>
+    
+    <?php $admin->mainSQLCheck();?>
+    </div>
 </body>
 
 
