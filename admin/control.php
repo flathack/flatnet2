@@ -33,7 +33,7 @@
         <div class='mainbodyDark'>
         
             <?php $admin->SubNav("admin"); ?>
-            
+
             <h2><a name='administration'>Administration</a></h2>
             
             <?php 
