@@ -1,7 +1,7 @@
 <?php
 /**
  * DOC COMMENT
- * 
+ *
  * PHP Version 7
  *
  * @category   Document
@@ -16,9 +16,9 @@ require 'objekt/functions.class.php';
 /**
  * Control
  * Stellt Administrative Aktionen zur Verfügung
- * 
+ *
  * PHP Version 7
- * 
+ *
  * @history Steven 19.08.2014 angelegt.
  * @history Steven 21.08.2014 Änderung der Methoden.
  * Gibt die richtige Ausgabe aus, wenn der richtige GET Selector angewählt wird.
@@ -37,9 +37,9 @@ class Control extends Functions
 
     /**
      * Ließt den GET Wert aus und leitet an die entsprechende Methode weiter.
-     * 
+     *
      * @param string $action Unterseite
-     * 
+     *
      * @return void
      */
     public function contentSelector($action)
@@ -114,7 +114,7 @@ class Control extends Functions
 
     /**
      * Zeigt alle Benutzer aus der Tabelle "benutzer" an.
-     * 
+     *
      * @return void
      */
     public function showBenutzer()
@@ -189,6 +189,8 @@ class Control extends Functions
 
     /**
      * Ermöglicht das hinzufügen eines neuen Benutzers.
+     * 
+     * @return void
      */
     public function newBenutzerEingabe()
     {
@@ -215,6 +217,8 @@ class Control extends Functions
     /**
      * Erstellt einen neuen User in der Datenbank.
      * Returns false or true.
+     * 
+     * @return boolean
      */
     public function newBenutzerFunction()
     {
@@ -263,6 +267,8 @@ class Control extends Functions
     /**
      * Ermöglicht das bearbeiten von Benutzern aus der Tabelle "benutzer".
      * bearb ist in dem Fall eine ID.
+     * 
+     * @return void
      */
     public function bearbBenutzerEingabe()
     {
@@ -322,6 +328,8 @@ class Control extends Functions
     /**
      * Ermöglicht, dass das Passwort und andere Daten mit den Benutzern geändert werden können.
      * Ergänzt die bearbBenutzerEingabe() Funktion.
+     * 
+     * @return boolean
      */
     public function bearbBenutzerFunction()
     {
@@ -381,7 +389,7 @@ class Control extends Functions
 
     /**
      * Löscht den Benutzer, wenn er keine anderen Einträge mehr hat.
-     * @todo
+     * 
      * @return boolean
      */
     public function deleteSingleUser()
@@ -417,6 +425,7 @@ class Control extends Functions
 
     /**
      * Ordnet die Besitzer-Spalte einer Tabelle zu.
+     * 
      * @return string
      */
     public function setBesitzerArray()
@@ -424,6 +433,7 @@ class Control extends Functions
 
         /**
          * Richtige Zuordnung
+         * 
          * @var unknown
          */
         $zuordnung = array(
@@ -461,6 +471,7 @@ class Control extends Functions
 
         /**
          * Umgekehrte Zuordnung
+         * 
          * @var unknown
          */
         $zuordnung2 = array(
@@ -501,15 +512,20 @@ class Control extends Functions
 
     /**
      * Gibt den Namen der Besitzerspalte zurück.
-     * @param unknown $tabelle
+     * 
+     * @param object $tabelle Tabellen
+     * 
+     * @return void
      */
     public function getBesitzerSpalte($tabelle)
     {
-
+         // EMPTY FUNCTION
     }
 
     /**
      * Zeigt alle Informationen eines Benutzers an und ermöglicht die Löschung der bestehenden Informationen.
+     * 
+     * @return void
      */
     public function deleteBenutzerFunction()
     {
@@ -597,6 +613,11 @@ class Control extends Functions
         }
     }
 
+    /**
+     * Zeigt Log Einträge an.
+     * 
+     * @return void
+     */
     public function getLogEintraege()
     {
         echo "<div class='newFahrt'>";
@@ -611,6 +632,8 @@ class Control extends Functions
 
     /**
      * Zeigt eingereichte Vorschläge der Benutzer an
+     * 
+     * @return void
      */
     public function adminVorschlaege()
     {
@@ -620,7 +643,7 @@ class Control extends Functions
                 $this->vorschlaegeAction($_GET['submit'], $_GET['status'], $_GET['hiddenID']);
             }
 
-            # Zeigt eine Box an, in der die Anzahl der Logeinträge angezeigt wird.
+            // Zeigt eine Box an, in der die Anzahl der Logeinträge angezeigt wird.
             $this->getLogEintraege();
 
             // Select from Database
@@ -862,6 +885,8 @@ class Control extends Functions
 
     /**
      * Löscht die Logeinträge aus dem gewählten Text.
+     * 
+     * @return void
      */
     public function adminVorschlaegeDELETE_Eintraege()
     {
@@ -884,6 +909,8 @@ class Control extends Functions
 
     /**
      * Zeigt eine Vorschlagsliste für die Benutzer an.
+     * 
+     * @return void
      */
     public function userVorschlaege()
     {
@@ -919,6 +946,12 @@ class Control extends Functions
 
     /**
      * Verändert den Status der eingereichten Vorschläge
+     * 
+     * @param unknown $submit Submit
+     * @param unknown $status Status
+     * @param int     $id     Vorschlag ID
+     * 
+     * @return void
      */
     public function vorschlaegeAction($submit, $status, $id)
     {
@@ -951,7 +984,8 @@ class Control extends Functions
     /**
      * Gibt den Namen einer RightKategorie zurück.
      *
-     * @param unknown $id
+     * @param int $id Kategorie ID
+     * 
      * @return unknown
      */
     public function getRightKategorieName($id)
@@ -970,6 +1004,8 @@ class Control extends Functions
 
     /**
      * Ermöglicht das erstellen eines neuen Rechts
+     * 
+     * @return void
      */
     public function newRight()
     {
@@ -1006,7 +1042,7 @@ class Control extends Functions
                     echo "<h2>Neues Recht erstellen</h2>";
                     echo "<form method=post>";
                     echo "<input type='text' value='' name='newRightName' placeholder='Infotext des Rechts' required autofocus /> <br> ";
-                    # Select für Kategorien
+                    // Select für Kategorien
                     $getKats = $this->getObjektInfo("SELECT * FROM rightkategorien ORDER BY name");
                     echo "<select name='kategorie'>";
                     for ($i = 0; $i < sizeof($getKats); $i++) {
@@ -1014,8 +1050,7 @@ class Control extends Functions
                     }
                     echo "</select>";
 
-                    #
-                    #echo "<input type='text' value='' name='kategorie' placeholder='Kategorie' required /> Kategorie wählen (eine Zahl)<br> ";
+                    //echo "<input type='text' value='' name='kategorie' placeholder='Kategorie' required /> Kategorie wählen (eine Zahl)<br> ";
                     echo "<input type='submit' name='absenden' value='OK' />";
                     echo "</form></div>";
                 }
@@ -1027,6 +1062,11 @@ class Control extends Functions
 
     /**
      * Entsperrt einen Benutzer
+     * 
+     * @param int    $id     UserID
+     * @param string $status Status
+     * 
+     * @return void
      */
     public function modifyUsersStatus($id, $status)
     {
@@ -1055,6 +1095,8 @@ class Control extends Functions
 
     /**
      * Ermöglicht das freischalten von Rechten für den Bereich "Forum".
+     * 
+     * @return void
      */
     public function setUserForumRights()
     {
@@ -1159,6 +1201,8 @@ class Control extends Functions
 
     /**
      * Zeigt alle Kategorien an.
+     * 
+     * @return void
      */
     public function showForumCategories()
     {
@@ -1194,17 +1238,18 @@ class Control extends Functions
 
     /**
      * Ermöglicht das setzen einer neuen Kategorie.
+     * 
+     * @return void
      */
     public function newForumCategory()
     {
         if ($this->userHasRight(49, 0) == true) {
             if (!isset($_GET['editid'])) {
 
-                # Höchste Potenz bekommen:
-
+                // Höchste Potenz bekommen:
                 $getMaxPotenz = $this->getObjektInfo("SELECT max(rightPotenz) as max FROM blogkategorien");
                 if (!isset($getMaxPotenz[0]->max)) {
-                    # Wenn es noch keine Kategorien gibt:
+                    // Wenn es noch keine Kategorien gibt:
                     $max = 0;
                 } else {
                     $max = $getMaxPotenz[0]->max + 1;
@@ -1236,6 +1281,8 @@ class Control extends Functions
      * Funktionalität: speichert Kategorieeintrag bei Aufruf und vorhandensein von
      * $_POST['nameNewCat'] und $_POST['description'],
      * siehe $this->newForumCategory();
+     * 
+     * @return void
      */
     public function addNewForumCategory()
     {
@@ -1282,6 +1329,8 @@ class Control extends Functions
 
     /**
      * Ermöglicht das verändern einer bestehendes Kategorie.
+     * 
+     * @return void
      */
     public function alternateForumCategory()
     {
@@ -1399,18 +1448,6 @@ class Control extends Functions
                         }
                     }
 
-                    // echo "<p class='info'>Deaktiviert</p>";
-                    /*
-                 * $query="UPDATE blogkategorien SET kategorie='$kategorie', beschreibung = '$description' WHERE id='$editid' LIMIT 1";
-                 *
-                 * if($this->sql_insert_update_delete($query) == true) {
-                 * echo "<p class='erfolg'>Kategorie abgeändert.</p>";
-                 * return true;
-                 * } else {
-                 * echo "<p class='meldung'>Kategorie konnte nicht geändert werden.</p>";
-                 * return false;
-                 * }
-                 */
                 } else {
                     echo "<p class='meldung'>Keine Auswahl</p>";
                     return false;
@@ -1423,15 +1460,17 @@ class Control extends Functions
     }
 
     /**
-     * Gibt die Kommentare der Spalten einer Tabelle wieder und speichert diese in einem Array.
+     * Gibt die Kommentare der Spalten einer Tabelle 
+     * wieder und speichert diese in einem Array.
      *
-     * @param unknown $table
-     * @return unknown
+     * @param string $table Tablename
+     * 
+     * @return void
      */
     public function getColumnComments($table)
     {
 
-        #    $this->connectToSpecialDB ( "information_schema", "info_user", "GCbzZFw2ppBwJp7Q" );
+        //    $this->connectToSpecialDB ( "information_schema", "info_user", "GCbzZFw2ppBwJp7Q" );
         $dbname = $this->getDBName();
         $select1 = "SELECT column_name, column_comment FROM columns WHERE TABLE_SCHEMA = '$dbname' AND TABLE_NAME='$table'";
         $row = $this->getObjektInfo($select1);
@@ -1443,6 +1482,8 @@ class Control extends Functions
 
     /**
      * Speichert die Inhalte erneut.
+     * 
+     * @return void
      */
     public function saveObjects()
     {
@@ -1554,6 +1595,8 @@ class Control extends Functions
 
     /**
      * Zeigt eine Datenzeile aus einer Tabelle an.
+     * 
+     * @return void
      */
     public function showObject()
     {
@@ -1570,7 +1613,7 @@ class Control extends Functions
                 $row = $this->getObjektInfo($select);
 
                 // Kommentar der Spalte auslesen:
-                #    $comments = $this->getColumnComments ( $table );
+                // $comments = $this->getColumnComments ( $table );
 
                 // Columns bekommen:
                 $columns = $this->getColumns($table);
@@ -1609,58 +1652,68 @@ class Control extends Functions
         }
     }
 
+    /**
+     * DEAKTIVIERT
+     * 
+     * @param string $table Tablename
+     * 
+     * @return void
+     */
     public function tableStructure($table)
     {
         if (isset($_GET['table']) and isset($_GET['showStructure'])) {
-            // Neue DB öffnen
-            #    $this->connectToSpecialDB ( "information_schema", "info_user", "GCbzZFw2ppBwJp7Q" );
-
-            // Columns bekommen:
             echo "<p class='meldung'>Diese Funktion ist außer Betrieb</p>";
+            // Neue DB öffnen
+            // $this->connectToSpecialDB ( "information_schema", "info_user", "GCbzZFw2ppBwJp7Q" );
             /*
-        $select1 = "SHOW COLUMNS FROM columns";
-        $row = $this->getObjektInfo($select1);
-        for ($i = 0 ; $i < sizeof($row) ; $i++) {
-        $columns [$i] = $row[$i]->Field;
-        }
+            $select1 = "SHOW COLUMNS FROM columns";
+            $row = $this->getObjektInfo($select1);
+            for ($i = 0 ; $i < sizeof($row) ; $i++) {
+            $columns [$i] = $row[$i]->Field;
+            }
 
-        if (sizeof ( $columns ) > 5) {
-        $changedColumns = true;
-        if (isset ( $_GET ['setWeitere'] ) and $_GET ['setWeitere'] == true) {
-        $changedColumns = false;
-        } else {
-        $menge = 5;
-        }
-        }
+            if (sizeof ( $columns ) > 5) {
+            $changedColumns = true;
+            if (isset ( $_GET ['setWeitere'] ) and $_GET ['setWeitere'] == true) {
+            $changedColumns = false;
+            } else {
+            $menge = 5;
+            }
+            }
 
-        // Table erstellen
-        echo "<table class='flatnetTable'>";
-        echo "<thead>";
-        for($i = 0; $i < sizeof ( $columns ); $i ++) {
-        echo "<td>";
-        echo $columns [$i];
-        echo "</td>";
-        }
-        echo "</thead>";
+            // Table erstellen
+            echo "<table class='flatnetTable'>";
+            echo "<thead>";
+            for($i = 0; $i < sizeof ( $columns ); $i ++) {
+            echo "<td>";
+            echo $columns [$i];
+            echo "</td>";
+            }
+            echo "</thead>";
 
-        // Select des Inhalts
-        $dbname = $this->getDBName();
-        $select1 = "SELECT * FROM columns WHERE TABLE_SCHEMA = '$dbname' AND TABLE_NAME='$table'";
-        $row = $this->getObjektInfo($select1);
-        for($i = 0; $i < sizeof ($row); $i ++) {
-        echo "<tbody>";
-        for($j = 0; $j < sizeof ($columns); $j ++) {
-        echo "<td>";
-        echo substr ( $row[$i]->$columns[$j], 0, 30 );
-        echo "</td>";
-        }
-        echo "</tbody>";
-        } */
+            // Select des Inhalts
+            $dbname = $this->getDBName();
+            $select1 = "SELECT * FROM columns 
+                WHERE TABLE_SCHEMA = '$dbname' AND TABLE_NAME='$table'";
+            $row = $this->getObjektInfo($select1);
+            for($i = 0; $i < sizeof ($row); $i ++) {
+            echo "<tbody>";
+            for($j = 0; $j < sizeof ($columns); $j ++) {
+            echo "<td>";
+            echo substr ( $row[$i]->$columns[$j], 0, 30 );
+            echo "</td>";
+            }
+            echo "</tbody>";
+            } */
         }
     }
 
     /**
      * Ermöglicht die direkte manipulation der Datenbank über das Webinterface.
+     * 
+     * @param string $query Query
+     * 
+     * @return void
      */
     public function insertQuery($query)
     {
@@ -1675,7 +1728,9 @@ class Control extends Functions
     /**
      * Fügt eine neue Zeile ein.
      *
-     * @param unknown $table
+     * @param string $table Tablename
+     * 
+     * @return void
      */
     public function insertIntoTable($table)
     {
@@ -1703,7 +1758,6 @@ class Control extends Functions
             }
 
             echo "<tfoot><td><input type=submit name=insertOK value='speichern' /></td><td></td></tfoot>";
-
             echo "</form></table>";
         } else {
             echo "<p class=''>Du darfst keine neuen Einträge in der Objektdatenbank hinzufügen.</p>";
@@ -1713,6 +1767,8 @@ class Control extends Functions
 
     /**
      * Zeigt eine QueryBox an, mit deren Hilfe man jede Art von Abfrage starten kann.
+     * 
+     * @return void
      */
     public function globalQueryBox()
     {
@@ -1749,6 +1805,8 @@ class Control extends Functions
     /**
      * Ermöglicht so etwas ähnliches wie PHP MY ADMIN.
      * Aber Designtechnisch auf meinem Niveau.
+     * 
+     * @return void
      */
     public function objektControl()
     {
@@ -1943,7 +2001,7 @@ class Control extends Functions
 
                 // Ausgabe der Tabelle
 
-                # Schauen, ob eine bestimmte Seite angeklickt wurde:
+                // Schauen, ob eine bestimmte Seite angeklickt wurde:
                 if (isset($_GET['von'])) {
                     $von = "&von=" . $_GET['von'];
                 } else {
@@ -1986,6 +2044,8 @@ class Control extends Functions
 
     /**
      * Ermöglicht die Erstellung von Codes, damit sich User registrieren können.
+     * 
+     * @return void
      */
     public function codeVerwaltung()
     {
@@ -2017,6 +2077,11 @@ class Control extends Functions
     }
 
     /**
+     * Gibt die Besitzerspalte einer Tabelle aus
+     * 
+     * @param string $lookingForThisTable Tablename
+     * 
+     * @return void
      */
     public function getBesitzerColumnName($lookingForThisTable)
     {
@@ -2037,6 +2102,8 @@ class Control extends Functions
 
     /**
      * Zeigt Einträge an, bei denen der Benutzer nicht mehr existiert und bietet an, diese zu löschen.
+     * 
+     * @return void
      */
     public function Aufraeumen()
     {
@@ -2079,10 +2146,15 @@ class Control extends Functions
     }
 
     /**
-     * Dieses Rechtesystem ersetzt das bestehende System. Dabei ist es egal, wie viele Rechte der Benutzer hat.
-     * Dabei wird die entsprechende Rechte ID und die Benutzer ID in die Tabelle rights gepackt.
-     * Wenn der Benutzer das Recht besitzt, dann wird true zurück gegegeben. Ist das Recht nicht vorhanden ist es automatisch
+     * Dieses Rechtesystem ersetzt das bestehende System. 
+     * Dabei ist es egal, wie viele Rechte der Benutzer hat.
+     * Dabei wird die entsprechende Rechte ID und die Benutzer ID 
+     * in die Tabelle rights gepackt.
+     * Wenn der Benutzer das Recht besitzt, dann wird true zurück 
+     * gegegeben. Ist das Recht nicht vorhanden ist es automatisch
      * verweigert.
+     * 
+     * @return void
      */
     public function rechteverwaltung()
     {
@@ -2096,16 +2168,16 @@ class Control extends Functions
             if ($this->userHasRight(46, 0) == true) {
                 $this->rechteverwaltung_setright();
 
-                # Liste von allen Benutzern anzeigen:
-                #####################################################################################################################
-                $allusers = $this->getObjektInfo("SELECT * FROM benutzer"); #
-                #
-                for ($i = 0; $i < sizeof($allusers); $i++) { #
-                echo "<a class='buttonlink' href='?action=6&userid=" . $allusers[$i]->id . "'>" . $allusers[$i]->Name . "</a>"; #
-            } #
-                #####################################################################################################################
+                // Liste von allen Benutzern anzeigen:
+                // #####################################################################################################################
+                $allusers = $this->getObjektInfo("SELECT * FROM benutzer");
+                //
+                for ($i = 0; $i < sizeof($allusers); $i++) {
+                    echo "<a class='buttonlink' href='?action=6&userid=" . $allusers[$i]->id . "'>" . $allusers[$i]->Name . "</a>";
+                } 
+                // #####################################################################################################################
 
-                # Wenn ein Benutzer angeklickt wurde:
+                // Wenn ein Benutzer angeklickt wurde:
                 if (isset($_GET['userid'])) {
                     $id = $_GET['userid'];
                     $userInformation = $this->getObjektInfo("SELECT * FROM benutzer WHERE id = '$id'");
@@ -2115,7 +2187,7 @@ class Control extends Functions
                         echo "<h2>Benutzer: " . $userInformation[0]->Name . "</h2>";
                     }
 
-                    # Liste erstellen, aber mit Kategorien:
+                    // Liste erstellen, aber mit Kategorien:
 
                     $getAllKategorien = $this->getObjektInfo("SELECT * FROM rightkategorien");
 
@@ -2123,7 +2195,7 @@ class Control extends Functions
 
                     for ($i = 0; $i < sizeof($getAllKategorien); $i++) {
 
-                        # Jetzt alle Einträge die zu dieser Kategorie gehören selektieren:
+                        // Jetzt alle Einträge die zu dieser Kategorie gehören selektieren:
                         $getEintraegeVonDieserKategorie = $this->getObjektInfo("SELECT * FROM userrights WHERE kategorie = '" . $getAllKategorien[$i]->id . "' ORDER BY recht");
 
                         echo "<thead>";
@@ -2132,7 +2204,7 @@ class Control extends Functions
                         echo "<td>Edit</td>";
                         echo "</thead>";
 
-                        # Jetzt Einträge ausgeben:
+                        // Jetzt Einträge ausgeben:
                         for ($j = 0; $j < sizeof($getEintraegeVonDieserKategorie); $j++) {
                             echo "<tbody";
                             if ($this->userHasRight($getEintraegeVonDieserKategorie[$j]->id, $userInformation[0]->id) == true) {
@@ -2161,7 +2233,7 @@ class Control extends Functions
                     echo "</table>";
 
                 }
-            } # Recht 46 Ende
+            } // Recht 46 Ende
         } else {
             echo "<p class=''>Du darfst die Rechteverwaltung nicht anzeigen.</p>";
         }
@@ -2170,6 +2242,8 @@ class Control extends Functions
 
     /**
      * Verweigert oder gewährt eine Berechtigung.
+     * 
+     * @return void
      */
     public function rechteverwaltung_setright()
     {
@@ -2177,9 +2251,9 @@ class Control extends Functions
         if ($this->userHasRight(46, 0) == true) {
 
             if (isset($_GET['userid']) and isset($_GET['gewaehren'])) {
-                #    echo "<p class='meldung'>Recht wird gewährt!</p>";
+                //echo "<p class='meldung'>Recht wird gewährt!</p>";
 
-                # Check ob es Benutzer gibt..
+                // Check ob es Benutzer gibt..
                 $userid = $_GET['userid'];
                 $userInformation = $this->getObjektInfo("SELECT * FROM benutzer WHERE id = $userid");
                 if (!isset($userInformation[0]->Name)) {
@@ -2187,7 +2261,7 @@ class Control extends Functions
                     exit;
                 }
 
-                # Check ob es Recht gibt...
+                // Check ob es Recht gibt...
                 $rechteID = $_GET['gewaehren'];
                 $rightInformation = $this->getObjektInfo("SELECT * FROM userrights WHERE id = '$rechteID'");
                 if (!isset($rightInformation[0]->id)) {
@@ -2195,7 +2269,7 @@ class Control extends Functions
                     exit;
                 }
 
-                # Check ob der Benutzer das Recht schon hat
+                // Check ob der Benutzer das Recht schon hat
                 $getAllRights = $this->getObjektInfo("SELECT * FROM userrights WHERE id = '$rechteID'");
                 $userInformation = $this->getObjektInfo("SELECT * FROM benutzer WHERE id = '$userid'");
                 if ($this->userHasRight($getAllRights[0]->id, $userInformation[0]->id) == true) {
@@ -2203,7 +2277,7 @@ class Control extends Functions
                     exit;
                 }
 
-                # Recht gewähren:
+                // Recht gewähren:
                 $query = "INSERT INTO rights (besitzer, right_id) VALUES ('$userid','$rechteID')";
                 if ($this->sql_insert_update_delete($query) == true) {
                     echo "<p class='erfolg'>Recht wurde gewährt!</p>";
@@ -2215,7 +2289,7 @@ class Control extends Functions
 
             if (isset($_GET['userid']) and isset($_GET['verweigern'])) {
 
-                # Check ob es Benutzer gibt..
+                // Check ob es Benutzer gibt..
                 $userid = $_GET['userid'];
                 $userInformation = $this->getObjektInfo("SELECT * FROM benutzer WHERE id = '$userid'");
                 if (!isset($userInformation[0]->Name)) {
@@ -2223,7 +2297,7 @@ class Control extends Functions
                     exit;
                 }
 
-                # Check ob es Recht gibt...
+                // Check ob es Recht gibt...
                 $rechteID = $_GET['verweigern'];
                 $rightInformation = $this->getObjektInfo("SELECT * FROM userrights WHERE id = '$rechteID'");
                 if (!isset($rightInformation[0]->id)) {
@@ -2231,7 +2305,7 @@ class Control extends Functions
                     exit;
                 }
 
-                # Check ob der Benutzer das Recht schon hat
+                // Check ob der Benutzer das Recht schon hat
                 $getAllRights = $this->getObjektInfo("SELECT * FROM userrights WHERE id = '$rechteID'");
                 $userInformation = $this->getObjektInfo("SELECT * FROM benutzer WHERE id = '$userid'");
                 if ($this->userHasRight($getAllRights[0]->id, $userInformation[0]->id) == false) {
@@ -2239,7 +2313,7 @@ class Control extends Functions
                     exit;
                 }
 
-                # Recht LÖSCHEN:
+                // Recht LÖSCHEN:
                 $query = "DELETE FROM rights WHERE besitzer = '$userid' AND right_id = '$rechteID'";
                 if ($this->sql_insert_update_delete($query) == true) {
                     echo "<p class='erfolg'>Recht wurde gelöscht!</p>";
@@ -2255,13 +2329,15 @@ class Control extends Functions
 
     /**
      * Ermöglicht die Verwaltung von Kategorien für die Rechte
+     * 
+     * @return void
      */
     public function rechtekategorienVerwaltung()
     {
 
         if ($this->userHasRight(68, 0) == true) {
 
-            # Alle Kategorien bekommen:
+            // Alle Kategorien bekommen:
             $getallcategories = $this->getObjektInfo("SELECT * FROM rightkategorien");
             echo "<p class='spacer'>Rechtekategorien</p>";
             echo "<table class='flatnetTable'>";
@@ -2279,6 +2355,8 @@ class Control extends Functions
 
     /**
      * Zeigt eine Ansicht der Tabelle "log"
+     * 
+     * @return void
      */
     public function log_verwaltung()
     {
@@ -2286,11 +2364,25 @@ class Control extends Functions
 
             echo "<div class='newFahrt'>";
 
-            # setlimit get-action
-            if (isset($_GET['setlimit'])) {if (is_numeric($_GET['setlimit']) == true) {$limit = $_GET['setlimit'];} else { $limit = 100;}} else { $limit = 100;}
+            // setlimit get-action
+            if (isset($_GET['setlimit'])) {
+                if (is_numeric($_GET['setlimit']) == true) {
+                    $limit = $_GET['setlimit'];
+                } else { 
+                    $limit = 100;
+                }
+            } else { 
+                $limit = 100;
+            }
             if (isset($_GET['textLimit'])) {
-                if (is_numeric($_GET['textLimit']) == true) {$textLimit = $_GET['textLimit'];} else { $textLimit = 70;}
-            } else { $textLimit = 70;}
+                if (is_numeric($_GET['textLimit']) == true) {
+                    $textLimit = $_GET['textLimit'];
+                } else { 
+                    $textLimit = 70;
+                }
+            } else { 
+                $textLimit = 70;
+            }
 
             $getLogs = $this->getObjektInfo("SELECT * FROM log ORDER BY timestamp DESC LIMIT $limit");
             $getanzahl = $this->getAmount("SELECT * FROM log");
@@ -2330,13 +2422,17 @@ class Control extends Functions
     }
 
     /**
-     * Erm�glicht die Administration der Finanzen f�r mehrere Benutzer und erm�glicht die Problembehandlung von verschiedenen Buchungen.
+     * Ermoeglicht die Administration der Finanzen fuer 
+     * mehrere Benutzer und ermoeglicht die 
+     * Problembehandlung von verschiedenen Buchungen.
+     * 
+     * @return void
      */
     public function FinanzVerwaltung()
     {
         echo "<h2>Finanzverwaltung</h2>";
 
-        # Selektion von Benutzern mit Konten:
+        // Selektion von Benutzern mit Konten:
         echo "<div class='newFahrt'>";
         $this->users_with_content();
         echo "</div>";
@@ -2344,7 +2440,9 @@ class Control extends Functions
     }
 
     /**
-     * Zeigt Nutzer an, welche Konten �ber das Finanzsystem angelegt haben.
+     * Zeigt Nutzer an, welche Konten ueber das Finanzsystem angelegt haben.
+     * 
+     * @return void
      */
     public function users_with_content()
     {
@@ -2360,6 +2458,11 @@ class Control extends Functions
         $this->show_accounts_for_user();
     }
 
+    /**
+     * Zeigt Accounts des Benutzers an.
+     * 
+     * @return void
+     */
     public function show_accounts_for_user()
     {
         if (isset($_GET['userid'])) {
@@ -2367,7 +2470,7 @@ class Control extends Functions
             $selectuserInfos = $this->getObjektInfo("SELECT * FROM benutzer WHERE id=$id");
 
             if (isset($selectuserInfos[0]->id)) {
-                # USER INFOS
+                // User Infos
                 echo "<h2>" . $selectuserInfos[0]->Name . " (" . $selectuserInfos[0]->id . ")</h2>";
 
                 $konten = $this->getObjektInfo("SELECT * FROM finanzen_konten WHERE besitzer=$id");
@@ -2388,6 +2491,8 @@ class Control extends Functions
 
     /**
      * Zeigt Informationen zum betroffenen Konto an.
+     * 
+     * @return void
      */
     public function show_konto_details()
     {
