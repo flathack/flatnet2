@@ -1,20 +1,14 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
     <head>
         <meta charset="utf-8" />
         <title>Chart.js demo</title>
         <script src='Chart.min.js'></script>
     </head>
     <body>
-    
     <canvas id="buyers" width="900" height="200"></canvas>
-    
     <canvas id="countries" width="600" height="400"></canvas>
-    
     <canvas id="income" width="600" height="400"></canvas>
-    
-    
-    
     <script>
     var buyerData = {
     		labels : ["January","February","March","April","May","June"],
@@ -79,6 +73,5 @@
 	    var income = document.getElementById("income").getContext("2d");
 	    new Chart(income).Bar(barData);
 	</script>
-    
     </body>
 </html>

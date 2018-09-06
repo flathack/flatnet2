@@ -47,13 +47,22 @@ class Sql
     {
         try {
             $dbname = $this->getDBName();
-            $db = new PDO("mysql:host=localhost;dbname=$dbname", "62_flathacksql1", "12141214", array(PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES utf8"));
+            $db = new PDO(
+                "mysql:host=localhost;dbname=$dbname", "62_flathacksql1", "12141214", array(PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES utf8")
+            );
         } catch (Exception $e) {
             $css = '<link href="/flatnet2/css/error.css" type="text/css" rel="stylesheet" />';
             $errorText = "<p class='info'>Datenbank Error</p>";
             $bild = "<img src='/flatnet2/images/fehler/grund.PNG' name='' alt='DatenbankError'>";
             $errorBeschreibung = "<p>Quggan traurig, Quaggan kann die Datenbank nicht finden, nur Errors.</p>";
-            die("<body><div><div class='wrapper'>" . $css. $errorText . $bild . $errorBeschreibung . "</div></div></body></html>");
+            die(
+                "<body><div><div class='wrapper'>" 
+                . $css 
+                . $errorText 
+                . $bild 
+                . $errorBeschreibung 
+                . "</div></div></body></html>"
+            );
         }
         return $db;
     }
