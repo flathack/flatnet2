@@ -106,90 +106,88 @@ class Datenbanken extends Functions
         if ($this->userHasRight(14, 0) == false) {
             exit();
         }
-        // Ausgabe initialisieren:
-        $ausgabe = "";
-
         // Var zuweisen:
         $bearbeiten = isset($_GET['bearbeiten']) ? $_GET['bearbeiten'] : '';
 
         // Erst los legen, wenn in Adresszeile Bearbeiten steht.
         if (isset($_GET["bearbeiten"])) {
             $userid = $_GET['bearbeiten'];
-            $ausgabe .= "<div class='newFahrt'>";
-            $ausgabe .= "<h2>Eintrag anzeigen und bearbeiten</h2>";
-            $ausgabe .= "<form action='?' METHOD=GET>";
-            $bearbeiten = $_GET["bearbeiten"];
+            echo "<div class='newFahrt'>";
+            echo "<h2>Eintrag anzeigen und bearbeiten</h2>";
 
-            // Informationen heranholen
-            $modsql = "SELECT * FROM adressbuch WHERE id=$bearbeiten";
-            $rowbearb = $this->getObjektInfo($modsql);
+            // FORM
+            echo "<form action='?' METHOD=GET>";
+                $bearbeiten = $_GET["bearbeiten"];
 
-            for ($i = 0; $i < sizeof($rowbearb); $i++) {
+                // Informationen heranholen
+                $modsql = "SELECT * FROM adressbuch WHERE id=$bearbeiten";
+                $rowbearb = $this->getObjektInfo($modsql);
+
                 $_GET['userid'] = $userid;
-                $ausgabe .= "<input type='hidden' name='id' value='" . $rowbearb[0]->id . "' readonly>";
+                echo "<input type='hidden' name='id' value='" . $rowbearb[0]->id . "' readonly>";
 
-                $ausgabe .= "<div class='rightBody'>";
-                $ausgabe .= "<h4>Fax: </h4>";
-                $ausgabe .= "<input placeholder='Fax' type='text'   name='fax' value='" . $rowbearb[0]->fax . "'>";
+                echo "<div class='rightBody'>";
+                    // Fax
+                    echo "<h4>Fax: </h4>";
+                    echo "<input placeholder='Fax' type='text'   name='fax' value='" . $rowbearb[0]->fax . "'>";
 
-                $ausgabe .= "<h4>Gruppenzugehφrigkeit: </h4>";
-                $ausgabe .= "<input placeholder='Gruppe' type='text'   name='gruppe' value='" . $rowbearb[0]->gruppe . "' />";
+                    // Gruppenzugehörigkeit
+                    echo "<h4>Gruppenzugeh&ouml;rigkeit: </h4>";
+                    echo "<input placeholder='Gruppe' type='text'   name='gruppe' value='" . $rowbearb[0]->gruppe . "' />";
+                    // E-Mail
+                    echo "<h4>E-Mail: </h4>";
+                    echo "<input placeholder='E-Mail' type='text'   name='email' value='" . $rowbearb[0]->email . "'>";
 
-                $ausgabe .= "<h4>E-Mail: </h4>";
-                $ausgabe .= "<input placeholder='E-Mail' type='text'   name='email' value='" . $rowbearb[0]->email . "'>";
+                    // Geburtstag
+                    echo "<h4>Geburtstag: </h4>";
+                    echo "<input placeholder='Geburtstag' type='date'  maxlength='10' name='geburtstag' value='" . $rowbearb[0]->geburtstag . "' />";
 
-                $ausgabe .= "<h4>Geburtstag: </h4>";
-                $ausgabe .= "<input placeholder='Geburtstag' type='date'  maxlength='10' name='geburtstag' value='" . $rowbearb[0]->geburtstag . "' />";
+                    // Social-Media
+                    echo "<h4>Social Media: </h4>";
+                    echo "<input placeholder='Skype' type='text'   name='skype' value='" . $rowbearb[0]->skype . "' />";
+                    echo "<input placeholder='Facebook' type='text'   name='facebook' value='" . $rowbearb[0]->facebook . "' />";
+                echo "</div>";
 
-                $ausgabe .= "<h4>Social Media: </h4>";
-                $ausgabe .= "<input placeholder='Skype' type='text'   name='skype' value='" . $rowbearb[0]->skype . "' />";
-                $ausgabe .= "<input placeholder='Facebook' type='text'   name='facebook' value='" . $rowbearb[0]->facebook . "' />";
+                echo "<div class='innerBody'>";
+                    echo "<h3>" . $rowbearb[0]->vorname . " " . $rowbearb[0]->nachname . "</h3>";
 
-                $ausgabe .= "</div>";
+                    echo "<input type='text'   name='vorname' value='" . $rowbearb[0]->vorname . "'  placeholder='Vorname' />";
+                    echo "<input type='text'   name='nachname' value='" . $rowbearb[0]->nachname . "'  placeholder='Nachname' />";
 
-                $ausgabe .= "<div class='innerBody'>";
-                $ausgabe .= "<h3>" . $rowbearb[0]->vorname . " " . $rowbearb[0]->nachname . "</h3>";
+                    echo "<h4>Adresse: </h4>";
 
-                $ausgabe .= "<input type='text'   name='vorname' value='" . $rowbearb[0]->vorname . "'  placeholder='Vorname' />";
-                $ausgabe .= "<input type='text'   name='nachname' value='" . $rowbearb[0]->nachname . "'  placeholder='Nachname' />";
+                    echo "<input type='text'   name='strasse' value='" . $rowbearb[0]->strasse . "'  placeholder='Straίe' />";
+                    echo "<input  type='text'   name='hausnummer' value='" . $rowbearb[0]->hausnummer . "' placeholder='Nr.' />";
+                    echo "<br>";
+                    echo "<input placeholder='PLZ' type='text'   name='postleitzahl' value='" . $rowbearb[0]->postleitzahl . "' />";
+                    echo "<input placeholder='Stadt' type='text'   name='stadt' value='" . $rowbearb[0]->stadt . "' />";
+                    echo "<br>";
+                    echo "<input placeholder='Bundesland' type='text'   name='bundesland' value='" . $rowbearb[0]->bundesland . "' />";
+                    echo "<input placeholder='Land' type='text'   name='land' value='" . $rowbearb[0]->land . "' />";
 
-                $ausgabe .= "<h4>Adresse: </h4>";
+                    echo "<h4>Kontaktdaten: </h4>";
 
-                $ausgabe .= "<input type='text'   name='strasse' value='" . $rowbearb[0]->strasse . "'  placeholder='Straίe' />";
-                $ausgabe .= "<input  type='text'   name='hausnummer' value='" . $rowbearb[0]->hausnummer . "' placeholder='Nr.' />";
-                $ausgabe .= "<br>";
-                $ausgabe .= "<input placeholder='PLZ' type='text'   name='postleitzahl' value='" . $rowbearb[0]->postleitzahl . "' />";
-                $ausgabe .= "<input placeholder='Stadt' type='text'   name='stadt' value='" . $rowbearb[0]->stadt . "' />";
-                $ausgabe .= "<br>";
-                $ausgabe .= "<input placeholder='Bundesland' type='text'   name='bundesland' value='" . $rowbearb[0]->bundesland . "' />";
-                $ausgabe .= "<input placeholder='Land' type='text'   name='land' value='" . $rowbearb[0]->land . "' />";
+                    echo "<input type='text'  size='10'  name='telefon1art' value='" . $rowbearb[0]->telefon1art . "' placeholder='Handy'>";
+                    echo "<input placeholder='Telefon 1' type='text'   name='telefon1' value='" . $rowbearb[0]->telefon1 . "' />";
+                    echo "<br>";
+                    echo "<input type='text'  size='10'  name='telefon2art' value='" . $rowbearb[0]->telefon2art . "' placeholder='Home' />";
+                    echo "<input placeholder='Telefon 2' type='text'   name='telefon2' value='" . $rowbearb[0]->telefon2 . "' />";
+                    echo "<br>";
+                    echo "<input type='text'  size='10'  name='telefon3art' value='" . $rowbearb[0]->telefon3art . "' placeholder='Arbeit' />";
+                    echo "<input placeholder='Telefon 3' type='text'   name='telefon3' value='" . $rowbearb[0]->telefon3 . "' />";
+                    echo "<br>";
+                    echo "<input  type='text' size='10'  name='telefon4art' value='" . $rowbearb[0]->telefon4art . "' placeholder='Privat' />";
+                    echo "<input placeholder='Telefon 4' type='text'   name='telefon4' value='" . $rowbearb[0]->telefon4 . "' />";
+                    echo "</div>";
 
-                $ausgabe .= "<h4>Kontaktdaten: </h4>";
+                    echo "<h4>Notizen: </h4>";
+                    echo "<textarea name='notizen' class='ckeditor' cols='52' rows='5' wrap='physical'>" . $rowbearb[0]->notizen . "</textarea>";
+                    echo "<input type='submit' name='update' value='Speichern' class='buttonlink' />";
+                    echo "<a href='?loeschen=ja&loeschid=" . $rowbearb[0]->id . "' class='buttonlink'>&#10008; l&ouml;schen</a>";
+                echo "</div>";
 
-                $ausgabe .= "<input type='text'  size='10'  name='telefon1art' value='" . $rowbearb[0]->telefon1art . "' placeholder='Handy'>";
-                $ausgabe .= "<input placeholder='Telefon 1' type='text'   name='telefon1' value='" . $rowbearb[0]->telefon1 . "' />";
-                $ausgabe .= "<br>";
-                $ausgabe .= "<input type='text'  size='10'  name='telefon2art' value='" . $rowbearb[0]->telefon2art . "' placeholder='Home' />";
-                $ausgabe .= "<input placeholder='Telefon 2' type='text'   name='telefon2' value='" . $rowbearb[0]->telefon2 . "' />";
-                $ausgabe .= "<br>";
-                $ausgabe .= "<input type='text'  size='10'  name='telefon3art' value='" . $rowbearb[0]->telefon3art . "' placeholder='Arbeit' />";
-                $ausgabe .= "<input placeholder='Telefon 3' type='text'   name='telefon3' value='" . $rowbearb[0]->telefon3 . "' />";
-                $ausgabe .= "<br>";
-                $ausgabe .= "<input  type='text' size='10'  name='telefon4art' value='" . $rowbearb[0]->telefon4art . "' placeholder='Privat' />";
-                $ausgabe .= "<input placeholder='Telefon 4' type='text'   name='telefon4' value='" . $rowbearb[0]->telefon4 . "' />";
-                $ausgabe .= "</div>";
-
-                $ausgabe .= "<h4>Notizen: </h4>";
-                $ausgabe .= "<textarea name='notizen' class='ckeditor' cols='52' rows='5' wrap='physical'>" . $rowbearb[0]->notizen . "</textarea>";
-                $ausgabe .= "<input type='submit' name='update' value='Speichern' />";
-                $ausgabe .= "<a href='?loeschen=ja&loeschid=" . $rowbearb[0]->id . "' class='buttonlink'>&#10008; lφschen</a>";
-
-            }
-            $ausgabe .= "</form>";
-            $ausgabe .= "</div>";
+            echo "</form>";
         }
-
-        return $ausgabe;
     }
 
     /**
@@ -311,91 +309,110 @@ class Datenbanken extends Functions
             $notizen = isset($_GET['notizen']) ? $_GET['notizen'] : '';
 
             if (isset($_GET["eintragenja"])) {
-                $ausgabe .= "
-                <form method=post>
-                <div id='draggable' class='newChar'>
-                <a href='?' class='highlightedLink'>Schlieίen</a></h2>
-                <h2>Eingabebereich</h2>
+                echo "";
+                echo "<form method=post>";
+                
+                    echo "<div id='draggable' class='newChar'>";
+                        echo "<a href='?' class='highlightedLink'>Exit</a></h2>";
+                        echo "<h2>Eingabebereich</h2>";
 
-                <table class='AdressTable'>
+                        echo "<table class='AdressTable'>";
 
-                <tr>
-                <td><input type='text'   name='vorname' value='$vorname' placeholder='Vorname*' required autofocus></td>
-                <td><input type='text'  name='nachname' value='$nachname' placeholder='Nachname*' required></td>
-                </tr>
+                            // Vorname
+                            echo "<tr>";
+                                echo "<td><input type='text'   name='vorname' value='$vorname' placeholder='Vorname*' required autofocus></td>";
+                                // Nachname
+                                echo "<td><input type='text'  name='nachname' value='$nachname' placeholder='Nachname*' required></td>";
+                            echo "</tr>";
 
-                <tr>
-                <td><input type='text'   name='strasse' value='$strasse' placeholder='Straίe' >
-                <input type='text'   name='hausnummer' value='$hausnummer' placeholder='Nr.' ></td>
-                <td><input type='text'  name='geburtstag' value='$geburtstag'  placeholder='Geburtstag'></td>
-                </tr>
+                            // Straße
+                            echo "<tr>";
+                                echo "<td><input type='text'   name='strasse' value='$strasse' placeholder='Straße' >";
+                                // Hausnummer
+                                echo "<input type='text'   name='hausnummer' value='$hausnummer' placeholder='Nr.' ></td>";
+                                // Geburtstag
+                                echo "<td><input type='text'  name='geburtstag' value='$geburtstag'  placeholder='Geburtstag'></td>";
+                            echo "</tr>";
 
-                <tr>
-                <td><input type='text' name='postleitzahl' value='$postleitzahl' placeholder='PLZ'></td>
-                <td><input type='text' name='bundesland' value='$bundesland' placeholder='Bundesland'></td>
-                </tr>
+                            // PLZ
+                            echo "<tr>";
+                                echo "<td><input type='text' name='postleitzahl' value='$postleitzahl' placeholder='PLZ'></td>";
+                                echo "<td><input type='text' name='bundesland' value='$bundesland' placeholder='Bundesland'></td>";
+                            echo "</tr>";
 
-                <tr>
-                <td><input type='text'  name='stadt' value='$stadt' placeholder='Stadt'></td>
-                <td><input type='text'  name='land' value='$land' placeholder='Land'></td>
-                </tr>
+                            // Stadt
+                            echo "<tr>";
+                                echo "<td><input type='text'  name='stadt' value='$stadt' placeholder='Stadt'></td>";
+                                // Land
+                                echo "<td><input type='text'  name='land' value='$land' placeholder='Land'></td>";
+                            echo "</tr>";
 
-                <tr>
-                <td><input type='text'   name='telefon1' value='$telefon1' placeholder='Telefon1' >
-                <input type='text' size='10'  name='telefon1art' value='$telefon1art' placeholder='Handy' ></td>
-                <td><input type='text'   name='fax' value='$fax' placeholder='Fax'></td>
-                </tr>
+                            // Telefon1
+                            echo "<tr>";
+                                echo "<td><input type='text'   name='telefon1' value='$telefon1' placeholder='Telefon1' >";
+                                echo "<input type='text' size='10'  name='telefon1art' value='$telefon1art' placeholder='Handy' ></td>";
+                                // Fax
+                                echo "<td><input type='text'   name='fax' value='$fax' placeholder='Fax'></td>";
+                            echo "</tr>";
 
-                <tr>
-                <td><input type='text'   name='telefon2' value='$telefon2' placeholder='Telefon2' >
-                <input type='text' size='10'  name='telefon2art' value='$telefon2art' placeholder='Home' ></td>
-                <td><input type='text'   name='gruppe' value='$gruppe' placeholder='Gruppe'></td>
-                </tr>
+                            // Telefon 2
+                            echo "<tr>";
+                                echo "<td><input type='text'   name='telefon2' value='$telefon2' placeholder='Telefon2' >";
+                                echo "<input type='text' size='10'  name='telefon2art' value='$telefon2art' placeholder='Home' ></td>";
+                                // Gruppe
+                                echo "<td><input type='text'   name='gruppe' value='$gruppe' placeholder='Gruppe'></td>";
+                            echo "</tr>";
 
-                <tr>
-                <td><input type='text'   name='telefon3' value='$telefon3' placeholder='Telefon 3' >
-                <input type='text' name='telefon3art' value='$telefon3art' placeholder='Arbeit' ></td>
-                <td><input type='text'   name='email' value='$email' placeholder='E-Mail'></td>
-                </tr>
+                            // Telefon 3
+                            echo "<tr>";
+                                echo "<td><input type='text'   name='telefon3' value='$telefon3' placeholder='Telefon 3' >";
+                                echo "<input type='text' name='telefon3art' value='$telefon3art' placeholder='Arbeit' ></td>";
+                                // E-Mail
+                                echo "<td><input type='text'   name='email' value='$email' placeholder='E-Mail'></td>";
+                            echo "</tr>";
 
-                <tr>
-                <td><input type='text'   name='telefon4' value='$telefon4' placeholder='Telefon 4' >
-                <input type='text' name='telefon4art' value='$telefon4art' placeholder='Privat' ></td>
-                </tr>
+                            // Telefon 4
+                            echo "<tr>";
+                                echo "<td><input type='text'   name='telefon4' value='$telefon4' placeholder='Telefon 4' >";
+                                echo "<input type='text' name='telefon4art' value='$telefon4art' placeholder='Privat' ></td>";
+                            echo "</tr>";
 
-                <tr>
-                <td><input type='text'   name='skype' value='$skype'  placeholder='Skypename'></td>
-                <td><input type='text'   name='facebook' value='$facebook' placeholder='facebook'>
-                </tr>
+                            // Skypename
+                            echo "<tr>";
+                                echo "<td><input type='text'   name='skype' value='$skype'  placeholder='Skypename'></td>";
+                                // Facebook
+                                echo "<td><input type='text'   name='facebook' value='$facebook' placeholder='facebook'>";
+                            echo "</tr>";
 
-                <tr>
-                <td colspan='4'>
-                <textarea name='notizen' class='ckeditor'>$notizen</textarea>
-                </td>
-                </tr>
-                </table>
-                <input type='hidden' name='eintragenja' value='' />
-                <input type='submit' name='eintragen' value='Speichern'>
-                <a href='?' class='highlightedLink'>Schlieίen</a></h2>
-                </div>
-                </form>";
+                            // Notizen
+                            echo "<tr>";
+                            echo "<td colspan='4'>";
+                                echo "<textarea name='notizen' class='ckeditor'>$notizen</textarea>";
+                            echo "</td>";
+                            echo "</tr>";
+
+                        echo "</table>";
+                        
+                        // Buttons
+                        echo "<input type='hidden' name='eintragenja' value='' />";
+                        echo "<input type='submit' name='eintragen' value='Speichern'>";
+                        echo "<a href='?' class='highlightedLink'>Exit</a></h2>";
+                    echo "</div>";
+                
+                echo "</form>";
             }
-
-            return $ausgabe;
         }
     }
 
     /**
-     * Ermoeglicht das eintragen von Datensδtzen zum Adressbuch in die Datenbank, die
-     * noetigen GET Vars liefert UserErstellenEingabe();
+     * Ermöglicht das eintragen von Datensätzen zum Adressbuch in die Datenbank, 
+     * die nötigen GET Vars liefert UserErstellenEingabe();
      * 
      * @return void
      */
     public function UserErstellenFunction()
     {
         if ($this->userHasRight(59, 0) == true) {
-
-            $ausgabe = "";
 
             if (isset($_POST['eintragen'])) {
                 if ($_POST['eintragen'] != "") {
@@ -423,25 +440,26 @@ class Datenbanken extends Functions
                     $geburtstag = $_POST["geburtstag"];
                     $notizen = $_POST["notizen"];
                     if ($nachname == "" or $vorname == "") {
-                        $ausgabe .= "<p class='meldung'>Eingabefehler. Es muss mindestens ein Vorname und ein Nachname eingegeben werden. <a href='?eintragenja=1' class='buttonlink'>Zurόck</a></p>";
+                        echo "<p class='meldung'>Eingabefehler. Es muss mindestens ein Vorname 
+                        und ein Nachname eingegeben werden. <a href='?eintragenja=1' class='buttonlink'>Zurόck</a></p>";
                     } else {
-                        $eintrag = "INSERT INTO adressbuch (geburtstag, vorname, nachname, strasse, hausnummer, postleitzahl,
-                        stadt, bundesland, land, telefon1, telefon2, telefon3, telefon4, telefon1art, telefon2art,
-                        telefon3art, telefon4art, email, skype, facebook, fax, gruppe, notizen) VALUES ('$geburtstag',
-                        '$vorname','$nachname','$strasse','$hausnummer','$postleitzahl','$stadt','$bundesland','$land'
-                        ,'$telefon1','$telefon2','$telefon3','$telefon4','$telefon1art','$telefon2art','$telefon3art',
-                        '$telefon4art','$email','$skype','$facebook','$fax','$gruppe','$notizen')";
+                        $eintrag = "
+                            INSERT INTO adressbuch (geburtstag, vorname, nachname, strasse, hausnummer, postleitzahl,
+                            stadt, bundesland, land, telefon1, telefon2, telefon3, telefon4, telefon1art, telefon2art,
+                            telefon3art, telefon4art, email, skype, facebook, fax, gruppe, notizen) VALUES ('$geburtstag',
+                            '$vorname','$nachname','$strasse','$hausnummer','$postleitzahl','$stadt','$bundesland','$land'
+                            ,'$telefon1','$telefon2','$telefon3','$telefon4','$telefon1art','$telefon2art','$telefon3art',
+                            '$telefon4art','$email','$skype','$facebook','$fax','$gruppe','$notizen'
+                        )";
 
                         if ($this->sql_insert_update_delete($eintrag) == true) {
-                            $ausgabe .= "<p class='erfolg'>Adressbucheintrag wurde erfolgreich hinzugefόgt! <a href='?eintragenja=1'>Zurόck</a></p>";
+                            echo "<p class='erfolg'>Adressbucheintrag wurde erfolgreich hinzugef&uuml;gt! <a href='?eintragenja=1' class='buttonlink'>Zurück</a></p>";
                         } else {
-                            $ausgabe .= "<p class='meldung'>Fehler beim speichern der Daten, das tut uns leid.<a href='?eintragenja=1'>Zurόck</a></p>";
+                            echo "<p class='meldung'>Fehler beim speichern der Daten<a href='?eintragenja=1' class='buttonlink'>Zurück</a></p>";
                         }
                     }
                 }
             }
-
-            return $ausgabe;
         }
     }
 
@@ -458,24 +476,29 @@ class Datenbanken extends Functions
             $ausgabe = "";
             $query = "SELECT * FROM adressbuch ORDER BY nachname";
             $row = $this->getObjektInfo($query);
-            $ausgabe .= "<table class='kontoTable'>";
-            $ausgabe .= "<thead><td>Name</td><td>Telefonnummer</td><td>E-Mail</td><td>Gruppe</td><td>Geburtstag</td></thead>";
+            echo "<table class='kontoTable'>";
+            echo "<thead>";
+                echo "<td>Name</td>"; 
+                echo "<td>Telefonnummer</td>"; 
+                echo "<td>E-Mail</td>"; 
+                echo "<td>Gruppe</td>"; 
+                echo "<td>Geburtstag</td>";
+            echo "</thead>";
             for ($i = 0; $i < sizeof($row); $i++) {
 
-                $ausgabe .= "<tbody>";
-                $ausgabe .= "<td><a href='eintrag.php?bearbeiten=" . $row[$i]->id . "'>" . $row[$i]->vorname . " " . $row[$i]->nachname . "</a></td>";
-                $ausgabe .= "<td>" . $row[$i]->telefon1art . " - " . $row[$i]->telefon1 . "</td>";
-                $ausgabe .= "<td><a href='mailto:" . $row[$i]->email . "'>" . $row[$i]->email . "</a></td>";
-                $ausgabe .= "<td>" . $row[$i]->gruppe . "</td>";
+                echo "<tbody>";
+                echo "<td><a href='eintrag.php?bearbeiten=" . $row[$i]->id . "'>" . $row[$i]->vorname . " " . $row[$i]->nachname . "</a></td>";
+                echo "<td>" . $row[$i]->telefon1art . " - " . $row[$i]->telefon1 . "</td>";
+                echo "<td><a href='mailto:" . $row[$i]->email . "'>" . $row[$i]->email . "</a></td>";
+                echo "<td>" . $row[$i]->gruppe . "</td>";
                 if ($row[$i]->geburtstag == "0000-00-00") {
-                    $ausgabe .= "<td></td>";
+                    echo "<td></td>";
                 } else {
-                    $ausgabe .= "<td>" . $row[$i]->geburtstag . "</td>";
+                    echo "<td>" . $row[$i]->geburtstag . "</td>";
                 }
-                $ausgabe .= "</tbody>";
+                echo "</tbody>";
             }
-            $ausgabe .= "</table>";
-            return $ausgabe;
+            echo "</table>";
         }
     }
 
