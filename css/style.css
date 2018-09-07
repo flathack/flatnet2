@@ -244,30 +244,23 @@ blockquote {
     transition: all 0.4s ease-in-out;
 }
 /* NavigationsHightlights */
-
 #uebersicht #uebersicht,
 #guildwars #guildwars,
 #forum #forum,
-#fahrten #fahrten,
-#toyota #toyota,
-#amazon #amazon,
-#gesundheit #gesundheit,
-#starcitizen #starcitizen,
 #profil #profil,
 #adressbuch #adressbuch,
 #gebkalender #gebkalender,
 #informationen #dokumentation,
 #kontakt #kontakt,
 #administration #administration,
-#learn #learn,
 #kontakt2 #kontakt,
 #doku #doku,
 #quellen #quellen,
 #finanzen #finanzen,
 #impressum #impressum {
-    border-bottom: 2px solid red;
-    background-color: #b30004;
-    box-shadow: 0px 0px 10px red;
+    border-bottom: 2px solid rgb(253, 0, 0);
+    background-color: #9e0003;
+    box-shadow: 0px 0px 10px rgb(255, 0, 0);
     color: white;
     -webkit-transition: all 0.4s ease-in-out;
     -moz-transition: all 0.4s ease-in-out;
@@ -328,35 +321,39 @@ blockquote {
     margin-left: 10px;
 }
 .bereichadressbuch h2,
-.bereichgesundheit h2,
 .bereichgebkalender h2,
 .bereichguildwars h2,
 .bereichforum h2,
 .bereichfinanzen h2,
-.bereichfahrten h2,
-.bereichtoyota h2,
-.bereichamazon h2,
-.bereichlernen h2,
 .bereichadministration h2,
 .bereichprofil h2,
 .bereichINACTIVE h2 {
     color: #414141;
     font-size: 1.1em;
 }
+
+.bereichadressbuch h2:hover,
+.bereichgebkalender h2:hover,
+.bereichguildwars h2:hover,
+.bereichforum h2:hover,
+.bereichfinanzen h2:hover,
+.bereichadministration h2:hover,
+.bereichprofil h2:hover,
+.bereichINACTIVE h2:hover {
+    background-color: rgba(246, 248, 105, 0.301);
+    border-radius: 10px;
+    color: rgba(94, 0, 0, 0.664);
+    text-decoration: none;
+}
 .bereichadressbuch p,
-.bereichgesundheit p,
 .bereichgebkalender p,
 .bereichguildwars p,
 .bereichforum p,
 .bereichfinanzen p,
-.bereichfahrten p,
-.bereichtoyota p,
-.bereichamazon p,
-.bereichlernen p,
 .bereichadministration p,
 .bereichprofil p,
 .bereichINACTIVE p {
-    color: black;
+    color: rgb(29, 29, 29);
     font-size: 1em;
 }
 .bereichINACTIVE {
@@ -367,24 +364,26 @@ blockquote {
     margin-right: 10px;
     padding: 5px;
     min-height: 120px;
+    border-radius: 10px;
     width: 46%;
     display: inline-block;
     opacity: 0.6;
 }
 .bereichGesperrt {
-    background-color: #ffe8e8;
+    background-color: #ffe4e4;
     border: 1px solid #4a0000;
     box-shadow: 0px 0px 5px #ffcccc;
     margin-bottom: 10px;
     margin-right: 10px;
     padding: 5px;
     min-height: 120px;
+    border-radius: 10px;
     width: 46%;
     display: inline-block;
     opacity: 0.6;
 }
 .bereichadressbuch {
-    background-color: white;
+    background-color: rgb(255, 255, 255);
     background-image: url(../images/tiles/adressbuch.png);
     background-repeat: no-repeat;
     background-position: right;
@@ -392,6 +391,7 @@ blockquote {
     border: 1px solid grey;
     margin-bottom: 10px;
     margin-right: 10px;
+    border-radius: 10px;
     padding: 5px;
     min-height: 120px;
     width: 46%;
@@ -405,28 +405,7 @@ blockquote {
     margin-right: 10px;
     padding: 5px;
     min-height: 120px;
-    width: 46%;
-    display: inline-block;
-}
-.bereichtoyota {
-    background-color: white;
-    box-shadow: 0px 0px 5px grey;
-    border: 1px solid grey;
-    margin-bottom: 10px;
-    margin-right: 10px;
-    padding: 5px;
-    min-height: 120px;
-    width: 46%;
-    display: inline-block;
-}
-.bereichgesundheit {
-    background-color: white;
-    box-shadow: 0px 0px 5px grey;
-    border: 1px solid grey;
-    margin-bottom: 10px;
-    margin-right: 10px;
-    padding: 5px;
-    min-height: 120px;
+    border-radius: 10px;
     width: 46%;
     display: inline-block;
 }
@@ -442,9 +421,39 @@ blockquote {
     padding: 5px;
     min-height: 120px;
     width: 46%;
+    border-radius: 10px;
     display: inline-block;
 }
-
+.bereichfinanzen {
+    background-color: #f7f7f7;
+    background-image: url(../images/tiles/schwein.png);
+    background-position: right;
+    background-repeat: no-repeat;
+    border: 1px solid #8080ff;
+    box-shadow: 0px 0px 5px #8080ff;
+    margin-bottom: 10px;
+    margin-right: 10px;
+    padding: 5px;
+    border-radius: 10px;
+    min-height: 120px;
+    width: 46%;
+    display: inline-block;
+}
+.bereichforum {
+    background-color: #f0f0ff;
+    background-image: url(../images/tiles/forum.png);
+    background-repeat: no-repeat;
+    background-position: top;
+    border: 1px solid grey;
+    box-shadow: 0px 0px 5px grey;
+    margin-bottom: 10px;
+    margin-right: 10px;
+    padding: 5px;
+    border-radius: 10px;
+    min-height: 120px;
+    width: 46%;
+    display: inline-block;
+}
 .adminKachel {
     background-color: white;
     border: 1px solid grey;
@@ -473,34 +482,7 @@ blockquote {
 .adminKachel #gesperrt li:hover {
     background-color: #e8e8e8;
 }
-.bereichfinanzen {
-    background-color: #f7f7f7;
-    background-image: url(../images/tiles/schwein.png);
-    background-position: right;
-    background-repeat: no-repeat;
-    border: 1px solid #8080ff;
-    box-shadow: 0px 0px 5px #8080ff;
-    margin-bottom: 10px;
-    margin-right: 10px;
-    padding: 5px;
-    min-height: 120px;
-    width: 46%;
-    display: inline-block;
-}
-.bereichforum {
-    background-color: #f0f0ff;
-    background-image: url(../images/tiles/forum.png);
-    background-repeat: no-repeat;
-    background-position: top;
-    border: 1px solid grey;
-    box-shadow: 0px 0px 5px grey;
-    margin-bottom: 10px;
-    margin-right: 10px;
-    padding: 5px;
-    min-height: 120px;
-    width: 46%;
-    display: inline-block;
-}
+
 .hilfe {
     width: 200px;
     margin-right: -12px;
