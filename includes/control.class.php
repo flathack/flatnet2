@@ -560,7 +560,7 @@ class Control extends Functions
                 if ($spalte != "xxx") {
                     // Table anzeigen:
 
-                    echo "<p class='dezentInfo'>Suche nach Spalte: " . $spalte . "</p>";
+                    echo "<p class='dezentInfo'>Spalte: <strong>" . $spalte . "</strong> / Tabelle : <strong>" .$table. "</strong></p>";
 
                     // Spalten bekommen
                     $columns = $this->getColumns($table);
@@ -583,7 +583,7 @@ class Control extends Functions
                     echo "<thead>";
                     echo "<td></td>";
                     for ($k = 0; $k < sizeof($columns); $k++) {
-                        echo "<td>$columns[$k]</td>";
+                        echo "<td>".$columns[$k]->Field."</td>";
                     }
                     echo "</thead>";
                     for ($j = 0; $j < sizeof($currentTableInfo); $j++) {
@@ -597,7 +597,8 @@ class Control extends Functions
                         // Gibt die Information der aktuellen Zelle aus:
                         for ($k = 0; $k < sizeof($columns); $k++) {
                             echo "<td>";
-                            echo substr(strip_tags($currentTableInfo[$j]->$columns[$k]), 0, 20);
+                            $field = $columns[$k]->Field;
+                            echo substr(strip_tags($currentTableInfo[$j]->$field), 0, 20);
                             echo "</td>";
                         }
 
