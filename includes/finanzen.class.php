@@ -884,6 +884,8 @@ class FinanzenNEW extends functions
     /**
      * Zeigt die Navigation der Monate an
      * 
+     * @history 2018-09-07: // non numeric value "notice" behoben.
+     * 
      * @return void
      */
     public function showMonateLinks()
@@ -897,15 +899,29 @@ class FinanzenNEW extends functions
             $monatzurueck = 12;
             $jahrzurueck = $jahr - 1;
         } else {
-            $jahrzurueck = $jahr;
-            $monatzurueck = $monat - 1;
+            // "encountered a non numeric value" Fehler behoben, 
+            // wenn kein Monat ausgewaehlt ist
+            if (is_numeric($monat)) {
+                $jahrzurueck = $jahr;
+                $monatzurueck = $monat - 1;
+            } else {
+                $jahrzurueck = 2017;
+                $monatzurueck = 1;
+            }
         }
         if ($monat == 12) {
             $monatvor = 1;
             $jahrvor = $jahr + 1;
         } else {
-            $monatvor = $monat + 1;
-            $jahrvor = $jahr;
+            // "encountered a non numeric value" Fehler behoben, 
+            // wenn kein Monat ausgewaehlt ist
+            if (is_numeric($monat)) {
+                $monatvor = $monat + 1;
+                $jahrvor = $jahr;
+            } else {
+                $monatvor = 1;
+                $jahrvor = 2019;
+            }
         }
         echo "<li>";
         echo "<a href='?konto=$konto&monat=$monatzurueck&jahr=$jahrzurueck'> &laquo; </a>";
