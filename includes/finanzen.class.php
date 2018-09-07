@@ -137,8 +137,9 @@ class FinanzenNEW extends functions
             // Forderungen anzeigen (Art = 3)
             $getForderungskonten = $this->getObjektInfo($queryFK);
             $anzahlForderungsK = $this->getAmount($queryFK) + 0;
+            $sumofFord = 0;
             if ($anzahlForderungsK > 0) {
-                $sumofFord = 0;
+                
                 echo "<div class='publicInfo'>";
                 echo "<h3>Forderungen</h3>";
                 for ($i = 0; $i < sizeof($getForderungskonten); $i++) {
@@ -162,9 +163,9 @@ class FinanzenNEW extends functions
             // Verbindlichkeiten anzeigen (Art = 4)
             $getVerbindK = $this->getObjektInfo($queryVK);
             $anzahlVerbK = $this->getAmount($queryVK) + 0;
-
+            $sumofVerbind = 0;
             if ($anzahlVerbK > 0) {
-                $sumofVerbind = 0;
+                
 
                 echo "<div class='publicInfo'>";
                 echo "<h3>Verbindlichkeiten</h3>";
