@@ -2166,11 +2166,13 @@ class Control extends Functions
     public function rechteverwaltung()
     {
         if ($this->userHasRight(44, 0) == true) {
+            echo "<div class='newFahrt'>";
             echo "<h2>Neue Rechteverwaltung</h2>";
 
             if ($this->userHasRight(15, 0) == true) {
                 $this->newRight();
             }
+            echo "</div>";
 
             if ($this->userHasRight(46, 0) == true) {
                 $this->rechteverwaltung_setright();
@@ -2179,13 +2181,20 @@ class Control extends Functions
                 // #####################################################################################################################
                 $allusers = $this->getObjektInfo("SELECT * FROM benutzer");
                 //
+                echo "<div class='newFahrt'>";
+                echo "<h3>Benutzer</h3>";
+                    echo "<p>";
+                        echo "Einen Benutzer unterhalb auswählen, um die Rechte zu verwalten.";
+                    echo "</p>";
                 for ($i = 0; $i < sizeof($allusers); $i++) {
                     echo "<a class='buttonlink' href='?action=6&userid=" . $allusers[$i]->id . "'>" . $allusers[$i]->Name . "</a>";
                 } 
+                echo "</div>";
                 // #####################################################################################################################
 
                 // Wenn ein Benutzer angeklickt wurde:
                 if (isset($_GET['userid'])) {
+                    echo "<div class='newFahrt'>";
                     $id = $_GET['userid'];
                     $userInformation = $this->getObjektInfo("SELECT * FROM benutzer WHERE id = '$id'");
                     if (!isset($userInformation[0]->Name)) {
@@ -2236,11 +2245,10 @@ class Control extends Functions
                             echo "</tbody>";
                         }
                     }
-
+                    echo "</div>";
                     echo "</table>";
-
                 }
-            } // Recht 46 Ende
+            }
         } else {
             echo "<p class=''>Du darfst die Rechteverwaltung nicht anzeigen.</p>";
         }
@@ -2346,7 +2354,8 @@ class Control extends Functions
 
             // Alle Kategorien bekommen:
             $getallcategories = $this->getObjektInfo("SELECT * FROM rightkategorien");
-            echo "<p class='spacer'>Rechtekategorien</p>";
+            echo "<div class='newFahrt'>";
+            echo "<h3>Rechtekategorien</h3>";
             echo "<table class='flatnetTable'>";
             for ($i = 0; $i < sizeof($getallcategories); $i++) {
                 echo "<tbody>";
@@ -2356,6 +2365,7 @@ class Control extends Functions
                 echo "</tbody>";
             }
             echo "</table>";
+            echo "</div>";
 
         }
     }

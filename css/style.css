@@ -2254,11 +2254,12 @@ input[type=password]:focus {
 
 .hinweis {
     background-color: #fbfbd9;
-    border: 1px solid #d3cf81;
+    border: 1px solid transparent;
+    /* box-shadow: 0px 0px 10px yellow; */
     padding: 5px;
     display: inline-block;
     margin-top: 5px;
-    color: black !important;
+    color: rgb(48, 23, 2) !important;
 }
 .spacer {
     margin-top: 10px;
