@@ -1504,7 +1504,8 @@ class Control extends Functions
                     $query = "UPDATE $table SET ";
 
                     for ($i = 0; $i < $menge; $i++) {
-                        $query .= "$columns[$i]='$currentObject[$i]'";
+                        $field = $columns[$i]->Field;
+                        $query .= "$field='$currentObject[$i]'";
                         if ($i != $menge - 1) {
                             $query .= ", ";
                         } else {
@@ -1612,9 +1613,6 @@ class Control extends Functions
                 $select = "SELECT * FROM $table WHERE id = '$id'";
                 $row = $this->getObjektInfo($select);
 
-                // Kommentar der Spalte auslesen:
-                // $comments = $this->getColumnComments ( $table );
-
                 // Columns bekommen:
                 $columns = $this->getColumns($table);
                 $this->insertQuery($select);
@@ -1629,15 +1627,16 @@ class Control extends Functions
 
                 for ($i = 0; $i < sizeof($row); $i++) {
                     for ($j = 0; $j < $menge; $j++) {
-                        if (strlen($row[$i]->$columns[$j]) > 50) {
-                            echo "<tbody><td>" . $columns[$j] . "</td>
+                        $field = $columns[$j]->Field;
+                        if (strlen($row[$i]->$field) > 50) {
+                            echo "<tbody><td>" . $field . "</td>
                             <td><textarea rows=10 cols=100 name=currentObject[$j]";
-                            echo ">" . $row[$i]->$columns[$j] . "</textarea></td></tbody>";
+                            echo ">" . $row[$i]->$field . "</textarea></td></tbody>";
                         } else {
-                            echo "<tbody><td>" . $columns[$j] . "</td><td><input type=text class='' name=currentObject[$j] value='";
-                            echo $row[$i]->$columns[$j];
+                            echo "<tbody><td>" . $field . "</td><td><input type=text class='' name=currentObject[$j] value='";
+                            echo $row[$i]->$field;
 
-                            echo "' placeholder='$columns[$j]'/> </td></tbody>";
+                            echo "' placeholder='$field'/> </td></tbody>";
                         }
                     }
                 }
@@ -1929,7 +1928,8 @@ class Control extends Functions
                 if (isset($_POST['newQuery'])) {
                     $select = $_POST['sqlbox'];
                 } else {
-                    $select = "SELECT * FROM $table ORDER BY $columns[0] ASC LIMIT $proSeite OFFSET $count1";
+                    $field = $columns[0]->Field;
+                    $select = "SELECT * FROM $table ORDER BY $field ASC LIMIT $proSeite OFFSET $count1";
                 }
 
                 // #####################################################################################################
@@ -2013,7 +2013,7 @@ class Control extends Functions
                 echo "<thead>";
                 echo "<td>anzeigen</td>";
                 for ($j = 0; $j < $menge; $j++) {
-                    echo "<td>$columns[$j]</td>";
+                    echo "<td>" .$columns[$j]->Field . "</td>";
                 }
                 if ($changedColumns == true) {
                     echo "<td>verborgen</td>";
@@ -2021,17 +2021,24 @@ class Control extends Functions
 
                 echo "</thead> ";
 
-                // Gibt den Tabellen Inhalt zeilenweise aus.
+                // Gibt alle Zeilen aus:
                 for ($i = 0; $i < sizeof($row); $i++) {
                     echo "<tbody>";
-                    echo "<td><a href='?action=3$von&table=$table&id=" . $row[$i]->id . "#angezeigteID' class='buttonlink'>EDIT</a></td>";
-                    for ($j = 0; $j < $menge; $j++) {
+                    if (isset($row[$i]->id)) {
+                        echo "<td><a href='?action=3$von&table=$table&id=" . $row[$i]->id . "#angezeigteID' class='buttonlink'>EDIT</a></td>";
+                    } else {
+                        echo "<td><a href='#'>no id</a></td>";
+                    }
+                    // Gibt die Spalte pro Zeile aus:
+                    for ($x = 0; $x < $menge; $x++) {
                         echo "<td>";
-                        echo substr(strip_tags($row[$i]->$columns[$j]), 0, 30);
+                        $field = $columns[$x]->Field;
+                        $zeile = substr(strip_tags($row[$i]->$field), 0, 30);
+                        echo $zeile;
                         echo "</td>";
                     }
                     if ($changedColumns == true) {
-                        echo "<td><a href='?setWeitere=true&action=3$von&table=$table'>... weitere</a></td>";
+                        echo "<td><a href='?setWeitere=true&action=3$von&table=$table'>mehr</a></td>";
                     }
                     echo "</tbody>";
                 }

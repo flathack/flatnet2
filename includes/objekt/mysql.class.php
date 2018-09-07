@@ -371,11 +371,11 @@ class Sql
         // COLUMNS SPEICHERN;
         $select1 = "SHOW COLUMNS FROM $table";
         $row = $this->getObjektInfo($select1);
-        for ($i = 0 ; $i < sizeof($row); $i++) {
-            $columns [$i] = $row[$i]->Field;
-        }
+        //for ($i = 0 ; $i < sizeof($row); $i++) {
+        //    $columns[$i] = $row[$i]->Field;
+        //}
         
-        return $columns;
+        return $row;
     }
     
     /**
