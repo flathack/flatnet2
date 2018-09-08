@@ -765,13 +765,22 @@ class FinanzenNEW extends functions
             $zwischensumme = round($startSaldo, 4);
             echo "<form method=post>";
             echo "<table class='kontoTable'>";
-            echo "<thead>" . "<td>Mark</td>" . "<td>Buchungsnr</td>" . "<td>Gegenkonto</td>" . "<td>Umsatz</td>" . "<td>Wert</td>" . "<td>Tag</td>" . "<td>Saldo</td>" . "</thead>";
-            echo "<thead>" . "<td><input type=submit name=delete value=delete /></td>" . "<td colspan=6>" . "Startsaldo: $startSaldo" . "</td>" . "</thead>";
-            //EXPORT to CSV
-
-            echo "<thead>";
-            echo "<td colspan=5><a href='export.php?year=$jahr&konto=$konto'>EXPORT TO CSV</a></td>";
-            echo "</thead>";
+            echo "<thead>" 
+            . "<td>Mark</td>" 
+            . "<td>Buchungsnr</td>" 
+            . "<td>Gegenkonto</td>" 
+            . "<td>Umsatz</td>" 
+            . "<td>Wert</td>" 
+            . "<td>Tag</td>" 
+            . "<td>Saldo</td>" 
+            . "</thead>";
+            echo "<thead>" 
+            . "<td><input type=submit name=delete value=delete /></td>" 
+            . "<td>" 
+            . "Startsaldo: $startSaldo" 
+            . "</td>" 
+            . "<td colspan=5><a href='export.php?year=$jahr&konto=$konto'>EXPORT TO CSV</a></td>"
+            . "</thead>";
 
             if (!isset($umsaetze[0]->id)) {
                 echo "<tbody><td id='minus' colspan=6>F&uuml;r das Jahr $jahr sind keine Ums&auml;tze verf&uuml;gbar</td></tbody>";
@@ -785,7 +794,7 @@ class FinanzenNEW extends functions
                         echo "<thead><td></td><td colspan=5><a href='#" 
                         . $this->getMonthName($umsaetze[$i]->monat) 
                         . "'>" . $this->getMonthName($umsaetze[$i]->monat) 
-                        . "</a></td><td>$zwischensumme</td></thead>";
+                        . "</a></td><td>$zwischensumme &#8364;</td></thead>";
                     }
                 }
 
@@ -808,11 +817,10 @@ class FinanzenNEW extends functions
                 echo "<td>" . $nameGegenkonto[0]->konto . "</td>";
                 echo "<td>" . $umsaetze[$i]->umsatzName . "</td>";
                 echo "<td $zelle>" . $umsaetze[$i]->umsatzWert . "</td>";
-                // echo "<td>" . $umsaetze[$i]->monat . "</td>";
                 echo "<td>" . $umsaetze[$i]->tag . "</td>";
 
                 // Berechnung Zwischensumme:
-                $zwischensumme = round($zwischensumme + $umsaetze[$i]->umsatzWert, 4);
+                $zwischensumme = $zwischensumme + $umsaetze[$i]->umsatzWert;
 
                 echo "<td>" . $zwischensumme . "</td>";
                 echo "</tbody>";
