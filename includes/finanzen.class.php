@@ -19,6 +19,8 @@ require 'objekt/functions.class.php';
  * Stellt die Funktionen der Finanzen zur Verfuegung.
  *
  * PHP Version 7
+ * 
+ * @history 2018-09-08: Nummerformat angepasst
  *
  * @category   Classes
  * @package    Flatnet2
@@ -492,7 +494,7 @@ class FinanzenNEW extends functions
             }
 
             $abrechnung = "<a href='abrechnung.php?month=" . $currentMonth . "&konto=" . $kontoinformation[0]->id . "'>Abrechnung</a>";
-            echo "<td colspan=7>Monat:<strong> $currentMonth </strong>im Jahr <strong>$currentYear</strong> $saldotext $mailinfo $abrechnung </td>";
+            echo "<td colspan=8>Monat:<strong> $currentMonth </strong>im Jahr <strong>$currentYear</strong> $saldotext $mailinfo $abrechnung </td>";
             echo "</thead>";
 
             echo "<thead>";
@@ -567,10 +569,11 @@ class FinanzenNEW extends functions
 
                     //TAG
                     echo "<td>" . $umsaetze[$i]->tag . "</td>";
-                    $ausgabeZwischensumme = round($zwischensumme, 4);
 
                     //WERT
-                    echo "<td $zelle>" . $umsaetze[$i]->umsatzWert . "</td>";
+                    echo "<td $zelle>"; 
+                        echo number_format(round($umsaetze[$i]->umsatzWert, 4), 2, ",", ".");
+                    echo " &#8364;</td>";
 
                     //Kategorie
                     echo "<td>#cat</td>";
@@ -580,19 +583,35 @@ class FinanzenNEW extends functions
                         $spaltenFarbe = "";
                         echo "<td id='$spaltenFarbe'>" . "-" . "</td>";
                     } else {
-                        echo "<td id='$spaltenFarbe'>" . $ausgabeZwischensumme . "</td>";
+                        // Update vom 08.09.2018: Links werden im Saldo angezeigt und 
+                        // ermöglichen eine direkte Erstellung einer Buchung
+
+                        echo "<td id='$spaltenFarbe'>";
+                            $k = $umsaetze[$i]->konto;
+                            $tk = $umsaetze[$i]->gegenkonto;
+                            $w = round($zwischensumme, 4);
+                            $link = "konto=$k&targetkonto=$tk&monat=$monat&jahr=$currentYear&wert=$w&newUeberweisung";
+                            echo "<a id='nostyle' href='?$link'>";
+                                echo number_format(round($zwischensumme, 4), 2, ",", ".") . " &#8364;";
+                            echo "</a>";
+                        echo "</td>";
                     }
 
                     //OPTIONEN
-                    echo "<td>" . "<a class='' href='?konto=$kontoID&monat=$monat&jahr=$currentYear&edit=" . $umsaetze[$i]->id . "'>edit</a>" . "</td>";
+                    echo "<td>" . "<a href='?konto=$kontoID&monat=$monat&jahr=$currentYear&edit=" . $umsaetze[$i]->id . "'>edit</a>" . "</td>";
                     echo "</tbody>";
 
                     // HEUTE Zeile anzeigen
                     $timestamp = time();
                     $heute = date("Y-m-d", $timestamp);
-                    if ($umsaetze[$i]->datum < $heute and isset($umsaetze[$i + 1]->datum) and $umsaetze[$i + 1]->datum >= $heute) {
+                    if ($umsaetze[$i]->datum < $heute 
+                        AND isset($umsaetze[$i + 1]->datum) 
+                        AND $umsaetze[$i + 1]->datum >= $heute
+                    ) {
                         $heute = date("d.m.Y", $timestamp);
-                        echo "<tbody id='today'><td colspan='7'><a name='heute'>Heute ist der $heute</a> n&auml;chster Umsatz: " . $umsaetze[$i + 1]->umsatzName . "</td></tbody>";
+                        echo "<tbody id='today'>"; 
+                            echo "<td colspan='7'><a name='heute'>Heute ist der $heute</a> n&auml;chster Umsatz: " . $umsaetze[$i + 1]->umsatzName . "</td>"; 
+                        echo "</tbody>";
                     }
                 }
             } else {
@@ -614,12 +633,16 @@ class FinanzenNEW extends functions
                     echo "<tbody id=''>" . "<td>" . $naechsterUmsatz[$k]->datum . "</td>" . "<td colspan=6>" . $naechsterUmsatz[$k]->umsatzName . ",  <a href='?konto=$kontoID&monat=$naechsterMonat&jahr=" . $naechsterUmsatz[$k]->jahr . "'>springe zu Monat</a></td>" . "</tbody>";
                 }
             }
-            $differenz = round($zwischensumme - $startsaldo, 4);
+            $differenz = number_format(round($zwischensumme - $startsaldo, 4), 2, ",", ".");
 
             if ($kontoinfos[0]->art == 2) {
-                echo "<tfoot><td colspan=5 id='rightAlign'>Endsaldo: </td><td id='rightAlign'> - </td><td></td></tfoot>";
+                echo "<tfoot>";
+                    echo "<td colspan=6 id='rightAlign'>Endsaldo: </td>";
+                    echo "<td id='rightAlign'> - </td>"; 
+                    echo "<td></td>"; 
+                echo "</tfoot>";
             } else {
-                echo "<tfoot><td colspan=5 id='rightAlign'>Endsaldo: </td><td id='rightAlign'>" . round($zwischensumme, 2) . "</td><td></td></tfoot>";
+                echo "<tfoot><td colspan=6 id='rightAlign'>Endsaldo: </td><td id='rightAlign'>" . number_format(round($zwischensumme, 2), 2, ",", ".") . " &#8364; </td><td></td></tfoot>";
             }
 
             echo "</table>";
@@ -1880,21 +1903,27 @@ class FinanzenNEW extends functions
                 }
                 echo "</select></td></tbody>";
 
-                echo "<tbody><td>Absender: </td><td><select name='absenderKonto'>";
+                echo "<tbody>"; 
+                echo "<td>Absender: </td><td><select name='absenderKonto'>";
                 $i = 0;
                 for ($i = 0; $i < sizeof($absenderKonten); $i++) {
 
                     echo "<option ";
-                    if (isset($_POST['absenderKonto']) and $absenderKonten[$i]->id == $_POST['absenderKonto']) {
+                    if (isset($_POST['absenderKonto']) 
+                        and $absenderKonten[$i]->id == $_POST['absenderKonto']
+                    ) {
                         echo " selected ";
-                    } elseif (isset($_GET['konto']) and $absenderKonten[$i]->id == $_GET['konto']) {
+                    } elseif (isset($_GET['targetkonto']) 
+                        and $absenderKonten[$i]->id == $_GET['targetkonto']
+                    ) {
                         echo " selected ";
                     } else {
                         echo "";
                     }
                     echo "value='" . $absenderKonten[$i]->id . "'>" . $absenderKonten[$i]->konto . "</option>";
                 }
-                echo "</select></td></tbody>";
+                echo "</select></td>"; 
+                echo "</tbody>";
 
                 // Date Variable f&uuml;llen:
                 $timestamp = time();
@@ -1903,8 +1932,12 @@ class FinanzenNEW extends functions
                 } else {
                     $date = date("Y-m-d", $timestamp);
                 }
-
-                echo "<tbody><td>Betrag</td><td><input type=text value='' placeholder='Betrag' name='valueUeberweisung' required /></td></tbody>";
+                if (isset($_GET['wert'])) {
+                    $wert = $_GET['wert'];
+                } else {
+                    $wert = 0;
+                }
+                echo "<tbody><td>Betrag</td><td><input type=number value='$wert' placeholder='Betrag' name='valueUeberweisung' required /></td></tbody>";
                 echo "<tbody><td>Datum</td><td><input type=date value='$date' placeholder='Datum' name='dateUeberweisung' required /></td></tbody>";
                 echo "<tbody><td colspan='2'><input type=submit name=sendnewUeberweisung value='Absenden' /></td></tbody>";
 
@@ -2062,11 +2095,14 @@ class FinanzenNEW extends functions
                     if ($konten[$i]->art == 2) {
                         echo "x";
                     } else {
-                        $summe = $umsaetze[0]->summe + 0;
+                        $summe = number_format($umsaetze[0]->summe + 0, 2, ",", ".");
                         echo $summe . " €";
                     }
-
-                    echo "<br>" . $konten[$i]->mail . "</p>";
+                    if ($konten[$i]->mail) {
+                        echo "<br>" . $konten[$i]->mail . "</p>";
+                    } else {
+                        echo "<br>" . "..." . "</p>";
+                    }
 
                     echo "</div>";
                     echo "</div>";

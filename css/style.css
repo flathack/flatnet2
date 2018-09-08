@@ -2083,8 +2083,8 @@ input[type=password]:focus {
     border: 1px solid grey;
 }
 .kontoTable thead {
-    background: #cdcdcd;
-    color: black;
+    background: #c9c9c9;
+    color: rgb(26, 6, 6);
     font-style: italic;
 }
 .kontoTable thead td {
@@ -2098,6 +2098,13 @@ input[type=password]:focus {
     background-color: #e0e0e0;
     border: 1px solid transparent;
 }
+
+.kontoTable #nostyle {
+    margin: 0px;
+    padding: 0px;
+    border: none;
+    background: none;
+}
 .kontoTable a:hover {
 	text-decoration: none;
     background-color: #e8ffea;
@@ -2105,7 +2112,8 @@ input[type=password]:focus {
 }
 .kontoTable tfoot td,
 .logTable tfoot td {
-    background-color: #c1ccff;
+    background-color: #747474;
+    color: white;
 }
 .kontoTable #minus {
     color: #ff5e5e;
