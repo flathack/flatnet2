@@ -2048,14 +2048,19 @@ class FinanzenNEW extends functions
                         $mark = "nolimit";
                     } elseif ($konten[$i]->art == 3) {
                         $mark = "Ford";
+                    } elseif ($konten[$i]->art == 4) {
+                        $mark = "Verb";
                     } else {
                         $mark = "Konto";
                     }
+                    
+                    echo "<div class='mainkonto'>";
                     echo "<div class='$mark'>";
+                    
                     echo "<p>" . $konten[$i]->id . ": <a href='index.php?konto=" . $konten[$i]->id . "'>" . $konten[$i]->konto . "</a><br>";
                     echo "<a href='detail.php?editKonto=" . $konten[$i]->id . "'>Einstellungen</a><br>";
                     if ($konten[$i]->art == 2) {
-                        echo "x</p>";
+                        echo "x";
                     } else {
                         $summe = $umsaetze[0]->summe + 0;
                         echo $summe . " €";
@@ -2063,6 +2068,7 @@ class FinanzenNEW extends functions
 
                     echo "<br>" . $konten[$i]->mail . "</p>";
 
+                    echo "</div>";
                     echo "</div>";
                 }
             }
