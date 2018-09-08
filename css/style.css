@@ -2093,9 +2093,9 @@ input[type=password]:focus {
     border-right: 1px solid grey;
 }
 .kontoTable a {
-    padding: 2px 20px 2px 20px;
+    padding: 2px 5px 2px 5px;
     color: #4a4a4a;
-    background-color: #e0e0e0;
+    /* background-color: #e0e0e0; */
     border: 1px solid transparent;
 }
 

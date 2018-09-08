@@ -363,6 +363,37 @@ class FinanzenNEW extends functions
     }
 
     /**
+     * Ordnet dem Umsatz eine Kategorie zu und gibt diese aus.
+     * 
+     * @param int $id UmsatzID
+     * 
+     * @return string
+     */
+    function getCategoryForUmsatz($id) 
+    {
+        $list = [
+        "amazon",
+        "gehalt",
+        ];
+
+        // get umsatz information
+        $umsatz = $this->getObjektInfo("SELECT * FROM finanzen_umsaetze WHERE id=$id");
+        if (isset($umsatz[0]->id)) {
+            foreach ($list as $listobject) {
+                if (stristr($umsatz[0]->umsatzName, "$listobject") === false) {
+                    $cat = "#none";
+                } else {
+                    $cat = "#$listobject";
+                }
+            }
+        } else {
+            echo "<p>UMSATZ EXISTIERT NICHT</p>";
+            $cat = "#none";
+        }
+        return $cat;
+    }
+
+    /**
      * Ueberprüft ob ein User das Konto ansehen darf.
      * 
      * @param int $kontoid Konto ID welche geprüft wird.
@@ -576,7 +607,8 @@ class FinanzenNEW extends functions
                     echo " &#8364;</td>";
 
                     //Kategorie
-                    echo "<td>#cat</td>";
+                    $cat = $this->getCategoryForUmsatz($umsaetze[$i]->id);
+                    echo "<td>$cat</td>";
 
                     //SALDO
                     if ($kontoinfos[0]->art == 2) {
