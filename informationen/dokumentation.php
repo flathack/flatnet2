@@ -138,7 +138,17 @@
                 <p class="einleitung">Das Adressbuch ist eine einfache Datenbank zur Speicherung von Adressdaten</p>
                 <button onclick="document.getElementById('adressbuch').style.display = 'block'">anzeigen</button>
                 <button onclick="document.getElementById('adressbuch').style.display = 'none'">verstecken</button>
-                <p id="adressbuch" style="display:none;">Anhand der Adressdaten wird auch ein Geburtstagskalender angezeigt.</p>
+                <div id="adressbuch" style="display:none;">
+                    <h3>Kontaktverwaltung</h3>
+
+                    <p>In der Kontaktverwaltung können neue Kontakte angelegt, bearbeitet und gelöscht werden.</p>
+                    <p>Hierzu gibt es den Button: neuen Kontakt. Die Möglichkeit Benutzer zu bearbeiten ist 
+                    mit einem Edit Button pro Benutzer gelöst.</p>
+
+                    <h3>Geburtstagskalender</h3>
+                    <p>Anhand der Kontaktdaten wird auch ein Geburtstagskalender bereitgestellt. Anhand der Gruppierung
+                    der Kontakte können diese ein- bzw. ausgeblendet werden.</p>
+                </div>
 
             </div>
             <div class="publicInfo">
@@ -148,9 +158,15 @@
                 <p class="einleitung">Hilfe f&uuml;r das Forum</p>
                 <button onclick="document.getElementById('forum').style.display = 'block'">anzeigen</button>
                 <button onclick="document.getElementById('forum').style.display = 'none'">verstecken</button>
-                <p id="forum" style="display:none;">Das Forum ist eine einfache M&ouml;glichkeit sich mit anderen Personen
-                    auszutauschen. Grundfunktionalit&auml;ten sind hierf&uuml;r gegeben. F&uuml;r fast alle Funktionen sind
-                    eigene Rechtebereiche eingerichtet und erm&ouml;glicht so, theoretisch, eine gro�e Anzahl von Benutzern.</p>
+                <div id="forum" style="display:none;">
+                <p>Das Forum ist eine einfache M&ouml;glichkeit sich mit anderen Personen
+                    auszutauschen. Grundfunktionalit&auml;ten sind hierf&uuml;r gegeben.</p>
+                <p>Im Administrationsbereich können neue Bereiche angelegt, bearbeitet und gelöscht werden. Bei
+                der Anlage eines neuen Bereichs, muss eine zweier Potenz als Recht angegeben werden. Anhand dieses
+                Rechts, kann danach der Zugriff auf den Bereich pro Benutzer eingeschränkt werden.</p>
+                <p>Wird eine Kategorie gelöscht, werden alle Posts innerhalb des Bereichs nach "nicht zugeordnet" verschoben.</p>
+                <p>Existiert dieser Bereich nicht, muss er manuell erstellt werden. </p>
+                </div>
 
             </div>
             <div class="publicInfo">
@@ -171,9 +187,24 @@
                         Konto aufgerufen werden. Der ausgew&auml;hlte Monat und das Jahr bleiben erhalten.</p>
 
                     <h2>Konten</h2>
-                    <p></p>
+                    <p>In der Kontenübersicht können Konten verwaltet werden.</p>
+                    <p>Dieser Bereich teilt sich in: </p>
+                    <ul>
+                        <li>Aktive Konten</li>
+                        <li>nicht sichtbare Konten</li>
+                    </ul>
+                    <p>Auf der rechten Seite befindet sich eine Übersicht mit den folgenden Kategorien:</p>
+                    <ul>
+                        <li>Statistiken</li>
+                        <li>Forderungen</li>
+                        <li>Verbindlichkeiten</li>
+                        <li>Guthaben</li>
+                        <li>Gesamt</li>
+                    </ul>
 
                     <h2>Shares</h2>
+                    <p>Konten können für andere Benutzer freigegeben werden. Die Benutzer bekommen dann ein
+                    Leserecht auf das Konto.</p>
 
                     <h2>Erstellen / Bearbeiten / L&ouml;schen</h2>
 
