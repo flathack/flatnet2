@@ -85,7 +85,7 @@ class Sql
      * 
      * @return void
      */
-    function sqlDelete($tabelle) 
+    function sqlDelete(string $tabelle) 
     {
         if (isset($_GET['loeschen']) AND isset($_GET['loeschid']) ) {
                 
@@ -110,7 +110,6 @@ class Sql
             $jaloeschen = isset($_POST['jaloeschen']) ? $_POST['jaloeschen'] : '';
             $loeschid = isset($_POST['id']) ? $_POST['id'] : '';
             if ($loeschid) {
-
                 // Durchführung der Löschung.
                 $loeschQuery = "DELETE FROM `$tabelle` WHERE `id` = $loeschid";
                     
@@ -119,10 +118,8 @@ class Sql
                 } else {
                     echo "<p class='meldung'>Fehler beim löschen!</p>";
                 }
-
             }
         }
-
     }
     
     /**
@@ -132,13 +129,10 @@ class Sql
      * 
      * @return void
      */
-    function sqlDeleteCustom($query) 
+    function sqlDeleteCustom(string $query) 
     {
-
         if (isset($_GET['loeschen']) AND isset($_GET['loeschid'])) {
-
             $id = $_GET['loeschid'];
-
             if ($id > 0 AND !isset($_POST['jaloeschen'])) {
                 // Abfrage, ob der User den Artikel wirklich löschen will.
                 echo "<form method=post>";
@@ -157,14 +151,11 @@ class Sql
             $jaloeschen = isset($_POST['jaloeschen']) ? $_POST['jaloeschen'] : '';
             $loeschid = isset($_POST['id']) ? $_POST['id'] : '';
             if ($loeschid) {
-
-                    
                 if ($this->sql_insert_update_delete($query) == true) {
                     echo "<p class='erfolg'>Erfolgreich gelöscht</p>";
                 } else {
                     echo "<p class='meldung'>Fehler beim löschen!</p>";
                 }
-
             }
         }
 
@@ -178,7 +169,7 @@ class Sql
      * 
      * @return boolean
      */
-    function sql_insert_update_delete($query) 
+    function sql_insert_update_delete(string $query) 
     {
         
         $db = $this->connectToDBNewWay();
@@ -203,7 +194,7 @@ class Sql
      * 
      * @return boolean
      */
-    function sql_insert_update_delete_hw($query) 
+    function sql_insert_update_delete_hw(string $query) 
     {
         $db = $this->connectToDBNewWay();
         $affected_rows = $db->exec($query);
@@ -216,14 +207,14 @@ class Sql
     }
     
     /**
-     * NO INFO
+     * Vergleicht ob die Namen der Datenbank richtig sind.
      * 
-     * @param String $relation_name Tabellenname
-     * @param String $structure 
+     * @param String $relation_name Tabellenname die geprüft werden soll.
+     * @param String $structure     Ein Array mit den richtigen Spaltennamen.
      * 
      * @return boolean
      */
-    function sql_db_check($relation_name, $structure) 
+    function sqlDbCheck(string $relation_name, array $structure) 
     {
         
         echo "<li>$relation_name</li>";
@@ -257,7 +248,7 @@ class Sql
      * 
      * @return boolean
      */
-    function logme($received_query) 
+    function logme(string $received_query) 
     {
         if (isset($_SESSION['username'])) {
             $username = $_SESSION['username'];
@@ -302,7 +293,7 @@ class Sql
      * 
      * @return int
      */
-    function getAmount($query) 
+    function getAmount(string $query) 
     {
         $db = $this->connectToDBNewWay();
         $stmt = $db->query($query);
@@ -317,7 +308,7 @@ class Sql
      * 
      * @return object
      */
-    function getObjektInfo($query) 
+    function getObjektInfo(string $query) 
     {
         // echo "<p class='dezentInfo'>" .$query . "</p>";
         
@@ -335,7 +326,7 @@ class Sql
      * 
      * @return object
      */
-    function getObjectsToArray($query) 
+    function getObjectsToArray(string $query) 
     {
          $this->getObjektInfo($query);
     }
@@ -348,7 +339,7 @@ class Sql
      * 
      * @return boolean
      */
-    function objectExists($query) 
+    function objectExists(string $query) 
     {
         $row = $this->getObjektInfo($query);
 
@@ -361,12 +352,13 @@ class Sql
     
     /**
      * Gibt die Spalten einer Tabelle zurück.
+     * DOPPELTE FUNKTION
      * 
      * @param String $table Tablename
      * 
      * @return unknown
      */
-    function getColumns($table) 
+    function getColumns(string $table) 
     {
         // COLUMNS SPEICHERN;
         $select1 = "SHOW COLUMNS FROM $table";
@@ -380,12 +372,13 @@ class Sql
     
     /**
      * Gibt die Spalten einer Query zurück.
+     * DOPPELTE FUNKTION
      *
      * @param String $query Query fuer die Abfrage
      * 
      * @return $columns
      */
-    function getColumnsFromQuery($query) 
+    function getColumnsFromQuery(string $query) 
     {
         $createTempTable = "CREATE TEMPORARY TABLE IF NOT EXISTS tempTable AS ($query);";
         $this->sql_insert_update_delete($createTempTable);
@@ -402,11 +395,11 @@ class Sql
     /**
      * Gibt die Anzahl der Spalten an.
      *
-     * @param String $query Query fuer die Abfrage
+     * @param string $query Query fuer die Abfrage
      * 
      * @return int
      */
-    function getColumnAnzahl($query) 
+    function getColumnAnzahl(string $query) 
     {
         $createTempTable = "
         CREATE TEMPORARY TABLE
@@ -417,6 +410,133 @@ class Sql
         
         $row = $this->getAmount($select1);
         return $row;
+    }
+
+    /**
+     * Erstellt anhand des Tabellennamen und der vorgegebenen Struktur eine
+     * Form mit der ein neuer Eintrag in einer Tabelle erstellt werden kann.
+     * 
+     * Array Format : 
+     * "dbColName","DisplayName","inputFieldRequired","inputFieldType"
+     * 
+     * dbColName = Name der Spalte in der DB
+     * DisplayName = Name der auf der Webseite angezeigt werden soll.
+     * inputFieldRequired = Erlaubte Werte : required | ""
+     * inputFieldType = text, number, password
+     * 
+     * @param string $uniqueName     UniqeName für diesen Form.
+     * @param string $tableName      Tabellenname
+     * @param array  $array          Spaltennamen
+     * @param string $cssTableDesign CSS Info für den Table
+     * @param string $title          Titel für die Box
+     * @param string $defaultPfad    Pfad der nach dem Klick auf X angesteuert wird.
+     * @param string $besitzerFeld   Felder wo der FK für den Besitzer gespeichert wird.
+     * 
+     * @return void
+     */
+    public function showCreateNewForm(
+        string $uniqueName
+        , string $tableName
+        , array $array
+        , string $cssTableDesign
+        , string $title
+        , string $defaultPfad
+        , string $besitzerFeld
+    ) {
+        if (isset($_POST["${uniqueName}Submit"])) {
+            $currentObject = $_POST['currentObject'];
+            $columns = $this->getColumns($tableName);
+
+            // Menge bekommen
+            $dbname = $this->getDBName();
+            $query = "SELECT COUNT(*) as anzahl FROM information_schema.columns WHERE table_schema = '$dbname' and table_name = '$tableName'";
+            $mengeGrund = $this->getObjektInfo($query);
+            $menge = $mengeGrund[0]->anzahl;
+
+            // Query bauen
+            $query = "INSERT INTO $tableName (";
+            for ($i = 0; $i < $menge; $i++) {
+                $query .= "" . $columns[$i]->Field . "";
+                if ($columns[$i]->Field == $besitzerFeld) {
+                    $besitzer = $currentObject[$i];
+                    $besitzerStelle = $i;
+                }
+                if ($i != $menge - 1) {
+                    $query .= ", ";
+                } else {
+                    $query .= ") VALUES (";
+                }
+            }
+            $i = 0;
+            for ($i = 0; $i < $menge; $i++) {
+                
+                if ($i == $besitzerStelle) {
+                    $userid = $this->getUserID($_SESSION['username']);
+                    $query .= "'$userid'";
+                } else {
+                    $query .= "'$currentObject[$i]'";
+                }
+                if ($i != $menge - 1) {
+                    $query .= ", ";
+                } else {
+                    $query .= ")";
+                }
+            }
+
+            
+            if ($this->sql_insert_update_delete($query) == true) {
+                echo "<div class='$cssTableDesign'><p class='erfolg'>" . "Objekt gespeichert." . "</p></div>";
+            } else {
+                echo "<div class='$cssTableDesign'><p class='meldung'>" ."Object nicht gespeichert.". "</p></div>";
+            }
+        }
+        
+        // DARSTELLUNG DER INPUT FELDER
+        echo "<div class='$cssTableDesign'>"; 
+        echo "<form method=post>";
+        echo "<h2>$title</h2>";
+        $query = "SHOW COLUMNS FROM $tableName";
+        $menge = $this->getAmount($query);
+
+        $DBColumns = $this->getColumns($tableName);
+
+        if (isset($_GET['von'])) {
+            $von = "&von=" . $_GET['von'];
+        } else {
+            $von = "";
+        }
+        echo "";
+        echo "<table class='kontoTable'><form method=post>";
+        //echo "<thead>" . "<td>Table: $tableName</td>" . "<td></td>" . "</thead>";
+        for ($i = 0; $i < $menge; $i++) {
+            if ($array[$i][2] == "hidden") {
+                echo "<input type=".$array[$i][3]." class='' name=currentObject[$i] value='' placeholder='".$DBColumns[$i]->Field."' ".$array[$i][2]." />";
+            } else {
+                echo "<tbody>"; 
+                echo "<td>" . $array[$i][1] . "</td>";
+                if ($DBColumns[$i]->Field == $besitzerFeld) {
+                    $value = $this->getUserID($_SESSION['username']);
+                } else {
+                    $value = "";
+                }
+                if ($array[$i][3] == "number") {
+                    $step = "step=".$array[$i][4];
+                } else {
+                    $step = "";
+                }
+                echo "<td><input type=".$array[$i][3]." $step name=currentObject[$i] value='$value' placeholder='".$array[$i][1]."' ".$array[$i][2]." /></td>";
+                echo "</tbody>";
+            }
+            
+        
+        }
+        echo "<tbody>"; 
+        echo "<td><button type=submit name=${uniqueName}Submit />Speichern</button></td>"; 
+        echo "<td><a href=\"$defaultPfad\" class='highlightedLink'>Zurück</a></td>";
+        echo "</tbody>";
+        echo "</form></table>";
+
+        echo "</div>";
     }
 }
 ?>

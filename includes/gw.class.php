@@ -1346,7 +1346,7 @@ class Gw_Handwerk extends Guildwars
      */
     public function showMatList()
     {
-        if ($this->userHasRight("16", 0) == true) {
+        if ($this->userHasRight(16, 0) == true) {
 
             //   $gesamtanzahl = 351;
             //Maximale matID bekommen:
@@ -1567,7 +1567,7 @@ class Gw_Handwerk extends Guildwars
     {
         if (isset($_POST['absenden'])) {
 
-            if ($this->userHasRight("16", 0) == true) {
+            if ($this->userHasRight(16, 0) == true) {
 
                 //   $gesamtzahl = 390;
                 $user = $this->getUserID($_SESSION['username']);

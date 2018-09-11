@@ -1562,7 +1562,7 @@ class Control extends Functions
                     // Query bauen
                     $query = "INSERT INTO $table (";
                     for ($i = 0; $i < $menge; $i++) {
-                        $query .= "" . $columns[$i] . "";
+                        $query .= "" . $columns[$i]->Field . "";
                         if ($i != $menge - 1) {
                             $query .= ", ";
                         } else {
@@ -1753,8 +1753,8 @@ class Control extends Functions
             echo "<table class='flatnetTable'><form method=post>";
             echo "<thead>" . "<td>Table: $table</td>" . "<td><a href='?action=3$von&table=$table' class='highlightedLink'>X</a></td>" . "</thead>";
             for ($i = 0; $i < $menge; $i++) {
-                echo "<tbody><td>" . $columns[$i] . "</td><td><input type=text class='' name=currentObject[$i] value=''
-                placeholder='$columns[$i]'/></td></tbody>";
+                echo "<tbody><td>" . $columns[$i]->Field . "</td><td><input type=text class='' name=currentObject[$i] value=''
+                placeholder='".$columns[$i]->Field."'/></td></tbody>";
             }
 
             echo "<tfoot><td><input type=submit name=insertOK value='speichern' /></td><td></td></tfoot>";

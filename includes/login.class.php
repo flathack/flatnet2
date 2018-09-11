@@ -165,12 +165,12 @@ class Login extends Functions
         if (!isset($_SESSION['angemeldet'])) {
             $ausgabe .= $notLoggedIn;
             $ausgabe .= '<form action="index.php" method=post>';
-            $ausgabe .= '<input type="text" value="" name="username" placeholder="Benutzername" />';
-            $ausgabe .= '<input type="password" value = "" name = "passwort" placeholder = "Passwort" />';
+            $ausgabe .= '<input type=text name=username placeholder=Benutzername required />';
+            $ausgabe .= '<input type=password name=passwort placeholder=Passwort required />';
             $ausgabe .= '<input type="submit" value="Einloggen" />';
             $ausgabe .= '</form>';
         } else {
-            $ausgabe .= "<p id='loginTitel'><p class='hinweis'>Du bist angemeldet</p><br><a href='uebersicht.php' class=''>Gehe zur &Uuml;bersicht</a></p>";
+            $ausgabe .= "<p id='loginTitel'><p class='hinweis'>Du bist bereits angemeldet.</p><br><a class='buttonlink' href='uebersicht.php'>Gehe zur &Uuml;bersicht</a></p>";
         }
         if (!isset($_GET['createUser'])) {
             return $ausgabe;
@@ -186,7 +186,7 @@ class Login extends Functions
      * 
      * @return void
      */
-    public function logged_inOLD($redirect = "redirect", $pfad = "/flatnet2/index.php")
+    public function loggedInOLD($redirect = "redirect", $pfad = "/flatnet2/index.php")
     {
         $hostname = $_SERVER['HTTP_HOST'];
         $path = dirname($_SERVER['PHP_SELF']);
