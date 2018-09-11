@@ -310,8 +310,6 @@ class Sql
      */
     function getObjektInfo(string $query) 
     {
-        // echo "<p class='dezentInfo'>" .$query . "</p>";
-        
         $db = $this->connectToDBNewWay();
         $stmt = $db->query($query);
         $results = $stmt->fetchAll(PDO::FETCH_OBJ);
@@ -467,16 +465,16 @@ class Sql
                     $query .= ") VALUES (";
                 }
             }
-            $i = 0;
-            for ($i = 0; $i < $menge; $i++) {
+            $j = 0;
+            for ($j = 0; $j < $menge; $j++) {
                 
-                if ($i == $besitzerStelle) {
+                if ($j == $besitzerStelle) {
                     $userid = $this->getUserID($_SESSION['username']);
                     $query .= "'$userid'";
                 } else {
-                    $query .= "'$currentObject[$i]'";
+                    $query .= "'$currentObject[$j]'";
                 }
-                if ($i != $menge - 1) {
+                if ($j != $menge - 1) {
                     $query .= ", ";
                 } else {
                     $query .= ")";
@@ -487,7 +485,7 @@ class Sql
             if ($this->sql_insert_update_delete($query) == true) {
                 echo "<div class='$cssTableDesign'><p class='erfolg'>" . "Objekt gespeichert." . "</p></div>";
             } else {
-                echo "<div class='$cssTableDesign'><p class='meldung'>" ."Object nicht gespeichert.". "</p></div>";
+                echo "<div class='$cssTableDesign'><p class='meldung'>" ."Objekt nicht gespeichert. ($query)". "</p></div>";
             }
         }
         
@@ -507,7 +505,7 @@ class Sql
         }
         echo "";
         echo "<table class='kontoTable'><form method=post>";
-        //echo "<thead>" . "<td>Table: $tableName</td>" . "<td></td>" . "</thead>";
+
         for ($i = 0; $i < $menge; $i++) {
             if ($array[$i][2] == "hidden") {
                 echo "<input type=".$array[$i][3]." class='' name=currentObject[$i] value='' placeholder='".$DBColumns[$i]->Field."' ".$array[$i][2]." />";
@@ -524,7 +522,27 @@ class Sql
                 } else {
                     $step = "";
                 }
-                echo "<td><input type=".$array[$i][3]." $step name=currentObject[$i] value='$value' placeholder='".$array[$i][1]."' ".$array[$i][2]." /></td>";
+                // Wenn das $array[$i][3] ein Array ist:
+                if (is_array($array[$i][3])) {
+                    // $array[$i][3][1] = tableName
+                    $order = $array[$i][3][2];
+                    $getManusQuery = "SELECT * FROM " .$array[$i][3][1] . " ORDER BY $order";
+                    $manus = $this->getObjektInfo($getManusQuery);
+                    echo "<td><select name=currentObject[$i]>";
+                    echo "<option></option>";
+                    if (isset($manus[0]->id)) {
+                        for ($x = 0; $x < sizeof($manus);$x++) {
+                            echo "<option";
+                                echo " value=" .$manus[$x]->id . " >";
+                                echo $manus[$x]->manuName;
+                            echo "</option>";
+                        }
+                    }
+                    echo "</select></td>";
+                } else {
+                    echo "<td><input type=".$array[$i][3]." $step name=currentObject[$i] value='$value' placeholder='".$array[$i][1]."' ".$array[$i][2]." /></td>";
+                }
+                
                 echo "</tbody>";
             }
             

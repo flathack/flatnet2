@@ -50,9 +50,14 @@ class HardwareDB extends Functions
         if (isset($_GET['showAllManus'])) {
             $this->showAllManufacturers();
         }
+        if (isset($_GET['alterHWID'])) {
+            $this->alterHardware($_GET['alterHWID']);
+        }
         if (isset($_GET['newHardware'])) {
             $this->createNewHardware();
         }
+
+        $this->showAllHardware();
         
     }
 
@@ -133,7 +138,7 @@ class HardwareDB extends Functions
             "newManu", 
             "hardwaremanfacturers", 
             $dbinfo, 
-            "newFahrt", 
+            "newChar", 
             "Neuen Hersteller anlegen", 
             "?showAllManus=1", 
             "ersteller"
@@ -167,9 +172,9 @@ class HardwareDB extends Functions
             array("id", "ID", "hidden", "number"),
             array("timestamp", "Timestamp", "hidden", "text"),
             array("besitzer","Besitzer", "hidden", "number", "any"),
-            array("manufacturer","Hersteller", "required", array("options", "hardwaremanufacturers", "any")),
+            array("manufacturer","Hersteller", "required", array("options", "hardwaremanfacturers", "manuName")),
             array("hwName", "Name", "required", "text"),
-            //                                              STEP  MIN
+            //                                              STEP
             array("hwValue", "Wert", "required", "number", "0.01"),
             array("hwDescription", "Beschreibung", " ", "text"),
             array("hwBuydate", "Kaufdatum", "required", "date"),
@@ -180,11 +185,66 @@ class HardwareDB extends Functions
             "newHard", 
             "hardwareentries", 
             $dbinfo, 
-            "newFahrt", 
+            "newChar", 
             "Neue Hardware anlegen", 
             "?start=1", 
             "besitzer"
         );
+    }
+
+    /**
+     * Stellt alle Hardwarekomponenten dar
+     * Tablename : $manuDB = hardwareentries
+     * 
+     * @param string $manuDB Tabellenname für Manufacturers
+     * 
+     * @return void
+     */
+    public function showAllHardware($manuDB = "hardwareentries")
+    {
+        $besitzer = $this->getUserID($_SESSION['username']);
+        $getAllManus = "SELECT * FROM $manuDB WHERE besitzer=$besitzer ORDER BY hwBuydate";
+        $allManus = $this->getObjektInfo($getAllManus);
+
+        if (count($allManus) > 0) {
+            //echo "<div class='newFahrt'";
+            echo "<table class='kontoTable'>";
+            echo "<thead>";
+                echo "<td>Name</td>";
+                echo "<td>Wert</td>";
+                echo "<td>Beschreibung</td>";
+                echo "<td>Kaufdatum</td>";
+                echo "<td>Garantie</td>";
+                echo "<td>Hersteller</td>";
+                echo "<td></td>";
+            echo "</thead>";
+            for ($i = 0; $i < sizeof($allManus); $i++) {
+                echo "<tbody>";
+                    echo "<td>" . $allManus[$i]->hwName . "</td>";
+                    echo "<td>" . $allManus[$i]->hwValue . "</td>";
+                    echo "<td>" . $allManus[$i]->hwDescription . "</td>";
+                    echo "<td>" . $allManus[$i]->hwBuydate . "</td>";
+                    echo "<td>" . $allManus[$i]->hwGarantieLengthMonth . "</td>";
+                    echo "<td>" . $allManus[$i]->manufacturer . "</td>";
+                    echo "<td>" . "<a href='?start=1&alterHWID=".$allManus[$i]->id."'>Edit</a>" . "</td>";
+                echo "</tbody>";
+            }
+            echo "</table>";
+            //echo "</div>";
+        }
+        
+    }
+
+    /**
+     * Ermöglicht die Bearbeitung einer HandwareKomponente
+     * 
+     * @param string $id ID der Hardware
+     * 
+     * @return void
+     */
+    public function alterHardware($id)
+    {
+
     }
 
 }
