@@ -1977,7 +1977,7 @@ class FinanzenNEW extends functions
                 } else {
                     $wert = 0;
                 }
-                echo "<tbody><td>Betrag</td><td><input type=number value='$wert' placeholder='Betrag' name='valueUeberweisung' required /></td></tbody>";
+                echo "<tbody><td>Betrag</td><td><input type=number step=0.01 value='$wert' placeholder='Betrag' name='valueUeberweisung' required /></td></tbody>";
                 echo "<tbody><td>Datum</td><td><input type=date value='$date' placeholder='Datum' name='dateUeberweisung' required /></td></tbody>";
                 echo "<tbody><td colspan='2'><input type=submit name=sendnewUeberweisung value='Absenden' /></td></tbody>";
 
