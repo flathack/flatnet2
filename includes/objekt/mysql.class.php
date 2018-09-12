@@ -415,7 +415,7 @@ class Sql
      * Form mit der ein neuer Eintrag in einer Tabelle erstellt werden kann.
      * 
      * Array Format : 
-     * "dbColName","DisplayName","inputFieldRequired","inputFieldType"
+     * "dbColName","DisplayName","inputFieldRequired","inputFieldType","span z. b. 0.01 wenn Type=number"
      * 
      * dbColName = Name der Spalte in der DB
      * DisplayName = Name der auf der Webseite angezeigt werden soll.
@@ -425,6 +425,7 @@ class Sql
      * @param string $uniqueName     UniqeName für diesen Form.
      * @param string $tableName      Tabellenname
      * @param array  $array          Spaltennamen
+     * @param string $cssDivDesign   CSS Info für den Div
      * @param string $cssTableDesign CSS Info für den Table
      * @param string $title          Titel für die Box
      * @param string $defaultPfad    Pfad der nach dem Klick auf X angesteuert wird.
@@ -436,6 +437,7 @@ class Sql
         string $uniqueName
         , string $tableName
         , array $array
+        , string $cssDivDesign
         , string $cssTableDesign
         , string $title
         , string $defaultPfad
@@ -467,7 +469,6 @@ class Sql
             }
             $j = 0;
             for ($j = 0; $j < $menge; $j++) {
-                
                 if ($j == $besitzerStelle) {
                     $userid = $this->getUserID($_SESSION['username']);
                     $query .= "'$userid'";
@@ -480,19 +481,15 @@ class Sql
                     $query .= ")";
                 }
             }
-
-            
             if ($this->sql_insert_update_delete($query) == true) {
-                echo "<div class='$cssTableDesign'><p class='erfolg'>" . "Objekt gespeichert." . "</p></div>";
+                echo "<div class='$cssDivDesign'><p class='erfolg'>" . "Objekt gespeichert." . "</p></div>";
             } else {
-                echo "<div class='$cssTableDesign'><p class='meldung'>" ."Objekt nicht gespeichert. ($query)". "</p></div>";
+                echo "<div class='$cssDivDesign'><p class='meldung'>" ."Objekt nicht gespeichert. ($query)". "</p></div>";
             }
         }
         
         // DARSTELLUNG DER INPUT FELDER
-        echo "<div class='$cssTableDesign'>"; 
-        echo "<form method=post>";
-        echo "<h2>$title</h2>";
+        
         $query = "SHOW COLUMNS FROM $tableName";
         $menge = $this->getAmount($query);
 
@@ -503,15 +500,22 @@ class Sql
         } else {
             $von = "";
         }
-        echo "";
-        echo "<table class='kontoTable'><form method=post>";
+        echo "<div class='$cssDivDesign'>"; 
+        echo "<form method=post>";
+        echo "<h2>$title</h2>";
+        echo "<table class='$cssTableDesign'><form method=post>";
 
         for ($i = 0; $i < $menge; $i++) {
             if ($array[$i][2] == "hidden") {
                 echo "<input type=".$array[$i][3]." class='' name=currentObject[$i] value='' placeholder='".$DBColumns[$i]->Field."' ".$array[$i][2]." />";
             } else {
+                if ($array[$i][2] == "required") {
+                    $marker = "pending";
+                } else {
+                    $marker = "";
+                }
                 echo "<tbody>"; 
-                echo "<td>" . $array[$i][1] . "</td>";
+                echo "<td id='$marker'>" . $array[$i][1] . "</td>";
                 if ($DBColumns[$i]->Field == $besitzerFeld) {
                     $value = $this->getUserID($_SESSION['username']);
                 } else {
@@ -526,27 +530,25 @@ class Sql
                 if (is_array($array[$i][3])) {
                     // $array[$i][3][1] = tableName
                     $order = $array[$i][3][2];
+                    $colName = $array[$i][3][2];
                     $getManusQuery = "SELECT * FROM " .$array[$i][3][1] . " ORDER BY $order";
                     $manus = $this->getObjektInfo($getManusQuery);
-                    echo "<td><select name=currentObject[$i]>";
-                    echo "<option></option>";
+                    echo "<td id='$marker'><select name=currentObject[$i]>";
+                    echo "<option value=''>(leer)</option>";
                     if (isset($manus[0]->id)) {
                         for ($x = 0; $x < sizeof($manus);$x++) {
                             echo "<option";
                                 echo " value=" .$manus[$x]->id . " >";
-                                echo $manus[$x]->manuName;
+                                echo $manus[$x]->$colName;
                             echo "</option>";
                         }
                     }
                     echo "</select></td>";
                 } else {
-                    echo "<td><input type=".$array[$i][3]." $step name=currentObject[$i] value='$value' placeholder='".$array[$i][1]."' ".$array[$i][2]." /></td>";
+                    echo "<td id='$marker'><input type=".$array[$i][3]." $step name=currentObject[$i] value='$value' placeholder='".$array[$i][1]."' ".$array[$i][2]." /></td>";
                 }
-                
                 echo "</tbody>";
             }
-            
-        
         }
         echo "<tbody>"; 
         echo "<td><button type=submit name=${uniqueName}Submit />Speichern</button></td>"; 

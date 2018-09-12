@@ -41,6 +41,7 @@ class HardwareDB extends Functions
     {
         $this->hardwareHeader();
         
+        // Hersteller // newManu
         if (isset($_GET['newManu'])) {
             $this->createNewManufacturer();
         }
@@ -50,15 +51,61 @@ class HardwareDB extends Functions
         if (isset($_GET['showAllManus'])) {
             $this->showAllManufacturers();
         }
+
+        // Alle Geräte
         if (isset($_GET['alterHWID'])) {
             $this->alterHardware($_GET['alterHWID']);
         }
         if (isset($_GET['newHardware'])) {
             $this->createNewHardware();
         }
+        if (isset($_GET['start'])) {
+            $this->showAllHardware();
+        }
 
-        $this->showAllHardware();
-        
+        // Alle Hardware Namen // newGeraet
+        if (isset($_GET['alterGeraet'])) {
+            $this->alterHardwareName($_GET['alterGeraetID']);
+        }
+        if (isset($_GET['newGeraet'])) {
+            $this->createNewGeraet();
+        }
+        if (isset($_GET['showAllGeraet'])) {
+            $this->showAllGeraet();
+        }
+
+        // Alle Lieferanten // newLieferant
+        if (isset($_GET['alterLieferant'])) {
+            $this->alterLieferant($_GET['alterLieferantID']);
+        }
+        if (isset($_GET['newLieferant'])) {
+            $this->newLieferant();
+        }
+        if (isset($_GET['showAllLieferant'])) {
+            $this->showAllLieferant();
+        }
+
+        // Alle Garantien // newGarantie
+        if (isset($_GET['alterGarantie'])) {
+            $this->alterLieferant($_GET['alterGarantieID']);
+        }
+        if (isset($_GET['newGarantie'])) {
+            $this->newGarantie();
+        }
+        if (isset($_GET['showAllGarantie'])) {
+            $this->showAllGarantie();
+        }
+
+        // Alle HardwareTypen // newHwType
+        if (isset($_GET['alterHwType'])) {
+            $this->alterLieferant($_GET['alterHwTypeID']);
+        }
+        if (isset($_GET['newHwType'])) {
+            $this->newHwType();
+        }
+        if (isset($_GET['showAllHwType'])) {
+            $this->showAllHwType();
+        }
     }
 
     /**
@@ -69,10 +116,20 @@ class HardwareDB extends Functions
     public function hardwareHeader() 
     {
         echo "<div class='finanzNAV'>";
-            echo "<li><a href='/flatnet2/toyota/index.php?start=1'>Start</a></li>";
+            echo "<li><a href='/flatnet2/toyota/index.php?start=1'>Gesamte Hardware</a></li>";
             echo "<li><a href='/flatnet2/toyota/index.php?showAllManus=1'>Hersteller</a></li>";
+            echo "<li><a href='/flatnet2/toyota/index.php?showAllGeraet=1'>Hardware Namen</a></li>";
+            echo "<li><a href='/flatnet2/toyota/index.php?showAllLieferant=1'>Lieferanten</a></li>";
+            echo "<li><a href='/flatnet2/toyota/index.php?showAllGarantie=1'>Garantien</a></li>";
+            echo "<li><a href='/flatnet2/toyota/index.php?showAllHwType=1'>Hardware Typen</a></li>";
+        echo "</div>";
+        echo "<div class='finanzNAV'>";
+            echo "<li><a href='/flatnet2/toyota/index.php?showAllHardware=1&newHardware'>NEU</a></li>";
             echo "<li><a href='/flatnet2/toyota/index.php?showAllManus=1&newManu=1'>Neuer Hersteller</a></li>";
-            echo "<li><a href='/flatnet2/toyota/index.php?showAllHardware=1&newHardware'>Neue Hardware</a></li>";
+            echo "<li><a href='/flatnet2/toyota/index.php?showAllManus=1&newGeraet=1'>Neues Gerät erstellen</a></li>";
+            echo "<li><a href='/flatnet2/toyota/index.php?showAllManus=1&newLieferant=1'>Neuer Lieferant</a></li>";
+            echo "<li><a href='/flatnet2/toyota/index.php?showAllManus=1&newGarantie=1'>Neue Garantie</a></li>";
+            echo "<li><a href='/flatnet2/toyota/index.php?showAllManus=1&newHwType=1'>Neuer Hardware Typ</a></li>";
         echo "</div>";
     }
 
@@ -105,9 +162,135 @@ class HardwareDB extends Functions
                 echo "</tbody>";
             }
             echo "</table>";
-            //echo "</div>";
         }
-        
+    }
+
+    /**
+     * Stellt alle Hardware Definitionen dar
+     * Tablename : $manuDB = hardwaredefinition
+     * 
+     * @param string $manuDB Tabellenname für hardwaredefinition
+     * 
+     * @return void
+     */
+    public function showAllGeraet($manuDB = "hardwaredefinition")
+    {
+        $getAllManus = "SELECT * FROM $manuDB";
+        $allManus = $this->getObjektInfo($getAllManus);
+
+        if (count($allManus) > 0) {
+            echo "<h2>Hardware Definitionen</h2>";
+            echo "<table class='kontoTable'>";
+            echo "<thead>";
+                echo "<td>ID</td>";
+                echo "<td>Hardware Definition Name</td>";
+                echo "<td></td>";
+            echo "</thead>";
+            for ($i = 0; $i < sizeof($allManus); $i++) {
+                echo "<tbody>";
+                    echo "<td>" . $allManus[$i]->id . "</td>";
+                    echo "<td>" . $allManus[$i]->hwTypeName . "</td>";
+                    echo "<td>" . "<a href='?showAllGerat=1&alterGeraet=".$allManus[$i]->id."'>Edit</a>" . "</td>";
+                echo "</tbody>";
+            }
+            echo "</table>";
+        }
+    }
+
+    /**
+     * Stellt alle Lieferanten dar
+     * Tablename : $manuDB = hardwaredeliverers
+     * 
+     * @param string $manuDB Tabellenname für hardwaredeliverers
+     * 
+     * @return void
+     */
+    public function showAllLieferant($manuDB = "hardwaredeliverers")
+    {
+        $getAllManus = "SELECT * FROM $manuDB";
+        $allManus = $this->getObjektInfo($getAllManus);
+
+        if (count($allManus) > 0) {
+            echo "<h2>Lieferanten</h2>";
+            echo "<table class='kontoTable'>";
+            echo "<thead>";
+                echo "<td>ID</td>";
+                echo "<td>Lieferantenname</td>";
+                echo "<td></td>";
+            echo "</thead>";
+            for ($i = 0; $i < sizeof($allManus); $i++) {
+                echo "<tbody>";
+                    echo "<td>" . $allManus[$i]->id . "</td>";
+                    echo "<td>" . $allManus[$i]->hwDelName . "</td>";
+                    echo "<td>" . "<a href='?showAllLieferant=1&alterLieferantID=".$allManus[$i]->id."'>Edit</a>" . "</td>";
+                echo "</tbody>";
+            }
+            echo "</table>";
+        }
+    }
+
+    /**
+     * Stellt alle Garantien dar
+     * Tablename : $manuDB = hardwaregarantietypes
+     * 
+     * @param string $manuDB Tabellenname für hardwaregarantietypes
+     * 
+     * @return void
+     */
+    public function showAllGarantie($manuDB = "hardwaregarantietypes")
+    {
+        $getAllManus = "SELECT * FROM $manuDB";
+        $allManus = $this->getObjektInfo($getAllManus);
+
+        if (count($allManus) > 0) {
+            echo "<h2>Garantien</h2>";
+            echo "<table class='kontoTable'>";
+            echo "<thead>";
+                echo "<td>ID</td>";
+                echo "<td>Garantiename</td>";
+                echo "<td></td>";
+            echo "</thead>";
+            for ($i = 0; $i < sizeof($allManus); $i++) {
+                echo "<tbody>";
+                    echo "<td>" . $allManus[$i]->id . "</td>";
+                    echo "<td>" . $allManus[$i]->hwGarantieName . "</td>";
+                    echo "<td>" . "<a href='?showAllGarantie=1&alterGarantieID=".$allManus[$i]->id."'>Edit</a>" . "</td>";
+                echo "</tbody>";
+            }
+            echo "</table>";
+        }
+    }
+
+    /**
+     * Stellt alle Hardware Typen dar
+     * Tablename : $manuDB = hardwaretypes
+     * 
+     * @param string $manuDB Tabellenname für hardwaretypes
+     * 
+     * @return void
+     */
+    public function showAllHwType($manuDB = "hardwaretypes")
+    {
+        $getAllManus = "SELECT * FROM $manuDB";
+        $allManus = $this->getObjektInfo($getAllManus);
+
+        if (count($allManus) > 0) {
+            echo "<h2>Garantien</h2>";
+            echo "<table class='kontoTable'>";
+            echo "<thead>";
+                echo "<td>ID</td>";
+                echo "<td>HardwareTyp Name</td>";
+                echo "<td></td>";
+            echo "</thead>";
+            for ($i = 0; $i < sizeof($allManus); $i++) {
+                echo "<tbody>";
+                    echo "<td>" . $allManus[$i]->id . "</td>";
+                    echo "<td>" . $allManus[$i]->hwTypeName . "</td>";
+                    echo "<td>" . "<a href='?showAllHwType=1&alterHwTypeID=".$allManus[$i]->id."'>Edit</a>" . "</td>";
+                echo "</tbody>";
+            }
+            echo "</table>";
+        }
     }
 
     /**
@@ -139,9 +322,42 @@ class HardwareDB extends Functions
             "hardwaremanufacturers", 
             $dbinfo, 
             "newChar", 
+            "kontoTable", 
             "Neuen Hersteller anlegen", 
             "?showAllManus=1", 
             "ersteller"
+        );
+    }
+
+    /**
+     * Erstellt ein neues Gerät
+     * 
+     * DB INFO:
+     * id               PRIMARY             
+     * timestamp        CURRENT_TIMESTAMP
+     * hwTypeName       VAR_CHAR(250)
+     * 
+     * @param string $manuDB Tabellenname für Geraete
+     * 
+     * @return void
+     */
+    public function createNewGeraet($manuDB = "hardwaredefinition")
+    {
+        $dbinfo = array (
+            array("id", "ID", "hidden", "number"),
+            array("timestamp", "Timestamp", "hidden", "text"),
+            array("hwTypeName","Gerät", "required", "text"),
+        );
+
+        $this->showCreateNewForm(
+            "newGeraet", 
+            $manuDB, 
+            $dbinfo, 
+            "newChar", 
+            "kontoTable", 
+            "Neues Gerät anlegen", 
+            "?showAllGeraet=1", 
+            " "
         );
     }
 
@@ -172,20 +388,32 @@ class HardwareDB extends Functions
             array("id", "ID", "hidden", "number"),
             array("timestamp", "Timestamp", "hidden", "text"),
             array("besitzer","Besitzer", "hidden", "number", "any"),
-            array("manufacturer","Hersteller", "required", array("options", "hardwaremanufacturers", "manuName")),
+            array("hwManu","Hersteller", "required", array("options", "hardwaremanufacturers", "manuName")),
             array("hwName", "Name", "required", "text"),
-            //                                              STEP
             array("hwValue", "Wert", "required", "number", "0.01"),
             array("hwDescription", "Beschreibung", " ", "text"),
             array("hwBuydate", "Kaufdatum", "required", "date"),
             array("hwGarantieLengthMonth", "Garantie (Monate)", " ", "number" , "any"),
+            array("hwType","Hardware", " ", array("options", "hardwaretypes", "hwTypeName")),
+            array("hwSerial","Seriennummer", " ", "text"),
+            array("hwDeliverer","Lieferant", " ", array("options", "hardwaredeliverers", "hwDelName")),
+            array("hwDelNumber","Lieferscheinnummer", " ", "text"),
+            array("hwDelDate","Lieferdatum", " ", "date"),
+            array("hwReNumber","Rechnungsnummer", " ", "text"),
+            array("hwReDate","Rechnungsdatum", " ", "date"),
+            array("hwGarantieType","Garantietyp", " ", array("options", "hardwaregarantietypes", "hwGarantieName")),
+            array("hwStandort","Arbeitsplatznummer", " ", "text"),
+            array("hwSold","Verkauft / Entsorgt", " ", "date"),
+            array("hwKostenstelle","Kostenstelle", " ", "text"),
+            array("hwHardwareType","Hardware Typ", "required", array("options", "hardwaredefinition", "hwTypeName")),
         );
 
         $this->showCreateNewForm(
             "newHard", 
             "hardwareentries", 
             $dbinfo, 
-            "newChar", 
+            "newChar",
+            "kontoTable", 
             "Neue Hardware anlegen", 
             "?start=1", 
             "besitzer"
@@ -245,7 +473,7 @@ class HardwareDB extends Functions
      */
     public function alterHardware($id)
     {
-
+        echo "Alter HWID $id";
     }
 
 }
