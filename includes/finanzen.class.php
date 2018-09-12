@@ -89,10 +89,11 @@ class FinanzenNEW extends functions
             // Buttons
             echo "<div class='innerBody'>";
             echo "<a href='?neuesKonto' class='rightBlueLink'>Neues Konto</a>";
-            echo "</div>";
+            
             // Kontomanipulationen
             $this->showCreateNewUeberweisung();
             $this->showCreateNewKonto($besitzer);
+            echo "</div>";
 
             // Konto&uuml;bersicht:
             $this->showKontoUebersicht($besitzer);
@@ -2216,7 +2217,7 @@ class FinanzenNEW extends functions
     {
         if (isset($_GET['neuesKonto'])) {
 
-            echo "<div class='newChar'>";
+            echo "<div class='newFahrt'>";
 
             $konten = $this->getAllKonten($besitzer);
             if (!isset($konten[0]->id) and !isset($konten[1]->id)) {
@@ -2234,7 +2235,7 @@ class FinanzenNEW extends functions
 
             echo "Kontoname: <br><form method=post><input type=text name=newKonto value='' placeholder='Kontoname' /><br>";
             echo "Mailadresse f&uuml;r das Konto: <br><input type=text name=mail value='' placeholder=Mail /><br>";
-            echo "<input type=submit name=insertNewKonto value=Speichern />";
+            echo "<br><button type=submit name=insertNewKonto>Speichern</button>";
             echo "</form></div>";
 
             if (isset($_POST['insertNewKonto']) and $this->userHasRight("18", 0) == true) {

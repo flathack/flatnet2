@@ -84,13 +84,13 @@ class HardwareDB extends Functions
      * 
      * @return void
      */
-    public function showAllManufacturers($manuDB = "hardwaremanfacturers")
+    public function showAllManufacturers($manuDB = "hardwaremanufacturers")
     {
         $getAllManus = "SELECT * FROM $manuDB";
         $allManus = $this->getObjektInfo($getAllManus);
 
         if (count($allManus) > 0) {
-            //echo "<div class='newFahrt'";
+            echo "<h2>Hersteller</h2>";
             echo "<table class='kontoTable'>";
             echo "<thead>";
                 echo "<td>Hersteller</td>";
@@ -124,7 +124,7 @@ class HardwareDB extends Functions
      * 
      * @return void
      */
-    public function createNewManufacturer($manuDB = "hardwaremanfacturers")
+    public function createNewManufacturer($manuDB = "hardwaremanufacturers")
     {
         $dbinfo = array (
             array("id", "ID", "hidden", "number"),
@@ -136,7 +136,7 @@ class HardwareDB extends Functions
 
         $this->showCreateNewForm(
             "newManu", 
-            "hardwaremanfacturers", 
+            "hardwaremanufacturers", 
             $dbinfo, 
             "newChar", 
             "Neuen Hersteller anlegen", 
@@ -172,7 +172,7 @@ class HardwareDB extends Functions
             array("id", "ID", "hidden", "number"),
             array("timestamp", "Timestamp", "hidden", "text"),
             array("besitzer","Besitzer", "hidden", "number", "any"),
-            array("manufacturer","Hersteller", "required", array("options", "hardwaremanfacturers", "manuName")),
+            array("manufacturer","Hersteller", "required", array("options", "hardwaremanufacturers", "manuName")),
             array("hwName", "Name", "required", "text"),
             //                                              STEP
             array("hwValue", "Wert", "required", "number", "0.01"),
@@ -207,15 +207,15 @@ class HardwareDB extends Functions
         $allManus = $this->getObjektInfo($getAllManus);
 
         if (count($allManus) > 0) {
-            //echo "<div class='newFahrt'";
+            echo "<h2>Hardware</h2>";
             echo "<table class='kontoTable'>";
             echo "<thead>";
-                echo "<td>Name</td>";
-                echo "<td>Wert</td>";
-                echo "<td>Beschreibung</td>";
-                echo "<td>Kaufdatum</td>";
-                echo "<td>Garantie</td>";
-                echo "<td>Hersteller</td>";
+                echo "<td><a href='?order=1'>Name</a></td>";
+                echo "<td><a href='?order=2'>Wert</a></td>";
+                echo "<td><a href='?order=3'>Beschreibung</a></td>";
+                echo "<td><a href='?order=4'>Kaufdatum</a></td>";
+                echo "<td><a href='?order=5'>Garantie</a></td>";
+                echo "<td><a href='?order=6'>Hersteller</a></td>";
                 echo "<td></td>";
             echo "</thead>";
             for ($i = 0; $i < sizeof($allManus); $i++) {
@@ -225,8 +225,9 @@ class HardwareDB extends Functions
                     echo "<td>" . $allManus[$i]->hwDescription . "</td>";
                     echo "<td>" . $allManus[$i]->hwBuydate . "</td>";
                     echo "<td>" . $allManus[$i]->hwGarantieLengthMonth . "</td>";
-                    echo "<td>" . $allManus[$i]->manufacturer . "</td>";
-                    echo "<td>" . "<a href='?start=1&alterHWID=".$allManus[$i]->id."'>Edit</a>" . "</td>";
+                    $manu = $this->getObjektInfo("SELECT id,manuName FROM hardwaremanufacturers WHERE id=".$allManus[$i]->id);
+                    echo "<td>" . $manu[$i]->manuName . "</td>";
+                    echo "<td>" . "<a href='?start=1&alterHWID=".$allManus[$i]->id."'>Edit</a><a class='redLink' href='?start=1&deleteHWID=".$allManus[$i]->id."'>X</a>" . "</td>";
                 echo "</tbody>";
             }
             echo "</table>";
