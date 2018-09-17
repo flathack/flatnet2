@@ -126,10 +126,10 @@ class HardwareDB extends Functions
         echo "<div class='finanzNAV'>";
             echo "<li><a href='/flatnet2/toyota/index.php?showAllHardware=1&newHardware'>NEU</a></li>";
             echo "<li><a href='/flatnet2/toyota/index.php?showAllManus=1&newManu=1'>Neuer Hersteller</a></li>";
-            echo "<li><a href='/flatnet2/toyota/index.php?showAllManus=1&newGeraet=1'>Neues Gerät erstellen</a></li>";
-            echo "<li><a href='/flatnet2/toyota/index.php?showAllManus=1&newLieferant=1'>Neuer Lieferant</a></li>";
-            echo "<li><a href='/flatnet2/toyota/index.php?showAllManus=1&newGarantie=1'>Neue Garantie</a></li>";
-            echo "<li><a href='/flatnet2/toyota/index.php?showAllManus=1&newHwType=1'>Neuer Hardware Typ</a></li>";
+            echo "<li><a href='/flatnet2/toyota/index.php?showAllGeraet=1&newGeraet=1'>Neues Gerät erstellen</a></li>";
+            echo "<li><a href='/flatnet2/toyota/index.php?showAllLieferant=1&newLieferant=1'>Neuer Lieferant</a></li>";
+            echo "<li><a href='/flatnet2/toyota/index.php?showAllGarantie=1&newGarantie=1'>Neue Garantie</a></li>";
+            echo "<li><a href='/flatnet2/toyota/index.php?showAllHWType=1&newHwType=1'>Neuer Hardware Typ</a></li>";
         echo "</div>";
     }
 
@@ -357,7 +357,103 @@ class HardwareDB extends Functions
             "kontoTable", 
             "Neues Gerät anlegen", 
             "?showAllGeraet=1", 
-            " "
+            "besitzer"
+        );
+    }
+
+    /**
+     * Erstellt eine neue Garantie
+     * 
+     * DB INFO:
+     * id               PRIMARY             
+     * timestamp        CURRENT_TIMESTAMP
+     * hwGarantieName   VAR_CHAR(250)
+     * 
+     * @param string $manuDB Tabellenname für Garantien
+     * 
+     * @return void
+     */
+    public function newGarantie($manuDB = "hardwaregarantietypes")
+    {
+        $dbinfo = array (
+            array("id", "ID", "hidden", "number"),
+            array("timestamp", "Timestamp", "hidden", "text"),
+            array("hwGarantieName","Garantie", "required", "text"),
+        );
+
+        $this->showCreateNewForm(
+            "newGarantie", 
+            $manuDB, 
+            $dbinfo, 
+            "newChar", 
+            "kontoTable", 
+            "Neue Garantie anlegen", 
+            "?showAllGarantie=1", 
+            "besitzer"
+        );
+    }
+
+    /**
+     * Erstellt einen neuen Lieferanten
+     * 
+     * DB INFO:
+     * id               PRIMARY             
+     * timestamp        CURRENT_TIMESTAMP
+     * hwDelName        VAR_CHAR(250)
+     * 
+     * @param string $manuDB Tabellenname für Lieferanten
+     * 
+     * @return void
+     */
+    public function newLieferant($manuDB = "hardwaredeliverers")
+    {
+        $dbinfo = array (
+            array("id", "ID", "hidden", "number"),
+            array("timestamp", "Timestamp", "hidden", "text"),
+            array("hwDelName","Lieferant", "required", "text"),
+        );
+
+        $this->showCreateNewForm(
+            "newLieferant", 
+            $manuDB, 
+            $dbinfo, 
+            "newChar", 
+            "kontoTable", 
+            "Neuem Lieferanten anlegen", 
+            "?showAllLieferant=1", 
+            "besitzer"
+        );
+    }
+
+    /**
+     * Erstellt einen neuen Hardware Typen
+     * 
+     * DB INFO:
+     * id               PRIMARY             
+     * timestamp        CURRENT_TIMESTAMP
+     * hwHWType         VAR_CHAR(250)
+     * 
+     * @param string $manuDB Tabellenname für HW Typen
+     * 
+     * @return void
+     */
+    public function newHwType($manuDB = "hardwaredefinition")
+    {
+        $dbinfo = array (
+            array("id", "ID", "hidden", "number"),
+            array("timestamp", "Timestamp", "hidden", "text"),
+            array("hwHWType","Lieferant", "required", "text"),
+        );
+
+        $this->showCreateNewForm(
+            "newHWType", 
+            $manuDB, 
+            $dbinfo, 
+            "newChar", 
+            "kontoTable", 
+            "Neuen HW Type anlegen", 
+            "?showAllHWType=1", 
+            "besitzer"
         );
     }
 
