@@ -63,9 +63,13 @@ session_start();
                     <?php require 'informationen/zweck.html'; ?>
                 </div>
             </div>
+            <div class="hinweis"><a href="/flatnet2/planner/index.php">Gehe zum EventPlanner</a></div>
+            
             <div id="register">
                 <?php $indexlogin->registerNewUser(); ?>
             </div>
+           
         </div>
+        
     </body>
 </html>
