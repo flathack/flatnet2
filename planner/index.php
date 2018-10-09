@@ -21,8 +21,8 @@
             <title>Steven.NET-Event Planner</title>
         </head>
         <body>
-            <div class='mainbodyDark'>
-                <?php $planner->plannerMainFunction(); ?>
+            <div class='mainbody'>
+                <?php $planner->plannerWelcome(); ?>
             </div>
         </body>
     </div>
