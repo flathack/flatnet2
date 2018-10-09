@@ -250,6 +250,7 @@ blockquote {
 #profil #profil,
 #adressbuch #adressbuch,
 #toyota #toyota,
+#planner #planner,
 #gebkalender #gebkalender,
 #informationen #dokumentation,
 #kontakt #kontakt,
@@ -323,6 +324,7 @@ blockquote {
 }
 .bereichadressbuch h2,
 .bereichtoyota h2,
+.bereichplanner h2,
 .bereichgebkalender h2,
 .bereichguildwars h2,
 .bereichforum h2,
@@ -336,6 +338,7 @@ blockquote {
 
 .bereichadressbuch h2:hover,
 .bereichtoyota h2:hover,
+.bereichplanner h2:hover,
 .bereichgebkalender h2:hover,
 .bereichguildwars h2:hover,
 .bereichforum h2:hover,
@@ -350,6 +353,7 @@ blockquote {
 }
 .bereichadressbuch p,
 .bereichtoyota p,
+.bereichplanner p,
 .bereichgebkalender p,
 .bereichguildwars p,
 .bereichforum p,
@@ -402,6 +406,18 @@ blockquote {
     display: inline-block;
 }
 .bereichtoyota {
+    background-color: rgb(255, 255, 255);
+    box-shadow: 0px 0px 5px red;
+    border: 1px solid red;
+    margin-bottom: 10px;
+    margin-right: 10px;
+    border-radius: 10px;
+    padding: 5px;
+    min-height: 120px;
+    width: 46%;
+    display: inline-block;
+}
+.bereichplanner {
     background-color: rgb(255, 255, 255);
     box-shadow: 0px 0px 5px red;
     border: 1px solid red;
@@ -2611,7 +2627,7 @@ li a:visited:hover,
     margin-top: 5px;
     margin-bottom: 5px;
     background: white;
-    box-shadow: 0px 0px 5px #008000;
+    box-shadow: 0px 0px 5px #008600;
     display: inline-block;
     width: 99%;
 }
@@ -2637,16 +2653,6 @@ li a:visited:hover,
 }
 .gruppierung:hover {
     border: 1px solid green;
-}
-.greenLine {
-    background-color: green;
-}
-.infoText {
-    color: grey;
-    font-size: 1em;
-    padding: 5px;
-    margin-left: auto;
-    margin-right: auto;
 }
 .docuEintrag input[type=text] {
     width: 70%;
@@ -2793,69 +2799,5 @@ input[type=checkbox]+label:hover {
     -ms-transition: all 0.3s ease-in-out;
     -o-transition: all 0.3s ease-in-out;
     transition: all 0.3s ease-in-out;
-}
-/* STAR CITIZEN */
-
-.SCChars {
-    border: 1px solid #4d4d4d;
-    background-color: #4d4d4d;
-    width: 97%;
-    height: 150px;
-    padding: 10px;
-    color: white;
-}
-.mainbodyStarCitizen {
-    background-color: white;
-    padding: 5px;
-}
-/* Lernbereich */
-
-.showKategorien {
-    margin: 10px;
-}
-.showKategorien ul li {
-    background-color: grey;
-    padding: 5px;
-    list-style-type: none;
-    margin-left: 0px;
-}
-.showKategorien ul li a {
-    color: white;
-}
-.createNewEintragInKategorie {
-    margin-top: 20px;
-    margin-bottom: 20px;
-    border: 1px solid grey;
-    box-shadow: 0px 0px 10px grey;
-    padding: 10px;
-}
-.createNewEintragInKategorie input[type=text] {
-    margin-bottom: 20px;
-    width: 98%;
-}
-.learnEintrag {
-    border: 1px solid grey;
-    margin-bottom: 10px;
-    padding: 5px;
-}
-.learnEintrag h3 {
-    margin-bottom: 10px;
-}
-.learnEintrag #bottom {
-    border-top: 2px solid grey;
-    padding: 10px;
-    background-color: #e3e3e3;
-}
-.learnNewCat {
-    border: 1px solid grey;
-    padding: 10px;
-}
-.learnNewCat #oeffentlich {
-    padding-top: 10px;
-}
-.loesungEintrag {
-    border-top: 2px solid grey;
-    margin-top: 5px;
-    padding-top: 20px;
 }
 /* ENDE DER CSS */
