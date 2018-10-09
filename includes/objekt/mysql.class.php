@@ -316,6 +316,20 @@ class Sql
                         
         return $results;
     }
+
+    /**
+     * Speichert die Informationen !eines! Objekts in der Variable $row
+     * Synonym für getObjektInfo
+     * 
+     * @param String $query Query fuer die Abfrage
+     * 
+     * @return object
+     */
+    function sqlselect(string $query) 
+    {
+        $results = $this->getObjektInfo($query);
+        return $results;
+    }
     
     /**
      * Laed Informationen in ein Objekt.
