@@ -53,7 +53,7 @@ class Functions extends Sql
                 // Spalten der Tabelle selektieren:
                 $colums = "SHOW COLUMNS FROM $tabelle";
 
-                $rowSpalten = $this->getObjektInfo($colums);
+                $rowSpalten = $this->sqlselect($colums);
 
                 // SuchQuery bauen:
                 // Start String:
@@ -67,7 +67,7 @@ class Functions extends Sql
                 $querySuche .= ")";
 
                 // Query für die Suche
-                $suchfeld = $this->getObjektInfo($querySuche);
+                $suchfeld = $this->sqlselect($querySuche);
 
                 // Ausgabe der Suche
                 $ergebnis_der_suche .= "<h2>Suchergebnis (= $ursprünglicheSuche)</h2>";
@@ -147,7 +147,7 @@ class Functions extends Sql
     public function getUserID($username)
     {
         // Namen des Benutzers auswählen:
-        $userInfo = $this->getObjektInfo("SELECT id, Name FROM benutzer WHERE Name = '$username' LIMIT 1");
+        $userInfo = $this->sqlselect("SELECT id, Name FROM benutzer WHERE Name = '$username' LIMIT 1");
         if (isset($userInfo[0]->id)) {
             $userID = $userInfo[0]->id;
         } else {
@@ -167,7 +167,7 @@ class Functions extends Sql
     {
         // Namen des Benutzers auswählen:
         $selectUsername = "SELECT id, Name FROM benutzer WHERE id = '$userid' LIMIT 1";
-        $rowUsername = $this->getObjektInfo($selectUsername);
+        $rowUsername = $this->sqlselect($selectUsername);
         if (isset($rowUsername[0]->Name)) {
             $username = $rowUsername[0]->Name;
         } else {
@@ -187,7 +187,7 @@ class Functions extends Sql
     public function getCatID($kategorieName)
     {
         $selectKat = "SELECT id, kategorie FROM blogkategorien WHERE kategorie = '$kategorieName' LIMIT 1";
-        $row = $this->getObjektInfo($selectKat);
+        $row = $this->sqlselect($selectKat);
         if (isset($row[0]->id)) {
             $catID = $row[0]->id;
         } else {
@@ -206,7 +206,7 @@ class Functions extends Sql
     public function getCatName($kategorieID)
     {
         $selectKat = "SELECT id, kategorie FROM blogkategorien WHERE id = '$kategorieID' LIMIT 1";
-        $row = $this->getObjektInfo($selectKat);
+        $row = $this->sqlselect($selectKat);
         if (isset($row[0]->kategorie)) {
             $catName = $row[0]->kategorie;
         } else {
@@ -229,14 +229,14 @@ class Functions extends Sql
 
         $user = $_SESSION['username'];
         $rightFromCurrentUser = "SELECT rights, titel FROM benutzer WHERE Name = '$user'";
-        $row = $this->getObjektInfo($rightFromCurrentUser);
+        $row = $this->sqlselect($rightFromCurrentUser);
 
         $benutzerrechte = $row[0]->rights;
         $rechte = array();
 
         // Menge der Rechte prüfen:
         $selectAnzahl = "SELECT count(*) as anzahl FROM userrights";
-        $menge = $this->getObjektInfo($selectAnzahl);
+        $menge = $this->sqlselect($selectAnzahl);
         // Anzahl prüfen Ende
 
         for ($i = $menge[0]->anzahl; $i >= 0; $i--) {
@@ -270,7 +270,7 @@ class Functions extends Sql
     {
         $user = $this->getUserID($_SESSION['username']);
         $query = "SELECT besitzer, right_id FROM rights WHERE besitzer = $user AND right_id = $rightID LIMIT 1";
-        $userHasRight = $this->getObjektInfo($query);
+        $userHasRight = $this->sqlselect($query);
         if (isset($userHasRight[0]->besitzer) and isset($userHasRight[0]->right_id)) {
             if ($userHasRight[0]->besitzer == $user and $userHasRight[0]->right_id == $rightID) {
                 return true;
@@ -302,7 +302,7 @@ class Functions extends Sql
 
         $query = "SELECT besitzer, right_id FROM rights WHERE besitzer = $user AND right_id = $id LIMIT 1";
 
-        $userHasRight = $this->getObjektInfo($query);
+        $userHasRight = $this->sqlselect($query);
 
         if (isset($userHasRight[0]->besitzer) and isset($userHasRight[0]->right_id)) {
             if ($userHasRight[0]->besitzer == $user and $userHasRight[0]->right_id == $id) {
@@ -330,7 +330,7 @@ class Functions extends Sql
         if ($benutzerrechte == 0) {
             $user = $_SESSION['username'];
             $rightFromCurrentUser = "SELECT * FROM benutzer WHERE Name = '$user' LIMIT 1";
-            $row = $this->getObjektInfo($rightFromCurrentUser);
+            $row = $this->sqlselect($rightFromCurrentUser);
             $benutzerrechte = $row[0]->rights;
         }
 
@@ -338,7 +338,7 @@ class Functions extends Sql
 
         // Anzahl der Rechte prüfen
         $selectAnzahl = "SELECT count(*) as anzahl FROM userrights";
-        $menge = $this->getObjektInfo($selectAnzahl);
+        $menge = $this->sqlselect($selectAnzahl);
         $menge = $menge[0]->anzahl;
         // Anzahl prüfen Ende
 
@@ -711,7 +711,7 @@ class Functions extends Sql
     {
         echo "<ul id='navigation'>";
 
-        $kacheln = $this->getObjektInfo("SELECT * FROM uebersicht_kacheln WHERE active=1 ORDER BY sortierung");
+        $kacheln = $this->sqlselect("SELECT * FROM uebersicht_kacheln WHERE active=1 ORDER BY sortierung");
         if ($this->userHasRight(7, 0) == "true") {
             echo "<li>	<a href='/flatnet2/uebersicht.php' id='uebersicht'>Startseite</a></li>";
         }
@@ -738,7 +738,7 @@ class Functions extends Sql
     {
         if ($this->userHasRight(24, 0) == true) {
             echo "<div class='InfoCenter'>";
-            $docuInfo = $this->getObjektInfo("SELECT *, month(timestamp) AS monat, day(timestamp) AS tag, year(timestamp) AS jahr FROM docu ORDER BY timestamp DESC LIMIT 1");
+            $docuInfo = $this->sqlselect("SELECT *, month(timestamp) AS monat, day(timestamp) AS tag, year(timestamp) AS jahr FROM docu ORDER BY timestamp DESC LIMIT 1");
             if (isset($docuInfo[0]->text)) {
                 echo "<a href='/flatnet2/informationen/hilfe.php'>" . $docuInfo[0]->tag . "." . $docuInfo[0]->monat . "." . $docuInfo[0]->jahr . "</a>: " . substr($docuInfo[0]->text, 0, 80);
             }
@@ -761,7 +761,7 @@ class Functions extends Sql
             $linkname = "Es gibt nichts neues";
             $class = "rightBlueLink";
 
-            $anzahlBenachrichtigungen = $this->getObjektInfo(
+            $anzahlBenachrichtigungen = $this->sqlselect(
                 "SELECT count(*) as anzahl
                 FROM blog_kommentare WHERE text LIKE '$text'
                 AND datediff(curdate(), timestamp) < 5
@@ -795,7 +795,7 @@ class Functions extends Sql
 
                 for ($i = 0; $i < sizeof($gefundeneForeneintraege); $i++) {
 
-                    $blogidInfos = $this->getObjektInfo("SELECT * FROM blogtexte WHERE id = '" . $gefundeneForeneintraege[$i]->blogid . "' LIMIT 1 ");
+                    $blogidInfos = $this->sqlselect("SELECT * FROM blogtexte WHERE id = '" . $gefundeneForeneintraege[$i]->blogid . "' LIMIT 1 ");
 
                     echo "<a href='/flatnet2/blog/blogentry.php?showblogid="
                     . $gefundeneForeneintraege[$i]->blogid
@@ -821,7 +821,7 @@ class Functions extends Sql
     {
         // Titel anzeigen:
         $userID = $this->getUserID($_SESSION['username']);
-        $userTitel = $this->getObjektInfo("SELECT id, titel FROM benutzer WHERE id = '$userID' LIMIT 1");
+        $userTitel = $this->sqlselect("SELECT id, titel FROM benutzer WHERE id = '$userID' LIMIT 1");
         if (isset($userTitel) and $userTitel[0]->titel != "") {
             echo "<div class='spacer'><a class='rightGreenLink' href='/flatnet2/forum/index.php?blogcategory=5'>Titel: " . $userTitel[0]->titel . "</a></div>";
         }

@@ -45,7 +45,7 @@ class Usermanager extends Functions
 
         } else {
             $select = "SELECT * FROM benutzer WHERE Name = '$user' LIMIT 1";
-            $row = $this->getObjektInfo($select);
+            $row = $this->sqlselect($select);
             for ($i = 0; $i < sizeof($row); $i++) {
                 if (!isset($row[$i]->Name) or $row[$i]->Name == "") {
                     echo "<p class='info'>Der Benutzer existiert nicht</p>";
@@ -68,7 +68,7 @@ class Usermanager extends Functions
                         $selectBlog = "SELECT * FROM blogtexte WHERE autor = '$userid' AND status = '1' ORDER BY timestamp DESC";
                     }
 
-                    $row2 = $this->getObjektInfo($selectBlog);
+                    $row2 = $this->sqlselect($selectBlog);
                     for ($j = 0; $j < sizeof($row2); $j++) {
 
                         echo "<tbody ";
@@ -104,7 +104,7 @@ class Usermanager extends Functions
         if (isset($_GET['userlist']) or isset($_GET['user'])) {
             //Benutzerauswahl
             $benutzerlisteUser = "SELECT id, Name FROM benutzer ORDER BY name";
-            $rowUser = $this->getObjektInfo($benutzerlisteUser);
+            $rowUser = $this->sqlselect($benutzerlisteUser);
 
             for ($i = 0; $i < sizeof($rowUser); $i++) {
                 echo "<div class='gwstart1'>";
@@ -131,7 +131,7 @@ class Usermanager extends Functions
         $user = $this->getUserID($_SESSION['username']);
         //General Account Information
         $select = "SELECT * FROM benutzer WHERE id = '$user'";
-        $row = $this->getObjektInfo($select);
+        $row = $this->sqlselect($select);
         if (isset($row[0]->realName)) {
             $name = $row[0]->realName;
         } else {
@@ -147,7 +147,7 @@ class Usermanager extends Functions
 
         //Guildwars Account Information
         $select = "SELECT count(*) as anzahl FROM gw_chars WHERE besitzer = '$user'";
-        $mengeGrund = $this->getObjektInfo($select);
+        $mengeGrund = $this->sqlselect($select);
         $menge = $mengeGrund[0]->anzahl;
         echo "<div id=''>";
         echo "<h2>Guildwars</h2>";
@@ -155,7 +155,7 @@ class Usermanager extends Functions
 
         //Dokumentation Account Information
         $select = "SELECT count(*) as anzahl FROM docu WHERE autor = '$user'";
-        $mengeGrund = $this->getObjektInfo($select);
+        $mengeGrund = $this->sqlselect($select);
         $menge = $mengeGrund[0]->anzahl;
         echo "<div id=''>";
         echo "<h2>Dokumentation</h2>";
@@ -164,14 +164,14 @@ class Usermanager extends Functions
 
         //Vorschläge Account Information
         $select = "SELECT count(*) as anzahl FROM vorschlaege WHERE autor = '$user'";
-        $mengeGrund = $this->getObjektInfo($select);
+        $mengeGrund = $this->sqlselect($select);
         $menge = $mengeGrund[0]->anzahl;
         echo "<div id=''>";
         echo "</div>";
 
         //Vorschläge Account Information
         $select = "SELECT count(*) as anzahl FROM blogtexte WHERE autor = '$user'";
-        $mengeGrund = $this->getObjektInfo($select);
+        $mengeGrund = $this->sqlselect($select);
         $menge = $mengeGrund[0]->anzahl;
         echo "<div id=''>";
         echo "<h2>Foreneinträge</h2>";
@@ -200,10 +200,10 @@ class Usermanager extends Functions
         FROM blogtexte
         WHERE autor = '$user'
         ORDER BY timestamp DESC";
-            $row2 = $this->getObjektInfo($selectBlog);
+            $row2 = $this->sqlselect($selectBlog);
 
             //Menge abfragen:
-            $mengeGrund = $this->getObjektInfo("SELECT count(*) as anzahl FROM blogtexte WHERE autor = '$user' ");
+            $mengeGrund = $this->sqlselect("SELECT count(*) as anzahl FROM blogtexte WHERE autor = '$user' ");
             $menge = $mengeGrund[0]->anzahl;
 
             for ($i = 0; $i < sizeof($row2); $i++) {
@@ -256,7 +256,7 @@ class Usermanager extends Functions
 
         //Altes Passwort holen aus der Datenbank holen:
         $abfrage = "SELECT Name, Passwort FROM benutzer WHERE Name LIKE '$user' LIMIT 1";
-        $row = $this->getObjektInfo($abfrage);
+        $row = $this->sqlselect($abfrage);
 
         //Check ob altes passwort = dem alten eingegeben Passwort ist:
         $hashOldPass = md5($altesPasswort);
@@ -447,8 +447,8 @@ class Usermanager extends Functions
             $user = $this->getUserID($_SESSION['username']);
             $select = "SELECT count(*) as anzahl FROM gw_accounts WHERE besitzer = '$user'";
             $select2 = "SELECT * FROM gw_accounts WHERE besitzer = '$user'";
-            $row = $this->getObjektInfo($select2);
-            $mengeGrund = $this->getObjektInfo($select);
+            $row = $this->sqlselect($select2);
+            $mengeGrund = $this->sqlselect($select);
             $menge = $mengeGrund[0]->anzahl;
 
             if ($menge == 0) {
@@ -493,7 +493,7 @@ class Usermanager extends Functions
 
                     //nächste Acc Nr bekommen:
                     $accnummer = "SELECT MAX(account) AS max FROM gw_accounts WHERE besitzer = '$user'";
-                    $row = $this->getObjektInfo($accnummer);
+                    $row = $this->sqlselect($accnummer);
                     $nextAccNo = $row[0]->max + 1;
 
                     if ($mail == "" or $nextAccNo == "") {
@@ -525,10 +525,10 @@ class Usermanager extends Functions
                 $user = $this->getUserID($_SESSION['username']);
 
                 $query = "SELECT * FROM gw_accounts WHERE besitzer = '$user' AND account = '$nummer' LIMIT 1";
-                $row = $this->getObjektInfo($query);
+                $row = $this->sqlselect($query);
 
                 //Gelöschte Stunden bekommen:
-                $stunden = $this->getObjektInfo("SELECT * FROM account_infos WHERE besitzer = '$user' AND account = '$nummer' AND attribut = 'gw_geloschte_stunden' LIMIT 1");
+                $stunden = $this->sqlselect("SELECT * FROM account_infos WHERE besitzer = '$user' AND account = '$nummer' AND attribut = 'gw_geloschte_stunden' LIMIT 1");
 
                 if (!isset($stunden[0]->wert)) {
                     $stundenWert = 0;
@@ -573,12 +573,12 @@ class Usermanager extends Functions
             }
 
             $query = "SELECT * FROM gw_accounts WHERE besitzer = '$user' AND account = '$nummer' LIMIT 1";
-            $row = $this->getObjektInfo($query);
+            $row = $this->sqlselect($query);
 
             $sqlupdate = "UPDATE gw_accounts SET mail='$mail' WHERE besitzer='$user' AND account='$nummer'";
 
             //Gelöschte Stunden bekommen:
-            $stundenOld = $this->getObjektInfo("SELECT * FROM account_infos WHERE besitzer = '$user' AND account = '$nummer' AND attribut = 'gw_geloschte_stunden' LIMIT 1");
+            $stundenOld = $this->sqlselect("SELECT * FROM account_infos WHERE besitzer = '$user' AND account = '$nummer' AND attribut = 'gw_geloschte_stunden' LIMIT 1");
 
             if ($this->sql_insert_update_delete($sqlupdate) == true) {
 
@@ -626,7 +626,7 @@ class Usermanager extends Functions
                 //nächste Acc Nr bekommen:
                 $query = "SELECT * FROM gw_accounts WHERE besitzer = '$user' AND account = '$nummer' LIMIT 1";
 
-                $row = $this->getObjektInfo($query);
+                $row = $this->sqlselect($query);
 
                 if (isset($_GET['Sure'])) {
                     if ($_GET['Sure'] == 1) {
@@ -712,17 +712,17 @@ class Usermanager extends Functions
             );
 
             //nächste Acc Nr bekommen:
-            $row = $this->getObjektInfo(
+            $row = $this->sqlselect(
                 "SELECT * FROM gw_accounts 
                 WHERE besitzer = '$user' AND account = '$nummer' LIMIT 1"
             );
 
-            $stundenThisAcc = $this->getObjektInfo(
+            $stundenThisAcc = $this->sqlselect(
                 "SELECT sum(spielstunden) as summe FROM gw_chars 
                 WHERE besitzer = '$user' AND account = '$nummer' LIMIT 1"
             );
 
-            $geloschteStundenCurrentAccount = $this->getObjektInfo(
+            $geloschteStundenCurrentAccount = $this->sqlselect(
                 "SELECT besitzer, attribut, wert, account 
                 FROM account_infos 
                 WHERE besitzer = '$user' 

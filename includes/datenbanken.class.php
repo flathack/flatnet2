@@ -121,7 +121,7 @@ class Datenbanken extends Functions
 
                 // Informationen heranholen
                 $modsql = "SELECT * FROM adressbuch WHERE id=$bearbeiten";
-                $rowbearb = $this->getObjektInfo($modsql);
+                $rowbearb = $this->sqlselect($modsql);
 
                 $_GET['userid'] = $userid;
                 echo "<input type='hidden' name='id' value='" . $rowbearb[0]->id . "' readonly>";
@@ -475,7 +475,7 @@ class Datenbanken extends Functions
         if ($this->userHasRight(13, 0) == true) {
             $ausgabe = "";
             $query = "SELECT * FROM adressbuch ORDER BY nachname";
-            $row = $this->getObjektInfo($query);
+            $row = $this->sqlselect($query);
             echo "<table class='kontoTable'>";
             echo "<thead>";
                 echo "<td>Name</td>"; 
@@ -517,7 +517,7 @@ class Datenbanken extends Functions
                 if ($monat != "") {
                     $select = "SELECT *, month(geburtstag) AS monat, day(geburtstag) as tag FROM adressbuch WHERE month(geburtstag) = '$monat' ORDER BY tag";
 
-                    $row = $this->getObjektInfo($select);
+                    $row = $this->sqlselect($select);
                     echo "<div id='draggable' class='summe'>";
                     echo "<a href='?#gebs' class='closeSumme'>X</a>";
                     echo "<h2>Detailansicht Monat</h2>";
@@ -541,7 +541,7 @@ class Datenbanken extends Functions
     public function showContractsFromGroup($group)
     {
         if ($this->userHasRight(22, 0) == true) {
-            $contacts = $this->getObjektInfo("SELECT * FROM adressbuch WHERE gruppe = '$group'");
+            $contacts = $this->sqlselect("SELECT * FROM adressbuch WHERE gruppe = '$group'");
 
             return $contacts;
         }
@@ -571,7 +571,7 @@ class Datenbanken extends Functions
         if ($this->userHasRight(22, 0) == true) {
             echo "<div class='mainbodyDark'>Gruppen:";
             // Alle Gruppen aus DB ziehen:
-            $allgroups = $this->getObjektInfo("SELECT * FROM adressbuch GROUP BY gruppe");
+            $allgroups = $this->sqlselect("SELECT * FROM adressbuch GROUP BY gruppe");
 
             // Checkboxen erstellen:
             echo "<form action='#gebs' method=post>";
@@ -652,7 +652,7 @@ class Datenbanken extends Functions
                     //echo "<div class='newChar'>" . $query . " Grφίe von SelectedGroups:" . sizeof($selectedGroups) .  " | Counter: $counterFόrOR</div>";
 
                     //Aus Datenbank laden:
-                    $getGeburtstage = $this->getObjektInfo($query);
+                    $getGeburtstage = $this->sqlselect($query);
 
                     $j = 1;
                     if (sizeof($getGeburtstage) > 6) { // wenn nicht genug Platz ist.

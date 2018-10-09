@@ -138,7 +138,7 @@ class FinanzenNEW extends functions
             }
 
             // Forderungen anzeigen (Art = 3)
-            $getForderungskonten = $this->getObjektInfo($queryFK);
+            $getForderungskonten = $this->sqlselect($queryFK);
             $anzahlForderungsK = $this->getAmount($queryFK) + 0;
             $sumofFord = 0;
             if ($anzahlForderungsK > 0) {
@@ -147,7 +147,7 @@ class FinanzenNEW extends functions
                 echo "<h3>Forderungen</h3>";
                 for ($i = 0; $i < sizeof($getForderungskonten); $i++) {
                     $summe = "SELECT sum(umsatzWert) as summe FROM finanzen_umsaetze WHERE konto=" . $getForderungskonten[$i]->id . " AND datum <= CURDATE()";
-                    $umsaetze = $this->getObjektInfo($summe);
+                    $umsaetze = $this->sqlselect($summe);
                     $wert = round($umsaetze[0]->summe + 0, 2);
 
                     $sumofFord = $sumofFord + $wert;
@@ -164,7 +164,7 @@ class FinanzenNEW extends functions
             }
 
             // Verbindlichkeiten anzeigen (Art = 4)
-            $getVerbindK = $this->getObjektInfo($queryVK);
+            $getVerbindK = $this->sqlselect($queryVK);
             $anzahlVerbK = $this->getAmount($queryVK) + 0;
             $sumofVerbind = 0;
             if ($anzahlVerbK > 0) {
@@ -174,7 +174,7 @@ class FinanzenNEW extends functions
                 echo "<h3>Verbindlichkeiten</h3>";
                 for ($i = 0; $i < sizeof($getVerbindK); $i++) {
                     $summe = "SELECT sum(umsatzWert) as summe FROM finanzen_umsaetze WHERE konto=" . $getVerbindK[$i]->id . " AND datum <= CURDATE()";
-                    $umsaetze = $this->getObjektInfo($summe);
+                    $umsaetze = $this->sqlselect($summe);
                     $wert = round($umsaetze[0]->summe + 0, 2);
 
                     $sumofVerbind = $sumofVerbind + $wert;
@@ -193,14 +193,14 @@ class FinanzenNEW extends functions
 
             // Guthaben anzeigen (Art = 1)
             $queryGH = "SELECT * FROM finanzen_konten WHERE besitzer=$besitzer AND art=1";
-            $getGuthaben = $this->getObjektInfo($queryGH);
+            $getGuthaben = $this->sqlselect($queryGH);
             $sumofGuthaben = 0;
             echo "<div class='publicInfo'>";
             echo "<h3>Guthaben</h3>";
 
             for ($i = 0; $i < sizeof($getGuthaben); $i++) {
                 $summe = "SELECT sum(umsatzWert) as summe FROM finanzen_umsaetze WHERE konto=" . $getGuthaben[$i]->id . " AND datum <= CURDATE()";
-                $umsaetze = $this->getObjektInfo($summe);
+                $umsaetze = $this->sqlselect($summe);
                 $wert = round($umsaetze[0]->summe + 0, 2);
 
                 $sumofGuthaben = $sumofGuthaben + $wert;
@@ -323,7 +323,7 @@ class FinanzenNEW extends functions
                 // Spalten der Tabelle selektieren:
                 $colums = "SHOW COLUMNS FROM finanzen_umsaetze";
 
-                $rowSpalten = $this->getObjektInfo($colums);
+                $rowSpalten = $this->sqlselect($colums);
 
                 // SuchQuery bauen:
                 // Start String:
@@ -341,7 +341,7 @@ class FinanzenNEW extends functions
                 $querySuche .= ")";
 
                 // Query f&uuml;r die Suche
-                $suchfeld = $this->getObjektInfo($querySuche);
+                $suchfeld = $this->sqlselect($querySuche);
 
                 echo "<div id='draggable' class='summe'>";
                 echo "Die Suche nach <strong>($suchWort)</strong> ergab folgendes Ergebnis:";
@@ -350,7 +350,7 @@ class FinanzenNEW extends functions
                 echo "<thead><td>Konto</td><td>Umsatzname</td><td>Wert</td><td>Datum</td></thead>";
                 for ($i = 0; $i < sizeof($suchfeld); $i++) {
 
-                    $kontoname = $this->getObjektInfo("SELECT * FROM finanzen_konten WHERE id=" . $suchfeld[$i]->konto . " LIMIT 1");
+                    $kontoname = $this->sqlselect("SELECT * FROM finanzen_konten WHERE id=" . $suchfeld[$i]->konto . " LIMIT 1");
                     $kontoname = $kontoname[0]->konto;
 
                     echo "<tr><td>" . $kontoname . "</td><td> " . "<a href='?konto=" . $suchfeld[$i]->konto . "&jahr=" . $suchfeld[$i]->jahr . "&monat=" . $suchfeld[$i]->monat . "&selected=" . $suchfeld[$i]->buchungsnr . "'>" . substr($suchfeld[$i]->umsatzName, 0, 20) . "</a></td>" . "<td>" . $suchfeld[$i]->umsatzWert . "</td>" . "<td>" . $suchfeld[$i]->datum . "</td>" . "</td></tr>";
@@ -378,7 +378,7 @@ class FinanzenNEW extends functions
         ];
 
         // get umsatz information
-        $umsatz = $this->getObjektInfo("SELECT * FROM finanzen_umsaetze WHERE id=$id");
+        $umsatz = $this->sqlselect("SELECT * FROM finanzen_umsaetze WHERE id=$id");
         if (isset($umsatz[0]->id)) {
             foreach ($list as $listobject) {
                 if (stristr($umsatz[0]->umsatzName, "$listobject") === false) {
@@ -406,8 +406,8 @@ class FinanzenNEW extends functions
         if (isset($kontoid) and is_numeric($kontoid) == true) {
             $currentuser = $this->getUserID($_SESSION['username']);
 
-            $kontoinfos = $this->getObjektInfo("SELECT * FROM finanzen_konten WHERE id=$kontoid");
-            $getshareInfos = $this->getObjektInfo("SELECT * FROM finanzen_shares WHERE target_user=$currentuser AND konto_id=$kontoid");
+            $kontoinfos = $this->sqlselect("SELECT * FROM finanzen_konten WHERE id=$kontoid");
+            $getshareInfos = $this->sqlselect("SELECT * FROM finanzen_shares WHERE target_user=$currentuser AND konto_id=$kontoid");
 
             if (!isset($kontoinfos[0]->id)) {
                 $error = 1;
@@ -461,7 +461,7 @@ class FinanzenNEW extends functions
         $monat = $this->getMonatFromGet();
         $currentMonth = $monat;
         // get konto information
-        $kontoinformation = $this->getObjektInfo("SELECT * FROM finanzen_konten WHERE id=$kontoID AND besitzer=$besitzer");
+        $kontoinformation = $this->sqlselect("SELECT * FROM finanzen_konten WHERE id=$kontoID AND besitzer=$besitzer");
 
         // jetziger Monat:
 
@@ -475,7 +475,7 @@ class FinanzenNEW extends functions
             // Jahresanfangssaldo bekommen:
             $letztesJahr = $currentYear - 1;
             $summeJahresabschluesseBisJetzt = $this->getJahresabschluesseBISJETZT($kontoID, $currentYear);
-            $summeUmsaetzeDiesesJahr = $this->getObjektInfo(
+            $summeUmsaetzeDiesesJahr = $this->sqlselect(
                 "SELECT sum(umsatzWert) as summe
                 FROM finanzen_umsaetze
                 WHERE konto = $kontoID
@@ -487,7 +487,7 @@ class FinanzenNEW extends functions
             // Ums&auml;tze der Vergangenheit einzeln addiert.
             $diesesJahr = date("Y");
             if ($this->checkIfJahrIsInFuture($diesesJahr, $currentYear) == true) {
-                $getSaldoUntilNow = $this->getObjektInfo(
+                $getSaldoUntilNow = $this->sqlselect(
                     "SELECT sum(umsatzWert) as summe
                     FROM finanzen_umsaetze
                     WHERE konto = $kontoID
@@ -502,7 +502,7 @@ class FinanzenNEW extends functions
 
             // Update vom 30.12.2016:
             // Bei Konten Art 2 wird kein Saldo angezeigt ...
-            $kontoinfos = $this->getObjektInfo("SELECT * FROM finanzen_konten WHERE id=$kontoID");
+            $kontoinfos = $this->sqlselect("SELECT * FROM finanzen_konten WHERE id=$kontoID");
 
             if ($kontoinfos[0]->art == 2) {
                 echo "<thead><td colspan=8 id='notOK'>Dieses Konto hat keinen Saldo!</td></thead>";
@@ -589,7 +589,7 @@ class FinanzenNEW extends functions
 
                     //Gegenkonto
                     // Name des Gegenkontos bekommen
-                    $nameGegenkonto = $this->getObjektInfo("SELECT * FROM finanzen_konten WHERE id=" . $umsaetze[$i]->gegenkonto . " LIMIT 1");
+                    $nameGegenkonto = $this->sqlselect("SELECT * FROM finanzen_konten WHERE id=" . $umsaetze[$i]->gegenkonto . " LIMIT 1");
                     echo "<td>" . $nameGegenkonto[0]->konto . "</td>";
 
                     //Umsatz
@@ -657,7 +657,7 @@ class FinanzenNEW extends functions
                 }
                 $curdate = $currentYear . "-" . $monat . "-01";
 
-                $naechsterUmsatz = $this->getObjektInfo("SELECT *, month(datum) as monat, year(datum) as jahr FROM finanzen_umsaetze WHERE besitzer=$besitzer AND konto=$kontoID AND datum > '$curdate' ORDER BY datum ASC LIMIT 1");
+                $naechsterUmsatz = $this->sqlselect("SELECT *, month(datum) as monat, year(datum) as jahr FROM finanzen_umsaetze WHERE besitzer=$besitzer AND konto=$kontoID AND datum > '$curdate' ORDER BY datum ASC LIMIT 1");
 
                 echo "<tbody id='plus'><td colspan=7>$curdate In diesem Monat gibt es keine Ums&auml;tze, der n&auml;chste Umsatz lautet: </td></tbody>";
 
@@ -713,7 +713,7 @@ class FinanzenNEW extends functions
             echo "<div class='alterUmsatz'><h2>L&ouml;sche ... </h2>";
             $i = 0;
             foreach ($numbers as $buchungsnr) {
-                $ownerofUmsatz = $this->getObjektInfo("SELECT id, besitzer FROM finanzen_umsaetze WHERE buchungsnr=$buchungsnr LIMIT 1");
+                $ownerofUmsatz = $this->sqlselect("SELECT id, besitzer FROM finanzen_umsaetze WHERE buchungsnr=$buchungsnr LIMIT 1");
                 $ownerofUmsatzBesitzer = $ownerofUmsatz[0]->besitzer;
                 if ($ownerofUmsatzBesitzer != $besitzer) {
                     echo "<p class='meldung'>Du darfst diese Aktion nicht ausf&uuml;hren.</p>";
@@ -763,7 +763,7 @@ class FinanzenNEW extends functions
         $currentuser = $this->getUserID($_SESSION['username']);
         $konto = $_GET['konto'];
 
-        $kontouser = $this->getObjektInfo("SELECT id,konto,besitzer FROM finanzen_konten WHERE id=$konto LIMIT 1");
+        $kontouser = $this->sqlselect("SELECT id,konto,besitzer FROM finanzen_konten WHERE id=$konto LIMIT 1");
 
         if ($kontouser[0]->besitzer == $currentuser) {
             echo "das Konto gehoert dir!";
@@ -791,7 +791,7 @@ class FinanzenNEW extends functions
 
             $query = "SELECT *, day(datum) as tag, year(datum) as jahr, month(datum) as monat
             FROM finanzen_umsaetze	WHERE konto = $konto HAVING jahr=$jahr ORDER BY monat,tag,id";
-            $umsaetze = $this->getObjektInfo($query);
+            $umsaetze = $this->sqlselect($query);
 
             $startSaldo = $this->getJahresabschluesseBISJETZT($konto, $jahr);
 
@@ -831,7 +831,7 @@ class FinanzenNEW extends functions
                     }
                 }
 
-                $nameGegenkonto = $this->getObjektInfo("SELECT * FROM finanzen_konten WHERE id=" . $umsaetze[$i]->gegenkonto . " LIMIT 1");
+                $nameGegenkonto = $this->sqlselect("SELECT * FROM finanzen_konten WHERE id=" . $umsaetze[$i]->gegenkonto . " LIMIT 1");
 
                 echo "<tbody>";
 
@@ -892,7 +892,7 @@ class FinanzenNEW extends functions
             $jahr = $_GET['jahr'];
 
             $query = "SELECT * FROM finanzen_umsaetze WHERE besitzer = $besitzer AND konto = $konto AND year(datum) = $jahr";
-            $zahlen = $this->getObjektInfo($query);
+            $zahlen = $this->sqlselect($query);
             $zwischensumme = 0;
 
             // Zwischensummen bilden und in Var schreiben
@@ -910,7 +910,7 @@ class FinanzenNEW extends functions
         if (isset($_GET['alles']) and isset($_GET['kontoOpt'])) {
             $konto = $_GET['kontoOpt'];
             $query = "SELECT * FROM finanzen_umsaetze WHERE besitzer = $besitzer AND konto = $konto";
-            $zahlen = $this->getObjektInfo($query);
+            $zahlen = $this->sqlselect($query);
             $zwischensumme = 0;
 
             for ($i = 0; $i < sizeof($zahlen); $i++) {
@@ -1165,7 +1165,7 @@ class FinanzenNEW extends functions
     {
         if (!isset($_GET['konto'])) {
             echo "<p class='dezentInfo'>Um Fortzufahren, musst du ein Konto unterhalb dieser Box ausw&auml;hlen.</p>";
-            $umsatzVorhanden = $this->getObjektInfo("SELECT id FROM finanzen_umsaetze WHERE besitzer=$besitzer");
+            $umsatzVorhanden = $this->sqlselect("SELECT id FROM finanzen_umsaetze WHERE besitzer=$besitzer");
             if (!isset($umsatzVorhanden[0]->id)) {
                 echo "<p class='hinweis'>Du hast noch keine Buchungen auf deinen Konten! Erstelle mit einem Klick auf <strong>Neue Buchung</strong> eine neue Buchung. Bei Problemen werde dich an das Forum oder an einen Administrator.</p>";
             }
@@ -1192,7 +1192,7 @@ class FinanzenNEW extends functions
         } else {
             $nokonto = 0;
         }
-        $shared = $this->getObjektInfo("SELECT konto_id, target_user FROM finanzen_shares WHERE target_user=$besitzer");
+        $shared = $this->sqlselect("SELECT konto_id, target_user FROM finanzen_shares WHERE target_user=$besitzer");
 
         if (isset($_GET['konto'])) {
             $konto = $_GET['konto'];
@@ -1225,7 +1225,7 @@ class FinanzenNEW extends functions
                     echo " id='selected' ";
                 }
                 $sharedid = $shared[$j]->konto_id;
-                $name = $this->getObjektInfo("SELECT id, konto FROM finanzen_konten WHERE id=$sharedid");
+                $name = $this->sqlselect("SELECT id, konto FROM finanzen_konten WHERE id=$sharedid");
                 echo "><a href='?konto=" . $shared[$j]->konto_id . "&monat=$monat&jahr=$jahr'>" . $name[0]->konto . " (shared)</a></li>";
             }
 
@@ -1446,7 +1446,7 @@ class FinanzenNEW extends functions
     public function showErrors()
     {
         // Summe aller Ums&auml;tze
-        $kontostand = $this->getObjektInfo("SELECT sum(umsatzWert) AS summe FROM finanzen_umsaetze");
+        $kontostand = $this->sqlselect("SELECT sum(umsatzWert) AS summe FROM finanzen_umsaetze");
 
         // Buchungsnummer Check:
 
@@ -1460,7 +1460,7 @@ class FinanzenNEW extends functions
                 dieses Problem informiert. Die betroffene Buchung wird jetzt gel&ouml;scht!";
 
             $selectProblem = "SELECT max(buchungsnr) as max FROM finanzen_umsaetze";
-            $max = $this->getObjektInfo($selectProblem);
+            $max = $this->sqlselect($selectProblem);
 
             $max = $max[0]->max;
 
@@ -1471,7 +1471,7 @@ class FinanzenNEW extends functions
                 // ANZAHL &Uuml;BERPR&Uuml;FEN:
                 $selectAnzahl = "SELECT * FROM finanzen_umsaetze WHERE buchungsnr = $i";
                 $anzahl = $this->getAmount($selectAnzahl);
-                $infos = $this->getObjektInfo($select);
+                $infos = $this->sqlselect($select);
 
                 if ($anzahl != 2 and $anzahl != 0) {
                     echo "<p class='meldung'>Unvollst&auml;ndige Buchung: " . $infos[0]->umsatzName . ", " . $infos[0]->umsatzWert . "</p>";
@@ -1483,7 +1483,7 @@ class FinanzenNEW extends functions
                     }
                 }
 
-                $buchung = $this->getObjektInfo($select);
+                $buchung = $this->sqlselect($select);
                 $j = 0;
                 for ($j = 0; $j < 2; $j++) {
                     // $buchung[$j]->umsatzName . " " . $buchung[$j]->umsatzWert . "<br>";
@@ -1524,7 +1524,7 @@ class FinanzenNEW extends functions
         AND gegenkonto=$gegenkonto 
         AND umsatzName='$name' 
         AND datum > '$datum'";
-        $ergebnis = $this->getObjektInfo($select);
+        $ergebnis = $this->sqlselect($select);
 
         if (isset($ergebnis[0]->id)) {
             $count = sizeof($ergebnis);
@@ -1581,7 +1581,7 @@ class FinanzenNEW extends functions
 
                 $id = $_GET['edit'];
                 $besitzer = $this->getUserID($_SESSION['username']);
-                $umsatzInfo = $this->getObjektInfo("SELECT * FROM finanzen_umsaetze WHERE id = '$id' and besitzer = '$besitzer'");
+                $umsatzInfo = $this->sqlselect("SELECT * FROM finanzen_umsaetze WHERE id = '$id' and besitzer = '$besitzer'");
 
                 if (isset($_POST['alterUmsatz'])) {
                     $text = $_POST['umsatzName'];
@@ -1607,7 +1607,7 @@ class FinanzenNEW extends functions
                     $id = $_GET['edit'];
 
                     // Buchungsnummer herausfinden;
-                    $objektBuchungsNr = $this->getObjektInfo("SELECT id, buchungsnr FROM finanzen_umsaetze WHERE id = '$id'");
+                    $objektBuchungsNr = $this->sqlselect("SELECT id, buchungsnr FROM finanzen_umsaetze WHERE id = '$id'");
                     $buchungsnr = $objektBuchungsNr[0]->buchungsnr;
 
                     // Werte errechnen:
@@ -1626,7 +1626,7 @@ class FinanzenNEW extends functions
                     }
 
                     // ID mit Minuswert herausfinden:
-                    $minusObjekt = $this->getObjektInfo(
+                    $minusObjekt = $this->sqlselect(
                         "SELECT * 
                         FROM finanzen_umsaetze 
                         WHERE buchungsnr = '$buchungsnr' 
@@ -1636,7 +1636,7 @@ class FinanzenNEW extends functions
                     $minusID = $minusObjekt[0]->id;
 
                     // ID mit Minuswert herausfinden:
-                    $plusObjekt = $this->getObjektInfo(
+                    $plusObjekt = $this->sqlselect(
                         "SELECT id, buchungsnr, umsatzWert 
                         FROM finanzen_umsaetze 
                         WHERE buchungsnr = '$buchungsnr' 
@@ -1674,8 +1674,8 @@ class FinanzenNEW extends functions
                     echo "<input type=text name=umsatzName value='" . $umsatzInfo[0]->umsatzName . "' /><br>";
                     $kontoID = $umsatzInfo[0]->gegenkonto;
                     $konto2ID = $umsatzInfo[0]->konto . "<br>";
-                    $gegenkonto = $this->getObjektInfo("SELECT * FROM finanzen_konten WHERE id = '$kontoID'");
-                    $konto = $this->getObjektInfo("SELECT * FROM finanzen_konten WHERE id = '$konto2ID'");
+                    $gegenkonto = $this->sqlselect("SELECT * FROM finanzen_konten WHERE id = '$kontoID'");
+                    $konto = $this->sqlselect("SELECT * FROM finanzen_konten WHERE id = '$konto2ID'");
                     echo "Buchung auf: " . $konto[0]->konto . " ";
                     echo " - " . $gegenkonto[0]->konto . "<br>";
                     echo "<input type=text name=umsatzWert value='" . $umsatzInfo[0]->umsatzWert . "' /><br>";
@@ -1690,7 +1690,7 @@ class FinanzenNEW extends functions
                     echo "</div>";
                 } else {
                     //   echo "<div id='' class='alterUmsatz'>";
-                    $isshared = $this->getObjektInfo("SELECT * FROM finanzen_shares WHERE konto_id=$kontoLink AND target_user=$besitzer");
+                    $isshared = $this->sqlselect("SELECT * FROM finanzen_shares WHERE konto_id=$kontoLink AND target_user=$besitzer");
                     if (isset($isshared[0]->target_user)) {
                         echo "<p class='meldung'>Du darfst ein fremdes Konto nicht bearbeiten!</p>";
                     } else {
@@ -1707,7 +1707,7 @@ class FinanzenNEW extends functions
                     $id = $_GET['edit'];
 
                     // Buchungsnummer herausfinden;
-                    $objektBuchungsNr = $this->getObjektInfo("SELECT id, buchungsnr FROM finanzen_umsaetze WHERE id = '$id'");
+                    $objektBuchungsNr = $this->sqlselect("SELECT id, buchungsnr FROM finanzen_umsaetze WHERE id = '$id'");
                     $buchungsnr = $objektBuchungsNr[0]->buchungsnr;
 
                     if (!isset($buchungsnr) or $buchungsnr == "") {
@@ -1737,8 +1737,8 @@ class FinanzenNEW extends functions
      */
     public function nextBuchungsnummer_with_old_numbers()
     {
-        $allBNRs = $this->getObjektInfo("SELECT buchungsnr FROM finanzen_umsaetze ORDER BY buchungsnr");
-        $maxbuchung = $this->getObjektInfo("SELECT max(buchungsnr) as max FROM finanzen_umsaetze");
+        $allBNRs = $this->sqlselect("SELECT buchungsnr FROM finanzen_umsaetze ORDER BY buchungsnr");
+        $maxbuchung = $this->sqlselect("SELECT max(buchungsnr) as max FROM finanzen_umsaetze");
         $maxnummer = $maxbuchung[0]->max + 0;
 
         $counter = 0;
@@ -1772,7 +1772,7 @@ class FinanzenNEW extends functions
      */
     public function nextBuchungsnummer()
     {
-        $nextBuchungsnummer = $this->getObjektInfo("SELECT max(buchungsnr) as max FROM finanzen_umsaetze");
+        $nextBuchungsnummer = $this->sqlselect("SELECT max(buchungsnr) as max FROM finanzen_umsaetze");
         $buchungsnummer = $nextBuchungsnummer[0]->max;
         if (!isset($buchungsnummer)) {
             $buchungsnummer = 0;
@@ -1927,7 +1927,7 @@ class FinanzenNEW extends functions
 
                 $besitzer = $this->getUserID($_SESSION['username']);
                 $select = "SELECT * FROM finanzen_konten WHERE besitzer = '$besitzer' ORDER BY konto";
-                $absenderKonten = $this->getObjektInfo($select);
+                $absenderKonten = $this->sqlselect($select);
 
                 echo "<tbody><td>Gutschrift hier</td><td><select name='zielKonto'>";
                 $i = 0;
@@ -2039,7 +2039,7 @@ class FinanzenNEW extends functions
         AND monat = $monat
         ORDER BY tag, id";
 
-        $ergebnis = $this->getObjektInfo($umsaetze);
+        $ergebnis = $this->sqlselect($umsaetze);
 
         if (isset($ergebnis[0]->id)) {
             return $ergebnis;
@@ -2115,7 +2115,7 @@ class FinanzenNEW extends functions
             for ($i = 0; $i < sizeof($konten); $i++) {
                 if ($konten[$i]->aktiv == 1) {
                     $select2 = "SELECT sum(umsatzWert) as summe FROM finanzen_umsaetze WHERE konto=" . $konten[$i]->id . " AND datum <= CURDATE()";
-                    $umsaetze = $this->getObjektInfo($select2);
+                    $umsaetze = $this->sqlselect($select2);
                     if ($konten[$i]->art == 1) {
                         $mark = "Guthabenkonto";
                     } elseif ($konten[$i]->art == 2) {
@@ -2160,7 +2160,7 @@ class FinanzenNEW extends functions
             echo "<thead><td>ID</td><td>Name</td><td>Art</td><td>Konto Details</td><td>Saldo</td><td>Mail</td></thead>";
             for ($i = 0; $i < sizeof($konten); $i++) {
                 $select2 = "SELECT sum(umsatzWert) as summe FROM finanzen_umsaetze WHERE konto=" . $konten[$i]->id . " AND datum <= CURDATE()";
-                $umsaetze = $this->getObjektInfo($select2);
+                $umsaetze = $this->sqlselect($select2);
                 if ($konten[$i]->aktiv == 0) {
                     if ($konten[$i]->art == 1) {
                         $mark = "Guthabenkonto";
@@ -2197,7 +2197,7 @@ class FinanzenNEW extends functions
      */
     public function getAllKonten($besitzer)
     {
-        $konten = $this->getObjektInfo("SELECT id, timestamp, konto, besitzer, aktiv, art, notizen, mail FROM finanzen_konten WHERE besitzer=$besitzer ORDER BY konto");
+        $konten = $this->sqlselect("SELECT id, timestamp, konto, besitzer, aktiv, art, notizen, mail FROM finanzen_konten WHERE besitzer=$besitzer ORDER BY konto");
 
         if (isset($konten)) {
             return $konten;
@@ -2299,7 +2299,7 @@ class FinanzenNEW extends functions
                     foreach ($buchungsnummern as $buchungsnummer) {
 
                         //Info ueber diese Buchung bekommen:
-                        $getBuchungInfos = $this->getObjektInfo("SELECT * FROM finanzen_umsaetze WHERE buchungsnr = $buchungsnummer");
+                        $getBuchungInfos = $this->sqlselect("SELECT * FROM finanzen_umsaetze WHERE buchungsnr = $buchungsnummer");
 
                         echo "Neues Absenderkonto $von, neues Gutschriftkonto = $nach";
 
@@ -2410,7 +2410,7 @@ class FinanzenNEW extends functions
 
             $select = "SELECT * FROM finanzen_konten WHERE besitzer = $besitzer AND id = $id";
 
-            $kontoInfo = $this->getObjektInfo($select);
+            $kontoInfo = $this->sqlselect($select);
 
             if (isset($kontoInfo[0]->aktiv) and $kontoInfo[0]->aktiv == 0) {
                 $checked = "";
@@ -2482,7 +2482,7 @@ class FinanzenNEW extends functions
                 WHERE besitzer = $besitzer
                 AND konto = $id
                 GROUP BY gegenkonto";
-            $getKonten = $this->getObjektInfo($selectKonten);
+            $getKonten = $this->sqlselect($selectKonten);
 
             for ($j = 0; $j < sizeof($getKonten); $j++) {
 
@@ -2514,9 +2514,9 @@ class FinanzenNEW extends functions
 
                 // Buchungen dieses Kontos bekommen:
 
-                $getKontoBuchungen = $this->getObjektInfo($select2);
+                $getKontoBuchungen = $this->sqlselect($select2);
 
-                $getKontoName = $this->getObjektInfo("SELECT * FROM finanzen_konten WHERE id=" . $getKonten[$j]->gegenkonto . " ");
+                $getKontoName = $this->sqlselect("SELECT * FROM finanzen_konten WHERE id=" . $getKonten[$j]->gegenkonto . " ");
                 $kontoname = $getKontoName[0]->konto;
 
                 echo "<form method=post>";
@@ -2539,7 +2539,7 @@ class FinanzenNEW extends functions
 
                     echo "<tbody>";
                     echo "<td><input type=checkbox name=marked[$i] value='" . $getKontoBuchungen[$i]->buchungsnr . "'/></td>";
-                    $gegenkonto = $this->getObjektInfo("SELECT * FROM finanzen_konten WHERE id = '" . $getKontoBuchungen[$i]->gegenkonto . "'");
+                    $gegenkonto = $this->sqlselect("SELECT * FROM finanzen_konten WHERE id = '" . $getKontoBuchungen[$i]->gegenkonto . "'");
                     echo "<td><a href='index.php?konto=" . $getKontoBuchungen[$i]->konto . "&jahr=" . $getKontoBuchungen[$i]->jahr . "&monat=" . $getKontoBuchungen[$i]->monat . "&selected=" . $getKontoBuchungen[$i]->buchungsnr . "'>" . $getKontoBuchungen[$i]->buchungsnr . "</a></td>
                         <td>" . $getKontoBuchungen[$i]->umsatzName . "</td>
                         <td>" . $getKontoBuchungen[$i]->umsatzWert . "</td>";
@@ -2577,7 +2577,7 @@ class FinanzenNEW extends functions
             if (isset($_POST['gutschriftKonto']) and isset($_POST['absenderKonto'])) {
                 $absenderKonto = $_POST['absenderKonto'];
                 $gutschriftKonto = $_POST['gutschriftKonto'];
-                $getBuchungInfos = $this->getObjektInfo("SELECT * FROM finanzen_umsaetze WHERE buchungsnr = $buchungsnr");
+                $getBuchungInfos = $this->sqlselect("SELECT * FROM finanzen_umsaetze WHERE buchungsnr = $buchungsnr");
 
                 echo "Neues Absenderkonto $absenderKonto, neues Gutschriftkonto = $gutschriftKonto";
 
@@ -2625,7 +2625,7 @@ class FinanzenNEW extends functions
             // Pr&uuml;fen ob Nummer existiert:
             $query = "SELECT * FROM finanzen_umsaetze WHERE buchungsnr = '$buchungsnr' AND besitzer = $besitzer";
             if ($this->objectExists($query) == true) {
-                $buchInfos = $this->getObjektInfo($query);
+                $buchInfos = $this->sqlselect($query);
 
                 echo "<div class='newCharWIDE'><form method=post>";
 
@@ -2640,7 +2640,7 @@ class FinanzenNEW extends functions
                         echo "<tbody><td>" . $buchInfos[$i]->umsatzName . " " . $buchInfos[$i]->umsatzWert . "</td></tbody>";
                         echo "<tbody>";
                         $selectKonten = "SELECT * FROM finanzen_konten WHERE besitzer = $besitzer ORDER BY konto";
-                        $konten = $this->getObjektInfo($selectKonten);
+                        $konten = $this->sqlselect($selectKonten);
                         echo "<td>";
                         echo "<select name=gutschriftKonto />";
                         for ($j = 0; $j < sizeof($konten); $j++) {
@@ -2664,7 +2664,7 @@ class FinanzenNEW extends functions
 
                         echo "<tbody>";
                         $selectKonten = "SELECT * FROM finanzen_konten WHERE besitzer = $besitzer ORDER BY konto";
-                        $konten = $this->getObjektInfo($selectKonten);
+                        $konten = $this->sqlselect($selectKonten);
                         echo "<td>";
                         echo "<select name=absenderKonto />";
 
@@ -2739,11 +2739,11 @@ class FinanzenNEW extends functions
         if (isset($_GET['Salden'])) {
             echo "<div>";
             $select = "SELECT * FROM finanzen_konten WHERE besitzer=$besitzer";
-            $konten = $this->getObjektInfo($select);
+            $konten = $this->sqlselect($select);
 
             for ($i = 0; $i < sizeof($konten); $i++) {
                 $select2 = "SELECT sum(umsatzWert) as summe FROM finanzen_umsaetze WHERE konto=" . $konten[$i]->id;
-                $umsaetze = $this->getObjektInfo($select2);
+                $umsaetze = $this->sqlselect($select2);
                 echo "<div class='newChar'>";
                 echo "<h2>" . $konten[$i]->konto . "</h2>";
                 echo "Summe: " . $umsaetze[0]->summe;
@@ -2763,7 +2763,7 @@ class FinanzenNEW extends functions
     public function getKontoname($kontoid)
     {
         if (is_numeric($kontoid)) {
-            $kontoinfo = $this->getObjektInfo("SELECT * FROM finanzen_konten WHERE id=$kontoid");
+            $kontoinfo = $this->sqlselect("SELECT * FROM finanzen_konten WHERE id=$kontoid");
 
             if (isset($kontoinfo[0]->konto)) {
                 return $kontoinfo[0]->konto;
@@ -2802,9 +2802,9 @@ class FinanzenNEW extends functions
         if (isset($_GET['newShare'])) {
 
             //$j
-            $getusers = $this->getObjektInfo("SELECT * FROM benutzer ORDER BY Name");
+            $getusers = $this->sqlselect("SELECT * FROM benutzer ORDER BY Name");
             //$i
-            $getkonten = $this->getObjektInfo("SELECT * FROM finanzen_konten WHERE besitzer=$besitzer ORDER BY konto");
+            $getkonten = $this->sqlselect("SELECT * FROM finanzen_konten WHERE besitzer=$besitzer ORDER BY konto");
 
             echo "<div class='newFahrt'>";
             echo "<h2>Share erstellen</h2>";
@@ -2884,7 +2884,7 @@ class FinanzenNEW extends functions
     public function showAllShares($besitzer)
     {
 
-        $shares = $this->getObjektInfo("SELECT * FROM finanzen_shares WHERE besitzer=$besitzer");
+        $shares = $this->sqlselect("SELECT * FROM finanzen_shares WHERE besitzer=$besitzer");
         $sharesAmount = $this->getAmount("SELECT * FROM finanzen_shares WHERE besitzer=$besitzer") + 0;
 
         echo "<table class='kontoTable'>";
@@ -2898,9 +2898,9 @@ class FinanzenNEW extends functions
 
         for ($i = 0; $i < sizeof($shares); $i++) {
             $id = $shares[$i]->target_user;
-            $username = $this->getObjektInfo("SELECT id, Name FROM benutzer WHERE id=$id LIMIT 1");
+            $username = $this->sqlselect("SELECT id, Name FROM benutzer WHERE id=$id LIMIT 1");
             $kontoid = $shares[$i]->konto_id;
-            $kontoname = $this->getObjektInfo("SELECT id, konto FROM finanzen_konten WHERE id=$kontoid LIMIT 1");
+            $kontoname = $this->sqlselect("SELECT id, konto FROM finanzen_konten WHERE id=$kontoid LIMIT 1");
             echo "<tbody>";
             echo "<td>" . $kontoname[0]->konto . "</td>";
             echo "<td>" . $username[0]->Name . "</td>";
@@ -2944,7 +2944,7 @@ class FinanzenNEW extends functions
             $jahr = $this->validateJahr();
             $besitzer = $this->GetUserID($_SESSION['username']);
             $query = "SELECT besitzer, jahr, wert, konto FROM finanzen_jahresabschluss WHERE besitzer=$besitzer AND $konto=$konto AND jahr=$jahr";
-            $jahresabschlussFuerDiesesJahr = $this->getObjektInfo($query);
+            $jahresabschlussFuerDiesesJahr = $this->sqlselect($query);
 
             if (isset($jahresabschlussFuerDiesesJahr[0]->wert) and $konto > 0) {
                 echo "<div class='dezentInfo'>";
@@ -2968,7 +2968,7 @@ class FinanzenNEW extends functions
         FROM finanzen_jahresabschluss
         WHERE konto = $konto
         AND jahr < $jetzigesJahr";
-        $summe = $this->getObjektInfo($query);
+        $summe = $this->sqlselect($query);
 
         if (isset($summe[0]->summe)) {
             $summeWert = $summe[0]->summe;
@@ -2998,7 +2998,7 @@ class FinanzenNEW extends functions
         AND year = '$jahr'
         AND monat = '$monat'";
 
-        $monatsabschluss = $this->getObjektInfo($query);
+        $monatsabschluss = $this->sqlselect($query);
 
         if (isset($monatsabschluss[0]->year)) {
             return $monatsabschluss[0]->wert;
@@ -3026,7 +3026,7 @@ class FinanzenNEW extends functions
         HAVING year(datum) = $jahr
         AND month(datum) = $monat;";
 
-        $umsaetze = $this->getObjektInfo($query);
+        $umsaetze = $this->sqlselect($query);
 
         // SUMME bilden
         $summe = 0;
@@ -3109,7 +3109,7 @@ class FinanzenNEW extends functions
     {
         $query = "SELECT * FROM finanzen_jahresabschluss WHERE konto = '$konto' AND besitzer = '$besitzer' AND jahr = '$jahr'";
 
-        $jahresabschluss = $this->getObjektInfo($query);
+        $jahresabschluss = $this->sqlselect($query);
 
         if (isset($jahresabschluss[0]->jahr)) {
             return $jahresabschluss[0]->wert;
@@ -3135,7 +3135,7 @@ class FinanzenNEW extends functions
         AND besitzer = $besitzer
         HAVING year(datum) = $jahr;";
 
-        $umsaetze = $this->getObjektInfo($query);
+        $umsaetze = $this->sqlselect($query);
 
         // SUMME bilden
         $summe = 0;
@@ -3157,7 +3157,7 @@ class FinanzenNEW extends functions
     public function getErstellungsdatumKonto($besitzer, $kontonummer)
     {
         // fr&uuml;hesten Eintrag im Konto finden:
-        $frueherEintrag = $this->getObjektInfo(
+        $frueherEintrag = $this->sqlselect(
             "SELECT min(year(datum)) 
             as min 
             FROM finanzen_umsaetze
@@ -3199,9 +3199,9 @@ class FinanzenNEW extends functions
 
                     $currentYear = date("Y");
                     // Pr&uuml;fen, ob Jahresabschluss KORREKT ist.
-                    $jahresabschlusswert = $this->getObjektInfo("SELECT sum(wert) as summe FROM finanzen_jahresabschluss WHERE besitzer=$besitzer AND konto=$konto");
+                    $jahresabschlusswert = $this->sqlselect("SELECT sum(wert) as summe FROM finanzen_jahresabschluss WHERE besitzer=$besitzer AND konto=$konto");
 
-                    $tatsaechlicheSumme = $this->getObjektInfo("SELECT sum(umsatzWert) as summe FROM finanzen_umsaetze WHERE besitzer = $besitzer AND konto = $konto AND year(datum)<$currentYear");
+                    $tatsaechlicheSumme = $this->sqlselect("SELECT sum(umsatzWert) as summe FROM finanzen_umsaetze WHERE besitzer = $besitzer AND konto = $konto AND year(datum)<$currentYear");
 
                     if (isset($jahresabschlusswert[0]->summe)) {
                         if ($jahresabschlusswert[0]->summe != $tatsaechlicheSumme[0]->summe) {

@@ -55,7 +55,7 @@ class Docu extends functions
 
         // Ausgabe der Doku aus der Datenbank
         $query = "SELECT *, month(timestamp) AS monat, day(timestamp) AS tag, year(timestamp) AS jahr FROM docu ORDER BY timestamp DESC";
-        $row = $this->getObjektInfo($query);
+        $row = $this->sqlselect($query);
         
         echo  "<table class='flatnetTable'>";
         echo  "<thead><td id='datum'>Datum</td><td id='text'>Text</td><td></td></thead>";

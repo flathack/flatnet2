@@ -91,7 +91,7 @@ class Uebersicht extends Functions
         if ($this->userHasRight(73, 0) == true) {
 
             $select = "SELECT * FROM uebersicht_kacheln";
-            $kacheln = $this->getObjektInfo($select);
+            $kacheln = $this->sqlselect($select);
 
             echo "<table class='kontoTable'>";
 
@@ -194,7 +194,7 @@ class Uebersicht extends Functions
             echo "<input id='css' type=text name=css value='" . $css . "' placeholder=css />";
 
             echo "<select name=rightID>";
-            $getAllRights = $this->getObjektInfo("SELECT * FROM userrights ORDER BY kategorie, id");
+            $getAllRights = $this->sqlselect("SELECT * FROM userrights ORDER BY kategorie, id");
             for ($i = 0; $i < sizeof($getAllRights); $i++) {
                 echo "<option value='";
                 echo $getAllRights[$i]->id;
@@ -245,7 +245,7 @@ class Uebersicht extends Functions
     {
 
         if ($this->userHasRight(77, 0) == true) {
-            $getKachelInfo = $this->getObjektInfo("SELECT * FROM uebersicht_kacheln WHERE id = $id");
+            $getKachelInfo = $this->sqlselect("SELECT * FROM uebersicht_kacheln WHERE id = $id");
 
             echo "<div class='changeStatus'><form method=post>";
             echo "<input type=hidden name=id value=$id />";
@@ -284,9 +284,9 @@ class Uebersicht extends Functions
      */
     public function showUebersicht()
     {
-        $kacheln = $this->getObjektInfo("SELECT * FROM uebersicht_kacheln WHERE active=1 ORDER BY sortierung, name, id");
-        $kachelnInactive = $this->getObjektInfo("SELECT * FROM uebersicht_kacheln WHERE active=0 ORDER BY sortierung, name, id");
-        $kachelnGesperrt = $this->getObjektInfo("SELECT * FROM uebersicht_kacheln WHERE active=2 ORDER BY sortierung, name, id");
+        $kacheln = $this->sqlselect("SELECT * FROM uebersicht_kacheln WHERE active=1 ORDER BY sortierung, name, id");
+        $kachelnInactive = $this->sqlselect("SELECT * FROM uebersicht_kacheln WHERE active=0 ORDER BY sortierung, name, id");
+        $kachelnGesperrt = $this->sqlselect("SELECT * FROM uebersicht_kacheln WHERE active=2 ORDER BY sortierung, name, id");
 
         //Normale Kacheln
         //Counter zum erkennen von Nutzern ohne Berechtigungen f�r eine Seite
@@ -360,7 +360,7 @@ class Uebersicht extends Functions
                 echo "<a class='buttonlink' href='?editEntry'>Kacheln bearbeiten</a>";
             }
             $select = "SELECT * FROM benutzer WHERE versuche >= 3";
-            $gesperrteUser = $this->getObjektInfo($select);
+            $gesperrteUser = $this->sqlselect($select);
             echo "<div id='gesperrt'>";
             for ($i = 0; $i < sizeof($gesperrteUser); $i++) {
                 echo "<li>" . $gesperrteUser[$i]->Name . " ist gesperrt <a class='redLink' href='/flatnet2/admin/control.php?statusID=" . $gesperrteUser[$i]->id . "&status=entsperren&userverw=1&action=1'>entsperren</a></li>";

@@ -144,7 +144,7 @@ class HardwareDB extends Functions
     public function showAllManufacturers($manuDB = "hardwaremanufacturers")
     {
         $getAllManus = "SELECT * FROM $manuDB";
-        $allManus = $this->getObjektInfo($getAllManus);
+        $allManus = $this->sqlselect($getAllManus);
 
         if (count($allManus) > 0) {
             echo "<h2>Hersteller</h2>";
@@ -176,7 +176,7 @@ class HardwareDB extends Functions
     public function showAllGeraet($manuDB = "hardwaredefinition")
     {
         $getAllManus = "SELECT * FROM $manuDB";
-        $allManus = $this->getObjektInfo($getAllManus);
+        $allManus = $this->sqlselect($getAllManus);
 
         if (count($allManus) > 0) {
             echo "<h2>Hardware Definitionen</h2>";
@@ -208,7 +208,7 @@ class HardwareDB extends Functions
     public function showAllLieferant($manuDB = "hardwaredeliverers")
     {
         $getAllManus = "SELECT * FROM $manuDB";
-        $allManus = $this->getObjektInfo($getAllManus);
+        $allManus = $this->sqlselect($getAllManus);
 
         if (count($allManus) > 0) {
             echo "<h2>Lieferanten</h2>";
@@ -240,7 +240,7 @@ class HardwareDB extends Functions
     public function showAllGarantie($manuDB = "hardwaregarantietypes")
     {
         $getAllManus = "SELECT * FROM $manuDB";
-        $allManus = $this->getObjektInfo($getAllManus);
+        $allManus = $this->sqlselect($getAllManus);
 
         if (count($allManus) > 0) {
             echo "<h2>Garantien</h2>";
@@ -272,7 +272,7 @@ class HardwareDB extends Functions
     public function showAllHwType($manuDB = "hardwaretypes")
     {
         $getAllManus = "SELECT * FROM $manuDB";
-        $allManus = $this->getObjektInfo($getAllManus);
+        $allManus = $this->sqlselect($getAllManus);
 
         if (count($allManus) > 0) {
             echo "<h2>Garantien</h2>";
@@ -528,7 +528,7 @@ class HardwareDB extends Functions
     {
         $besitzer = $this->getUserID($_SESSION['username']);
         $getAllManus = "SELECT * FROM $manuDB WHERE besitzer=$besitzer ORDER BY hwBuydate";
-        $allManus = $this->getObjektInfo($getAllManus);
+        $allManus = $this->sqlselect($getAllManus);
 
         if (count($allManus) > 0) {
             echo "<h2>Hardware</h2>";
@@ -549,7 +549,7 @@ class HardwareDB extends Functions
                     echo "<td>" . $allManus[$i]->hwDescription . "</td>";
                     echo "<td>" . $allManus[$i]->hwBuydate . "</td>";
                     echo "<td>" . $allManus[$i]->hwGarantieLengthMonth . "</td>";
-                    $manu = $this->getObjektInfo("SELECT id,manuName FROM hardwaremanufacturers WHERE id=".$allManus[$i]->id);
+                    $manu = $this->sqlselect("SELECT id,manuName FROM hardwaremanufacturers WHERE id=".$allManus[$i]->id);
                     echo "<td>" . $manu[$i]->manuName . "</td>";
                     echo "<td>" . "<a href='?start=1&alterHWID=".$allManus[$i]->id."'>Edit</a><a class='redLink' href='?start=1&deleteHWID=".$allManus[$i]->id."'>X</a>" . "</td>";
                 echo "</tbody>";

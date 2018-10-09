@@ -47,7 +47,7 @@ class Blog extends Functions
         if (isset($_GET['showblogid'])) {
             $blogid = $_GET['showblogid'];
 
-            $getBlogEintragInfos = $this->getObjektInfo("SELECT * FROM blogtexte WHERE id = '$blogid'");
+            $getBlogEintragInfos = $this->sqlselect("SELECT * FROM blogtexte WHERE id = '$blogid'");
 
             $category = $getBlogEintragInfos[0]->kategorie;
 
@@ -93,7 +93,7 @@ class Blog extends Functions
             if (isset($_GET['showblogid'])) {
                 //CurrentBlogID Info
                 $id = $_GET['showblogid'];
-                $getbloginfo = $this->getObjektInfo("SELECT * FROM blogtexte WHERE id = '$id'");
+                $getbloginfo = $this->sqlselect("SELECT * FROM blogtexte WHERE id = '$id'");
                 $kategorie = $getbloginfo[0]->kategorie;
 
                 if (isset($getbloginfo[0]->kategorie)) {
@@ -158,14 +158,14 @@ class Blog extends Functions
             //Gibt alle Kategorien aus.
             echo "<select name='blogkategorie' value='' size='1'>";
             $selectKat = "SELECT id, kategorie, rightWert FROM blogkategorien";
-            $row = $this->getObjektInfo($selectKat);
+            $row = $this->sqlselect($selectKat);
             for ($i = 0; $i < sizeof($row); $i++) {
 
                 //BenutzerRecht selektieren:
                 //Check ob die Kategorie in der Auswahlliste auftauchen soll.
                 $userID = $this->getUserID($_SESSION['username']);
                 $selectBenutzerRecht = "SELECT id, forumRights FROM benutzer WHERE id = '$userID' LIMIT 1";
-                $rowRecht = $this->getObjektInfo($selectBenutzerRecht);
+                $rowRecht = $this->sqlselect($selectBenutzerRecht);
 
                 $aktuelleBenutzerrechte = $rowRecht[0]->forumRights;
                 $kategorieRechte = $row[$i]->rightWert;
@@ -237,7 +237,7 @@ class Blog extends Functions
                     //ID des Benutzers auswählen:
                     $autor = $_SESSION['username'];
                     $selectUserID = "SELECT id, Name FROM benutzer WHERE Name = '$autor' LIMIT 1";
-                    $row = $this->getObjektInfo($selectUserID);
+                    $row = $this->sqlselect($selectUserID);
                     
                     if (isset($row[0]->id)) {
                         $autor = $row[0]->id;
@@ -250,7 +250,7 @@ class Blog extends Functions
 
                     //ID der Kategorie:
                     $selectKategorieID = "SELECT * FROM blogkategorien WHERE id = $kategorie";
-                    $row2 = $this->getObjektInfo($selectKategorieID);
+                    $row2 = $this->sqlselect($selectKategorieID);
                     if (isset($row2[0]->id)) {
                         $kategorie = $row2[0]->id;
                     } else {
@@ -290,7 +290,7 @@ class Blog extends Functions
                 $currentUser = $this->getUserID($_SESSION['username']);
 
                 $selectCheck = "SELECT id, autor, status, kategorie FROM blogtexte WHERE id=$id";
-                $rowCheck = $this->getObjektInfo($selectCheck);
+                $rowCheck = $this->sqlselect($selectCheck);
 
                 //Check, ob User den Artikel sehen darf:
                 if (!isset($rowCheck[0]->autor)
@@ -312,7 +312,7 @@ class Blog extends Functions
                         , minute(timestamp) AS minute
                         FROM blogtexte WHERE id=$id";
 
-                    $row = $this->getObjektInfo($select);
+                    $row = $this->sqlselect($select);
                     for ($i = 0; $i < sizeof($row); $i++) {
 
                         if (isset($_GET['editComment'])) {
@@ -333,7 +333,7 @@ class Blog extends Functions
                         echo "<table class='forumPost'>";
 
                         //Wenn der Benutzer einen Titel hat:
-                        $autorTitel = $this->getObjektInfo("SELECT id, titel FROM benutzer WHERE id = '" . $row[$i]->autor . "'");
+                        $autorTitel = $this->sqlselect("SELECT id, titel FROM benutzer WHERE id = '" . $row[$i]->autor . "'");
                         if (isset($autorTitel->titel) and $autorTitel->titel != "") {
                             $titel = "<p id='smallLink' class='rightRedLink'>" . $autorTitel->titel . "</p>";
                         } else {
@@ -432,7 +432,7 @@ class Blog extends Functions
             //Es wird sichergestellt, dass ID eine Zahl ist.
             if ($bearbid > 0) {
                 $select = "SELECT id, timestamp, autor, titel, text, kategorie, status FROM blogtexte WHERE id=$bearbid";
-                $row = $this->getObjektInfo($select);
+                $row = $this->sqlselect($select);
 
                 for ($i = 0; $i < sizeof($row); $i++) {
 
@@ -453,14 +453,14 @@ class Blog extends Functions
                     //Kategorie Bereich:
                     echo "<select name='newblogkategorie' value='' size='1'>";
                     $selectKat = "SELECT id, kategorie, rightWert FROM blogkategorien";
-                    $row2 = $this->getObjektInfo($selectKat);
+                    $row2 = $this->sqlselect($selectKat);
                     echo "<option></option>";
 
                     //BenutzerRecht selektieren:
                     //Check ob die Kategorie in der Auswahlliste auftauchen soll.
                     $userID = $this->getUserID($_SESSION['username']);
                     $selectBenutzerRecht = "SELECT id, forumRights FROM benutzer WHERE id = '$userID' LIMIT 1";
-                    $rowRecht = $this->getObjektInfo($selectBenutzerRecht);
+                    $rowRecht = $this->sqlselect($selectBenutzerRecht);
 
                     for ($j = 0; $j < sizeof($row2); $j++) {
                         $aktuelleBenutzerrechte = $rowRecht[0]->forumRights;
@@ -535,7 +535,7 @@ class Blog extends Functions
             $loeschblogid = isset($_POST['blogid']) ? $_POST['blogid'] : '';
             if ($loeschblogid) {
 
-                $row = $this->getObjektInfo("SELECT id, autor FROM blogtexte WHERE id=$id LIMIT 1");
+                $row = $this->sqlselect("SELECT id, autor FROM blogtexte WHERE id=$id LIMIT 1");
                 //namen des Benutzers ausw�hlen:
                 if (!isset($row[0]->autor)) {
                     echo "<p class='info'>Beitrag exisitert nicht!</p>";
@@ -544,7 +544,7 @@ class Blog extends Functions
                     $autor = $row[0]->autor;
                 }
 
-                $realUsername_select = $this->getObjektInfo("SELECT id, Name FROM benutzer WHERE id=$autor LIMIT 1");
+                $realUsername_select = $this->sqlselect("SELECT id, Name FROM benutzer WHERE id=$autor LIMIT 1");
 
                 if (isset($realUsername_select[0]->Name)) {
                     $realUsername = $realUsername_select[0]->Name;
@@ -574,13 +574,13 @@ class Blog extends Functions
 
                 //Kontrolle, ob User den Artikel l�schen darf.
                 $select = "SELECT id, autor FROM blogtexte WHERE id=$id LIMIT 1";
-                $row = $this->getObjektInfo($select);
+                $row = $this->sqlselect($select);
 
                 //namen des Benutzers ausw�hlen:
                 if (isset($row[0]->autor)) {
                     $autor = $row[0]->autor;
                     $selectUsername = "SELECT id, Name FROM benutzer WHERE id=$autor LIMIT 1";
-                    $realUsername_select = $this->getObjektInfo($selectUsername);
+                    $realUsername_select = $this->sqlselect($selectUsername);
                     if (isset($realUsername_select[0]->Name)) {
                         $realUsername = $realUsername_select[0]->Name;
                     } else {
@@ -618,7 +618,7 @@ class Blog extends Functions
 
         if ($this->userHasRight(30, 0) == true) {
 
-            $blogIDInfos = $this->getObjektInfo("SELECT id, locked FROM blogtexte WHERE id = '$blogid'");
+            $blogIDInfos = $this->sqlselect("SELECT id, locked FROM blogtexte WHERE id = '$blogid'");
             if ($blogIDInfos[0]->locked != 1) {
 
                 if (!isset($_POST['absenden'])) {
@@ -631,7 +631,7 @@ class Blog extends Functions
                         //Wenn gequotet wurde:
                         if (isset($_GET['quote'])) {
                             $quoteID = $_GET['quote'];
-                            $getQuoteInfo = $this->getObjektInfo(
+                            $getQuoteInfo = $this->sqlselect(
                                 "SELECT *
                                 , day(timestamp) as tag
                                 , month(timestamp) as monat
@@ -656,7 +656,7 @@ class Blog extends Functions
                         //Wenn ein Kommentar gequotet wurde:
                         if (isset($_GET['quoteKomment'])) {
                             $quoteID = $_GET['quoteKomment'];
-                            $getQuoteInfo = $this->getObjektInfo(
+                            $getQuoteInfo = $this->sqlselect(
                                 "SELECT *
                                 , day(timestamp) as tag
                                 , month(timestamp) as monat
@@ -699,7 +699,7 @@ class Blog extends Functions
                             //ID vom aktuellen Benutzer holen
                             $autor = $_SESSION['username'];
                             $selectBenutzer = "SELECT id, Name FROM benutzer WHERE Name = '$autor'";
-                            $rowAutor = $this->getObjektInfo($selectBenutzer);
+                            $rowAutor = $this->sqlselect($selectBenutzer);
                             //ID geholt:
                             $autorID = $rowAutor[0]->id;
                             //$blogid
@@ -746,8 +746,8 @@ class Blog extends Functions
                 FROM blog_kommentare
                 WHERE blogid=$blogid ORDER BY id
             ";
-            $row = $this->getObjektInfo($select);
-            $getLockedInfo = $this->getObjektInfo("SELECT * FROM blogtexte WHERE id = '$blogid'");
+            $row = $this->sqlselect($select);
+            $getLockedInfo = $this->sqlselect("SELECT * FROM blogtexte WHERE id = '$blogid'");
 
             //Ausgabe aller Kommentare
             for ($i = 0; $i < sizeof($row); $i++) {
@@ -756,7 +756,7 @@ class Blog extends Functions
                 echo "<thead id='small'>";
 
                 //Wenn der Benutzer einen Titel hat:
-                $autorTitel = $this->getObjektInfo("SELECT id, titel FROM benutzer WHERE id = '" . $row[$i]->autor . "'");
+                $autorTitel = $this->sqlselect("SELECT id, titel FROM benutzer WHERE id = '" . $row[$i]->autor . "'");
                 if (isset($autorTitel->titel) and $autorTitel->titel != "") {
                     $titel = "<p id='smallLink' class='rightRedLink'>" . $autorTitel->titel . "</p>";
                 } else {
@@ -811,13 +811,13 @@ class Blog extends Functions
         if (isset($kommentarID) and $kommentarID > 0 and $kommentarID != "") {
 
             //Autor des Kommentars bekommen:
-            $kommentarAutor = $this->getObjektInfo("SELECT * FROM blog_kommentare WHERE id = '$kommentarID' LIMIT 1");
+            $kommentarAutor = $this->sqlselect("SELECT * FROM blog_kommentare WHERE id = '$kommentarID' LIMIT 1");
 
             $autorID = $kommentarAutor[0]->autor;
             $angemeldeterUserID = $this->getUserID($_SESSION['username']);
 
             if ($this->userHasRight(32, 0) == true or $this->userHasRight(33, 0) == true) {
-                $kommentar = $this->getObjektInfo("SELECT * FROM blog_kommentare WHERE id ='$kommentarID' AND autor = '$autorID' LIMIT 1");
+                $kommentar = $this->sqlselect("SELECT * FROM blog_kommentare WHERE id ='$kommentarID' AND autor = '$autorID' LIMIT 1");
                 if (!isset($kommentar) or $kommentar == "") {
                     echo "<p class='meldung'>Kommentar kann nicht editiert werden.</p>";
                 } else {
@@ -928,15 +928,15 @@ class Blog extends Functions
      */
     public function userIsAllowedToSeeCategory($user, $blogID)
     {
-        $getblogidinfos = $this->getObjektInfo("SELECT id, kategorie FROM blogtexte WHERE id = '$blogID'");
+        $getblogidinfos = $this->sqlselect("SELECT id, kategorie FROM blogtexte WHERE id = '$blogID'");
         if (isset($getblogidinfos[0]->kategorie) and $getblogidinfos[0]->kategorie != "") {
             $kategorie = $getblogidinfos[0]->kategorie;
 
             //Benötigten Wert der Kategorie bekommen:
-            $getKategorieRechteWert = $this->getObjektInfo("SELECT id, rightWert FROM blogkategorien WHERE id = '$kategorie'");
+            $getKategorieRechteWert = $this->sqlselect("SELECT id, rightWert FROM blogkategorien WHERE id = '$kategorie'");
 
             //Rechte des aktuellen Benutzers bekommen
-            $getRechteForumAktuellerBenutzer = $this->getObjektInfo("SELECT id, forumRights FROM benutzer WHERE id = '$user' ");
+            $getRechteForumAktuellerBenutzer = $this->sqlselect("SELECT id, forumRights FROM benutzer WHERE id = '$user' ");
 
             //Rechte checken
             if ($this->check($getKategorieRechteWert[0]->rightWert, $getRechteForumAktuellerBenutzer[0]->forumRights) == true) {

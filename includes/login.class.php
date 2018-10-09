@@ -70,7 +70,7 @@ class Login extends Functions
                 //SQL Abfrage
                 $abfrage = "SELECT id, Name, Passwort, versuche FROM benutzer WHERE Name LIKE '$username' LIMIT 1";
 
-                $row = $this->getObjektInfo($abfrage);
+                $row = $this->sqlselect($abfrage);
 
                 if (!isset($row[0]->Name)) {
                     $this->logEintrag(false, "Login Fehlgeschlagen: Name $username existiert nicht in der Datenbank.", "Error");
@@ -99,7 +99,7 @@ class Login extends Functions
                         $this->logEintrag(true, " logged in", "login");
 
                         //Versuche Updaten
-                        $getversucheAnzahl = $this->getObjektInfo("SELECT id, Name, versuche FROM benutzer WHERE Name='" . $row[0]->Name . "' LIMIT 1");
+                        $getversucheAnzahl = $this->sqlselect("SELECT id, Name, versuche FROM benutzer WHERE Name='" . $row[0]->Name . "' LIMIT 1");
 
                         //Prüfen ob die Versuche > 0 sind.
                         if ($getversucheAnzahl[0]->versuche == 0) {
@@ -126,7 +126,7 @@ class Login extends Functions
 
                         //Versuche hochzählen // ab hier ist sicher, dass der Benutzer existiert.
                         $abfrage = "SELECT Name, versuche FROM benutzer WHERE Name LIKE '$username' LIMIT 1";
-                        $row2 = $this->getObjektInfo($abfrage);
+                        $row2 = $this->sqlselect($abfrage);
 
                         //Zur Sicherheit wird der Benutzername aus der Tabelle genommen
                         $usernameSAVE = $row2[0]->Name;
@@ -263,7 +263,7 @@ class Login extends Functions
                     echo "<p class='meldung'>Fehler, es wurden nicht alle Felder ausgefüllt.</p>";
                 } else {
                     $check = "SELECT * FROM benutzer WHERE Name LIKE '$username' LIMIT 1";
-                    $row = $this->getObjektInfo($check);
+                    $row = $this->sqlselect($check);
 
                     if (isset($row[0]->Name)) {
                         echo "<p class='meldung'>Fehler, der Name $username ist bereits vergeben.</p>";
@@ -274,7 +274,7 @@ class Login extends Functions
 
                             //Register Code Check
 
-                            $codeExists = $this->getObjektInfo("SELECT * FROM registercode WHERE code = '$code' LIMIT 1 ");
+                            $codeExists = $this->sqlselect("SELECT * FROM registercode WHERE code = '$code' LIMIT 1 ");
 
                             if (!isset($codeExists[0]->code)) {
                                 // echo "<p class='meldung'>Code gibts nicht</p>";
@@ -289,7 +289,7 @@ class Login extends Functions
 
                                 //Den Code überprüfen
                                 $select = "SELECT * FROM registercode WHERE code = '$code' LIMIT 1";
-                                $row = $this->getObjektInfo($select);
+                                $row = $this->sqlselect($select);
 
                                 //Check, ob der Code zu oft benutzt wurde
                                 if ($row[0]->used >= $row[0]->usageTimes) {

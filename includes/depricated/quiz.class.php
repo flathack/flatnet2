@@ -38,7 +38,7 @@ class Quiz extends Functions
     public function showNavigation()
     {
         $query = "SELECT * FROM quiz_themen";
-        $themen = $this->getObjektInfo($query);
+        $themen = $this->sqlselect($query);
 
         echo "<div class='finanzNAV'><ul>";
         if (isset($_GET['themeid'])) {
@@ -81,7 +81,7 @@ class Quiz extends Functions
 
                 $thema = $_GET['themeid'];
                 $query = "SELECT * FROM quiz_fragen WHERE thema_id=$thema";
-                $fragen = $this->getObjektInfo($query);
+                $fragen = $this->sqlselect($query);
 
                 for ($i = 0; $i < sizeof($fragen); $i++) {
                     echo "<div class='newCharWIDE'>";
@@ -89,7 +89,7 @@ class Quiz extends Functions
                     echo "<form method=post>";
                     $frageid = $fragen[$i]->id;
                     $antwortquery = "SELECT * FROM quiz_antworten WHERE frage_id=$frageid";
-                    $antworten = $this->getObjektInfo($antwortquery);
+                    $antworten = $this->sqlselect($antwortquery);
                     $checked = "";
                     echo "<ul>";
                     echo "<input type=number name=frageid value='$frageid' hidden />";
@@ -130,7 +130,7 @@ class Quiz extends Functions
 
         foreach ($antworten as $antwort) {
 
-            $trueorfalse = $this->getObjektInfo("SELECT * FROM quiz_antworten WHERE id=$antwort LIMIT 1");
+            $trueorfalse = $this->sqlselect("SELECT * FROM quiz_antworten WHERE id=$antwort LIMIT 1");
 
             if ($trueorfalse[0]->true_or_false == 1) {
                 echo "<li>" . $trueorfalse[0]->antwort_text . " ist richtig</li>";
@@ -164,7 +164,7 @@ class Quiz extends Functions
     public function saveFortschritt($frageid, $besitzer, $wert)
     {
 
-        $getFortschritt = $this->getObjektInfo("SELECT * FROM quiz_fortschritt WHERE frage_id=$frageid AND besitzer=$besitzer LIMIT 1");
+        $getFortschritt = $this->sqlselect("SELECT * FROM quiz_fortschritt WHERE frage_id=$frageid AND besitzer=$besitzer LIMIT 1");
 
         if (!isset($getFortschritt[0]->id)) {
             $query = "INSERT INTO quiz_fortschritt (besitzer, frage_id, richtig, falsch) VALUES ($besitzer, $frageid, 1, 0)";

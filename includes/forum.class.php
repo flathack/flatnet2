@@ -43,7 +43,7 @@ class Forum extends Functions
             //get info
             $selectCategories = "SELECT * FROM blogkategorien ORDER BY sortierung, kategorie ASC";
             $userID = $this->getUserID($_SESSION['username']);
-            $row = $this->getObjektInfo($selectCategories);
+            $row = $this->sqlselect($selectCategories);
 
             echo "<table class='forum'>";
 
@@ -54,14 +54,14 @@ class Forum extends Functions
                 //Prüfen ob der Benutzer die Rechte hat, das aktuelle Forum zu betrachten.
                 $benutzerliste = "SELECT id, Name, forumRights FROM benutzer WHERE id = '$userID' LIMIT 1";
 
-                $row2 = $this->getObjektInfo($benutzerliste);
+                $row2 = $this->sqlselect($benutzerliste);
 
                 for ($j = 0; $j < sizeof($row2); $j++) {
                     //Check
                     if ($this->check($row[$i]->rightWert, $row2[$j]->forumRights) == true) {
                         $kategorie = $row[$i]->id;
                         $query = "SELECT count(*) as anzahl FROM blogtexte WHERE kategorie = $kategorie";
-                        $anzahlPosts = $this->getObjektInfo($query);
+                        $anzahlPosts = $this->sqlselect($query);
                         $anzahlPosts = $anzahlPosts[0]->anzahl;
                         //Wenn der Check bestanden ist, dann anzeigen.
                         echo "<tbody><td><a href='?blogcategory=" . $row[$i]->id . "'><strong>" . $row[$i]->kategorie . "</strong></a>
@@ -96,13 +96,13 @@ class Forum extends Functions
 
             //Check ob der Benutzer das aktuelle Forum anzeigen darf.
             $selectCategories = "SELECT * FROM blogkategorien WHERE id = '$kategorie'";
-            $row = $this->getObjektInfo($selectCategories);
+            $row = $this->sqlselect($selectCategories);
 
             for ($i = 0; $i < sizeof($row); $i++) {
                 //Prüfen ob der Benutzer die Rechte hat, das aktuelle Forum zu betrachten.
                 $userID = $this->getUserID($_SESSION['username']);
                 $benutzerliste = "SELECT id, Name, forumRights FROM benutzer WHERE id = '$userID' LIMIT 1";
-                $row2 = $this->getObjektInfo($benutzerliste);
+                $row2 = $this->sqlselect($benutzerliste);
                 for ($j = 0; $j < sizeof($row2); $j++) {
                     //Check
                     if ($row2[$j]->forumRights == 0) {
@@ -129,7 +129,7 @@ class Forum extends Functions
             WHERE kategorie = '$kategorie'
             ORDER BY timestamp DESC";
 
-            $row = $this->getObjektInfo($selectBlogEintraege);
+            $row = $this->sqlselect($selectBlogEintraege);
 
             echo "<a href='?' class='highlightedLink'>Zurück</a> ";
             if (isset($_GET['blogcategory'])) {
@@ -149,7 +149,7 @@ class Forum extends Functions
                 </thead>";
             for ($i = 0; $i < sizeof($row); $i++) {
 
-                $lockedInfo = $this->getObjektInfo("SELECT * FROM blogtexte WHERE id = '" . $row[$i]->id . "'");
+                $lockedInfo = $this->sqlselect("SELECT * FROM blogtexte WHERE id = '" . $row[$i]->id . "'");
                 if (!isset($lockedInfo[0]->locked)) {
                     $locked = "";
                 } else if ($lockedInfo[0]->locked == 1) {
@@ -165,7 +165,7 @@ class Forum extends Functions
 
                     //Anzahl der Kommentare herausfinden
                     $countList = "SELECT COUNT(blogid) as anzahl FROM blog_kommentare WHERE blogid = '" . $row[$i]->id . "'";
-                    $menge = $this->getObjektInfo($countList);
+                    $menge = $this->sqlselect($countList);
                     $menge = $menge[0]->anzahl;
 
                     if ($row[$i]->status == 4) {
@@ -210,10 +210,10 @@ class Forum extends Functions
             $query = "SELECT * FROM blogtexte WHERE status=4";
 
             $countList = "SELECT count(*) as anzahl FROM blogtexte WHERE status=4";
-            $menge = $this->getObjektInfo($countList);
+            $menge = $this->sqlselect($countList);
             $menge = $menge[0]->anzahl;
 
-            $beitraege = $this->getObjektInfo($query);
+            $beitraege = $this->sqlselect($query);
 
             echo "<table class='forum'>";
             echo "<thead><td>Titel</td></thead>";

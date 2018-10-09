@@ -51,7 +51,7 @@ class PublicThings extends functions
             if ($test == "Marcel" OR $test == "marcel" OR $test == "Steven" OR $test == "steven") {
                 $query = "INSERT INTO blog_kommentare (autor, text, blogid) VALUES ('0','$text','$blogid')";
                 $check = "SELECT count(*) as anzahl FROM blog_kommentare WHERE text ='$text'";
-                $checkInfo = $this->getObjektInfo($query);
+                $checkInfo = $this->sqlselect($query);
                 
                 if (isset($checkInfo[0]->anzahl) AND $checkInfo[0]->anzahl > 0) {
                     echo "<p class='meldung'>Creation failed! You cannot create the same post twice!</p>";
@@ -105,7 +105,7 @@ class PublicThings extends functions
         echo "<div class='kommentare'>";
         $query = "SELECT * FROM blog_kommentare WHERE blogid=$blogid ";
         
-        $kommentare = $this->getObjektInfo($query);
+        $kommentare = $this->sqlselect($query);
         for ($i = 0 ; $i < sizeof($kommentare); $i++) {
             echo "<div class='publicInfo'>";
             $autorName = $this->getUserName($kommentare[$i]->autor);
@@ -131,7 +131,7 @@ class PublicThings extends functions
             // Prüfen ob topicID eine Nummer ist.
             if (is_numeric($topicID) == true AND $topicID > 0) {
                 $query = "SELECT * FROM blogtexte WHERE id=$topicID AND status=4";
-                $beitrag = $this->getObjektInfo($query);
+                $beitrag = $this->sqlselect($query);
                 
                 // Prüfen ob ID existiert,
                 if (isset($beitrag[0]->titel)) {

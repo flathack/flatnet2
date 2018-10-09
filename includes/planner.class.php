@@ -193,7 +193,7 @@ class Planner Extends Functions
             if (isset($username) AND isset($code)) {
                 // code und name vorhanden!
                 // check ob code vorhanden ist:
-                $codes = $this->getObjektInfo("SELECT * FROM eventinvitecodes WHERE eventinvitecode='$code'");
+                $codes = $this->sqlselect("SELECT * FROM eventinvitecodes WHERE eventinvitecode='$code'");
                 if (isset($codes[0]->eventinvitecode)) {
                     
                     $eventid = $codes[0]->eventid;

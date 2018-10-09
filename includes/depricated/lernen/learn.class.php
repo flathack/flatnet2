@@ -57,12 +57,12 @@ class learn extends functions {
 				
 				$userid = $this->getUserID($_SESSION['username']);
 				
-				$getKategorieInfos = $this->getObjektInfo("SELECT * FROM learnkategorie WHERE id = '$kategorie' ");
+				$getKategorieInfos = $this->sqlselect("SELECT * FROM learnkategorie WHERE id = '$kategorie' ");
 				
 				if($getKategorieInfos[0]->public == 1) {
-					$getEintraege = $this->getObjektInfo("SELECT * FROM learnlernkarte WHERE kategorie = $kategorie");
+					$getEintraege = $this->sqlselect("SELECT * FROM learnlernkarte WHERE kategorie = $kategorie");
 				} else {
-					$getEintraege = $this->getObjektInfo("SELECT * FROM learnlernkarte WHERE besitzer = $userid AND kategorie = $kategorie");
+					$getEintraege = $this->sqlselect("SELECT * FROM learnlernkarte WHERE besitzer = $userid AND kategorie = $kategorie");
 				}
 				
 				$this->editEintrag();
@@ -207,7 +207,7 @@ class learn extends functions {
 	
 		$query = "SELECT count(*) as anzahl FROM learnlernkarte WHERE besitzer = '$besitzer' AND frage='$titel' AND kategorie = '$kategorie' LIMIT 1";
 	
-		$gibtEsDenEintrag = $this->getObjektInfo($query);
+		$gibtEsDenEintrag = $this->sqlselect($query);
 	
 		if(isset($gibtEsDenEintrag->frage)) {
 			return true;
@@ -252,12 +252,12 @@ class learn extends functions {
 	
 				$userid = $this->getUserID($_SESSION['username']);
 	
-				$getKategorieInfos = $this->getObjektInfo("SELECT * FROM learnkategorie");
+				$getKategorieInfos = $this->sqlselect("SELECT * FROM learnkategorie");
 	
 				if($getKategorieInfos[0]->public == 1) {
-					$getEintraege = $this->getObjektInfo("SELECT * FROM learnlernkarte WHERE kategorie = $kategorie");
+					$getEintraege = $this->sqlselect("SELECT * FROM learnlernkarte WHERE kategorie = $kategorie");
 				} else {
-					$getEintraege = $this->getObjektInfo("SELECT * FROM learnlernkarte WHERE besitzer = $userid AND kategorie = $kategorie");
+					$getEintraege = $this->sqlselect("SELECT * FROM learnlernkarte WHERE besitzer = $userid AND kategorie = $kategorie");
 				}
 	
 				echo "<ul>";
@@ -281,7 +281,7 @@ class learn extends functions {
 	 */
 	function showKategorien() {
 		$userid = $this->getUserID($_SESSION['username']);
-		$getkategories = $this->getObjektInfo("SELECT * FROM learnkategorie WHERE besitzer = $userid");
+		$getkategories = $this->sqlselect("SELECT * FROM learnkategorie WHERE besitzer = $userid");
 	
 		if(isset($_GET['kategorie'])) {
 			$kategorieBereitsVorhanden = $_GET['kategorie'];
@@ -381,7 +381,7 @@ class learn extends functions {
 	function getKategorieInfo($kategorie) {
 		$query = "SELECT * FROM learnkategorie WHERE id = '$kategorie'";
 		
-		$check = $this->getObjektInfo($query);
+		$check = $this->sqlselect($query);
 		
 		if(isset($check[0]->id)) {
 			return $check;
@@ -509,7 +509,7 @@ class learn extends functions {
 			
 			$query = "SELECT * FROM lernstatus WHERE besitzer = '$besitzer' AND lern_id = '$lern_id' LIMIT 1";
 			
-			$check = $this->getObjektInfo($query);
+			$check = $this->sqlselect($query);
 			
 			return $check->status;
 			
@@ -551,7 +551,7 @@ class learn extends functions {
 		
 		$query = "SELECT count(*) as anzahl FROM lernstatus WHERE lern_id = '$lern_id' AND besitzer = '$besitzer'";
 		
-		$check = $this->getObjektInfo($query);
+		$check = $this->sqlselect($query);
 		
 		if($check->anzahl > 0) {
 			return true;
@@ -630,7 +630,7 @@ class learn extends functions {
 			# Checkanzahl:
 			
 			$query = "SELECT count(*) as anzahl FROM learnlernkarte WHERE kategorie = '$kategorie'";
-			$check = $this->getObjektInfo($query);
+			$check = $this->sqlselect($query);
 			return $check->anzahl;
 		}
 		
@@ -647,7 +647,7 @@ class learn extends functions {
 				AND $this->checkIfUserIsAllowedToSeeKategorie($besitzer, $kategorie) == true) {
 			
 			$query = "SELECT * FROM learnlernkarte WHERE kategorie = '$kategorie'";
-			$eintraege = $this->getObjektInfo($query);
+			$eintraege = $this->sqlselect($query);
 			
 			return $eintraege;
 		} else {
@@ -683,7 +683,7 @@ class learn extends functions {
 	function checkIfKategorieExists($kategorie) {
 		$query = "SELECT count(*) as anzahl FROM learnkategorie WHERE id = '$kategorie'";
 		
-		$check = $this->getObjektInfo($query);
+		$check = $this->sqlselect($query);
 		
 		if($check[0]->anzahl > 0) {
 			return true;

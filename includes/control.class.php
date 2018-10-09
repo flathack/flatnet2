@@ -146,7 +146,7 @@ class Control extends Functions
                     FROM benutzer
                     ORDER BY id";
 
-            $row = $this->getObjektInfo($benutzerliste);
+            $row = $this->sqlselect($benutzerliste);
             for ($i = 0; $i < sizeof($row); $i++) {
 
                 echo "<tbody";
@@ -236,7 +236,7 @@ class Control extends Functions
                         echo "<p class='meldung'>Fehler, es wurden nicht alle Felder ausgefüllt.</p>";
                     } else {
                         $check = "SELECT * FROM benutzer WHERE Name LIKE '$username' LIMIT 1";
-                        $row = $this->getObjektInfo($check);
+                        $row = $this->sqlselect($check);
 
                         /*
                          * Hier tritt ein Notice Fehler auf, ist aber normal,
@@ -279,7 +279,7 @@ class Control extends Functions
                     echo "<div class='newFahrt'>";
                     echo "<h2><a name='bearbeiten'>Benutzerbearbeitung</a> <a href='?userverw=1' class='rightRedLink'>X</a></h2>";
                     $userinfo = "SELECT timestamp, id, Name, Passwort, titel, forumRights FROM benutzer WHERE id = $bearb";
-                    $row = $this->getObjektInfo($userinfo);
+                    $row = $this->sqlselect($userinfo);
                     echo "<table>";
 
                     $i = 0;
@@ -305,7 +305,7 @@ class Control extends Functions
 
                         if ($spalte != "xxx") {
                             $query = "SELECT count(*) as anzahl FROM " . $tabelle . " WHERE " . $spalte . " = $bearb ";
-                            $amount = $this->getObjektInfo($query);
+                            $amount = $this->sqlselect($query);
 
                             if ($amount[0]->anzahl > 0) {
                                 echo "<div class='kleineBox'>";
@@ -359,7 +359,7 @@ class Control extends Functions
 
                     // Prüfen, ob die Daten überhaupt geändert wurden:
                     $checkRights = "SELECT * FROM benutzer WHERE id = '$selectedid' LIMIT 1";
-                    $rightsCheck = $this->getObjektInfo($checkRights);
+                    $rightsCheck = $this->sqlselect($checkRights);
 
                     if ($forumRights == $rightsCheck[0]->forumRights and $updatepass == "" and $newUserName == $rightsCheck[0]->Name and $titel == $rightsCheck[0]->titel) {
                         echo "<p class='info'>Es gab keine Änderung</p>";
@@ -566,7 +566,7 @@ class Control extends Functions
                     $columns = $this->getColumns($table);
 
                     // Informationen des aktuellen Tables auslesen
-                    $currentTableInfo = $this->getObjektInfo("SELECT * FROM $table WHERE $spalte = $userID");
+                    $currentTableInfo = $this->sqlselect("SELECT * FROM $table WHERE $spalte = $userID");
 
                     // Table nur anzeigen, wenn etwas vom Benutzer da ist:
                     // if(isset($currentTableInfo[$i])) {
@@ -625,7 +625,7 @@ class Control extends Functions
         echo "<h3>Logeinträge</h3>";
 
         $select = "SELECT count(*) as anzahl FROM `vorschlaege`";
-        $row = $this->getObjektInfo($select);
+        $row = $this->sqlselect($select);
 
         echo "Das Log umfasst " . $row[0]->anzahl . " Einträge.";
         echo "</div>";
@@ -666,7 +666,7 @@ class Control extends Functions
                     FROM vorschlaege
                     WHERE status = 'illegal'
                     ORDER BY timestamp DESC";
-            $row = $this->getObjektInfo($vorschlaege);
+            $row = $this->sqlselect($vorschlaege);
             for ($i = 0; $i < sizeof($row); $i++) {
                 echo "<thead id='illegal'><td colspan = '6' >WARNUNG</td></thead>";
                 echo "<form method=get>";
@@ -748,7 +748,7 @@ class Control extends Functions
                     OR status = 'verworfen'
                     OR status = 'erledigt'
                     ORDER BY id ASC";
-            $row = $this->getObjektInfo($vorschlaege);
+            $row = $this->sqlselect($vorschlaege);
             for ($i = 0; $i < sizeof($row); $i++) {
                 echo "<form method=get>";
                 echo "<input type=hidden name='action' value='2' />";
@@ -833,7 +833,7 @@ class Control extends Functions
                     FROM vorschlaege
                     WHERE status = 'login'
                     GROUP BY autor ORDER BY timestamp ASC";
-            $rowNEW = $this->getObjektInfo($vorschlaegeNEW);
+            $rowNEW = $this->sqlselect($vorschlaegeNEW);
 
             echo "<table class='logTable'>";
             echo "<thead><td id='smallLaenge'>Benutzer</td><td>Text</td><td id='smallLaenge'>Anzahl</td><td id='fixedLaenge'>Letzter Eintrag</td><td id='smallLaenge'>Optionen</td></thead>";
@@ -841,7 +841,7 @@ class Control extends Functions
             for ($i = 0; $i < sizeof($rowNEW); $i++) {
 
                 // letzter Eintag:
-                $letzterEintrag = $this->getObjektInfo("SELECT * FROM vorschlaege WHERE text = '" . $rowNEW[$i]->text . "' ORDER BY timestamp DESC");
+                $letzterEintrag = $this->sqlselect("SELECT * FROM vorschlaege WHERE text = '" . $rowNEW[$i]->text . "' ORDER BY timestamp DESC");
 
                 echo "<tbody>";
                 echo "<td>" . $this->getUserName($rowNEW[$i]->autor) . "</td>";
@@ -858,7 +858,7 @@ class Control extends Functions
                     FROM vorschlaege
                     WHERE status = 'Error'
                     GROUP BY text ORDER BY timestamp DESC";
-            $rowNEW = $this->getObjektInfo($vorschlaegeNEW);
+            $rowNEW = $this->sqlselect($vorschlaegeNEW);
 
             echo "<div class='newFahrt'>";
             echo "<h3>" . "Fehlgeschlagene Logins oder Registrierungen" . "</h3>";
@@ -868,7 +868,7 @@ class Control extends Functions
             for ($i = 0; $i < sizeof($rowNEW); $i++) {
 
                 // letzter Eintag:
-                $letzterEintrag = $this->getObjektInfo("SELECT * FROM vorschlaege WHERE text = '" . $rowNEW[$i]->text . "' ORDER BY timestamp DESC");
+                $letzterEintrag = $this->sqlselect("SELECT * FROM vorschlaege WHERE text = '" . $rowNEW[$i]->text . "' ORDER BY timestamp DESC");
 
                 echo "<tbody>
                         <td>" . $rowNEW[$i]->text . "</td><td>" . $rowNEW[$i]->anzahl . "</td>
@@ -897,7 +897,7 @@ class Control extends Functions
                 if ($id != "" and $id > 0) {
 
                     // Text der zu löschenden ID bekommen:
-                    $deleteObjectWithThisText = $this->getObjektInfo("SELECT * FROM vorschlaege WHERE id = '$id' LIMIT 1");
+                    $deleteObjectWithThisText = $this->sqlselect("SELECT * FROM vorschlaege WHERE id = '$id' LIMIT 1");
                     $text = $deleteObjectWithThisText[0]->text;
                     // JETZT wird $text gelöscht!
                     $this->sqlDeleteCustom("DELETE FROM vorschlaege WHERE text = '$text'");
@@ -924,7 +924,7 @@ class Control extends Functions
 
             // Select from Database
             $vorschlaege = "SELECT id, timestamp, autor, text, status FROM vorschlaege WHERE status = 'offen' ORDER BY status DESC";
-            $row = $this->getObjektInfo($vorschlaege);
+            $row = $this->sqlselect($vorschlaege);
             echo "<table class='logTable'>";
             echo "<thead>";
             echo "<td>Text</td><td>Status</td>";
@@ -993,7 +993,7 @@ class Control extends Functions
     {
         $this->connectToDB();
         $selectUsername = "SELECT id, name FROM rightkategorien WHERE id = '$id' LIMIT 1";
-        $rowUsername = $this->getObjektInfo($selectUsername);
+        $rowUsername = $this->sqlselect($selectUsername);
         if (isset($rowUsername[0]->name)) {
             $username = $rowUsername[0]->name;
         } else {
@@ -1044,7 +1044,7 @@ class Control extends Functions
                     echo "<form method=post>";
                     echo "<input type='text' value='' name='newRightName' placeholder='Infotext des Rechts' required autofocus /> <br> ";
                     // Select für Kategorien
-                    $getKats = $this->getObjektInfo("SELECT * FROM rightkategorien ORDER BY name");
+                    $getKats = $this->sqlselect("SELECT * FROM rightkategorien ORDER BY name");
                     echo "<select name='kategorie'>";
                     for ($i = 0; $i < sizeof($getKats); $i++) {
                         echo "<option value='" . $getKats[$i]->id . "'>" . $getKats[$i]->name . "</option>";
@@ -1107,7 +1107,7 @@ class Control extends Functions
             echo "<div>";
             echo "<h3><a name='forumRechte'>Forum - Rechte verteilen</a></h3>";
             $benutzerlisteUser = "SELECT id, Name FROM benutzer ORDER BY name";
-            $rowUser = $this->getObjektInfo($benutzerlisteUser);
+            $rowUser = $this->sqlselect($benutzerlisteUser);
 
             for ($i = 0; $i < sizeof($rowUser); $i++) {
                 echo "<a href='?action=5&user=" . $rowUser[$i]->id . "#forumRechte' class='buttonlink'>" . $rowUser[$i]->Name . "</a>";
@@ -1121,7 +1121,7 @@ class Control extends Functions
                     // ALTE BENUTZERRECHTE BEKOMMEN:
                     $userid = $_GET['user'];
                     $rightFromCurrentUser = "SELECT forumRights FROM benutzer WHERE id = '$userid'";
-                    $rowGetRights = $this->getObjektInfo($rightFromCurrentUser);
+                    $rowGetRights = $this->sqlselect($rightFromCurrentUser);
                     $benutzerrechte = $rowGetRights[0]->forumRights;
                     if ($benutzerrechte == 0) {
                         $benutzerrechte = 1;
@@ -1130,7 +1130,7 @@ class Control extends Functions
                     // Dezimalwert der RechteID bekommen:
                     $rightID = $_GET['right'];
                     $getRightValue = "SELECT id, rightWert FROM blogkategorien WHERE id = '$rightID'";
-                    $rowGetValue = $this->getObjektInfo($getRightValue);
+                    $rowGetValue = $this->sqlselect($getRightValue);
                     $rightValue = $rowGetValue[0]->rightWert;
 
                     // Status der Änderung:
@@ -1161,7 +1161,7 @@ class Control extends Functions
                 $id = $_GET['user'];
 
                 $benutzerliste = "SELECT id, Name, forumRights FROM benutzer WHERE id = '$id' ORDER BY name";
-                $row = $this->getObjektInfo($benutzerliste);
+                $row = $this->sqlselect($benutzerliste);
 
                 echo "<div id=''>";
 
@@ -1178,7 +1178,7 @@ class Control extends Functions
 
                     // Rechteliste des Benutzer erstellen
                     $rightListe = "SELECT * FROM blogkategorien ORDER BY rightPotenz DESC";
-                    $row2 = $this->getObjektInfo($rightListe);
+                    $row2 = $this->sqlselect($rightListe);
 
                     echo "<h3>Rechteliste</h3>";
                     echo "<table class='flatnetTable'>";
@@ -1221,7 +1221,7 @@ class Control extends Functions
                     FROM blogkategorien
                     ORDER BY kategorie";
 
-            $row = $this->getObjektInfo($selectCategories);
+            $row = $this->sqlselect($selectCategories);
             for ($i = 0; $i < sizeof($row); $i++) {
                 echo "<tbody><td>";
                 echo "<a href='/flatnet2/forum/index.php?blogcategory=" . $row[$i]->id . "'>" . $row[$i]->kategorie . "</a></td>";
@@ -1248,7 +1248,7 @@ class Control extends Functions
             if (!isset($_GET['editid'])) {
 
                 // Höchste Potenz bekommen:
-                $getMaxPotenz = $this->getObjektInfo("SELECT max(rightPotenz) as max FROM blogkategorien");
+                $getMaxPotenz = $this->sqlselect("SELECT max(rightPotenz) as max FROM blogkategorien");
                 if (!isset($getMaxPotenz[0]->max)) {
                     // Wenn es noch keine Kategorien gibt:
                     $max = 0;
@@ -1302,7 +1302,7 @@ class Control extends Functions
 
                     // Püfen ob es diesen Namen schon gibt:
                     $check = "SELECT * FROM blogkategorien WHERE kategorie = '$kategorie'";
-                    $row = $this->getObjektInfo($check);
+                    $row = $this->sqlselect($check);
                     if (isset($row[0]->kategorie)) {
                         echo "<p class='meldung'>Diese Kategorie existiert bereits.</p>";
                         return false;
@@ -1347,7 +1347,7 @@ class Control extends Functions
 
                     // nicht zugeordnet Kategorie finden:
                     $select = "SELECT id, kategorie FROM blogkategorien WHERE kategorie = 'nicht zugeordnet' LIMIT 1";
-                    $row = $this->getObjektInfo($select);
+                    $row = $this->sqlselect($select);
                     if (isset($row[0]->id)) {
                         $notAssigned = $row[0]->id;
                     }
@@ -1414,7 +1414,7 @@ class Control extends Functions
                     // ##########################
                     $editid = $_GET['editid'];
                     $select = "SELECT * FROM blogkategorien WHERE id = '$editid'";
-                    $row = $this->getObjektInfo($select);
+                    $row = $this->sqlselect($select);
                     for ($i = 0; $i < sizeof($row); $i++) {
                         echo "<div class='newChar'>";
                         echo "<form method=post>";
@@ -1474,7 +1474,7 @@ class Control extends Functions
         //    $this->connectToSpecialDB ( "information_schema", "info_user", "GCbzZFw2ppBwJp7Q" );
         $dbname = $this->getDBName();
         $select1 = "SELECT column_name, column_comment FROM columns WHERE TABLE_SCHEMA = '$dbname' AND TABLE_NAME='$table'";
-        $row = $this->getObjektInfo($select1);
+        $row = $this->sqlselect($select1);
         for ($i = 0; $i < sizeof($row); $i++) {
             $comments[$i] = $row[$i]->column_comment;
         }
@@ -1556,7 +1556,7 @@ class Control extends Functions
                     // Menge bekommen
                     $dbname = $this->getDBName();
                     $query = "SELECT COUNT(*) as anzahl FROM information_schema.columns WHERE table_schema = '$dbname' and table_name = '$table'";
-                    $mengeGrund = $this->getObjektInfo($query);
+                    $mengeGrund = $this->sqlselect($query);
                     $menge = $mengeGrund[0]->anzahl;
 
                     // Query bauen
@@ -1612,7 +1612,7 @@ class Control extends Functions
                 $menge = $this->getAmount($query);
 
                 $select = "SELECT * FROM $table WHERE id = '$id'";
-                $row = $this->getObjektInfo($select);
+                $row = $this->sqlselect($select);
 
                 // Columns bekommen:
                 $columns = $this->getColumns($table);
@@ -1667,7 +1667,7 @@ class Control extends Functions
             // $this->connectToSpecialDB ( "information_schema", "info_user", "GCbzZFw2ppBwJp7Q" );
             /*
             $select1 = "SHOW COLUMNS FROM columns";
-            $row = $this->getObjektInfo($select1);
+            $row = $this->sqlselect($select1);
             for ($i = 0 ; $i < sizeof($row) ; $i++) {
             $columns [$i] = $row[$i]->Field;
             }
@@ -1695,7 +1695,7 @@ class Control extends Functions
             $dbname = $this->getDBName();
             $select1 = "SELECT * FROM columns 
                 WHERE TABLE_SCHEMA = '$dbname' AND TABLE_NAME='$table'";
-            $row = $this->getObjektInfo($select1);
+            $row = $this->sqlselect($select1);
             for($i = 0; $i < sizeof ($row); $i ++) {
             echo "<tbody>";
             for($j = 0; $j < sizeof ($columns); $j ++) {
@@ -1817,7 +1817,7 @@ class Control extends Functions
             $select = "SHOW TABLES FROM $DBName";
             $columnName = "Tables_in_" . $DBName;
 
-            $row = $this->getObjektInfo($select);
+            $row = $this->sqlselect($select);
             echo "<form method=get action='?action=3'>";
             echo "<input type=hidden name=action value=3 />";
             echo "<select class='bigSelect' name='table'>";
@@ -1990,7 +1990,7 @@ class Control extends Functions
                 }
 
                 // Ergebnis der SQL Abfrage
-                $row = $this->getObjektInfo($select);
+                $row = $this->sqlselect($select);
                 $abfrageMenge = $this->getAmount($pageSelect);
                 $currentSelect = $this->getAmount($select);
 
@@ -2180,7 +2180,7 @@ class Control extends Functions
 
                 // Liste von allen Benutzern anzeigen:
                 // #####################################################################################################################
-                $allusers = $this->getObjektInfo("SELECT * FROM benutzer");
+                $allusers = $this->sqlselect("SELECT * FROM benutzer");
                 //
                 echo "<div class='newFahrt'>";
                 echo "<h3>Benutzer</h3>";
@@ -2197,7 +2197,7 @@ class Control extends Functions
                 if (isset($_GET['userid'])) {
                     echo "<div class='newFahrt'>";
                     $id = $_GET['userid'];
-                    $userInformation = $this->getObjektInfo("SELECT * FROM benutzer WHERE id = '$id'");
+                    $userInformation = $this->sqlselect("SELECT * FROM benutzer WHERE id = '$id'");
                     if (!isset($userInformation[0]->Name)) {
                         echo "<p class='meldung'>Diesen Benutzer gibt es nicht</p>";
                     } else {
@@ -2206,14 +2206,14 @@ class Control extends Functions
 
                     // Liste erstellen, aber mit Kategorien:
 
-                    $getAllKategorien = $this->getObjektInfo("SELECT * FROM rightkategorien");
+                    $getAllKategorien = $this->sqlselect("SELECT * FROM rightkategorien");
 
                     echo "<table class='flatnetTable'>";
 
                     for ($i = 0; $i < sizeof($getAllKategorien); $i++) {
 
                         // Jetzt alle Einträge die zu dieser Kategorie gehören selektieren:
-                        $getEintraegeVonDieserKategorie = $this->getObjektInfo("SELECT * FROM userrights WHERE kategorie = '" . $getAllKategorien[$i]->id . "' ORDER BY recht");
+                        $getEintraegeVonDieserKategorie = $this->sqlselect("SELECT * FROM userrights WHERE kategorie = '" . $getAllKategorien[$i]->id . "' ORDER BY recht");
 
                         echo "<thead>";
                         echo "<td>" . $getAllKategorien[$i]->name . "</td>";
@@ -2271,7 +2271,7 @@ class Control extends Functions
 
                 // Check ob es Benutzer gibt..
                 $userid = $_GET['userid'];
-                $userInformation = $this->getObjektInfo("SELECT * FROM benutzer WHERE id = $userid");
+                $userInformation = $this->sqlselect("SELECT * FROM benutzer WHERE id = $userid");
                 if (!isset($userInformation[0]->Name)) {
                     echo "<p class='meldung'>Diesen Benutzer gibt es nicht</p>";
                     exit;
@@ -2279,15 +2279,15 @@ class Control extends Functions
 
                 // Check ob es Recht gibt...
                 $rechteID = $_GET['gewaehren'];
-                $rightInformation = $this->getObjektInfo("SELECT * FROM userrights WHERE id = '$rechteID'");
+                $rightInformation = $this->sqlselect("SELECT * FROM userrights WHERE id = '$rechteID'");
                 if (!isset($rightInformation[0]->id)) {
                     echo "<p class='meldung'>Dieses Recht gibt es nicht!</p>";
                     exit;
                 }
 
                 // Check ob der Benutzer das Recht schon hat
-                $getAllRights = $this->getObjektInfo("SELECT * FROM userrights WHERE id = '$rechteID'");
-                $userInformation = $this->getObjektInfo("SELECT * FROM benutzer WHERE id = '$userid'");
+                $getAllRights = $this->sqlselect("SELECT * FROM userrights WHERE id = '$rechteID'");
+                $userInformation = $this->sqlselect("SELECT * FROM benutzer WHERE id = '$userid'");
                 if ($this->userHasRight($getAllRights[0]->id, $userInformation[0]->id) == true) {
                     echo "<p class='meldung'>Der Benutzer hat das Recht bereits!</p>";
                     exit;
@@ -2307,7 +2307,7 @@ class Control extends Functions
 
                 // Check ob es Benutzer gibt..
                 $userid = $_GET['userid'];
-                $userInformation = $this->getObjektInfo("SELECT * FROM benutzer WHERE id = '$userid'");
+                $userInformation = $this->sqlselect("SELECT * FROM benutzer WHERE id = '$userid'");
                 if (!isset($userInformation[0]->Name)) {
                     echo "<p class='meldung'>Diesen Benutzer gibt es nicht</p>";
                     exit;
@@ -2315,15 +2315,15 @@ class Control extends Functions
 
                 // Check ob es Recht gibt...
                 $rechteID = $_GET['verweigern'];
-                $rightInformation = $this->getObjektInfo("SELECT * FROM userrights WHERE id = '$rechteID'");
+                $rightInformation = $this->sqlselect("SELECT * FROM userrights WHERE id = '$rechteID'");
                 if (!isset($rightInformation[0]->id)) {
                     echo "<p class='meldung'>Dieses Recht gibt es nicht!</p>";
                     exit;
                 }
 
                 // Check ob der Benutzer das Recht schon hat
-                $getAllRights = $this->getObjektInfo("SELECT * FROM userrights WHERE id = '$rechteID'");
-                $userInformation = $this->getObjektInfo("SELECT * FROM benutzer WHERE id = '$userid'");
+                $getAllRights = $this->sqlselect("SELECT * FROM userrights WHERE id = '$rechteID'");
+                $userInformation = $this->sqlselect("SELECT * FROM benutzer WHERE id = '$userid'");
                 if ($this->userHasRight($getAllRights[0]->id, $userInformation[0]->id) == false) {
                     echo "<p class='meldung'>Der Benutzer hat das Recht nicht, also kann es ihn auch nicht verweigert werden!</p>";
                     exit;
@@ -2354,7 +2354,7 @@ class Control extends Functions
         if ($this->userHasRight(68, 0) == true) {
 
             // Alle Kategorien bekommen:
-            $getallcategories = $this->getObjektInfo("SELECT * FROM rightkategorien");
+            $getallcategories = $this->sqlselect("SELECT * FROM rightkategorien");
             echo "<div class='newFahrt'>";
             echo "<h3>Rechtekategorien</h3>";
             echo "<table class='flatnetTable'>";
@@ -2402,7 +2402,7 @@ class Control extends Functions
                 $textLimit = 70;
             }
 
-            $getLogs = $this->getObjektInfo("SELECT * FROM log ORDER BY timestamp DESC LIMIT $limit");
+            $getLogs = $this->sqlselect("SELECT * FROM log ORDER BY timestamp DESC LIMIT $limit");
             $getanzahl = $this->getAmount("SELECT * FROM log");
             echo "<h3>" . "Datenbankänderungen (insert, update, delete, html-tag bereinigt)" . "(" . $getanzahl . " Einträge)" . "</h3>";
             echo "<form method=get><input type=number name=setlimit value=$limit /><input type=hidden name=action value=2 /><input type=submit class='' /></form>";
@@ -2464,7 +2464,7 @@ class Control extends Functions
      */
     public function users_with_content()
     {
-        $user_with_content = $this->getObjektInfo("SELECT * FROM finanzen_konten GROUP BY besitzer");
+        $user_with_content = $this->sqlselect("SELECT * FROM finanzen_konten GROUP BY besitzer");
         echo "<h2>Benutzer mit Konten</h2>";
         echo "<ul>";
         for ($i = 0; $i < sizeof($user_with_content); $i++) {
@@ -2485,13 +2485,13 @@ class Control extends Functions
     {
         if (isset($_GET['userid'])) {
             $id = $_GET['userid'];
-            $selectuserInfos = $this->getObjektInfo("SELECT * FROM benutzer WHERE id=$id");
+            $selectuserInfos = $this->sqlselect("SELECT * FROM benutzer WHERE id=$id");
 
             if (isset($selectuserInfos[0]->id)) {
                 // User Infos
                 echo "<h2>" . $selectuserInfos[0]->Name . " (" . $selectuserInfos[0]->id . ")</h2>";
 
-                $konten = $this->getObjektInfo("SELECT * FROM finanzen_konten WHERE besitzer=$id");
+                $konten = $this->sqlselect("SELECT * FROM finanzen_konten WHERE besitzer=$id");
 
                 echo "<ul>";
                 for ($i = 0; $i < sizeof($konten); $i++) {
