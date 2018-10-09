@@ -168,7 +168,7 @@ class Quiz extends Functions
 
         if (!isset($getFortschritt[0]->id)) {
             $query = "INSERT INTO quiz_fortschritt (besitzer, frage_id, richtig, falsch) VALUES ($besitzer, $frageid, 1, 0)";
-            if ($this->sql_insert_update_delete($query) == true) {
+            if ($this->sqlInsertUpdateDelete($query) == true) {
                 return true;
             } else {
                 return false;
@@ -178,7 +178,7 @@ class Quiz extends Functions
                 $alterRichtigWert = $getFortschritt[0]->richtig;
                 $neu = $alterRichtigWert + 1;
 
-                if ($this->sql_insert_update_delete("UPDATE quiz_fortschritt SET richtig=$neu WHERE frage_id=$frageid AND besitzer=$besitzer") == true) {
+                if ($this->sqlInsertUpdateDelete("UPDATE quiz_fortschritt SET richtig=$neu WHERE frage_id=$frageid AND besitzer=$besitzer") == true) {
 
                 } else {
                     echo "update konnte nicht gespeichert werden";
@@ -188,7 +188,7 @@ class Quiz extends Functions
                 $alterFalschWert = $getFortschritt[0]->falsch;
                 $neu = $alterFalschWert + 1;
 
-                if ($this->sql_insert_update_delete("UPDATE quiz_fortschritt SET falsch=$neu WHERE frage_id=$frageid AND besitzer=$besitzer") == true) {
+                if ($this->sqlInsertUpdateDelete("UPDATE quiz_fortschritt SET falsch=$neu WHERE frage_id=$frageid AND besitzer=$besitzer") == true) {
 
                 } else {
                     echo "update konnte nicht gespeichert werden";

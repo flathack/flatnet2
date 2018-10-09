@@ -50,7 +50,7 @@ $kontakt->logged_in();
                         $text = strip_tags(stripslashes($_POST['vorschlagText']));
                         // Query in die Class schieben:
                         $query = "INSERT INTO vorschlaege (autor, text, status) VALUES ('$autor','$text','offen')";
-                        if ($kontakt->sql_insert_update_delete($query) == true) {
+                        if ($kontakt->sqlInsertUpdateDelete($query) == true) {
                             echo "<p class='erfolg'>Vorschlag eingereicht</p>";
                         } else {
                             echo "<p class='info'>Sorry! Gerade ist was kaputt. Der Vorschlag wurde nicht gesendet, aber eingetragen</p>";

@@ -119,7 +119,7 @@ class Blog extends Functions
             if (isset($_GET['lockthread'])) {
                 $id = $_GET['lockthread'];
                 if ($id > 0 and is_numeric($id) == true) {
-                    $this->sql_insert_update_delete("UPDATE blogtexte SET locked=1 WHERE id = '$id'");
+                    $this->sqlInsertUpdateDelete("UPDATE blogtexte SET locked=1 WHERE id = '$id'");
                 }
 
             }
@@ -137,7 +137,7 @@ class Blog extends Functions
             if (isset($_GET['unlockthread'])) {
                 $id = $_GET['unlockthread'];
                 if ($id > 0 and is_numeric($id) == true) {
-                    $this->sql_insert_update_delete("UPDATE blogtexte SET locked=0 WHERE id = '$id'");
+                    $this->sqlInsertUpdateDelete("UPDATE blogtexte SET locked=0 WHERE id = '$id'");
                 }
             }
         }
@@ -260,7 +260,7 @@ class Blog extends Functions
                     $status = $_POST['status'];
                     $insertNewBlog = "INSERT INTO blogtexte (autor, titel, text, kategorie, status) VALUES ('$autor','$titel','$text','$kategorie','$status')";
 
-                    if ($this->sql_insert_update_delete($insertNewBlog) == true) {
+                    if ($this->sqlInsertUpdateDelete($insertNewBlog) == true) {
                         echo '<p class="erfolg">Der Foreneintrag mit dem Titel <strong>' . $titel . ' </strong>wurde erstellt.';
                     } else {
                         echo '<p class="meldung">Das speichern ist fehlgeschlagen!
@@ -422,7 +422,7 @@ class Blog extends Functions
 
                 //Durchführung des Updates
 
-                if ($this->sql_insert_update_delete($sqlupdate) == true) {
+                if ($this->sqlInsertUpdateDelete($sqlupdate) == true) {
                     echo "<p class='erfolg'>Foreneintrag <strong>$titel</strong> wurde geändert.</p>";
                 } else {
                     echo "<p class='meldung'>Es ist ein Fehler aufgetreten. Kopiere den unteren Text in ein anderes Dokument um den Text nicht zu verlieren und versuche es später nochmal.</p>";
@@ -558,9 +558,9 @@ class Blog extends Functions
                     //Durchfuehrung der Loeschung.
                     $loeschQuery = "DELETE FROM blogtexte WHERE id=$loeschblogid";
 
-                    if ($this->sql_insert_update_delete($loeschQuery) == true) {
+                    if ($this->sqlInsertUpdateDelete($loeschQuery) == true) {
                         echo "<p class='erfolg'>Der Beitrag wurde erfolgreich gel�scht!</p>";
-                        if ($this->sql_insert_update_delete("DELETE FROM blog_kommentare WHERE blogid=$loeschblogid") == true) {
+                        if ($this->sqlInsertUpdateDelete("DELETE FROM blog_kommentare WHERE blogid=$loeschblogid") == true) {
                             echo "<p class='erfolg'>Der Beitrag wurde erfolgreich gel�scht!</p>";
                             exit;
                         }
@@ -706,7 +706,7 @@ class Blog extends Functions
 
                             $insertKommentar = "INSERT INTO blog_kommentare (autor, text, blogid) VALUES ('$autorID','$text','$blogid')";
 
-                            if ($this->sql_insert_update_delete($insertKommentar) == true) {
+                            if ($this->sqlInsertUpdateDelete($insertKommentar) == true) {
                                 echo "<p class='erfolg'>Antwort erstellt</p>";
                             } else {
                                 echo "<p class='meldung'>Fehler</p>";
@@ -858,7 +858,7 @@ class Blog extends Functions
                             $text = $_POST['kommentarText'] . "<p><span style=\"font-size:10px; padding:3px; background-Color: #e0e0e0;\">Editiert am $editiertAm von $userDerGeaendertHat</span></p>";
 
                             $query = "UPDATE blog_kommentare SET text = '$text' WHERE id = '" . $kommentar[0]->id . "' AND autor = '$autorID'";
-                            if ($this->sql_insert_update_delete($query) == true) {
+                            if ($this->sqlInsertUpdateDelete($query) == true) {
                                 echo "<p class='erfolg'>Erfolgreich gespeichert</p>";
                                 echo "<a href='/flatnet2/blog/blogentry.php?showblogid=" . $kommentar[0]->blogid . "' class='greenLink' > Zurück </a>";
                             } else {
@@ -890,7 +890,7 @@ class Blog extends Functions
 
             $loeschQuery = "DELETE FROM `blog_kommentare` WHERE id=$id AND blogid ='$blogid'";
 
-            if ($this->sql_insert_update_delete($loeschQuery) == true) {
+            if ($this->sqlInsertUpdateDelete($loeschQuery) == true) {
                 echo "<p class='erfolg'><a name='geloescht'>Kommentar gel&ouml;scht!</a><a href='?showblogid=$blogid' class='buttonlink'>OK</a></p>";
                 exit;
             } else {

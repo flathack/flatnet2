@@ -235,7 +235,7 @@ class Datenbanken extends Functions
                     stadt='$stadt', bundesland='$bundesland', land='$land', telefon1='$telefon1', telefon2='$telefon2', telefon3='$telefon3', telefon4='$telefon4', telefon1art='$telefon1art', telefon2art='$telefon2art',
                     telefon3art='$telefon3art', telefon4art='$telefon4art', email='$email', skype='$skype', facebook='$facebook', fax='$fax', gruppe='$gruppe', notizen='$notizen' WHERE id='$updid'";
 
-                    if ($this->sql_insert_update_delete($sqlupdate) == true) {
+                    if ($this->sqlInsertUpdateDelete($sqlupdate) == true) {
                         $fehler .= "<p class='erfolg'>Adressbucheintrag wurde erfolgreich geδndert!</p>";
                     } else {
                         $fehler .= "<p class='meldung'>Fehler beim speichern</p>";
@@ -452,7 +452,7 @@ class Datenbanken extends Functions
                             '$telefon4art','$email','$skype','$facebook','$fax','$gruppe','$notizen'
                         )";
 
-                        if ($this->sql_insert_update_delete($eintrag) == true) {
+                        if ($this->sqlInsertUpdateDelete($eintrag) == true) {
                             echo "<p class='erfolg'>Adressbucheintrag wurde erfolgreich hinzugef&uuml;gt! <a href='?eintragenja=1' class='buttonlink'>Zurück</a></p>";
                         } else {
                             echo "<p class='meldung'>Fehler beim speichern der Daten<a href='?eintragenja=1' class='buttonlink'>Zurück</a></p>";

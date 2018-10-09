@@ -72,7 +72,7 @@ class Uebersicht extends Functions
         $query = "INSERT INTO uebersicht_kacheln (id, timestamp, name, link, beschreibung, sortierung, active, cssID, rightID)
                 VALUES
                 ('$id', CURRENT_TIMESTAMP,'$name','$link','$beschreibung','$sortierung','$active','$css','$rightID')";
-        if ($this->sql_insert_update_delete($query) == true) {
+        if ($this->sqlInsertUpdateDelete($query) == true) {
             return true;
         } else {
             return false;
@@ -224,7 +224,7 @@ class Uebersicht extends Functions
                 $id = $_POST['id'];
                 $status = $_POST['changeStatus'];
 
-                if ($this->sql_insert_update_delete("UPDATE uebersicht_kacheln SET active=$status WHERE id=$id LIMIT 1") == true) {
+                if ($this->sqlInsertUpdateDelete("UPDATE uebersicht_kacheln SET active=$status WHERE id=$id LIMIT 1") == true) {
                     echo "<p class='erfolg'>Wurde geändert</p>";
                 } else {
                     echo "<p class='meldung'>Es gab einen Fehler.</p>";

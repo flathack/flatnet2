@@ -103,7 +103,7 @@ class Docu extends functions
             } else {
                 $autor = $this->getUserID($_SESSION['username']);
                 $insert = "INSERT INTO docu (text, autor) VALUES ('$text','$autor')";
-                if ($this->sql_insert_update_delete($insert) == true) {
+                if ($this->sqlInsertUpdateDelete($insert) == true) {
                     echo "<p class='erfolg'>Eintrag gespeichert.</p>";
                 } else {
                     echo "<p class='meldung'>Fehler beim speichern in der Datenbank.</p>";

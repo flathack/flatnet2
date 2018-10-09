@@ -113,7 +113,7 @@ class Login extends Functions
                         } else {
                             $update = "UPDATE benutzer SET versuche=0 WHERE Name = '" . $row[0]->Name . "' LIMIT 1";
 
-                            if ($this->sql_insert_update_delete_hw($update) == false) {
+                            if ($this->sqlInsertUpdateDeleteHW($update) == false) {
                                 echo "<p class='info'>Ein Login ist derzeit nicht möglich.</p>";
                                 $this->logEintrag(false, "Versuche von $username konnten nicht auf 0 gesetzt werden.", "Error");
                             } else {
@@ -138,7 +138,7 @@ class Login extends Functions
                         //Versuche speichern
                         $updateVersuche = "UPDATE benutzer SET versuche='$neueVersuche' WHERE Name = '$usernameSAVE'";
 
-                        if ($this->sql_insert_update_delete($updateVersuche) == true) {
+                        if ($this->sqlInsertUpdateDelete($updateVersuche) == true) {
                             $this->logEintrag(false, "Versuche von $usernameSAVE wurden hochgezählt (falsches Passwort).", "Error");
                             return $errorMessage;
                         } else {
@@ -314,7 +314,7 @@ class Login extends Functions
 
                                     //Update des Codes.
                                     $update = "UPDATE registercode SET used='$used',usedBy='$username',ipadress='$ip' WHERE code = '$code'";
-                                    if ($this->sql_insert_update_delete($update) == true) {
+                                    if ($this->sqlInsertUpdateDelete($update) == true) {
                                         //Logeintrag
                                         $this->logEintrag(true, "hat den Code $code benutzt, dieser wurde von " . $row[0]->used . " nach $used geupdatet", "Error");
                                     } else {
@@ -329,7 +329,7 @@ class Login extends Functions
                             //Benutzer anlegen
                             $passwortneu = md5($passwort1);
                             $query = "INSERT INTO benutzer (Name, Passwort, rights, versuche) VALUES ('$username','$passwortneu','0','0')";
-                            if ($this->sql_insert_update_delete($query) == true) {
+                            if ($this->sqlInsertUpdateDelete($query) == true) {
                                 echo "<p class='erfolg'>Hallo $username! Du hast dich erfolgreich registriert! <a href='uebersicht.php'>Klicke hier</a></p>";
                                 //Logeintrag
                                 $this->logEintrag(true, "hat sich registriert", "login");

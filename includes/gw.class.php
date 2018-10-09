@@ -276,7 +276,7 @@ class Gw_Costs extends Guildwars
                 $insert = "INSERT INTO gwcosts (text, wert, besitzer, kaufdat) 
                     VALUES ('$text','$wert','$autor','$kaufdat')";
 
-                if ($this->sql_insert_update_delete($insert) == true) {
+                if ($this->sqlInsertUpdateDelete($insert) == true) {
                     echo "<p class='erfolg'>Eintrag gespeichert.</p>";
                 } else {
                     echo "<p class='meldung'>Fehler beim speichern in der Datenbank.</p>";
@@ -1070,7 +1070,7 @@ class Gw_Charakter extends Guildwars
                             '$handwerk1','$handwerk2','$handwerk1stufe','$handwerk2stufe',
                             '$erkundung','$spielstunden','$account')";
 
-                            if ($this->sql_insert_update_delete($insert) == true) {
+                            if ($this->sqlInsertUpdateDelete($insert) == true) {
                                 $fehlermeldung .= '<p class="erfolg">Charakter angelegt.</p>';
                             } else {
                                 $fehlermeldung .= "<p class='meldung'>Fehler</p>";
@@ -1138,7 +1138,7 @@ class Gw_Charakter extends Guildwars
                     erkundung='$erkundung', name='$name', rasse='$rasse', klasse='$klasse'
                     WHERE id='$charID'";
 
-                    if ($this->sql_insert_update_delete($charUpdate) == true) {
+                    if ($this->sqlInsertUpdateDelete($charUpdate) == true) {
                         echo "<p class='erfolg'>Der Charakter wurde geändert!</p>";
                     }
                 } else {
@@ -1201,7 +1201,7 @@ class Gw_Charakter extends Guildwars
 
                 $loeschQuery = "DELETE FROM `$tabelle` WHERE `id` = $loeschid";
 
-                if ($this->sql_insert_update_delete($loeschQuery) == true) {
+                if ($this->sqlInsertUpdateDelete($loeschQuery) == true) {
                     echo "<p class='erfolg'>Der Charakter wurde gelöscht!</p>";
                     exit;
                 } else {
@@ -1233,11 +1233,11 @@ class Gw_Charakter extends Guildwars
 
         //Update oder Insert durchführen.
         if (!isset($bisherigeStunden[0]->wert) or $bisherigeStunden[0]->wert == "") {
-            $this->sql_insert_update_delete("INSERT INTO account_infos (besitzer, attribut, wert, account) VALUES ('$userID','gw_geloschte_stunden','0','$charAccount')");
+            $this->sqlInsertUpdateDelete("INSERT INTO account_infos (besitzer, attribut, wert, account) VALUES ('$userID','gw_geloschte_stunden','0','$charAccount')");
             //jetzt updaten
-            $this->sql_insert_update_delete("UPDATE account_infos SET wert='$neuerWert' WHERE besitzer = '$userID' AND attribut = 'gw_geloschte_stunden' AND account='$charAccount'");
+            $this->sqlInsertUpdateDelete("UPDATE account_infos SET wert='$neuerWert' WHERE besitzer = '$userID' AND attribut = 'gw_geloschte_stunden' AND account='$charAccount'");
         } else {
-            $this->sql_insert_update_delete("UPDATE account_infos SET wert='$neuerWert' WHERE besitzer = '$userID' AND attribut = 'gw_geloschte_stunden' AND account='$charAccount'");
+            $this->sqlInsertUpdateDelete("UPDATE account_infos SET wert='$neuerWert' WHERE besitzer = '$userID' AND attribut = 'gw_geloschte_stunden' AND account='$charAccount'");
         }
     }
 
@@ -1450,7 +1450,7 @@ class Gw_Handwerk extends Guildwars
 
                         $query = "INSERT INTO gwmatlist (matID, matName, matPrice, kategorie) VALUES ('$nextUsefulID', '$name', '$price', '$kat')";
 
-                        if ($this->sql_insert_update_delete($query) == true) {
+                        if ($this->sqlInsertUpdateDelete($query) == true) {
                             echo "<p class='erfolg'>Erfolg, $name in Kategorie $kat mit Preis $price gespeichert.</p>";
                             $nextUsefulID = $nextUsefulID + 1;
                         } else {
@@ -1606,7 +1606,7 @@ class Gw_Handwerk extends Guildwars
                         }
 
                         //Extrawurst für das Handwerk, weil sonst das Log vollgespammt wird.
-                        if ($this->sql_insert_update_delete_hw($query) == true) {
+                        if ($this->sqlInsertUpdateDeleteHW($query) == true) {
                             $erfolg = $erfolg + 1;
                         } else {
                             $fehler = $fehler + 1;

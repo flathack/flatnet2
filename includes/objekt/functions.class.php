@@ -411,7 +411,7 @@ class Functions extends Sql
             $userID = $this->getUserID($username);
             $insert = "INSERT INTO vorschlaege (text, autor, status, ipadress) VALUES ('$username $art','$userID','$status','$ip')";
 
-            if ($this->sql_insert_update_delete_hw($insert) == true) {
+            if ($this->sqlInsertUpdateDeleteHW($insert) == true) {
                 return true;
             } else {
                 return false;
@@ -421,7 +421,7 @@ class Functions extends Sql
             // Log Eintrag erstellen wenn User nicht bekannt ist.
             $insert = "INSERT INTO vorschlaege (text, autor, status, ipadress) VALUES ('Ein Login ist fehlgeschlagen: $art ($ip).','0','Error','$ip')";
 
-            if ($this->sql_insert_update_delete_hw($insert) == true) {
+            if ($this->sqlInsertUpdateDeleteHW($insert) == true) {
                 return true;
             } else {
                 return false;

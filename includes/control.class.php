@@ -249,7 +249,7 @@ class Control extends Functions
                                 $passwortneu = md5($passwort1);
                                 $query = "INSERT INTO benutzer (Name, Passwort, rights, versuche, forumRights) VALUES ('$username','$passwortneu','1','3','1')";
 
-                                if ($this->sql_insert_update_delete($query) == true) {
+                                if ($this->sqlInsertUpdateDelete($query) == true) {
                                     echo "<p class='erfolg'>Benutzer angelegt</p>";
                                 } else {
                                     echo "<p class='meldung'>Fehler.</p>";
@@ -373,7 +373,7 @@ class Control extends Functions
                         $sqlupdate = "UPDATE benutzer SET Passwort='$updatepassmd5', forumRights='$forumRights', Name='$newUserName', titel='$titel' WHERE id='$selectedid'";
                     }
 
-                    if ($this->sql_insert_update_delete($sqlupdate) == true) {
+                    if ($this->sqlInsertUpdateDelete($sqlupdate) == true) {
                         echo "<p class='erfolg'>Der Datensatz wurde aktualisiert!";
                     } else {
                         echo "<p class='meldung'>Fehler beim speichern der Daten.";
@@ -410,7 +410,7 @@ class Control extends Functions
                         exit();
                     }
                     $sql = "DELETE FROM benutzer WHERE id='$loeschid'";
-                    if ($this->sql_insert_update_delete($sql) == true) {
+                    if ($this->sqlInsertUpdateDelete($sql) == true) {
                         echo "<p class='erfolg'>Datensatz wurde gelöscht.";
                         echo "<a href='?action=1' class='buttonlink'>Zurück</a></p>";
                     } else {
@@ -962,7 +962,7 @@ class Control extends Functions
             if ($submit == "OK") {
                 // Vars zuweisen
                 $sqlupdate = "UPDATE vorschlaege SET status='$status' WHERE id='$id'";
-                if ($this->sql_insert_update_delete($sqlupdate) == true) {
+                if ($this->sqlInsertUpdateDelete($sqlupdate) == true) {
                     return true;
                 } else {
                     return false;
@@ -970,7 +970,7 @@ class Control extends Functions
             } else if ($submit == "X") {
                 // @todo Rechtesystem einbauen
                 $loeschen = "DELETE FROM vorschlaege WHERE id = '$id'";
-                if ($this->sql_insert_update_delete($loeschen) == true) {
+                if ($this->sqlInsertUpdateDelete($loeschen) == true) {
                     return true;
                 } else {
                     return false;
@@ -1020,7 +1020,7 @@ class Control extends Functions
 
                     // SQL
                     $query = "INSERT INTO userrights (recht, kategorie) VALUES ('$newRightName','$kategorie')";
-                    if ($this->sql_insert_update_delete($query) == true) {
+                    if ($this->sqlInsertUpdateDelete($query) == true) {
                         echo "<p class='erfolg'>Das Recht wurde erstellt.</p>";
                     } else {
                         echo "<p class='meldung'>Es ist ein Fehler aufgetreten.</p>";
@@ -1076,14 +1076,14 @@ class Control extends Functions
                 if ($status == "entsperren") {
                     $updateVersuche = "UPDATE benutzer SET versuche='0' WHERE id = '$id'";
 
-                    if ($this->sql_insert_update_delete($updateVersuche) == true) {
+                    if ($this->sqlInsertUpdateDelete($updateVersuche) == true) {
                         echo "<p class='erfolg'>Benutzer entsperrt</p>";
                     }
 
                 } else if ($status == "sperren") {
                     $updateVersuche = "UPDATE benutzer SET versuche='3' WHERE id = '$id'";
 
-                    if ($this->sql_insert_update_delete($updateVersuche) == true) {
+                    if ($this->sqlInsertUpdateDelete($updateVersuche) == true) {
                         echo "<p class='meldung'>Benutzer gesperrt</p>";
                     }
 
@@ -1148,7 +1148,7 @@ class Control extends Functions
 
                     $sqlRightUpdate = "UPDATE benutzer SET forumRights='$neueBenutzerRechte' WHERE id='$userid'";
 
-                    if ($this->sql_insert_update_delete($sqlRightUpdate) == true) {
+                    if ($this->sqlInsertUpdateDelete($sqlRightUpdate) == true) {
                         echo "<p class='erfolg'>Das Recht wurde aktualisiert</p>";
                     } else {
                         echo "<p class='meldung'>Es ist ein Fehler aufgetreten</p>";
@@ -1311,7 +1311,7 @@ class Control extends Functions
 
                     $insert = "INSERT INTO blogkategorien (kategorie, beschreibung, rightPotenz, rightWert, sortierung) VALUES('$kategorie', '$description', '$potenz', '$wert', '$sortierung')";
 
-                    if ($this->sql_insert_update_delete($insert) == true) {
+                    if ($this->sqlInsertUpdateDelete($insert) == true) {
                         echo "<p class='erfolg'>Kategorie wurde erfolgreich angelegt.</p>";
                         return true;
                     } else {
@@ -1385,7 +1385,7 @@ class Control extends Functions
                                     return false;
                                     exit();
                                 } else {
-                                    if ($this->sql_insert_update_delete($query) == true) {
+                                    if ($this->sqlInsertUpdateDelete($query) == true) {
                                         echo "<p class='erfolg'>Kategorie gelöscht.</p>";
 
                                         $notAssigned = $_POST['notAssigned'];
@@ -1393,7 +1393,7 @@ class Control extends Functions
                                         // BLOGEINTRÄGE auf ANDERE KATEGORIE UMÄNDERN:
 
                                         $update = "UPDATE blogtexte SET kategorie ='$notAssigned' WHERE kategorie = '$loeschid'";
-                                        if ($this->sql_insert_update_delete($update) == true) {
+                                        if ($this->sqlInsertUpdateDelete($update) == true) {
                                             echo "<p class='erfolg'>Beiträge erfolgreich verschoben.</p>";
                                             return true;
                                         } else {
@@ -1439,7 +1439,7 @@ class Control extends Functions
                             $wert = pow(2, $potenz);
                             $query = "UPDATE blogkategorien SET kategorie='$kategorie', beschreibung = '$description', rightPotenz = '$potenz', rightWert = '$wert', sortierung = '$sortierung' WHERE id='$editid' LIMIT 1";
 
-                            if ($this->sql_insert_update_delete($query) == true) {
+                            if ($this->sqlInsertUpdateDelete($query) == true) {
                                 echo "<p class='erfolg'>Kategorie abgeändert.</p>";
                                 return true;
                             } else {
@@ -1515,7 +1515,7 @@ class Control extends Functions
                     }
                     $query .= " WHERE id='$id'";
 
-                    if ($this->sql_insert_update_delete($query) == true) {
+                    if ($this->sqlInsertUpdateDelete($query) == true) {
                         $this->insertQuery($query);
                         echo "<p class='erfolg'>Update erfolgt</p>";
                     } else {
@@ -1532,7 +1532,7 @@ class Control extends Functions
                     $table = $_GET['table'];
                     $id = $_GET['id'];
                     $sql = "DELETE FROM $table WHERE id='$id'";
-                    if ($this->sql_insert_update_delete($sql) == true) {
+                    if ($this->sqlInsertUpdateDelete($sql) == true) {
                         $this->insertQuery($sql);
                         echo "<p class='erfolg'>Datensatz wurde gelöscht.";
                         echo "<a href='?action=3' class='buttonlink'>Zurück</a></p>";
@@ -1581,7 +1581,7 @@ class Control extends Functions
 
                     $this->insertQuery($query);
 
-                    if ($this->sql_insert_update_delete($query) == true) {
+                    if ($this->sqlInsertUpdateDelete($query) == true) {
                         echo "<p class='erfolg'>Datensatz eingefügt</p>";
                     } else {
                         echo "<p class='meldung'>Fehler</p>";
@@ -1788,7 +1788,7 @@ class Control extends Functions
             if (isset($_POST['globalqueryok'])) {
                 $query = $_POST['sqlbox'];
 
-                if ($this->sql_insert_update_delete($query) == true) {
+                if ($this->sqlInsertUpdateDelete($query) == true) {
                     echo "<p class='erfolg'>SQL Query wurde erfolgreich durchgeführt.</p>";
                 } else {
                     echo "<p class='meldung'>Es ist ein Fehler aufgetreten</p>";
@@ -2072,7 +2072,7 @@ class Control extends Functions
                     $code = $_POST['newCode'];
                     $usageTimes = $_POST['usageTimes'];
                     $query = "INSERT INTO registercode (code, used, usageTimes) VALUES ('$code','0','$usageTimes')";
-                    if ($this->sql_insert_update_delete($query) == true) {
+                    if ($this->sqlInsertUpdateDelete($query) == true) {
                         echo "<p class='erfolg'>Code eingefügt</p>";
                     } else {
                         echo "<p class='meldung'>Fehler</p>";
@@ -2128,7 +2128,7 @@ class Control extends Functions
                 }
 
                 $query = "DELETE FROM $table WHERE $column=$userID";
-                if ($this->sql_insert_update_delete($query) == true) {
+                if ($this->sqlInsertUpdateDelete($query) == true) {
                     echo "<p class='erfolg'>Benutzerdaten wurden gelöscht.</p>";
                 }
             }
@@ -2295,7 +2295,7 @@ class Control extends Functions
 
                 // Recht gewähren:
                 $query = "INSERT INTO rights (besitzer, right_id) VALUES ('$userid','$rechteID')";
-                if ($this->sql_insert_update_delete($query) == true) {
+                if ($this->sqlInsertUpdateDelete($query) == true) {
                     echo "<p class='erfolg'>Recht wurde gewährt!</p>";
                 } else {
                     echo "<p class='meldung'>Es gab einen Fehler beim speichern.</p>";
@@ -2331,7 +2331,7 @@ class Control extends Functions
 
                 // Recht LÖSCHEN:
                 $query = "DELETE FROM rights WHERE besitzer = '$userid' AND right_id = '$rechteID'";
-                if ($this->sql_insert_update_delete($query) == true) {
+                if ($this->sqlInsertUpdateDelete($query) == true) {
                     echo "<p class='erfolg'>Recht wurde gelöscht!</p>";
                 } else {
                     echo "<p class='meldung'>Es gab einen Fehler beim speichern.</p>";

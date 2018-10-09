@@ -207,7 +207,7 @@ class Planner Extends Functions
                         // Update Code:
                         $this->updateCodesUsed($codes[0]->id, $guestid[0]->id);
 
-                        $this->sql_insert_update_delete("UPDATE eventguests SET loggedin=1 WHERE guestname='$username'");
+                        $this->sqlInsertUpdateDelete("UPDATE eventguests SET loggedin=1 WHERE guestname='$username'");
                     } else {
                         echo "<p class='hinweis'>Name ist nicht bekannt, bitte wende dich an deinen Event-Veranstalter</p>";
                     }
@@ -276,7 +276,7 @@ class Planner Extends Functions
             $counter = 1;
             $sql = "INSERT INTO eventcodeusage (codeid, codeusage, userid) VALUES ($codeid, $counter, $guestid)";
         }
-        $this->sql_insert_update_delete($sql);
+        $this->sqlInsertUpdateDelete($sql);
     }
 
     /**

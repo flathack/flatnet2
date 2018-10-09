@@ -283,7 +283,7 @@ class Usermanager extends Functions
                             $hashedPass = md5($neuesPass);
                             $sqlupdate = "UPDATE benutzer SET Passwort='$hashedPass' WHERE Name='$user' LIMIT 1";
 
-                            if ($this->sql_insert_update_delete($sqlupdate) == true) {
+                            if ($this->sqlInsertUpdateDelete($sqlupdate) == true) {
                                 echo "<p class='erfolg'>Passwort geändert</p>";
                             } else {
                                 echo "<p class='meldung'>Das Passwort wurde nicht geändert (hast du etwa das gleiche wieder genommen?)</p>";
@@ -501,7 +501,7 @@ class Usermanager extends Functions
                         return false;
                     } else {
                         $query = "INSERT INTO gw_accounts (besitzer, account, mail) VALUES ('$user','$nextAccNo','$mail')";
-                        if ($this->sql_insert_update_delete($query) == true) {
+                        if ($this->sqlInsertUpdateDelete($query) == true) {
                             echo "<div class='gwEinstellungen'><p class='erfolg'>Account angelegt</p></div>";
                         } else {
                             echo "<div class='gwEinstellungen'><p class='meldung'>Fehler</p></div>";
@@ -538,7 +538,7 @@ class Usermanager extends Functions
 
                 if (!isset($row[0]->mail)) {
                     $insert = "INSERT INTO gw_accounts (besitzer, account, mail) VALUES ('$user','1','Standard Account')";
-                    if ($this->sql_insert_update_delete($insert) == true) {
+                    if ($this->sqlInsertUpdateDelete($insert) == true) {
                         echo "<div class='gwEinstellungen'>";
 
                         echo "<p class='erfolg'>Dein Account wurde einmalig konfiguriert. Du kannst hier jetzt mehrere Accounts
@@ -580,7 +580,7 @@ class Usermanager extends Functions
             //Gelöschte Stunden bekommen:
             $stundenOld = $this->sqlselect("SELECT * FROM account_infos WHERE besitzer = '$user' AND account = '$nummer' AND attribut = 'gw_geloschte_stunden' LIMIT 1");
 
-            if ($this->sql_insert_update_delete($sqlupdate) == true) {
+            if ($this->sqlInsertUpdateDelete($sqlupdate) == true) {
 
                 echo "<div class='erfolg'>";
                 echo "<p >Eintrag geändert</p>";
@@ -595,7 +595,7 @@ class Usermanager extends Functions
             if (!isset($stundenOld[0]->wert)) {
                 //Neuen Eintrag erstellen:
 
-                if ($this->sql_insert_update_delete("INSERT INTO account_infos (besitzer, attribut, wert, account) VALUES ('$user','gw_geloschte_stunden','$stunden','$nummer')") == true) {
+                if ($this->sqlInsertUpdateDelete("INSERT INTO account_infos (besitzer, attribut, wert, account) VALUES ('$user','gw_geloschte_stunden','$stunden','$nummer')") == true) {
                     echo "<p class='erfolg'>Der Eintrag für gelöschte Stunden wurde erstellt.</p>";
                 } else {
                     echo "<p class=''>Der Eintrag für die gelöschten Stunden wurde nicht erstellt.</p>";
@@ -603,7 +603,7 @@ class Usermanager extends Functions
             } else {
                 //Bestehenden Eintrag ändern:
 
-                if ($this->sql_insert_update_delete("UPDATE account_infos SET wert='$stunden' WHERE besitzer='$user' AND account='$nummer' AND attribut = 'gw_geloschte_stunden'") == true) {
+                if ($this->sqlInsertUpdateDelete("UPDATE account_infos SET wert='$stunden' WHERE besitzer='$user' AND account='$nummer' AND attribut = 'gw_geloschte_stunden'") == true) {
                     echo "<p class='erfolg'>Die gelöschten Stunden wurden abgeändert.</p>";
                 } else {
                     echo "<p class=''>Die gelöschten Stunden wurden nicht geändert.</p>";
@@ -637,21 +637,21 @@ class Usermanager extends Functions
                             $getAmountOfChars = $this->getAmount($sqlupdate);
 
                             //Löschen, wenn die Charakter verschoben wurden, oder aber die Anzahl der Charakter ist gleich 0.
-                            if ($this->sql_insert_update_delete($sqlupdate) == true or $getAmountOfChars == 0) {
+                            if ($this->sqlInsertUpdateDelete($sqlupdate) == true or $getAmountOfChars == 0) {
 
                                 $sql = "DELETE FROM gw_accounts WHERE account='$nummer' AND besitzer = '$user'";
 
-                                if ($this->sql_insert_update_delete($sql) == true) {
+                                if ($this->sqlInsertUpdateDelete($sql) == true) {
 
                                     //Löscht die Informationen zum account in der Tabelle Account Infos:
-                                    if ($this->sql_insert_update_delete("DELETE FROM account_infos WHERE besitzer = '$user' AND account = '$nummer'") == true) {
+                                    if ($this->sqlInsertUpdateDelete("DELETE FROM account_infos WHERE besitzer = '$user' AND account = '$nummer'") == true) {
                                         echo "Accountinfos für Accountnummer $nummer gelöscht.";
                                     } else {
                                         echo "Accountinfos wurden nicht gelöscht.";
                                     }
 
                                     //Löscht alle Informationen in der gwusersmats
-                                    if ($this->sql_insert_update_delete("DELETE FROM gwusersmats WHERE besitzer = '$user' AND account = '$nummer'") == true) {
+                                    if ($this->sqlInsertUpdateDelete("DELETE FROM gwusersmats WHERE besitzer = '$user' AND account = '$nummer'") == true) {
                                         echo "Handwerksmaterialien für diesen Accountg gelöscht.";
                                     } else {
                                         echo "Handwerksmaterialien wurden nicht gelöscht.";

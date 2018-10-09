@@ -720,7 +720,7 @@ class FinanzenNEW extends functions
                 } else {
                     echo "<p>$i - Buchungsnummer: <input type=number name=numbers[$i] value=$buchungsnr readonly /> </p>";
                     $query = "DELETE FROM finanzen_umsaetze WHERE buchungsnr=$buchungsnr AND besitzer=$besitzer";
-                    if ($this->sql_insert_update_delete($query) == true) {
+                    if ($this->sqlInsertUpdateDelete($query) == true) {
                         echo "<p class='erfolg'>$buchungsnr gel&ouml;scht!</p>";
                     }
                 }
@@ -1477,7 +1477,7 @@ class FinanzenNEW extends functions
                     echo "<p class='meldung'>Unvollst&auml;ndige Buchung: " . $infos[0]->umsatzName . ", " . $infos[0]->umsatzWert . "</p>";
                     $delete = "DELETE FROM finanzen_umsaetze
                     WHERE buchungsnr = '$i' LIMIT 1";
-                    if ($this->sql_insert_update_delete($delete) == true) {
+                    if ($this->sqlInsertUpdateDelete($delete) == true) {
                         $this->logEintrag(true, "Buchung $i wurde wegen Unvollst&auml;ndigkeit gel&ouml;scht.", "Error");
                         echo "<p class='erfolg'>Fehlerhafte Buchung gel&ouml;scht</p>";
                     }
@@ -1655,7 +1655,7 @@ class FinanzenNEW extends functions
                         WHERE besitzer='$besitzer' 
                         and id = '$minusID'";
                         if ($this->userHasRight(18, 0) == true) {
-                            if ($this->sql_insert_update_delete($plusQuery) == true and $this->sql_insert_update_delete($minusQuery) == true) {
+                            if ($this->sqlInsertUpdateDelete($plusQuery) == true and $this->sqlInsertUpdateDelete($minusQuery) == true) {
                                 echo "<p class='erfolg'>Umsatz gespeichert</p>";
                             } else {
                                 echo "<p class='info'>Fehler</p>";
@@ -1716,7 +1716,7 @@ class FinanzenNEW extends functions
                     if ($this->userHasRight(18, 0) == true) {
                         $delete = "DELETE FROM finanzen_umsaetze
                         WHERE besitzer='$besitzer' AND buchungsnr = '$buchungsnr' LIMIT 2";
-                        if ($this->sql_insert_update_delete($delete) == true) {
+                        if ($this->sqlInsertUpdateDelete($delete) == true) {
                             echo "<p class='erfolg'>Umsatz gel&ouml;scht</p>";
                         } else {
                             echo "<p class='erfolg'>Fehler</p>";
@@ -1804,7 +1804,7 @@ class FinanzenNEW extends functions
         $query2 = "INSERT INTO finanzen_umsaetze (buchungsnr, besitzer, konto, gegenkonto, umsatzName, umsatzWert, datum, link)
             VALUES ('$buchungsnummer','$besitzer','$nach','$von','$text','$betrag','$datum','$link')";
 
-        if ($this->sql_insert_update_delete($query) == true and $this->sql_insert_update_delete($query2) == true) {
+        if ($this->sqlInsertUpdateDelete($query) == true and $this->sqlInsertUpdateDelete($query2) == true) {
             echo "<p class='erfolg'>&Uuml;berweisung von $text durchgef&uuml;hrt (Buchungsnummer: $buchungsnummer)</p>";
         }
     }
@@ -2265,7 +2265,7 @@ class FinanzenNEW extends functions
     {
         $query = "INSERT INTO finanzen_konten (besitzer,konto,aktiv,mail) VALUES ('$besitzer','$kontoname',1,'$mail')";
 
-        if ($this->sql_insert_update_delete($query) == true) {
+        if ($this->sqlInsertUpdateDelete($query) == true) {
             return true;
         } else {
             return false;
@@ -2308,7 +2308,7 @@ class FinanzenNEW extends functions
                             if ($getBuchungInfos[$i]->umsatzWert < 0) {
                                 $update = "UPDATE finanzen_umsaetze SET konto=$von, gegenkonto=$nach WHERE buchungsnr=$buchungsnummer AND umsatzWert < 0";
 
-                                if ($this->sql_insert_update_delete($update) == true) {
+                                if ($this->sqlInsertUpdateDelete($update) == true) {
                                     echo "<p class='erfolg'>Umbuchung erfolgt</p>";
                                 } else {
                                     echo "<p class='meldung'>Es gab einen Fehler.</p>";
@@ -2320,7 +2320,7 @@ class FinanzenNEW extends functions
 
                                 $update = "UPDATE finanzen_umsaetze SET konto=$nach, gegenkonto=$von WHERE buchungsnr=$buchungsnummer AND umsatzWert > 0";
 
-                                if ($this->sql_insert_update_delete($update) == true) {
+                                if ($this->sqlInsertUpdateDelete($update) == true) {
                                     echo "<p class='erfolg'>Umbuchung f&uuml;r $buchungsnummer erfolgt</p>";
                                 } else {
                                     echo "<p class='meldung'>Es gab einen Fehler.</p>";
@@ -2397,7 +2397,7 @@ class FinanzenNEW extends functions
 
                 $update = "UPDATE finanzen_konten SET art=$art, konto='$name', aktiv=$aktiv, notizen='$notizen', mail='$mail' WHERE besitzer = $besitzer AND id = $id";
 
-                if ($this->sql_insert_update_delete($update)) {
+                if ($this->sqlInsertUpdateDelete($update)) {
                     echo "<p class='erfolg'>Konto gespeichert.</p>";
                 } else {
                     echo "<p class='meldung'>Es gab einen Fehler beim speichern der Informationen.</p>";
@@ -2586,7 +2586,7 @@ class FinanzenNEW extends functions
                     if ($getBuchungInfos[$i]->umsatzWert < 0) {
                         $update = "UPDATE finanzen_umsaetze SET konto=$absenderKonto, gegenkonto=$gutschriftKonto WHERE buchungsnr=$buchungsnr AND umsatzWert < 0";
 
-                        if ($this->sql_insert_update_delete($update) == true) {
+                        if ($this->sqlInsertUpdateDelete($update) == true) {
                             echo "<p class='erfolg'>Umbuchung erfolgt</p>";
                         } else {
                             echo "<p class='meldung'>Es gab einen Fehler.</p>";
@@ -2598,7 +2598,7 @@ class FinanzenNEW extends functions
 
                         $update = "UPDATE finanzen_umsaetze SET konto=$gutschriftKonto, gegenkonto=$absenderKonto WHERE buchungsnr=$buchungsnr AND umsatzWert > 0";
 
-                        if ($this->sql_insert_update_delete($update) == true) {
+                        if ($this->sqlInsertUpdateDelete($update) == true) {
                             echo "<p class='erfolg'>Umbuchung erfolgt</p>";
                         } else {
                             echo "<p class='meldung'>Es gab einen Fehler.</p>";
@@ -2712,11 +2712,11 @@ class FinanzenNEW extends functions
                 $delAbschluesseQuery = "DELETE FROM finanzen_monatsabschluss WHERE konto=$konto";
                 $delAbschluesseQuery2 = "DELETE FROM finanzen_jahresabschluss WHERE konto=$konto";
 
-                if ($this->sql_insert_update_delete($delquery) == true) {
+                if ($this->sqlInsertUpdateDelete($delquery) == true) {
                     //Monatsabschl&uuml;sse l&ouml;schen ...
-                    $this->sql_insert_update_delete($delAbschluesseQuery);
+                    $this->sqlInsertUpdateDelete($delAbschluesseQuery);
                     //Jahresabschl&uuml;sse l&ouml;schen ...
-                    $this->sql_insert_update_delete($delAbschluesseQuery2);
+                    $this->sqlInsertUpdateDelete($delAbschluesseQuery2);
                     echo "<p class='info'>Konto wurde gel&ouml;scht.</p>";
                 } else {
                     echo "<p class='meldung'>Beim l&ouml;schen ist ein Fehler aufgetreten.</p>";
@@ -2842,7 +2842,7 @@ class FinanzenNEW extends functions
                     $user = $_POST['user'];
 
                     if ($konto > 0 and $user > 0) {
-                        if ($this->sql_insert_update_delete("INSERT INTO finanzen_shares (besitzer, konto_id, target_user) VALUES ($besitzer, $konto, $user) ")) {
+                        if ($this->sqlInsertUpdateDelete("INSERT INTO finanzen_shares (besitzer, konto_id, target_user) VALUES ($besitzer, $konto, $user) ")) {
                             echo "<p class='erfolg'>Share wurde gespeichert.</p>";
                         } else {
                             echo "<p class='meldung'>Share konnte nicht gespeichert werden, m&ouml;glicherweise existiert der Share bereits!</p>";
@@ -2866,7 +2866,7 @@ class FinanzenNEW extends functions
         if (isset($_GET['del']) and isset($_GET['user']) and isset($_GET['konto'])) {
             $user = $_GET['user'];
             $konto = $_GET['konto'];
-            if ($this->sql_insert_update_delete("DELETE FROM finanzen_shares WHERE besitzer=$besitzer AND konto_id=$konto AND target_user=$user")) {
+            if ($this->sqlInsertUpdateDelete("DELETE FROM finanzen_shares WHERE besitzer=$besitzer AND konto_id=$konto AND target_user=$user")) {
                 echo "<p class='erfolg'>Share entfernt!</p>";
             } else {
                 echo "<p class='meldung'>Share kann nicht entfernt werden, m&ouml;glicherweise existiert der Share nicht mehr.</p>";
@@ -3081,7 +3081,7 @@ class FinanzenNEW extends functions
                     VALUES
                     ('$besitzer','$gepruefterMonat','$currentJahr','$saldo','$konto')";
 
-                    if ($this->sql_insert_update_delete($query) == true) {
+                    if ($this->sqlInsertUpdateDelete($query) == true) {
                         $counter = $counter + 1;
                     } else {
                         echo "<p class='meldung'>Es gab einen Fehler beim erstellen des Monatsabschlusses $currentJahr, im Monat $gepruefterMonat.</p>";
@@ -3208,7 +3208,7 @@ class FinanzenNEW extends functions
                             $differenz = $jahresabschlusswert[0]->summe - $tatsaechlicheSumme[0]->summe;
                             echo "<p class='dezentInfo'>Achtung: Konto $kontoname (Nr. $konto), Jahresabschluss korrigiert, Differenz: $differenz. ";
 
-                            if ($this->sql_insert_update_delete("DELETE FROM finanzen_jahresabschluss WHERE besitzer=$besitzer AND konto=$konto") == true) {
+                            if ($this->sqlInsertUpdateDelete("DELETE FROM finanzen_jahresabschluss WHERE besitzer=$besitzer AND konto=$konto") == true) {
                                 echo "<br>Abschluss gel&ouml;scht.</p>";
                             } else {
                                 echo "<br>falscher Abschluss kann nicht gel&ouml;scht werden.</p>";
@@ -3244,13 +3244,13 @@ class FinanzenNEW extends functions
             if (isset($_GET['createStandardConfig'])) {
                 if ($this->userHasRight(18, 0) == true) {
                     if ($this->objectExists("SELECT * FROM finanzen_konten WHERE besitzer = $besitzer AND konto = 'Hauptkonto'") == false) {
-                        if ($this->sql_insert_update_delete("INSERT INTO finanzen_konten (konto, besitzer, aktiv) VALUES ('Hauptkonto','$besitzer', 1)") == true) {
+                        if ($this->sqlInsertUpdateDelete("INSERT INTO finanzen_konten (konto, besitzer, aktiv) VALUES ('Hauptkonto','$besitzer', 1)") == true) {
                             echo "<p class='erfolg'>Ein Hauptkonto wurde erstellt.</p>";
                         }
                     }
 
                     if ($this->objectExists("SELECT * FROM finanzen_konten WHERE besitzer = $besitzer AND konto = 'Ausgaben'") == false) {
-                        if ($this->sql_insert_update_delete("INSERT INTO finanzen_konten (konto, besitzer, aktiv) VALUES ('Ausgaben','$besitzer', 0)") == true) {
+                        if ($this->sqlInsertUpdateDelete("INSERT INTO finanzen_konten (konto, besitzer, aktiv) VALUES ('Ausgaben','$besitzer', 0)") == true) {
                             echo "<p class='erfolg'>Ein Ausgabenkonto wurde erstellt.</p>";
                         }
                     }
@@ -3283,9 +3283,9 @@ class FinanzenNEW extends functions
                         $konto = $kontenDesNutzers[$i]->id;
                         $query = "INSERT INTO finanzen_jahresabschluss (besitzer, jahr, wert, konto) VALUES ('$besitzer','$geprueftesJahr','$saldo','$konto')";
 
-                        if ($this->sql_insert_update_delete($query) == true) {
+                        if ($this->sqlInsertUpdateDelete($query) == true) {
 
-                            if ($this->sql_insert_update_delete("DELETE FROM finanzen_monatsabschluss WHERE besitzer = $besitzer AND year < $currentYear") == true) {
+                            if ($this->sqlInsertUpdateDelete("DELETE FROM finanzen_monatsabschluss WHERE besitzer = $besitzer AND year < $currentYear") == true) {
                                 echo "<tbody><td>";
                                 echo "<p class='info'>Monatsabschl&uuml;sse gel&ouml;scht</p>";
                                 echo "</td></tbody>";

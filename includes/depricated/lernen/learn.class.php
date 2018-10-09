@@ -184,7 +184,7 @@ class learn extends functions {
 				$query = "INSERT INTO learnlernkarte (besitzer, kategorie, frage, loesung) VALUES ('$userid','$kategorie','$frage','$loesung')";
 				
 				if($this->checkIfEintragInKategorieAlreadyExists($frage, $userid, $kategorie) == false) {
-					if($this->sql_insert_update_delete($query) == true) {
+					if($this->sqlInsertUpdateDelete($query) == true) {
 						echo "<p class='erfolg'>Eintrag wurde gespeichert</p>";
 					} else {
 						echo "<p class='meldung'>Es gab einen Fehler! Der Eintrag konnte nicht gespeichert werden.</p>";
@@ -225,7 +225,7 @@ class learn extends functions {
 			$id = $_POST['editID'];
 				
 			if($id != "" AND $text != "") {
-				if($this->sql_insert_update_delete("UPDATE learnlernkarte SET loesung = '$text' WHERE id = '$id' ") == true) {
+				if($this->sqlInsertUpdateDelete("UPDATE learnlernkarte SET loesung = '$text' WHERE id = '$id' ") == true) {
 					echo "<p class='erfolg'>Eintrag wurde geändert!</p>";
 				} else {
 					echo "<p class='meldung'>Änderung nicht möglich!</p>";;
@@ -336,7 +336,7 @@ class learn extends functions {
 			
 			$query = "INSERT INTO learnkategorie (besitzer, kategorie, public) VALUES ('$userid','$newcat','$public')";
 			
-			if($this->sql_insert_update_delete($query) == true) {
+			if($this->sqlInsertUpdateDelete($query) == true) {
 				echo "<p class='erfolg'>Eintrag wurde gespeichert</p>";
 			} else {
 				echo "<p class='meldung'>Es gab einen Fehler! Der Eintrag konnte nicht gespeichert werden $public.</p>";
@@ -487,7 +487,7 @@ class learn extends functions {
 		if($this->checkIfLernstatusExists($besitzer, $lern_id) == true) {
 			$query = "UPDATE lernstatus SET status = '$NEWstatus' WHERE besitzer = '$besitzer' AND lern_id = '$lern_id' LIMIT 1";
 			
-			if($this->sql_insert_update_delete($query) == true) {
+			if($this->sqlInsertUpdateDelete($query) == true) {
 				echo "<p class='erfolg'>Lernstatus aktualisiert.</p>";
 				return true;
 			} else {
@@ -532,7 +532,7 @@ class learn extends functions {
 		if($this->checkIfLernstatusExists($besitzer, $lern_id) == false) {
 			$query = "INSERT INTO lernstatus (besitzer, lern_id, status, changedate) VALUES ('$besitzer','$lern_id','$status',CURRENT_TIMESTAMP)";
 			
-			if($this->sql_insert_update_delete($query)== true) {
+			if($this->sqlInsertUpdateDelete($query)== true) {
 				return true;
 			} else {
 				return false;

@@ -253,7 +253,7 @@ class fahrten extends functions {
 					$query = "INSERT INTO fahrkosten (besitzer, datum, fahrart, ziel, notizen, spritpreis, fahrrichtung)
 						values ('$userID','$datum','$fahrtart','$ziel','$notizen','$spritpreis','$fahrrichtung')";
 					
-					if ($this->sql_insert_update_delete ( $query ) == true) {
+					if ($this->sqlInsertUpdateDelete ( $query ) == true) {
 						
 						echo "<p class='erfolg'>Erfolg</p>";
 					} else {
@@ -330,7 +330,7 @@ class fahrten extends functions {
 						WHERE besitzer='$userID' 
 						AND id='$id'";
 						
-						if ($this->sql_insert_update_delete ( $query ) == true) {
+						if ($this->sqlInsertUpdateDelete ( $query ) == true) {
 							echo "<p class='erfolg'>Erfolg</p>";
 						} else {
 							echo "<p class='meldung'>Fehler</p>";
@@ -448,7 +448,7 @@ class fahrten extends functions {
 					// Einfügen
 					$query = "INSERT INTO fahrzeuge (besitzer, name, verbrauch, name_tag) values ('$userID','$name','$verbrauch','$name_tag')";
 					
-					if ($this->sql_insert_update_delete ( $query ) == true) {
+					if ($this->sqlInsertUpdateDelete ( $query ) == true) {
 						
 						echo "<p class='erfolg'>Fahrzeug angelegt</p>";
 					} else {
@@ -552,7 +552,7 @@ class fahrten extends functions {
 					// Einfügen
 					$query = "INSERT INTO fahrkostenziele (besitzer, name, entfernung) values ('$userID','$name','$entfernung')";
 			
-					if ($this->sql_insert_update_delete ( $query ) == true) {
+					if ($this->sqlInsertUpdateDelete ( $query ) == true) {
 							
 						echo "<p class='erfolg'>Ziel angelegt</p>";
 					} else {

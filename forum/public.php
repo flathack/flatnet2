@@ -57,7 +57,7 @@ class PublicThings extends functions
                     echo "<p class='meldung'>Creation failed! You cannot create the same post twice!</p>";
                     exit;
                 }
-                if ($this->sql_insert_update_delete($query) == true) {
+                if ($this->sqlInsertUpdateDelete($query) == true) {
                     echo "<p class='erfolg'>Post created!</p>";
                 } else {
                     echo "<p class='meldung'>Creation failed!</p>";

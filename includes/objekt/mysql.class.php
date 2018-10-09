@@ -113,7 +113,7 @@ class Sql
                 // Durchführung der Löschung.
                 $loeschQuery = "DELETE FROM `$tabelle` WHERE `id` = $loeschid";
                     
-                if ($this->sql_insert_update_delete($loeschQuery) == true) {
+                if ($this->sqlInsertUpdateDelete($loeschQuery) == true) {
                     echo "<p class='erfolg'>Eintrag gelöscht.</p>";
                 } else {
                     echo "<p class='meldung'>Fehler beim löschen!</p>";
@@ -151,7 +151,7 @@ class Sql
             $jaloeschen = isset($_POST['jaloeschen']) ? $_POST['jaloeschen'] : '';
             $loeschid = isset($_POST['id']) ? $_POST['id'] : '';
             if ($loeschid) {
-                if ($this->sql_insert_update_delete($query) == true) {
+                if ($this->sqlInsertUpdateDelete($query) == true) {
                     echo "<p class='erfolg'>Erfolgreich gelöscht</p>";
                 } else {
                     echo "<p class='meldung'>Fehler beim löschen!</p>";
@@ -169,7 +169,7 @@ class Sql
      * 
      * @return boolean
      */
-    function sql_insert_update_delete(string $query) 
+    function sqlInsertUpdateDelete(string $query) 
     {
         
         $db = $this->connectToDBNewWay();
@@ -182,10 +182,9 @@ class Sql
             return true;
         } else {
             return false;
-        }
-        
+        } 
     }
-    
+
     /**
      * Extra sql Methode für gw.class.php in Zeile 1446
      * Hier wird nicht geloggt.
@@ -194,7 +193,7 @@ class Sql
      * 
      * @return boolean
      */
-    function sql_insert_update_delete_hw(string $query) 
+    function sqlInsertUpdateDeleteHW(string $query) 
     {
         $db = $this->connectToDBNewWay();
         $affected_rows = $db->exec($query);
@@ -393,7 +392,7 @@ class Sql
     function getColumnsFromQuery(string $query) 
     {
         $createTempTable = "CREATE TEMPORARY TABLE IF NOT EXISTS tempTable AS ($query);";
-        $this->sql_insert_update_delete($createTempTable);
+        $this->sqlInsertUpdateDelete($createTempTable);
         
         $select1 = "SHOW COLUMNS FROM tempTable";
         $row = $this->getObjektInfo($select1);
@@ -416,7 +415,7 @@ class Sql
         $createTempTable = "
         CREATE TEMPORARY TABLE
         IF NOT EXISTS tempTable AS ($query);";
-        $this->sql_insert_update_delete($createTempTable);
+        $this->sqlInsertUpdateDelete($createTempTable);
         
         $select1 = "SHOW COLUMNS FROM tempTable";
         
@@ -495,7 +494,7 @@ class Sql
                     $query .= ")";
                 }
             }
-            if ($this->sql_insert_update_delete($query) == true) {
+            if ($this->sqlInsertUpdateDelete($query) == true) {
                 echo "<div class='$cssDivDesign'><p class='erfolg'>" . "Objekt gespeichert." . "</p></div>";
             } else {
                 echo "<div class='$cssDivDesign'><p class='meldung'>" ."Objekt nicht gespeichert. ($query)". "</p></div>";
