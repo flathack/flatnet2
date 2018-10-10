@@ -65,7 +65,7 @@ class Planner Extends Functions
         $this->changeEvent();
         // Administration
         if (isset($_SESSION['username'])) {
-            $this->eventAdministration();
+            $this->eventNavigation();
         }
         $this->eventSelector();
         $this->showFooter();
@@ -516,14 +516,16 @@ class Planner Extends Functions
      */
     function eventNavigation() 
     {
+        echo "<ul class='finanzNAV'>";
         if (isset($_SESSION['username'])) {
             $this->eventAdministration();
         }
         if (isset($_SESSION['eventid'])) {
-            echo "<a class='buttonlink' href='event.php'>" .$this->getEventname($_SESSION['eventid']). "</a>";
+            echo "<li><a href='event.php'>" .$this->getEventname($_SESSION['eventid']). "</a></li>";
         }
         
-        echo "<a class='rightRedLink' href='index.php?eventchange'>Logout</a>";
+        echo "<li><a href='index.php?eventchange'>Logout</a></li>";
+        echo "</ul>";
         
     }
     /**
@@ -533,8 +535,8 @@ class Planner Extends Functions
      */
     function eventAdministration() 
     {   
-        echo "<a class='buttonlink' href='index.php'>Login</a>";
-        echo "<a class='buttonlink' href='administration.php'>Event-Administration</a>";
+        echo "<li><a href='index.php'>Login</a></li>";
+        echo "<li><a href='administration.php'>Administration</a></li>";
     }
 
     /**
@@ -620,6 +622,18 @@ class Planner Extends Functions
     }
 
     /**
+     * Holt den Namen des Gastes
+     * 
+     * @return void
+     */
+    function getGuestName(int $guestid) 
+    {
+        $guestname = $this->sqlselect("SELECT id,guestname FROM eventguests WHERE id=$guestid LIMIT 1");
+
+        return $guestname[0]->guestname;
+    }
+
+    /**
      * Zeigt alle Einladungscodes für die Veranstaltung an.
      * 
      * @param int $eventid ID des Events
@@ -639,6 +653,17 @@ class Planner Extends Functions
         echo "<thead><td>Code</td><td>Optionen</td></thead>";
         for ($i = 0; $i < sizeof($codeslist); $i++) {
             echo "<tbody><td>".$codeslist[$i]->eventinvitecode."</td><td><a href='?delInvCode=".$codeslist[$i]->id."&eventid=$eventid'>X</a></td></tbody>";
+            $codeid = $codeslist[$i]->id;
+            $usages = $this->sqlselect("SELECT * FROM eventcodeusage WHERE codeid=$codeid");
+            if (isset($usages[0]->codeid)) {
+                echo "<tbody id='today'><td colspan=2>Nutzungen:</td></tbody>";
+            }
+            for ($j = 0; $j < sizeof($usages);$j++) {
+                echo "<tbody>";
+                echo "<td>".$this->getGuestName($usages[$j]->userid)."</td>";
+                echo "<td>Anzahl: ".$usages[$j]->codeusage."</td>";
+                echo "</tbody>";
+            }
         }
         echo "</table>";
         echo "</div>";
@@ -771,13 +796,51 @@ class Planner Extends Functions
             echo "<h2>Hallo " . $_SESSION['eventguest'] . ", schön dich hier zu sehen!</h2>";
             
             echo "<div class='rightBody'>";
+                $this->showSmallGuestList();
             echo "</div>";
             echo "<div class='innerBody'>";
-                $this->showEventMembers($_SESSION['eventid']);
+                $this->askUserForZusage($_SESSION['eventid']);
+                //$this->showEventMembers($_SESSION['eventid']);
             echo "</div>";
 
             
         }
+    }
+
+    /**
+     * Fragt den Nutzer ob er zusagen möchte.
+     * 
+     * @param int $eventid ID des Events
+     * 
+     * @return void
+     */
+    function askUserForZusage(int $eventid) 
+    {
+        // CHECK IF USER HASNT ZUGESAGT YET
+        echo "<div class='separateDivBox'>";
+        echo "<p>Hast du schon zugesagt?</p>";
+
+        echo "</div>";
+    }
+
+    /**
+     * Zeigt eine abgespeckte Gästeliste an.
+     * 
+     * @return void
+     */
+    function showSmallGuestList() 
+    {
+        $eventid = $_SESSION['eventid'];
+        $memberlist = $this->sqlselect("SELECT * FROM eventguests WHERE eventid=$eventid");
+
+        echo "<div>";
+        echo "<h3>Gästeliste</h3>";
+        echo "<ul>";
+        for ($i = 0; $i < sizeof($memberlist); $i++) {
+            echo "<li>".$memberlist[$i]->guestname."</li>";
+        }
+        echo "</ul>";
+        echo "</div>";
     }
 
     /**
