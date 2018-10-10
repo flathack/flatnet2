@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 4.7.0
+-- version 4.8.3
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Erstellungszeit: 14. Aug 2017 um 07:54
--- Server-Version: 10.1.25-MariaDB
--- PHP-Version: 5.6.31
+-- Erstellungszeit: 10. Okt 2018 um 07:55
+-- Server-Version: 10.1.35-MariaDB
+-- PHP-Version: 7.2.9
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET AUTOCOMMIT = 0;
@@ -25,7 +25,7 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur für Tabelle `account_infos`
+-- Tabellenstruktur fÃ¼r Tabelle `account_infos`
 --
 
 CREATE TABLE `account_infos` (
@@ -40,7 +40,7 @@ CREATE TABLE `account_infos` (
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur für Tabelle `adressbuch`
+-- Tabellenstruktur fÃ¼r Tabelle `adressbuch`
 --
 
 CREATE TABLE `adressbuch` (
@@ -74,7 +74,7 @@ CREATE TABLE `adressbuch` (
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur für Tabelle `benutzer`
+-- Tabellenstruktur fÃ¼r Tabelle `benutzer`
 --
 
 CREATE TABLE `benutzer` (
@@ -84,22 +84,22 @@ CREATE TABLE `benutzer` (
   `timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `rights` bigint(20) NOT NULL COMMENT 'Rechte des Benutzers',
   `forumRights` bigint(20) NOT NULL COMMENT 'Rechte zum Anzeigen von Inhalten im Forum',
-  `versuche` int(3) DEFAULT NULL COMMENT 'Versuche für den Login',
+  `versuche` int(3) DEFAULT NULL COMMENT 'Versuche fÃ¼r den Login',
   `realName` varchar(50) COLLATE latin1_general_ci NOT NULL COMMENT 'Echter Name des Benutzers',
   `titel` varchar(250) COLLATE latin1_general_ci NOT NULL COMMENT 'Titel des Benutzers'
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci;
 
 --
--- Daten für Tabelle `benutzer`
+-- Daten fÃ¼r Tabelle `benutzer`
 --
 
 INSERT INTO `benutzer` (`id`, `Name`, `Passwort`, `timestamp`, `rights`, `forumRights`, `versuche`, `realName`, `titel`) VALUES
-(1, 'administrator', 'fa818419cd8c85cecba515a276ae6977', '2014-03-08 07:29:51', 1, 127, 0, 'Steven Schödel', 'Administrator');
+(1, 'administrator', 'fa818419cd8c85cecba515a276ae6977', '2014-03-08 07:29:51', 1, 1, 0, '', 'Administrator');
 
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur für Tabelle `blogkategorien`
+-- Tabellenstruktur fÃ¼r Tabelle `blogkategorien`
 --
 
 CREATE TABLE `blogkategorien` (
@@ -115,7 +115,7 @@ CREATE TABLE `blogkategorien` (
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur für Tabelle `blogtexte`
+-- Tabellenstruktur fÃ¼r Tabelle `blogtexte`
 --
 
 CREATE TABLE `blogtexte` (
@@ -132,7 +132,7 @@ CREATE TABLE `blogtexte` (
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur für Tabelle `blog_kommentare`
+-- Tabellenstruktur fÃ¼r Tabelle `blog_kommentare`
 --
 
 CREATE TABLE `blog_kommentare` (
@@ -146,7 +146,7 @@ CREATE TABLE `blog_kommentare` (
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur für Tabelle `docu`
+-- Tabellenstruktur fÃ¼r Tabelle `docu`
 --
 
 CREATE TABLE `docu` (
@@ -159,7 +159,86 @@ CREATE TABLE `docu` (
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur für Tabelle `finanzen_jahresabschluss`
+-- Tabellenstruktur fÃ¼r Tabelle `eventadministrators`
+--
+
+CREATE TABLE `eventadministrators` (
+  `eventid` int(11) NOT NULL,
+  `userid` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_german2_ci;
+
+
+-- --------------------------------------------------------
+
+--
+-- Tabellenstruktur fÃ¼r Tabelle `eventcodeusage`
+--
+
+CREATE TABLE `eventcodeusage` (
+  `codeid` int(11) NOT NULL,
+  `codeusage` int(11) NOT NULL COMMENT 'Anzahl der Nutzungen',
+  `userid` int(11) NOT NULL COMMENT 'Primary key aus eventguests'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_german2_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Tabellenstruktur fÃ¼r Tabelle `eventguests`
+--
+
+CREATE TABLE `eventguests` (
+  `id` int(11) NOT NULL,
+  `timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `guestname` varchar(250) COLLATE utf8_german2_ci NOT NULL,
+  `guestmailaddress` varchar(100) COLLATE utf8_german2_ci NOT NULL,
+  `eventid` int(11) NOT NULL,
+  `loggedin` int(11) DEFAULT NULL,
+  `zusage` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_german2_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Tabellenstruktur fÃ¼r Tabelle `eventinvitecodes`
+--
+
+CREATE TABLE `eventinvitecodes` (
+  `id` int(11) NOT NULL,
+  `timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `eventid` int(11) NOT NULL,
+  `eventinvitecode` varchar(100) COLLATE utf8_german2_ci NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_german2_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Tabellenstruktur fÃ¼r Tabelle `eventlist`
+--
+
+CREATE TABLE `eventlist` (
+  `id` int(11) NOT NULL,
+  `timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `eventname` varchar(250) COLLATE utf8_german2_ci NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_german2_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Tabellenstruktur fÃ¼r Tabelle `eventtexts`
+--
+
+CREATE TABLE `eventtexts` (
+  `id` int(11) NOT NULL,
+  `timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `eventid` int(11) NOT NULL,
+  `text` text COLLATE utf8_german2_ci NOT NULL,
+  `textid` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_german2_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Tabellenstruktur fÃ¼r Tabelle `finanzen_jahresabschluss`
 --
 
 CREATE TABLE `finanzen_jahresabschluss` (
@@ -173,7 +252,7 @@ CREATE TABLE `finanzen_jahresabschluss` (
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur für Tabelle `finanzen_konten`
+-- Tabellenstruktur fÃ¼r Tabelle `finanzen_konten`
 --
 
 CREATE TABLE `finanzen_konten` (
@@ -190,7 +269,7 @@ CREATE TABLE `finanzen_konten` (
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur für Tabelle `finanzen_monatsabschluss`
+-- Tabellenstruktur fÃ¼r Tabelle `finanzen_monatsabschluss`
 --
 
 CREATE TABLE `finanzen_monatsabschluss` (
@@ -206,19 +285,19 @@ CREATE TABLE `finanzen_monatsabschluss` (
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur für Tabelle `finanzen_shares`
+-- Tabellenstruktur fÃ¼r Tabelle `finanzen_shares`
 --
 
 CREATE TABLE `finanzen_shares` (
   `besitzer` int(11) NOT NULL COMMENT 'Share_Holder',
-  `konto_id` int(11) NOT NULL COMMENT 'Fremdschlüssel KontoID',
+  `konto_id` int(11) NOT NULL COMMENT 'FremdschlÃ¼ssel KontoID',
   `target_user` int(11) NOT NULL COMMENT 'User, der dass Konto sehen darf.'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur für Tabelle `finanzen_umsaetze`
+-- Tabellenstruktur fÃ¼r Tabelle `finanzen_umsaetze`
 --
 
 CREATE TABLE `finanzen_umsaetze` (
@@ -237,7 +316,7 @@ CREATE TABLE `finanzen_umsaetze` (
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur für Tabelle `gwcosts`
+-- Tabellenstruktur fÃ¼r Tabelle `gwcosts`
 --
 
 CREATE TABLE `gwcosts` (
@@ -252,7 +331,7 @@ CREATE TABLE `gwcosts` (
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur für Tabelle `gwmatlist`
+-- Tabellenstruktur fÃ¼r Tabelle `gwmatlist`
 --
 
 CREATE TABLE `gwmatlist` (
@@ -265,7 +344,7 @@ CREATE TABLE `gwmatlist` (
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci;
 
 --
--- Daten für Tabelle `gwmatlist`
+-- Daten fÃ¼r Tabelle `gwmatlist`
 --
 
 INSERT INTO `gwmatlist` (`id`, `timestamp`, `matID`, `matName`, `matPrice`, `kategorie`) VALUES
@@ -291,8 +370,8 @@ INSERT INTO `gwmatlist` (`id`, `timestamp`, `matID`, `matName`, `matPrice`, `kat
 (20, '2015-03-03 05:27:25', 62, 'Orichalcumbarren', '0', 1),
 (21, '2015-03-03 05:30:22', 4, 'Juterest', '0', 1),
 (22, '2015-03-03 05:30:22', 5, 'Juteballen', '0', 1),
-(23, '2015-03-03 05:30:22', 9, 'Grüner Holzblock', '0', 1),
-(24, '2015-03-03 05:30:22', 10, 'Grüne Holzplanke', '0', 1),
+(23, '2015-03-03 05:30:22', 9, 'GrÃ¼ner Holzblock', '0', 1),
+(24, '2015-03-03 05:30:22', 10, 'GrÃ¼ne Holzplanke', '0', 1),
 (25, '2015-03-03 05:30:22', 14, 'Wollrest', '0', 1),
 (26, '2015-03-03 05:30:22', 15, 'Wollballen', '0', 1),
 (27, '2015-03-03 05:30:22', 19, 'Geschmeidiger Holzblock', '0', 1),
@@ -314,11 +393,11 @@ INSERT INTO `gwmatlist` (`id`, `timestamp`, `matID`, `matName`, `matPrice`, `kat
 (43, '2015-03-03 05:30:22', 50, 'Alte Holzplanke', '0', 1),
 (44, '2015-03-03 05:30:22', 59, 'Antikes Holz', '0', 1),
 (45, '2015-03-03 05:30:22', 60, 'Antike Holzplanke', '0', 1),
-(46, '2015-03-03 12:16:02', 7, 'Rohlederstücke', '0', 1),
-(47, '2015-03-03 12:16:02', 17, 'Dünnes Lederstück', '0', 1),
-(48, '2015-03-03 12:16:02', 27, 'Raues Lederstück', '0', 1),
-(49, '2015-03-03 12:16:02', 37, 'Robustes Lederstück', '0', 1),
-(50, '2015-03-03 12:16:02', 47, 'Dickes Lederstück', '0', 1),
+(46, '2015-03-03 12:16:02', 7, 'RohlederstÃ¼cke', '0', 1),
+(47, '2015-03-03 12:16:02', 17, 'DÃ¼nnes LederstÃ¼ck', '0', 1),
+(48, '2015-03-03 12:16:02', 27, 'Raues LederstÃ¼ck', '0', 1),
+(49, '2015-03-03 12:16:02', 37, 'Robustes LederstÃ¼ck', '0', 1),
+(50, '2015-03-03 12:16:02', 47, 'Dickes LederstÃ¼ck', '0', 1),
 (51, '2015-03-03 12:16:46', 8, 'Gespannter Rohlederflicken', '0', 1),
 (52, '2015-03-03 12:17:39', 12, 'Eisenbarren', '0', 1),
 (53, '2015-03-03 12:17:39', 54, 'Gazerest', '0', 1),
@@ -342,23 +421,23 @@ INSERT INTO `gwmatlist` (`id`, `timestamp`, `matID`, `matName`, `matPrice`, `kat
 (71, '2015-03-03 12:21:28', 99, 'Glatte Schuppen', '0', 2),
 (72, '2015-03-03 12:21:28', 100, 'Graviertes Totem', '0', 2),
 (73, '2015-03-03 12:21:28', 101, 'Voller Giftbeutel', '0', 2),
-(74, '2015-03-03 12:21:28', 105, 'Großer Knochen', '0', 2),
-(75, '2015-03-03 12:21:28', 106, 'Große Klaue', '0', 2),
+(74, '2015-03-03 12:21:28', 105, 'GroÃŸer Knochen', '0', 2),
+(75, '2015-03-03 12:21:28', 106, 'GroÃŸe Klaue', '0', 2),
 (76, '2015-03-03 12:21:28', 110, 'Verziertes Totem', '0', 2),
 (77, '2015-03-03 12:21:28', 111, 'Wirkungsvolle Giftbeutel', '0', 2),
 (78, '2015-03-03 12:22:20', 41, 'Primordiumbrocken', '0', 1),
 (79, '2015-03-05 16:05:29', 13, 'Kupferbarren', '0', 1),
-(80, '2015-03-05 16:05:29', 18, 'Getrockneter Dünner Lederflicken', '0', 1),
+(80, '2015-03-05 16:05:29', 18, 'Getrockneter DÃ¼nner Lederflicken', '0', 1),
 (81, '2015-03-05 16:05:29', 22, 'Stahlbarren', '0', 1),
 (82, '2015-03-05 16:05:29', 28, 'Getrockneter rauer Lederflicken', '0', 1),
 (83, '2015-03-05 16:05:29', 38, 'Getrockneter Robuster Lederflicken', '0', 1),
 (84, '2015-03-05 16:05:29', 48, 'Getrockneter Dicker Lederflicken', '0', 1),
-(85, '2015-03-05 16:05:29', 57, 'Gehärtetes Lederstück', '0', 1),
-(86, '2015-03-05 16:05:29', 58, 'Getrockneter Gehärteter Lederflicken', '0', 1),
+(85, '2015-03-05 16:05:29', 57, 'GehÃ¤rtetes LederstÃ¼ck', '0', 1),
+(86, '2015-03-05 16:05:29', 58, 'Getrockneter GehÃ¤rteter Lederflicken', '0', 1),
 (87, '2015-03-05 16:05:29', 63, 'Rucksack-Rahmengestell des Handwerkers', '0', 1),
 (88, '2015-03-05 16:05:29', 64, 'Phiole mit schwachem Blut', '0', 2),
 (89, '2015-03-05 16:05:29', 67, 'Haufen glitzernden Staubs', '0', 2),
-(90, '2015-03-05 16:05:29', 74, 'Phiole mit dünnem Blut', '0', 2),
+(90, '2015-03-05 16:05:29', 74, 'Phiole mit dÃ¼nnem Blut', '0', 2),
 (91, '2015-03-05 16:05:29', 76, 'Kleine Klaue', '0', 2),
 (92, '2015-03-05 16:05:29', 77, 'Haufen funkelnder Staub', '0', 2),
 (93, '2015-03-05 16:05:29', 84, 'Phiole mit Blut', '0', 2),
@@ -367,19 +446,19 @@ INSERT INTO `gwmatlist` (`id`, `timestamp`, `matID`, `matName`, `matPrice`, `kat
 (96, '2015-03-05 16:05:29', 94, 'Phiole mit dickem Blut', '0', 2),
 (97, '2015-03-05 16:05:29', 97, 'Haufen leuchtenden Staub', '0', 2),
 (98, '2015-03-05 16:05:29', 104, 'Phiole mit wirkungsvollem Blut', '0', 2),
-(99, '2015-03-05 16:05:29', 107, 'Haufen weißglühenden Staub', '0', 2),
+(99, '2015-03-05 16:05:29', 107, 'Haufen weiÃŸglÃ¼henden Staub', '0', 2),
 (100, '2015-03-05 19:02:30', 68, 'Winziger Fangzahn', '0', 2),
 (101, '2015-03-05 19:02:30', 72, 'Phiole mit kraftvollem Blut', '0', 2),
 (102, '2015-03-05 19:02:30', 73, 'Antiker Knochen', '0', 2),
-(103, '2015-03-05 19:02:30', 82, 'Scheußliche Klaue', '0', 2),
+(103, '2015-03-05 19:02:30', 82, 'ScheuÃŸliche Klaue', '0', 2),
 (104, '2015-03-05 19:02:30', 83, 'Haufen kristallinen Staubs', '0', 2),
-(105, '2015-03-05 19:02:30', 92, 'Scheußlicher Fangzahn', '0', 2),
+(105, '2015-03-05 19:02:30', 92, 'ScheuÃŸlicher Fangzahn', '0', 2),
 (106, '2015-03-05 19:02:30', 93, 'Gepanzerte Schuppe', '0', 2),
 (107, '2015-03-05 19:02:30', 98, 'Scharfer Fangzahn', '0', 2),
 (108, '2015-03-05 19:02:30', 102, 'Kunstvolles Totem', '0', 2),
 (109, '2015-03-05 19:02:30', 103, 'Kraftvoller Giftbeutel', '0', 2),
-(110, '2015-03-05 19:02:30', 108, 'Großer Fangzahn', '0', 2),
-(111, '2015-03-05 19:02:30', 109, 'Große Schuppe', '0', 2),
+(110, '2015-03-05 19:02:30', 108, 'GroÃŸer Fangzahn', '0', 2),
+(111, '2015-03-05 19:02:30', 109, 'GroÃŸe Schuppe', '0', 2),
 (112, '2015-03-05 19:02:30', 112, 'Karka-Panzer', '0', 2),
 (113, '2015-03-05 19:02:30', 113, 'Uhrwerk-Zwischenzahnrad', '0', 2),
 (114, '2015-03-05 19:03:46', 169, 'Haufen Blutsteinstaub', '0', 4),
@@ -388,14 +467,14 @@ INSERT INTO `gwmatlist` (`id`, `timestamp`, `matID`, `matName`, `matPrice`, `kat
 (117, '2015-03-05 19:03:46', 178, 'Klumpen aus dunkler Materie', '0', 4),
 (118, '2015-03-05 19:03:46', 187, 'Thermokatalytisches Reagens', '0', 4),
 (119, '2015-03-05 19:08:18', 114, 'Kristall-Span', '0', 3),
-(120, '2015-03-05 19:08:18', 115, 'Zerstörer-Span', '0', 3),
+(120, '2015-03-05 19:08:18', 115, 'ZerstÃ¶rer-Span', '0', 3),
 (121, '2015-03-05 19:08:18', 116, 'Verdorbener-Span', '0', 3),
 (122, '2015-03-05 19:08:18', 117, 'Haufen beschmutzter Essenz', '0', 3),
 (123, '2015-03-05 19:08:18', 118, 'Gelandener Span', '0', 3),
 (124, '2015-03-05 19:08:18', 119, 'Onyx-Span', '0', 3),
 (125, '2015-03-05 19:08:18', 120, 'Geschmolzener Span', '0', 3),
 (126, '2015-03-05 19:08:18', 121, 'Gletscher-Span', '0', 3),
-(127, '2015-03-05 19:08:18', 122, 'Großer Schädel', '0', 3),
+(127, '2015-03-05 19:08:18', 122, 'GroÃŸer SchÃ¤del', '0', 3),
 (128, '2015-03-05 19:08:18', 170, 'Kristallinerz', '0', 4),
 (129, '2015-03-05 19:08:18', 233, 'Karotte', '0', 6),
 (130, '2015-03-05 19:08:18', 234, 'Salatkopf', '0', 6),
@@ -409,23 +488,23 @@ INSERT INTO `gwmatlist` (`id`, `timestamp`, `matID`, `matName`, `matPrice`, `kat
 (138, '2015-03-05 19:08:18', 243, 'Selleriestange', '0', 6),
 (139, '2015-03-05 19:08:18', 244, 'Chilischote', '0', 6),
 (140, '2015-03-05 19:08:19', 245, 'Zimtstange', '0', 6),
-(141, '2015-03-05 19:08:19', 246, 'Kreuzkümmel', '0', 6),
-(142, '2015-03-05 19:08:19', 247, 'Grüne Bohne', '0', 6),
+(141, '2015-03-05 19:08:19', 246, 'KreuzkÃ¼mmel', '0', 6),
+(142, '2015-03-05 19:08:19', 247, 'GrÃ¼ne Bohne', '0', 6),
 (143, '2015-03-05 19:08:19', 248, 'Zitrone', '0', 6),
 (144, '2015-03-05 19:08:19', 249, 'Muskatnuss', '0', 6),
 (145, '2015-03-05 19:08:19', 250, 'Thymianblatt', '0', 6),
 (146, '2015-03-05 19:08:19', 251, 'Tomate', '0', 6),
 (147, '2015-03-05 19:08:19', 252, 'Vanilleschote', '0', 6),
-(148, '2015-03-05 19:11:25', 253, 'Stück Butter', '0', 6),
+(148, '2015-03-05 19:11:25', 253, 'StÃ¼ck Butter', '0', 6),
 (149, '2015-03-05 19:11:25', 256, 'Ei', '0', 6),
-(150, '2015-03-05 19:11:25', 258, 'Stück Wildfleisch', '0', 6),
-(151, '2015-03-05 19:11:25', 259, 'Stück Geflügelfleisch', '0', 6),
+(150, '2015-03-05 19:11:25', 258, 'StÃ¼ck Wildfleisch', '0', 6),
+(151, '2015-03-05 19:11:25', 259, 'StÃ¼ck GeflÃ¼gelfleisch', '0', 6),
 (152, '2015-03-05 19:11:25', 260, 'Beutel Mehl', '0', 6),
-(153, '2015-03-05 19:11:25', 261, 'Krug Pflanzenöl', '0', 6),
+(153, '2015-03-05 19:11:25', 261, 'Krug PflanzenÃ¶l', '0', 6),
 (154, '2015-03-05 19:11:25', 262, 'Paket Backpulver', '0', 6),
 (155, '2015-03-05 19:11:25', 263, 'Paket Salz', '0', 6),
-(156, '2015-03-05 19:11:25', 264, 'Flasche Sojasoße', '0', 6),
-(157, '2015-03-05 19:11:25', 265, 'Beutel mit Stärke', '0', 6),
+(156, '2015-03-05 19:11:25', 264, 'Flasche SojasoÃŸe', '0', 6),
+(157, '2015-03-05 19:11:25', 265, 'Beutel mit StÃ¤rke', '0', 6),
 (158, '2015-03-05 19:11:25', 266, 'Sack Zucker', '0', 6),
 (159, '2015-03-05 19:11:25', 267, 'Flasche Essig', '0', 6),
 (160, '2015-03-05 19:11:25', 268, 'Krug Wasser', '0', 6),
@@ -435,8 +514,8 @@ INSERT INTO `gwmatlist` (`id`, `timestamp`, `matID`, `matName`, `matPrice`, `kat
 (164, '2015-03-05 19:11:25', 272, 'Oreganoblatt', '0', 6),
 (165, '2015-03-05 19:11:25', 273, 'Salbeiblatt', '0', 6),
 (166, '2015-03-05 19:11:25', 274, 'Spinatblatt', '0', 6),
-(167, '2015-03-05 19:11:25', 275, 'Steckrübe', '0', 6),
-(168, '2015-03-05 19:11:25', 276, 'Reisbällchen', '0', 6),
+(167, '2015-03-05 19:11:25', 275, 'SteckrÃ¼be', '0', 6),
+(168, '2015-03-05 19:11:25', 276, 'ReisbÃ¤llchen', '0', 6),
 (169, '2015-03-05 19:11:25', 277, 'Banane', '0', 6),
 (170, '2015-03-05 19:11:25', 278, 'Basilikumblatt', '0', 6),
 (171, '2015-03-05 19:11:25', 279, 'Lorbeerblatt', '0', 6),
@@ -448,26 +527,26 @@ INSERT INTO `gwmatlist` (`id`, `timestamp`, `matID`, `matName`, `matPrice`, `kat
 (177, '2015-03-05 19:16:56', 285, 'Kohlkopf', '0', 6),
 (178, '2015-03-05 19:16:56', 286, 'Dillzweig', '0', 6),
 (179, '2015-03-05 19:16:56', 287, 'Traube', '0', 6),
-(180, '2015-03-05 19:16:56', 288, 'Grünkohlblatt', '0', 6),
+(180, '2015-03-05 19:16:56', 288, 'GrÃ¼nkohlblatt', '0', 6),
 (181, '2015-03-05 19:16:56', 289, 'Portobellopilz', '0', 6),
 (182, '2015-03-05 19:16:56', 290, 'Rosmarinzweig', '0', 6),
 (183, '2015-03-05 19:16:56', 291, 'Sesamsamen', '0', 6),
-(184, '2015-03-05 19:16:56', 292, 'Süßkartoffel', '0', 6),
+(184, '2015-03-05 19:16:56', 292, 'SÃ¼ÃŸkartoffel', '0', 6),
 (185, '2015-03-05 19:16:56', 293, 'Zucchini', '0', 6),
 (186, '2015-03-05 19:16:56', 294, 'Mandel', '0', 6),
 (187, '2015-03-05 19:16:56', 295, 'Avocado', '0', 6),
 (188, '2015-03-05 19:16:56', 296, 'Kirsche', '0', 6),
 (189, '2015-03-05 19:16:56', 297, 'Ingwerwurzel', '0', 6),
 (190, '2015-03-05 19:16:56', 298, 'Limette', '0', 6),
-(191, '2015-03-05 19:16:56', 299, 'Schüssel mit Sauerrahm', '0', 6),
+(191, '2015-03-05 19:16:56', 299, 'SchÃ¼ssel mit Sauerrahm', '0', 6),
 (192, '2015-03-05 19:16:56', 300, 'Brombeere', '0', 6),
 (193, '2015-03-05 19:16:56', 301, 'Blumenkohlkopf', '0', 6),
 (194, '2015-03-05 19:16:56', 302, 'Nelke', '0', 6),
 (195, '2015-03-05 19:16:56', 303, 'Koriandersamen', '0', 6),
-(196, '2015-03-05 19:16:56', 304, 'Grüne Zwiebel', '0', 6),
+(196, '2015-03-05 19:16:56', 304, 'GrÃ¼ne Zwiebel', '0', 6),
 (197, '2015-03-05 19:16:56', 305, 'Minzblatt', '0', 6),
-(198, '2015-03-05 19:16:56', 306, 'Kohlrübe', '0', 6),
-(199, '2015-03-05 19:16:56', 307, 'Zuckerkürbis', '0', 6),
+(198, '2015-03-05 19:16:56', 306, 'KohlrÃ¼be', '0', 6),
+(199, '2015-03-05 19:16:56', 307, 'ZuckerkÃ¼rbis', '0', 6),
 (200, '2015-03-05 19:16:56', 308, 'Kichererbse', '0', 6),
 (201, '2015-03-05 19:16:56', 309, 'Kokosnuss', '0', 6),
 (202, '2015-03-05 19:16:56', 310, 'Meerrettchwurzel', '0', 6),
@@ -477,18 +556,18 @@ INSERT INTO `gwmatlist` (`id`, `timestamp`, `matID`, `matName`, `matPrice`, `kat
 (206, '2015-03-05 19:16:56', 314, 'Schalotte', '0', 6),
 (207, '2015-03-05 19:16:56', 315, 'Artischocke', '0', 6),
 (208, '2015-03-05 19:16:56', 316, 'Spargelstange', '0', 6),
-(209, '2015-03-05 19:16:56', 317, 'Butternusskürbis', '0', 6),
+(209, '2015-03-05 19:16:56', 317, 'ButternusskÃ¼rbis', '0', 6),
 (210, '2015-03-05 19:16:56', 318, 'Cayennepfeffer', '0', 6),
 (211, '2015-03-05 19:16:56', 319, 'Lauch', '0', 6),
 (212, '2015-03-05 19:16:56', 320, 'Pastinakenwurzel', '0', 6),
 (213, '2015-03-05 19:16:56', 321, 'Himbeere', '0', 6),
-(214, '2015-03-05 19:16:56', 322, 'Estragonblätter', '0', 6),
+(214, '2015-03-05 19:16:56', 322, 'EstragonblÃ¤tter', '0', 6),
 (215, '2015-03-05 19:16:56', 323, 'Lotuswurzel', '0', 6),
 (216, '2015-03-05 19:16:56', 324, 'Seetang', '0', 6),
-(217, '2015-03-05 19:16:56', 325, 'Schneetrüffel', '0', 6),
+(217, '2015-03-05 19:16:56', 325, 'SchneetrÃ¼ffel', '0', 6),
 (218, '2015-03-05 19:16:56', 326, 'Aubergine', '0', 6),
 (219, '2015-03-05 19:16:56', 327, 'Pfirsich', '0', 6),
-(220, '2015-03-05 19:16:56', 328, 'Orrianischer Trüffel', '0', 6),
+(220, '2015-03-05 19:16:56', 328, 'Orrianischer TrÃ¼ffel', '0', 6),
 (221, '2015-03-05 19:16:56', 329, 'Geister-Paprika', '0', 6),
 (222, '2015-03-05 19:16:56', 330, 'Zitronengras', '0', 6),
 (223, '2015-03-05 19:16:56', 331, 'Omnombeere', '0', 6),
@@ -497,39 +576,39 @@ INSERT INTO `gwmatlist` (`id`, `timestamp`, `matID`, `matName`, `matPrice`, `kat
 (226, '2015-03-05 19:16:56', 334, 'Maracuja', '0', 6),
 (227, '2015-03-05 19:16:56', 335, 'Nopal', '0', 6),
 (228, '2015-03-05 19:16:56', 336, 'Stachelbirne', '0', 6),
-(229, '2015-03-06 03:22:19', 337, 'Stück Candy-Corn', '0', 7),
-(230, '2015-03-06 03:22:19', 338, 'Geschwätziger Schädel', '0', 7),
-(231, '2015-03-06 03:22:19', 339, 'Nougatfüllung', '0', 7),
-(232, '2015-03-06 03:22:19', 340, 'Plastikzähne', '0', 7),
+(229, '2015-03-06 03:22:19', 337, 'StÃ¼ck Candy-Corn', '0', 7),
+(230, '2015-03-06 03:22:19', 338, 'GeschwÃ¤tziger SchÃ¤del', '0', 7),
+(231, '2015-03-06 03:22:19', 339, 'NougatfÃ¼llung', '0', 7),
+(232, '2015-03-06 03:22:19', 340, 'PlastikzÃ¤hne', '0', 7),
 (233, '2015-03-06 03:22:19', 341, 'Winzige Schneeflocke', '0', 7),
 (234, '2015-03-06 03:22:19', 342, 'Filigrane Schneeflocke', '0', 7),
 (235, '2015-03-06 03:22:19', 343, 'Glitzernde Schneeflocke', '0', 7),
 (236, '2015-03-06 03:22:19', 344, 'Einzigartige Schneeflocke', '0', 7),
-(237, '2015-03-06 03:22:19', 345, 'Unberührte Schneeflocke', '0', 7),
+(237, '2015-03-06 03:22:19', 345, 'UnberÃ¼hrte Schneeflocke', '0', 7),
 (238, '2015-03-06 03:22:19', 346, 'Makellose Schneeflocke', '0', 7),
-(239, '2015-03-06 03:22:19', 347, 'Stück Zhaikritze', '0', 7),
+(239, '2015-03-06 03:22:19', 347, 'StÃ¼ck Zhaikritze', '0', 7),
 (240, '2015-03-06 03:22:19', 348, 'Candy-Corn-Kolben', '0', 7),
-(241, '2015-03-06 03:22:19', 349, 'Plappernder Schädel', '0', 7),
-(242, '2015-03-06 03:22:19', 350, 'Hochwertige Plastikzähne', '0', 7),
-(243, '2015-03-06 03:22:19', 351, 'Tyrias beste Nougatfüllung', '0', 7),
+(241, '2015-03-06 03:22:19', 349, 'Plappernder SchÃ¤del', '0', 7),
+(242, '2015-03-06 03:22:19', 350, 'Hochwertige PlastikzÃ¤hne', '0', 7),
+(243, '2015-03-06 03:22:19', 351, 'Tyrias beste NougatfÃ¼llung', '0', 7),
 (244, '2015-03-08 07:05:59', 242, 'Schwarzes Pfefferkorn', '0', 6),
 (245, '2015-08-05 14:49:48', 188, 'Bernsteinkiesel', NULL, 5),
 (246, '2015-08-05 14:51:48', 123, 'Phiole kondensierter Nebelessenz', NULL, 3),
 (247, '2015-08-05 14:52:40', 132, 'Sonnenperlen', NULL, 3),
 (248, '2015-08-05 14:53:30', 153, 'Obsidian Scherben', NULL, 3),
 (249, '2015-08-05 14:54:12', 152, 'Ektoplasmakugeln', NULL, 3),
-(250, '2015-08-05 14:55:05', 162, 'Mystische Münzen', NULL, 3),
+(250, '2015-08-05 14:55:05', 162, 'Mystische MÃ¼nzen', NULL, 3),
 (251, '2015-08-05 14:56:19', 160, 'Geschmolzener Magnetstein', NULL, 3),
 (252, '2015-08-05 14:57:06', 149, 'Onyx Kern', NULL, 3),
 (253, '2015-08-05 14:57:31', 148, 'Geladener Kern', NULL, 3),
 (254, '2015-08-05 14:58:46', 164, 'Makellose Toxische Sporenproben', NULL, 3),
-(255, '2015-08-05 14:59:21', 166, 'Ambrit-Stücke', NULL, 3),
+(255, '2015-08-05 14:59:21', 166, 'Ambrit-StÃ¼cke', NULL, 3),
 (256, '2015-08-05 15:01:39', 168, 'Aufgeladene Ambrit-Platten', NULL, 3),
 (257, '2015-08-05 15:04:10', 189, 'Granatkiesel', NULL, 5),
 (258, '2015-08-05 15:04:10', 190, 'Malachitkiesel', NULL, 5),
 (259, '2015-08-05 15:04:10', 191, 'Perlen', NULL, 5),
 (260, '2015-08-05 15:04:10', 192, 'Tigeraugenkiesel', NULL, 5),
-(261, '2015-08-05 15:04:10', 193, 'Türkiskiesel', NULL, 5),
+(261, '2015-08-05 15:04:10', 193, 'TÃ¼rkiskiesel', NULL, 5),
 (262, '2015-08-05 15:06:23', 194, 'Amethystnugget', NULL, 5),
 (263, '2015-08-05 15:06:23', 195, 'Karneolnugget', NULL, 5),
 (264, '2015-08-05 15:06:23', 196, 'Lapisnugget', NULL, 5),
@@ -559,13 +638,13 @@ INSERT INTO `gwmatlist` (`id`, `timestamp`, `matID`, `matName`, `matPrice`, `kat
 (288, '2015-08-05 15:20:18', 225, 'Chrysokollkugeln', NULL, 5),
 (289, '2015-08-05 15:21:24', 230, 'Saphirkugeln', NULL, 5),
 (290, '2015-08-05 15:21:24', 232, 'Quarzkristalle', NULL, 5),
-(291, '2015-08-05 15:24:09', 254, 'Gläser Buttermilch', NULL, 6),
-(292, '2015-08-05 15:24:09', 255, 'Käseecken', NULL, 6),
+(291, '2015-08-05 15:24:09', 254, 'GlÃ¤ser Buttermilch', NULL, 6),
+(292, '2015-08-05 15:24:09', 255, 'KÃ¤seecken', NULL, 6),
 (293, '2015-08-05 15:24:09', 257, 'Pakete Hefe', NULL, 6),
 (294, '2015-08-05 15:25:45', 206, 'Sonnensteinbrocken', NULL, 5),
-(295, '2015-08-05 15:26:44', 210, 'Korallenstück', NULL, 5),
+(295, '2015-08-05 15:26:44', 210, 'KorallenstÃ¼ck', NULL, 5),
 (296, '2015-08-05 15:26:44', 211, 'Smaragd-Scherbe', NULL, 5),
-(297, '2015-08-05 15:29:35', 222, 'Maracujablüte', NULL, 5),
+(297, '2015-08-05 15:29:35', 222, 'MaracujablÃ¼te', NULL, 5),
 (298, '2015-08-05 15:29:35', 223, 'Azuritkristall', NULL, 5),
 (299, '2015-08-05 15:29:35', 226, 'Korallenkugel', NULL, 5),
 (300, '2015-08-05 15:29:35', 227, 'Smaragdkugel', NULL, 5),
@@ -578,9 +657,9 @@ INSERT INTO `gwmatlist` (`id`, `timestamp`, `matID`, `matName`, `matPrice`, `kat
 (307, '2015-08-05 15:33:20', 182, 'Aufsteigender Stern', NULL, 4),
 (308, '2015-08-05 15:34:51', 167, 'Ambrit-Platte', NULL, 3),
 (309, '2015-08-07 09:33:14', 124, 'Kristall-Fragment', NULL, 3),
-(310, '2015-08-19 08:56:51', 125, 'Zerstörer-Fragment', NULL, 3),
+(310, '2015-08-19 08:56:51', 125, 'ZerstÃ¶rer-Fragment', NULL, 3),
 (311, '2015-08-19 08:56:51', 126, 'Verdorbenes-Fragment', NULL, 3),
-(312, '2015-08-19 08:56:51', 127, 'Haufen übler Essenz', NULL, 3),
+(312, '2015-08-19 08:56:51', 127, 'Haufen Ã¼bler Essenz', NULL, 3),
 (313, '2015-08-19 08:56:51', 128, 'Geladenes Fragment', NULL, 3),
 (314, '2015-08-19 08:56:51', 129, 'Onyx-Fragment', NULL, 3),
 (315, '2015-08-19 08:56:51', 130, 'Geschmolzenes Fragment', NULL, 3),
@@ -594,24 +673,24 @@ INSERT INTO `gwmatlist` (`id`, `timestamp`, `matID`, `matName`, `matPrice`, `kat
 (323, '2015-08-19 08:59:10', 163, 'Aufgeladener Quarzkristall', NULL, 3),
 (324, '2015-08-19 09:00:05', 142, 'Riesenauge', NULL, 3),
 (325, '2015-08-24 01:20:13', 146, 'Verdorbener Kern', NULL, 3),
-(326, '2015-08-25 09:06:39', 147, 'Haufen widerwärtiger Essenz', NULL, 3),
+(326, '2015-08-25 09:06:39', 147, 'Haufen widerwÃ¤rtiger Essenz', NULL, 3),
 (327, '2015-08-25 09:09:56', 150, 'Geschmolzener Kern', NULL, 3),
 (328, '2015-08-25 09:09:56', 151, 'Gletscher-Kern', NULL, 3),
-(329, '2015-08-25 09:09:56', 155, 'Zerstörer-Magnetstein', NULL, 3),
+(329, '2015-08-25 09:09:56', 155, 'ZerstÃ¶rer-Magnetstein', NULL, 3),
 (330, '2015-08-25 09:09:56', 156, 'Verdorbener Magnetstein', NULL, 3),
 (331, '2015-08-25 09:09:56', 157, 'Haufen fauler Essenz', NULL, 3),
 (332, '2015-08-25 09:09:56', 158, 'Geladener Magnetstein', NULL, 3),
 (333, '2015-08-25 09:09:56', 159, 'Onyx-Magnetstein', NULL, 3),
 (334, '2015-08-25 09:09:56', 161, 'Gletscher-Magnetstein', NULL, 3),
-(335, '2015-08-25 09:14:05', 135, 'Zerstörer-Scherbe', NULL, 3),
+(335, '2015-08-25 09:14:05', 135, 'ZerstÃ¶rer-Scherbe', NULL, 3),
 (336, '2015-08-25 09:14:05', 136, 'Verdorbene Scherbe', NULL, 3),
 (337, '2015-08-25 09:14:05', 137, 'Haufen schmutziger Essenz', NULL, 3),
 (338, '2015-08-25 09:14:05', 138, 'Geladene Scherbe', NULL, 3),
 (339, '2015-08-25 09:14:05', 139, 'Onyx-Scherbe', NULL, 3),
 (340, '2015-08-25 09:14:05', 140, 'Geschmolzene Scherbe', NULL, 3),
 (341, '2015-08-25 09:14:05', 141, 'Gletscher-Scherbe', NULL, 3),
-(342, '2015-08-25 09:14:05', 145, 'Zerstörer-Kern', NULL, 3),
-(343, '2015-08-25 09:19:21', 173, 'Batzen von Rückständen des Ältesten-Geists', NULL, 4),
+(342, '2015-08-25 09:14:05', 145, 'ZerstÃ¶rer-Kern', NULL, 3),
+(343, '2015-08-25 09:19:21', 173, 'Batzen von RÃ¼ckstÃ¤nden des Ã„ltesten-Geists', NULL, 4),
 (344, '2015-08-25 09:19:21', 174, 'Spule dicker elonischer Schnur', NULL, 4),
 (345, '2015-08-25 09:19:21', 175, 'Spule Seidenwebfaden', NULL, 4),
 (346, '2015-08-25 09:19:21', 176, 'Mithrilliumbrocken', NULL, 4),
@@ -621,13 +700,13 @@ INSERT INTO `gwmatlist` (`id`, `timestamp`, `matID`, `matName`, `matPrice`, `kat
 (350, '2015-08-25 09:19:21', 185, 'Damastballen', NULL, 4),
 (351, '2015-08-25 09:19:21', 186, 'Deldrimor-Stahlbarren', NULL, 4),
 (352, '2015-10-28 19:26:49', 352, 'Haufen aus Leinsamen', NULL, 1),
-(353, '2015-10-28 19:27:12', 353, 'Mühlstein', NULL, 1),
-(354, '2015-10-28 19:31:55', 354, 'Phiole mit Leinsamen-Öl', NULL, 2),
+(353, '2015-10-28 19:27:12', 353, 'MÃ¼hlstein', NULL, 1),
+(354, '2015-10-28 19:31:55', 354, 'Phiole mit Leinsamen-Ã–l', NULL, 2),
 (355, '2015-10-28 19:31:55', 355, 'Blatt-Fossil', NULL, 2),
 (356, '2015-10-28 19:31:55', 356, 'Stachel-Dorn', NULL, 2),
 (357, '2015-10-28 19:31:55', 357, 'Haufen rauer Sand', NULL, 2),
-(358, '2015-10-28 19:34:49', 375, 'Flaschen Luftschiff-Öl', NULL, 4),
-(359, '2015-10-28 19:36:31', 384, 'Süßwasserperle', NULL, 5),
+(358, '2015-10-28 19:34:49', 375, 'Flaschen Luftschiff-Ã–l', NULL, 4),
+(359, '2015-10-28 19:36:31', 384, 'SÃ¼ÃŸwasserperle', NULL, 5),
 (360, '2015-10-30 20:18:21', 385, 'Cassavawurzel', NULL, 6),
 (361, '2015-10-30 20:18:21', 386, 'Beutel mit Cassavamehl', NULL, 6),
 (362, '2015-10-30 20:18:21', 387, 'Miesmuscheln', NULL, 6),
@@ -636,57 +715,57 @@ INSERT INTO `gwmatlist` (`id`, `timestamp`, `matID`, `matName`, `matPrice`, `kat
 (365, '2015-10-31 00:01:30', 360, 'Mordrem-Scherbe', NULL, 3),
 (366, '2015-10-31 00:01:30', 361, 'Mordrem-Kern', NULL, 3),
 (367, '2015-10-31 00:01:30', 362, 'Mordrem-Magnetstein', NULL, 3),
-(368, '2015-10-31 00:01:30', 363, 'Immergrün-Späne', NULL, 3),
-(369, '2015-10-31 00:01:30', 364, 'Immergrün-Fragment', NULL, 3),
-(370, '2015-10-31 00:01:30', 365, 'Immergrün-Scherbe', NULL, 3),
-(371, '2015-10-31 00:01:30', 366, 'Immergrün-Kern', NULL, 3),
-(372, '2015-10-31 00:01:30', 367, 'Immergrün-Magnetstein', NULL, 3),
+(368, '2015-10-31 00:01:30', 363, 'ImmergrÃ¼n-SpÃ¤ne', NULL, 3),
+(369, '2015-10-31 00:01:30', 364, 'ImmergrÃ¼n-Fragment', NULL, 3),
+(370, '2015-10-31 00:01:30', 365, 'ImmergrÃ¼n-Scherbe', NULL, 3),
+(371, '2015-10-31 00:01:30', 366, 'ImmergrÃ¼n-Kern', NULL, 3),
+(372, '2015-10-31 00:01:30', 367, 'ImmergrÃ¼n-Magnetstein', NULL, 3),
 (373, '2015-10-31 00:01:30', 368, 'Aufgeladenes Fossil', NULL, 3),
 (374, '2015-10-31 00:01:30', 369, 'Aufgeladener Dorn', NULL, 3),
 (375, '2015-10-31 00:01:30', 370, 'Leuchtpilzgruppe', NULL, 3),
 (376, '2015-10-31 00:01:30', 371, 'Scherbe des Ruhms', NULL, 3),
 (377, '2015-10-31 00:01:30', 372, 'Erinnerungen des Kampfes', NULL, 3),
-(378, '2015-10-31 00:01:30', 373, 'Mystischer Glücksklee', NULL, 3),
+(378, '2015-10-31 00:01:30', 373, 'Mystischer GlÃ¼cksklee', NULL, 3),
 (379, '2015-10-31 00:02:51', 374, 'Fulgurit', NULL, 4),
-(380, '2015-10-31 00:02:51', 376, 'Haufen Güldener Staub', NULL, 4),
+(380, '2015-10-31 00:02:51', 376, 'Haufen GÃ¼ldener Staub', NULL, 4),
 (381, '2015-10-31 00:02:51', 377, 'Ley-Linien-Funke', NULL, 4),
 (382, '2015-10-31 00:04:22', 378, 'Schwarzer Diamant', NULL, 5),
-(383, '2015-10-31 00:04:22', 379, 'Stück Maguuma-Wurzelholz', NULL, 5),
+(383, '2015-10-31 00:04:22', 379, 'StÃ¼ck Maguuma-Wurzelholz', NULL, 5),
 (384, '2015-10-31 00:04:22', 380, 'Ebenholzkugel', NULL, 5),
-(385, '2015-10-31 00:04:22', 381, 'Leinblüte', NULL, 5),
+(385, '2015-10-31 00:04:22', 381, 'LeinblÃ¼te', NULL, 5),
 (386, '2015-10-31 00:04:22', 382, 'Maguuma-Lilie', NULL, 5),
 (387, '2015-10-31 00:04:22', 383, 'Mondsteinkugel', NULL, 5),
 (388, '2015-11-01 13:11:43', 388, 'Haufen Pimentbeeren', NULL, 6),
-(389, '2015-11-01 13:11:43', 389, 'Sägeblattpilz', NULL, 6),
+(389, '2015-11-01 13:11:43', 389, 'SÃ¤geblattpilz', NULL, 6),
 (390, '2015-11-04 20:13:59', 390, 'Flachsfaser', '0', 1),
 (391, '2015-11-04 20:13:59', 391, 'Beutel mit rotem Pigment', '0', 1),
 (392, '2015-11-04 20:13:59', 392, 'Beutel mit orangenem Pigment', '0', 1),
 (393, '2015-11-04 20:13:59', 393, 'Beutel mit gelben Pigment', '0', 1),
-(394, '2015-11-04 20:13:59', 394, 'Beutel mit grünem Pigment', '0', 1),
+(394, '2015-11-04 20:13:59', 394, 'Beutel mit grÃ¼nem Pigment', '0', 1),
 (395, '2015-11-04 20:13:59', 395, 'Beutel mit blauen Pigment', '0', 1),
 (396, '2015-11-04 20:13:59', 396, 'Beutel mit lilanen Pigment', '0', 1),
-(397, '2015-11-04 20:13:59', 397, 'Beutel mit weißem Pigment', '0', 1),
+(397, '2015-11-04 20:13:59', 397, 'Beutel mit weiÃŸem Pigment', '0', 1),
 (398, '2015-11-04 20:13:59', 398, 'Beutel mit schwarzem Pigment', '0', 1),
 (399, '2015-11-04 20:13:59', 399, 'Beutel mit braunem Pigment', '0', 1),
-(400, '2015-11-04 20:16:42', 400, 'Perlmutt-Stück', '0', 2),
-(401, '2015-11-04 20:16:42', 401, 'Güldene Späne', '0', 3),
-(402, '2015-11-04 20:16:42', 402, 'Güldene Barren', '0', 3),
+(400, '2015-11-04 20:16:42', 400, 'Perlmutt-StÃ¼ck', '0', 2),
+(401, '2015-11-04 20:16:42', 401, 'GÃ¼ldene SpÃ¤ne', '0', 3),
+(402, '2015-11-04 20:16:42', 402, 'GÃ¼ldene Barren', '0', 3),
 (403, '2015-11-04 20:16:42', 403, 'Resornierender Span', '0', 3),
 (404, '2015-11-04 20:16:42', 404, 'Resornierendes Fragment', '0', 3),
 (405, '2015-11-04 20:16:42', 405, 'Resornierender Kern', '0', 3),
 (406, '2015-11-04 20:16:42', 406, 'Resornierender Magnetstein', '0', 3),
 (407, '2015-11-04 20:17:53', 407, 'Stabilisierende Matrix', '0', 4),
 (408, '2015-11-04 20:17:53', 408, 'Kugel aus dunkler Energie', '0', 4),
-(409, '2015-11-04 20:17:53', 409, 'Würfel aus stabilisierender dunkler Energie', '0', 4),
+(409, '2015-11-04 20:17:53', 409, 'WÃ¼rfel aus stabilisierender dunkler Energie', '0', 4),
 (410, '2015-11-05 04:24:09', 410, 'Achatkugel', '198', 5),
 (411, '2016-02-02 03:33:43', 411, 'Zuckerstangen', '160', 7),
-(412, '2016-11-05 07:55:10', 412, 'Mystische Kuriosität', '0', 4),
+(412, '2016-11-05 07:55:10', 412, 'Mystische KuriositÃ¤t', '0', 4),
 (413, '2016-11-05 07:55:10', 413, 'Scherbe von Anstrengung', '0', 4),
 (414, '2017-05-20 15:57:20', 414, 'Blutrubin', '0', 3),
 (415, '2017-05-20 15:57:20', 415, 'Versteinertes Holz', '0', 3),
 (416, '2017-05-20 15:57:20', 416, 'Frische Winterbeere', '0', 3),
 (417, '2017-05-20 15:57:20', 417, 'Jade-Scherbe', '0', 3),
-(418, '2017-05-20 15:57:20', 418, 'Feuerorchidenblüte', '0', 3),
+(418, '2017-05-20 15:57:20', 418, 'FeuerorchidenblÃ¼te', '0', 3),
 (419, '2017-05-20 15:58:35', 419, 'Scherbe der Freundschaft', '0', 4),
 (420, '2017-05-20 15:58:35', 420, 'Scherbe des Krieges', '0', 4),
 (421, '2017-05-20 15:58:35', 421, 'Scherbe der Liturgie', '0', 4);
@@ -694,7 +773,7 @@ INSERT INTO `gwmatlist` (`id`, `timestamp`, `matID`, `matName`, `matPrice`, `kat
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur für Tabelle `gwusersmats`
+-- Tabellenstruktur fÃ¼r Tabelle `gwusersmats`
 --
 
 CREATE TABLE `gwusersmats` (
@@ -709,7 +788,7 @@ CREATE TABLE `gwusersmats` (
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur für Tabelle `gw_accounts`
+-- Tabellenstruktur fÃ¼r Tabelle `gw_accounts`
 --
 
 CREATE TABLE `gw_accounts` (
@@ -723,7 +802,7 @@ CREATE TABLE `gw_accounts` (
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur für Tabelle `gw_chars`
+-- Tabellenstruktur fÃ¼r Tabelle `gw_chars`
 --
 
 CREATE TABLE `gw_chars` (
@@ -748,7 +827,107 @@ CREATE TABLE `gw_chars` (
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur für Tabelle `log`
+-- Tabellenstruktur fÃ¼r Tabelle `hardwaredefinition`
+--
+
+CREATE TABLE `hardwaredefinition` (
+  `id` int(11) NOT NULL,
+  `timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `hwTypeName` varchar(250) COLLATE utf8_german2_ci NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_german2_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Tabellenstruktur fÃ¼r Tabelle `hardwaredeliverers`
+--
+
+CREATE TABLE `hardwaredeliverers` (
+  `id` int(11) NOT NULL,
+  `timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `hwDelName` varchar(250) COLLATE utf8_german2_ci NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_german2_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Tabellenstruktur fÃ¼r Tabelle `hardwareentries`
+--
+
+CREATE TABLE `hardwareentries` (
+  `id` int(11) NOT NULL,
+  `timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `besitzer` int(11) NOT NULL,
+  `hwManu` int(11) NOT NULL COMMENT 'FK',
+  `hwName` varchar(250) COLLATE utf8_german2_ci NOT NULL,
+  `hwValue` decimal(9,2) DEFAULT NULL,
+  `hwDescription` text COLLATE utf8_german2_ci NOT NULL,
+  `hwBuydate` date NOT NULL,
+  `hwGarantieLengthMonth` int(11) NOT NULL,
+  `hwType` int(11) NOT NULL COMMENT 'FK',
+  `hwSerial` varchar(30) COLLATE utf8_german2_ci NOT NULL,
+  `hwDeliverer` int(11) NOT NULL COMMENT 'FK',
+  `hwDelNumber` varchar(250) COLLATE utf8_german2_ci NOT NULL,
+  `hwDelDate` date NOT NULL,
+  `hwReNumber` varchar(250) COLLATE utf8_german2_ci NOT NULL,
+  `hwReDate` date NOT NULL,
+  `hwGarantieType` int(11) NOT NULL COMMENT 'FK',
+  `hwStandort` varchar(250) COLLATE utf8_german2_ci NOT NULL,
+  `hwSold` date NOT NULL,
+  `hwKostenstelle` varchar(30) COLLATE utf8_german2_ci NOT NULL,
+  `hwHardwareType` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_german2_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Tabellenstruktur fÃ¼r Tabelle `hardwaregarantietypes`
+--
+
+CREATE TABLE `hardwaregarantietypes` (
+  `id` int(11) NOT NULL,
+  `timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `hwGarantieName` varchar(250) COLLATE utf8_german2_ci NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_german2_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Tabellenstruktur fÃ¼r Tabelle `hardwaremanufacturers`
+--
+
+CREATE TABLE `hardwaremanufacturers` (
+  `id` int(11) NOT NULL,
+  `timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `manuName` varchar(250) COLLATE utf8_german2_ci NOT NULL,
+  `manuDescription` text COLLATE utf8_german2_ci NOT NULL,
+  `ersteller` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_german2_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Tabellenstruktur fÃ¼r Tabelle `hardwaretypes`
+--
+
+CREATE TABLE `hardwaretypes` (
+  `id` int(11) NOT NULL,
+  `timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `hwTypeName` varchar(250) COLLATE utf8_german2_ci NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_german2_ci;
+
+--
+-- Daten fÃ¼r Tabelle `hardwaretypes`
+--
+
+INSERT INTO `hardwaretypes` (`id`, `timestamp`, `hwTypeName`) VALUES
+(1, '2018-09-12 09:11:32', 'Desktop'),
+(2, '2018-09-12 09:11:32', 'Laptop');
+
+-- --------------------------------------------------------
+
+--
+-- Tabellenstruktur fÃ¼r Tabelle `log`
 --
 
 CREATE TABLE `log` (
@@ -759,17 +938,10 @@ CREATE TABLE `log` (
   `ip_adress` varchar(15) COLLATE utf16_german2_ci NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf16 COLLATE=utf16_german2_ci;
 
---
--- Daten für Tabelle `log`
---
-
-INSERT INTO `log` (`id`, `timestamp`, `benutzer`, `log_text`, `ip_adress`) VALUES
-(1, '2017-08-14 05:54:42', 1, 'administrator : DELETE FROM uebersicht_kacheln WHERE id=\'14\'', '::1');
-
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur für Tabelle `registercode`
+-- Tabellenstruktur fÃ¼r Tabelle `registercode`
 --
 
 CREATE TABLE `registercode` (
@@ -778,7 +950,7 @@ CREATE TABLE `registercode` (
   `code` varchar(250) COLLATE latin1_general_ci NOT NULL,
   `used` int(11) NOT NULL COMMENT 'Wurde er benutzt',
   `usageTimes` int(11) NOT NULL,
-  `usedBy` varchar(250) COLLATE latin1_general_ci NOT NULL COMMENT 'Welcher Benutzer hat ihn eingelöst.',
+  `usedBy` varchar(250) COLLATE latin1_general_ci NOT NULL COMMENT 'Welcher Benutzer hat ihn eingelÃ¶st.',
   `ipadress` varchar(15) COLLATE latin1_general_ci NOT NULL COMMENT 'Ipadress des Benutzers',
   `rights` bigint(20) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci;
@@ -786,7 +958,7 @@ CREATE TABLE `registercode` (
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur für Tabelle `rightkategorien`
+-- Tabellenstruktur fÃ¼r Tabelle `rightkategorien`
 --
 
 CREATE TABLE `rightkategorien` (
@@ -795,28 +967,28 @@ CREATE TABLE `rightkategorien` (
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci;
 
 --
--- Daten für Tabelle `rightkategorien`
+-- Daten fÃ¼r Tabelle `rightkategorien`
 --
 
 INSERT INTO `rightkategorien` (`id`, `name`) VALUES
-(1, 'Öffentlich'),
+(1, 'Ã–ffentlich'),
 (2, 'Administrator'),
 (3, 'Forum'),
-(4, 'Ankündigungen'),
+(4, 'AnkÃ¼ndigungen'),
 (5, 'Guildwars'),
 (6, 'Finanzen'),
 (7, 'Adressbuch'),
-(8, 'Fahrkosten'),
-(9, 'Starcitizen'),
-(10, 'Lernbereich'),
-(11, 'Gesundheit'),
-(12, 'Amazon'),
+(8, 'Fahrkosten (dep)'),
+(9, 'Starcitizen (dep)'),
+(10, 'Lernbereich (dep)'),
+(11, 'Gesundheit (dep)'),
+(12, 'EventPlanner'),
 (13, 'Toyota');
 
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur für Tabelle `rights`
+-- Tabellenstruktur fÃ¼r Tabelle `rights`
 --
 
 CREATE TABLE `rights` (
@@ -826,7 +998,7 @@ CREATE TABLE `rights` (
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci;
 
 --
--- Daten für Tabelle `rights`
+-- Daten fÃ¼r Tabelle `rights`
 --
 
 INSERT INTO `rights` (`timestamp`, `besitzer`, `right_id`) VALUES
@@ -892,12 +1064,17 @@ INSERT INTO `rights` (`timestamp`, `besitzer`, `right_id`) VALUES
 ('2015-09-24 04:21:18', 1, 68),
 ('2015-12-04 22:48:32', 1, 69),
 ('2016-02-22 06:18:25', 1, 73),
-('2016-02-22 06:18:28', 1, 77);
+('2016-02-22 06:18:28', 1, 77),
+('2018-10-08 06:36:39', 1, 78),
+('2018-10-08 06:36:43', 1, 79),
+('2018-10-08 06:36:45', 1, 80),
+('2018-09-11 07:46:12', 1, 81),
+('2018-09-11 07:46:15', 1, 82);
 
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur für Tabelle `uebersicht_kacheln`
+-- Tabellenstruktur fÃ¼r Tabelle `uebersicht_kacheln`
 --
 
 CREATE TABLE `uebersicht_kacheln` (
@@ -913,75 +1090,77 @@ CREATE TABLE `uebersicht_kacheln` (
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci;
 
 --
--- Daten für Tabelle `uebersicht_kacheln`
+-- Daten fÃ¼r Tabelle `uebersicht_kacheln`
 --
 
 INSERT INTO `uebersicht_kacheln` (`id`, `timestamp`, `name`, `link`, `beschreibung`, `sortierung`, `active`, `cssID`, `rightID`) VALUES
 (1, '2016-02-04 08:08:04', 'Adressbuch', '/flatnet2/datenbank/datenbanken.php', 'Zeigt ein einfaches Adressbuch an.', 1, 1, 'adressbuch', 13),
 (3, '2016-02-04 08:08:08', 'Forum', '/flatnet2/forum/index.php', 'Zeigt ein Forum an', 2, 1, 'forum', 13),
-(8, '2016-02-04 08:08:11', 'Guildwars', '/flatnet2/guildwars/start.php', 'Verwaltung für Guildwars Charakter und Handwerk', 3, 1, 'guildwars', 3),
-(9, '2016-02-04 08:08:14', 'Finanzbereich', '/flatnet2/finanzen/index.php', 'Eine Finanzverwaltung für langfristige Budget-Planung', 4, 1, 'finanzen', 17),
-(12, '2015-12-06 20:59:50', 'Geburtstagskalender', '/flatnet2/datenbank/kalender.php', 'Basis Geburtstagskalender', 100, 1, 'gebkalender', 22);
+(8, '2016-02-04 08:08:11', 'Guildwars', '/flatnet2/guildwars/start.php', 'Verwaltung fÃ¼r Guildwars Charakter und Handwerk', 3, 1, 'guildwars', 3),
+(9, '2016-02-04 08:08:14', 'Finanzbereich', '/flatnet2/finanzen/index.php', 'Eine Finanzverwaltung fÃ¼r langfristige Budget-Planung', 4, 1, 'finanzen', 17),
+(12, '2015-12-06 20:59:50', 'Geburtstagskalender', '/flatnet2/datenbank/kalender.php', 'Basis Geburtstagskalender', 100, 1, 'gebkalender', 22),
+(13, '2018-10-09 06:25:08', 'Toyota', '/flatnet2/toyota/index.php', 'Toyota Bereich', 100, 0, 'toyota', 81),
+(14, '2018-10-08 06:36:23', 'Planner', '/flatnet2/planner/index.php', 'Event Planner', 5000, 1, 'planner', 78);
 
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur für Tabelle `userrights`
+-- Tabellenstruktur fÃ¼r Tabelle `userrights`
 --
 
 CREATE TABLE `userrights` (
   `id` int(11) NOT NULL,
   `timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'Erstellungsdatum',
-  `kategorie` int(11) NOT NULL COMMENT 'Ermöglicht eine Kategorisierung',
+  `kategorie` int(11) NOT NULL COMMENT 'ErmÃ¶glicht eine Kategorisierung',
   `recht` text COLLATE latin1_general_ci NOT NULL,
   `potenz` int(11) NOT NULL,
   `dezimalerWert` bigint(20) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci;
 
 --
--- Daten für Tabelle `userrights`
+-- Daten fÃ¼r Tabelle `userrights`
 --
 
 INSERT INTO `userrights` (`id`, `timestamp`, `kategorie`, `recht`, `potenz`, `dezimalerWert`) VALUES
 (2, '2015-08-20 17:29:03', 3, 'SEHEN: Forum', 1, 2),
 (3, '2015-08-20 17:29:10', 5, 'Guildwarsbereich sehen', 2, 4),
-(7, '2015-08-20 17:29:25', 1, 'Übersicht, Profil sehen', 0, 1),
-(8, '2015-09-23 05:47:26', 4, 'SEHEN: Ankündigungshauptseite', 6, 64),
+(7, '2015-08-20 17:29:25', 1, 'Ãœbersicht, Profil sehen', 0, 1),
+(8, '2015-09-23 05:47:26', 4, 'SEHEN: AnkÃ¼ndigungshauptseite', 6, 64),
 (9, '2015-08-20 17:29:39', 5, 'DO: Allgemeines Schreibrecht innerhalb des GW Bereichs', 5, 32),
-(10, '2015-08-20 17:29:50', 2, 'SEHEN: Betrachten FREMDER nicht veröffentlichter Foreneinträge', 4, 16),
-(11, '2015-09-22 09:42:43', 8, 'WATCH: Betrachten des Fahrkosten-Bereichs', 7, 128),
-(12, '2015-09-22 09:43:06', 8, 'DO: Fahrkostenbereich bearbeiten', 8, 256),
+(10, '2015-08-20 17:29:50', 2, 'SEHEN: Betrachten FREMDER nicht verÃ¶ffentlichter ForeneintrÃ¤ge', 4, 16),
+(11, '2015-09-22 09:42:43', 8, 'Leeres Recht', 0, 0),
+(12, '2015-09-22 09:43:06', 8, 'Leeres Recht', 0, 0),
 (13, '2015-08-20 17:30:08', 7, 'WATCH: Adressbuch betrachten', 9, 512),
-(14, '2015-08-20 17:30:13', 7, 'DO: Einträge im Adressbuch bearbeiten', 10, 1024),
+(14, '2015-08-20 17:30:13', 7, 'DO: EintrÃ¤ge im Adressbuch bearbeiten', 10, 1024),
 (15, '2015-09-23 04:10:11', 2, 'Rechteverwaltung: Darf Berechtigungen erstellen', 11, 2048),
 (16, '2015-08-20 17:30:28', 5, 'DO: Handwerksmaterialien GW Bereich', 12, 4096),
 (17, '2015-08-20 17:30:34', 6, 'SEHEN: Finanzbereich', 13, 8192),
 (18, '2015-08-20 17:30:39', 6, 'DO: Finanzbereich Schreibrechte', 14, 16384),
-(19, '2015-09-23 05:47:31', 4, 'DO: Ankündigungen erstellen', 15, 32768),
+(19, '2015-09-23 05:47:31', 4, 'DO: AnkÃ¼ndigungen erstellen', 15, 32768),
 (20, '2015-08-20 17:30:52', 3, 'DO: Forum Schreibrechte', 16, 65536),
 (21, '2015-08-20 17:30:58', 5, 'ADMIN: Guildwarsbereich', 17, 131072),
 (22, '2015-08-20 17:31:07', 7, 'SEHEN: Kalender im Adressbuch', 18, 262144),
 (23, '0000-00-00 00:00:00', 1, 'DO: Darf die Suche nutzen', 0, 0),
-(24, '0000-00-00 00:00:00', 4, 'SEHEN: Ankündigung oberhalb der Seite', 0, 0),
+(24, '0000-00-00 00:00:00', 4, 'SEHEN: AnkÃ¼ndigung oberhalb der Seite', 0, 0),
 (25, '0000-00-00 00:00:00', 1, 'SEHEN: Benachrichtigungscenter', 0, 0),
 (26, '0000-00-00 00:00:00', 3, 'Forum-Admin: Hat Zugriff auf die Admin-Tools', 0, 0),
 (27, '0000-00-00 00:00:00', 3, 'Forum-Admin: Darf Themen sperren und entsperren', 0, 0),
-(28, '0000-00-00 00:00:00', 3, 'DO: Darf im Forum seine eigenen Einträge löschen', 0, 0),
-(29, '0000-00-00 00:00:00', 3, 'Forum-Admin: Darf Einträge im Forum löschen (alle Benutzer)', 0, 0),
+(28, '0000-00-00 00:00:00', 3, 'DO: Darf im Forum seine eigenen EintrÃ¤ge lÃ¶schen', 0, 0),
+(29, '0000-00-00 00:00:00', 3, 'Forum-Admin: Darf EintrÃ¤ge im Forum lÃ¶schen (alle Benutzer)', 0, 0),
 (30, '0000-00-00 00:00:00', 3, 'DO: Antworten in Themen erstellen', 0, 0),
 (31, '0000-00-00 00:00:00', 3, 'SEHEN: Antworten eines Themas', 0, 0),
-(32, '0000-00-00 00:00:00', 3, 'Forum-Admin: Benutzer darf Einträge editieren (alle Benutzer)', 0, 0),
+(32, '0000-00-00 00:00:00', 3, 'Forum-Admin: Benutzer darf EintrÃ¤ge editieren (alle Benutzer)', 0, 0),
 (33, '0000-00-00 00:00:00', 3, 'DO: Benutzer darf seine eigenen Antworten in Themen editieren', 0, 0),
-(34, '2015-09-23 03:48:21', 3, 'DO: Benutzer darf seine eigenen Antworten in Themen löschen', 0, 0),
-(35, '0000-00-00 00:00:00', 3, 'Forum-Admin: Benutzer darf Antworten in Themen löschen (alle Benutzer)', 0, 0),
+(34, '2015-09-23 03:48:21', 3, 'DO: Benutzer darf seine eigenen Antworten in Themen lÃ¶schen', 0, 0),
+(35, '0000-00-00 00:00:00', 3, 'Forum-Admin: Benutzer darf Antworten in Themen lÃ¶schen (alle Benutzer)', 0, 0),
 (36, '0000-00-00 00:00:00', 2, 'SEHEN: Administrationsbereich', 0, 0),
 (37, '2015-09-23 04:00:19', 2, 'Benutzerverwaltung: Benutzer darf die Benutzerverwaltung anzeigen', 0, 0),
 (38, '2015-09-23 04:00:14', 2, 'Benutzerverwaltung: Benutzer darf neue Benutzer anlegen', 0, 0),
 (39, '2015-09-23 04:00:09', 2, 'Benutzerverwaltung: Benutzer darf bestehende Benutzer bearbeiten', 0, 0),
-(40, '2015-09-23 04:00:05', 2, 'Benutzerverwaltung: Benutzer darf bestehende Benutzeraccounts löschen', 0, 0),
+(40, '2015-09-23 04:00:05', 2, 'Benutzerverwaltung: Benutzer darf bestehende Benutzeraccounts lÃ¶schen', 0, 0),
 (41, '2015-09-23 03:59:56', 2, 'Benutzerverwaltung: Benutzer darf alle Informationen eines Benutzers anzeigen', 0, 0),
 (42, '0000-00-00 00:00:00', 2, 'LOG: Darf das Log anzeigen', 0, 0),
-(43, '0000-00-00 00:00:00', 2, 'LOG: Darf Einträge aus dem Log löschen', 0, 0),
+(43, '0000-00-00 00:00:00', 2, 'LOG: Darf EintrÃ¤ge aus dem Log lÃ¶schen', 0, 0),
 (44, '0000-00-00 00:00:00', 2, 'Rechteverwaltung: SEHEN: Rechteverwaltung', 0, 0),
 (45, '0000-00-00 00:00:00', 2, 'Benutzerverwaltung: Darf Benutzer entsperren und sperren', 0, 0),
 (46, '0000-00-00 00:00:00', 2, 'Rechteverwaltung: Darf Berechtigungen an die Benutzer verteilen', 0, 0),
@@ -990,41 +1169,41 @@ INSERT INTO `userrights` (`id`, `timestamp`, `kategorie`, `recht`, `potenz`, `de
 (49, '0000-00-00 00:00:00', 2, 'Forumverwaltung: Darf neue Kategorien im Forum erstellen', 0, 0),
 (50, '0000-00-00 00:00:00', 2, 'Forumverwaltung: Darf bestehende Kategorien im Forum bearbeiten', 0, 0),
 (51, '0000-00-00 00:00:00', 2, 'Objektverwaltung: SEHEN: Darf die Objektverwaltung sehen und bedienen', 0, 0),
-(52, '0000-00-00 00:00:00', 2, 'Objektverwaltung: Darf Updates durchführen', 0, 0),
-(53, '0000-00-00 00:00:00', 2, 'Objektverwaltung: Darf in der ObjVerw. Einträge löschen', 0, 0),
-(54, '0000-00-00 00:00:00', 2, 'Objektverwaltung: Darf Einträge erstellen', 0, 0),
+(52, '0000-00-00 00:00:00', 2, 'Objektverwaltung: Darf Updates durchfÃ¼hren', 0, 0),
+(53, '0000-00-00 00:00:00', 2, 'Objektverwaltung: Darf in der ObjVerw. EintrÃ¤ge lÃ¶schen', 0, 0),
+(54, '0000-00-00 00:00:00', 2, 'Objektverwaltung: Darf EintrÃ¤ge erstellen', 0, 0),
 (55, '0000-00-00 00:00:00', 2, 'Objektverwaltung: Darf Objekte anzeigen', 0, 0),
 (56, '0000-00-00 00:00:00', 2, 'Objektverwaltung: Darf die Master SQL-Query-BOX verwenden', 0, 0),
 (57, '0000-00-00 00:00:00', 2, 'Registercodes: Darf die Codeverwaltung verwenden', 0, 0),
-(58, '0000-00-00 00:00:00', 2, 'Benutzerverwaltung: Darf die Informationen eines Benutzers löschen', 0, 0),
-(59, '0000-00-00 00:00:00', 7, 'DO: Einträge im Adressbuch erstellen', 0, 0),
-(60, '0000-00-00 00:00:00', 8, 'SEHEN: Statisik im Fahrtkosten-Bereich', 0, 0),
+(58, '0000-00-00 00:00:00', 2, 'Benutzerverwaltung: Darf die Informationen eines Benutzers lÃ¶schen', 0, 0),
+(59, '0000-00-00 00:00:00', 7, 'DO: EintrÃ¤ge im Adressbuch erstellen', 0, 0),
+(60, '2018-10-09 22:00:00', 8, 'Leeres Recht', 0, 0),
 (61, '0000-00-00 00:00:00', 5, 'SEHEN: Liste der GW Charakter', 0, 0),
 (62, '0000-00-00 00:00:00', 5, 'SEHEN: Kalender im GW Bereich', 0, 0),
 (63, '0000-00-00 00:00:00', 5, 'SEHEN & DO: Kostenbereich Guildwars', 0, 0),
 (64, '0000-00-00 00:00:00', 5, 'SEHEN: Statistik zu allen Charaktern', 0, 0),
-(65, '0000-00-00 00:00:00', 9, 'SEHEN: Starcitizen Hauptseite', 0, 0),
-(66, '0000-00-00 00:00:00', 4, 'LÖSCHEN: Ankündigungen', 0, 0),
+(65, '0000-00-00 00:00:00', 9, 'Leeres Recht', 0, 0),
+(66, '0000-00-00 00:00:00', 4, 'LÃ–SCHEN: AnkÃ¼ndigungen', 0, 0),
 (67, '2015-09-24 03:55:15', 2, 'SEHEN: Links zu externen Ressourcen', 0, 0),
 (68, '2015-09-24 04:20:49', 2, 'SEHEN: Rechtekategorie-Verwaltung', 0, 0),
 (69, '2015-11-05 04:39:56', 5, 'DO: Darf neue Materialien im Handwerksbereich anlegen und verwalten', 0, 0),
-(70, '2015-11-25 19:36:24', 10, 'Darf den Lernbereich sehen', 0, 0),
-(71, '2015-11-25 19:36:36', 10, 'Darf Inhalte im Lernbereich erstellen', 0, 0),
-(72, '2015-11-25 19:37:21', 10, 'ADMIN: Darf fremde Inhalte des Lernbereiches sehen und verändern', 0, 0),
-(73, '2016-02-07 20:49:17', 2, 'Darf die Übersichtkacheln administrieren', 0, 0),
-(74, '2016-02-07 20:49:30', 11, 'Darf den Gesundheitsbereich sehen', 0, 0),
-(76, '2016-02-07 20:50:13', 11, 'Darf im Gesundheitsbereich Einträge erstellen', 0, 0),
-(77, '2016-02-07 20:51:44', 2, 'Darf in der Übersicht den Status verändern', 0, 0),
-(78, '2016-10-31 14:11:57', 12, 'Darf Amazon Inhalte sehen', 0, 0),
-(79, '2016-10-31 14:12:15', 12, 'Darf Einträge in Amazon hinzufügen', 0, 0),
-(80, '2016-10-31 14:12:25', 12, 'Amazon Admin', 0, 0),
+(70, '2015-11-25 19:36:24', 10, 'Leeres Recht', 0, 0),
+(71, '2015-11-25 19:36:36', 10, 'Leeres Recht', 0, 0),
+(72, '2015-11-25 19:37:21', 10, 'Leeres Recht', 0, 0),
+(73, '2016-02-07 20:49:17', 2, 'Darf die Ãœbersichtkacheln administrieren', 0, 0),
+(74, '2016-02-07 20:49:30', 11, 'Leeres Recht', 0, 0),
+(76, '2016-02-07 20:50:13', 11, 'Leeres Recht', 0, 0),
+(77, '2016-02-07 20:51:44', 2, 'Darf in der Ãœbersicht den Status verÃ¤ndern', 0, 0),
+(78, '2016-10-31 14:11:57', 12, 'Leeres Recht', 0, 0),
+(79, '2016-10-31 14:12:15', 12, 'Leeres Recht', 0, 0),
+(80, '2016-10-31 14:12:25', 12, 'Leeres Recht', 0, 0),
 (81, '2017-01-19 06:54:18', 13, 'Darf den Toyota-Bereich sehen', 0, 0),
 (82, '2017-01-19 06:54:48', 13, 'DO: Schreibrecht im Bereich Toyota', 0, 0);
 
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur für Tabelle `vorschlaege`
+-- Tabellenstruktur fÃ¼r Tabelle `vorschlaege`
 --
 
 CREATE TABLE `vorschlaege` (
@@ -1037,24 +1216,17 @@ CREATE TABLE `vorschlaege` (
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci;
 
 --
--- Daten für Tabelle `vorschlaege`
---
-
-INSERT INTO `vorschlaege` (`id`, `timestamp`, `autor`, `text`, `status`, `ipadress`) VALUES
-(1, '2017-08-14 05:53:41', 1, 'administrator  logged in', 'login', '::1');
-
---
 -- Indizes der exportierten Tabellen
 --
 
 --
--- Indizes für die Tabelle `account_infos`
+-- Indizes fÃ¼r die Tabelle `account_infos`
 --
 ALTER TABLE `account_infos`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indizes für die Tabelle `adressbuch`
+-- Indizes fÃ¼r die Tabelle `adressbuch`
 --
 ALTER TABLE `adressbuch`
   ADD PRIMARY KEY (`id`),
@@ -1062,246 +1234,399 @@ ALTER TABLE `adressbuch`
   ADD KEY `id_2` (`id`);
 
 --
--- Indizes für die Tabelle `benutzer`
+-- Indizes fÃ¼r die Tabelle `benutzer`
 --
 ALTER TABLE `benutzer`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indizes für die Tabelle `blogkategorien`
+-- Indizes fÃ¼r die Tabelle `blogkategorien`
 --
 ALTER TABLE `blogkategorien`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indizes für die Tabelle `blogtexte`
+-- Indizes fÃ¼r die Tabelle `blogtexte`
 --
 ALTER TABLE `blogtexte`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indizes für die Tabelle `blog_kommentare`
+-- Indizes fÃ¼r die Tabelle `blog_kommentare`
 --
 ALTER TABLE `blog_kommentare`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indizes für die Tabelle `docu`
+-- Indizes fÃ¼r die Tabelle `docu`
 --
 ALTER TABLE `docu`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indizes für die Tabelle `finanzen_jahresabschluss`
+-- Indizes fÃ¼r die Tabelle `eventadministrators`
+--
+ALTER TABLE `eventadministrators`
+  ADD PRIMARY KEY (`eventid`,`userid`);
+
+--
+-- Indizes fÃ¼r die Tabelle `eventcodeusage`
+--
+ALTER TABLE `eventcodeusage`
+  ADD PRIMARY KEY (`codeid`,`userid`) USING BTREE;
+
+--
+-- Indizes fÃ¼r die Tabelle `eventguests`
+--
+ALTER TABLE `eventguests`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indizes fÃ¼r die Tabelle `eventinvitecodes`
+--
+ALTER TABLE `eventinvitecodes`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indizes fÃ¼r die Tabelle `eventlist`
+--
+ALTER TABLE `eventlist`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indizes fÃ¼r die Tabelle `eventtexts`
+--
+ALTER TABLE `eventtexts`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indizes fÃ¼r die Tabelle `finanzen_jahresabschluss`
 --
 ALTER TABLE `finanzen_jahresabschluss`
   ADD PRIMARY KEY (`besitzer`,`jahr`,`konto`);
 
 --
--- Indizes für die Tabelle `finanzen_konten`
+-- Indizes fÃ¼r die Tabelle `finanzen_konten`
 --
 ALTER TABLE `finanzen_konten`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indizes für die Tabelle `finanzen_monatsabschluss`
+-- Indizes fÃ¼r die Tabelle `finanzen_monatsabschluss`
 --
 ALTER TABLE `finanzen_monatsabschluss`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indizes für die Tabelle `finanzen_shares`
+-- Indizes fÃ¼r die Tabelle `finanzen_shares`
 --
 ALTER TABLE `finanzen_shares`
   ADD PRIMARY KEY (`besitzer`,`konto_id`,`target_user`);
 
 --
--- Indizes für die Tabelle `finanzen_umsaetze`
+-- Indizes fÃ¼r die Tabelle `finanzen_umsaetze`
 --
 ALTER TABLE `finanzen_umsaetze`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indizes für die Tabelle `gwcosts`
+-- Indizes fÃ¼r die Tabelle `gwcosts`
 --
 ALTER TABLE `gwcosts`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indizes für die Tabelle `gwmatlist`
+-- Indizes fÃ¼r die Tabelle `gwmatlist`
 --
 ALTER TABLE `gwmatlist`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indizes für die Tabelle `gwusersmats`
+-- Indizes fÃ¼r die Tabelle `gwusersmats`
 --
 ALTER TABLE `gwusersmats`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indizes für die Tabelle `gw_accounts`
+-- Indizes fÃ¼r die Tabelle `gw_accounts`
 --
 ALTER TABLE `gw_accounts`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indizes für die Tabelle `gw_chars`
+-- Indizes fÃ¼r die Tabelle `gw_chars`
 --
 ALTER TABLE `gw_chars`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indizes für die Tabelle `log`
+-- Indizes fÃ¼r die Tabelle `hardwaredefinition`
+--
+ALTER TABLE `hardwaredefinition`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indizes fÃ¼r die Tabelle `hardwaredeliverers`
+--
+ALTER TABLE `hardwaredeliverers`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indizes fÃ¼r die Tabelle `hardwareentries`
+--
+ALTER TABLE `hardwareentries`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indizes fÃ¼r die Tabelle `hardwaregarantietypes`
+--
+ALTER TABLE `hardwaregarantietypes`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indizes fÃ¼r die Tabelle `hardwaremanufacturers`
+--
+ALTER TABLE `hardwaremanufacturers`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indizes fÃ¼r die Tabelle `hardwaretypes`
+--
+ALTER TABLE `hardwaretypes`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indizes fÃ¼r die Tabelle `log`
 --
 ALTER TABLE `log`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indizes für die Tabelle `registercode`
+-- Indizes fÃ¼r die Tabelle `registercode`
 --
 ALTER TABLE `registercode`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indizes für die Tabelle `rightkategorien`
+-- Indizes fÃ¼r die Tabelle `rightkategorien`
 --
 ALTER TABLE `rightkategorien`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indizes für die Tabelle `rights`
+-- Indizes fÃ¼r die Tabelle `rights`
 --
 ALTER TABLE `rights`
   ADD PRIMARY KEY (`besitzer`,`right_id`);
 
 --
--- Indizes für die Tabelle `uebersicht_kacheln`
+-- Indizes fÃ¼r die Tabelle `uebersicht_kacheln`
 --
 ALTER TABLE `uebersicht_kacheln`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indizes für die Tabelle `userrights`
+-- Indizes fÃ¼r die Tabelle `userrights`
 --
 ALTER TABLE `userrights`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indizes für die Tabelle `vorschlaege`
+-- Indizes fÃ¼r die Tabelle `vorschlaege`
 --
 ALTER TABLE `vorschlaege`
   ADD PRIMARY KEY (`id`);
 
 --
--- AUTO_INCREMENT für exportierte Tabellen
+-- AUTO_INCREMENT fÃ¼r exportierte Tabellen
 --
 
 --
--- AUTO_INCREMENT für Tabelle `account_infos`
+-- AUTO_INCREMENT fÃ¼r Tabelle `account_infos`
 --
 ALTER TABLE `account_infos`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
 --
--- AUTO_INCREMENT für Tabelle `adressbuch`
+-- AUTO_INCREMENT fÃ¼r Tabelle `adressbuch`
 --
 ALTER TABLE `adressbuch`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
 --
--- AUTO_INCREMENT für Tabelle `benutzer`
+-- AUTO_INCREMENT fÃ¼r Tabelle `benutzer`
 --
 ALTER TABLE `benutzer`
-  MODIFY `id` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=52;
+  MODIFY `id` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
 --
--- AUTO_INCREMENT für Tabelle `blogkategorien`
+-- AUTO_INCREMENT fÃ¼r Tabelle `blogkategorien`
 --
 ALTER TABLE `blogkategorien`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
 --
--- AUTO_INCREMENT für Tabelle `blogtexte`
+-- AUTO_INCREMENT fÃ¼r Tabelle `blogtexte`
 --
 ALTER TABLE `blogtexte`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Primary Key';
+
 --
--- AUTO_INCREMENT für Tabelle `blog_kommentare`
+-- AUTO_INCREMENT fÃ¼r Tabelle `blog_kommentare`
 --
 ALTER TABLE `blog_kommentare`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
 --
--- AUTO_INCREMENT für Tabelle `docu`
+-- AUTO_INCREMENT fÃ¼r Tabelle `docu`
 --
 ALTER TABLE `docu`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Primary Key';
+
 --
--- AUTO_INCREMENT für Tabelle `finanzen_konten`
+-- AUTO_INCREMENT fÃ¼r Tabelle `eventguests`
+--
+ALTER TABLE `eventguests`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+
+--
+-- AUTO_INCREMENT fÃ¼r Tabelle `eventinvitecodes`
+--
+ALTER TABLE `eventinvitecodes`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
+-- AUTO_INCREMENT fÃ¼r Tabelle `eventlist`
+--
+ALTER TABLE `eventlist`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
+-- AUTO_INCREMENT fÃ¼r Tabelle `eventtexts`
+--
+ALTER TABLE `eventtexts`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
+-- AUTO_INCREMENT fÃ¼r Tabelle `finanzen_konten`
 --
 ALTER TABLE `finanzen_konten`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
 --
--- AUTO_INCREMENT für Tabelle `finanzen_monatsabschluss`
+-- AUTO_INCREMENT fÃ¼r Tabelle `finanzen_monatsabschluss`
 --
 ALTER TABLE `finanzen_monatsabschluss`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
 --
--- AUTO_INCREMENT für Tabelle `finanzen_umsaetze`
+-- AUTO_INCREMENT fÃ¼r Tabelle `finanzen_umsaetze`
 --
 ALTER TABLE `finanzen_umsaetze`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
 --
--- AUTO_INCREMENT für Tabelle `gwcosts`
+-- AUTO_INCREMENT fÃ¼r Tabelle `gwcosts`
 --
 ALTER TABLE `gwcosts`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
 --
--- AUTO_INCREMENT für Tabelle `gwmatlist`
+-- AUTO_INCREMENT fÃ¼r Tabelle `gwmatlist`
 --
 ALTER TABLE `gwmatlist`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=422;
+
 --
--- AUTO_INCREMENT für Tabelle `gwusersmats`
+-- AUTO_INCREMENT fÃ¼r Tabelle `gwusersmats`
 --
 ALTER TABLE `gwusersmats`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
 --
--- AUTO_INCREMENT für Tabelle `gw_accounts`
+-- AUTO_INCREMENT fÃ¼r Tabelle `gw_accounts`
 --
 ALTER TABLE `gw_accounts`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
 --
--- AUTO_INCREMENT für Tabelle `gw_chars`
+-- AUTO_INCREMENT fÃ¼r Tabelle `gw_chars`
 --
 ALTER TABLE `gw_chars`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
 --
--- AUTO_INCREMENT für Tabelle `log`
+-- AUTO_INCREMENT fÃ¼r Tabelle `hardwaredefinition`
+--
+ALTER TABLE `hardwaredefinition`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT fÃ¼r Tabelle `hardwaredeliverers`
+--
+ALTER TABLE `hardwaredeliverers`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT fÃ¼r Tabelle `hardwareentries`
+--
+ALTER TABLE `hardwareentries`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT fÃ¼r Tabelle `hardwaregarantietypes`
+--
+ALTER TABLE `hardwaregarantietypes`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT fÃ¼r Tabelle `hardwaremanufacturers`
+--
+ALTER TABLE `hardwaremanufacturers`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT fÃ¼r Tabelle `hardwaretypes`
+--
+ALTER TABLE `hardwaretypes`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
+-- AUTO_INCREMENT fÃ¼r Tabelle `log`
 --
 ALTER TABLE `log`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
 --
--- AUTO_INCREMENT für Tabelle `registercode`
+-- AUTO_INCREMENT fÃ¼r Tabelle `registercode`
 --
 ALTER TABLE `registercode`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
 --
--- AUTO_INCREMENT für Tabelle `rightkategorien`
+-- AUTO_INCREMENT fÃ¼r Tabelle `rightkategorien`
 --
 ALTER TABLE `rightkategorien`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
+
 --
--- AUTO_INCREMENT für Tabelle `uebersicht_kacheln`
+-- AUTO_INCREMENT fÃ¼r Tabelle `uebersicht_kacheln`
 --
 ALTER TABLE `uebersicht_kacheln`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
+
 --
--- AUTO_INCREMENT für Tabelle `userrights`
+-- AUTO_INCREMENT fÃ¼r Tabelle `userrights`
 --
 ALTER TABLE `userrights`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=83;
+
 --
--- AUTO_INCREMENT für Tabelle `vorschlaege`
+-- AUTO_INCREMENT fÃ¼r Tabelle `vorschlaege`
 --
 ALTER TABLE `vorschlaege`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;COMMIT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
