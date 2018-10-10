@@ -1194,8 +1194,8 @@ INSERT INTO `userrights` (`id`, `timestamp`, `kategorie`, `recht`, `potenz`, `de
 (74, '2016-02-07 20:49:30', 11, 'Leeres Recht', 0, 0),
 (76, '2016-02-07 20:50:13', 11, 'Leeres Recht', 0, 0),
 (77, '2016-02-07 20:51:44', 2, 'Darf in der Übersicht den Status verändern', 0, 0),
-(78, '2016-10-31 14:11:57', 12, 'Leeres Recht', 0, 0),
-(79, '2016-10-31 14:12:15', 12, 'Leeres Recht', 0, 0),
+(78, '2016-10-31 14:11:57', 12, 'Uebersicht Kacheln ansehen', 0, 0),
+(79, '2016-10-31 14:12:15', 12, 'Super Administrator', 0, 0),
 (80, '2016-10-31 14:12:25', 12, 'Leeres Recht', 0, 0),
 (81, '2017-01-19 06:54:18', 13, 'Darf den Toyota-Bereich sehen', 0, 0),
 (82, '2017-01-19 06:54:48', 13, 'DO: Schreibrecht im Bereich Toyota', 0, 0);

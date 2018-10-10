@@ -1069,6 +1069,10 @@ blockquote {
 .navigationReiter li a:hover {
     color: blue;
 }
+.separateDivBox {
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
 .newFahrt {
     border: 1px solid grey;
     box-shadow: 5px 5px 5px grey;
