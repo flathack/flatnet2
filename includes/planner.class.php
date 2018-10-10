@@ -119,18 +119,13 @@ class Planner Extends Functions
             echo "<h2>Event Management</h2>";
             echo "<p>Hier können Events angelegt und verwaltet werden</p>";
 
-            echo "<div class='separateDivBox'>";
             $this->listAllEventAdministrators();
-            $this->createNewEvent();
             $this->listAllEvents();
 
             if (isset($_SESSION['eventid'])) {
-                $this->addGuests();
                 $this->showEventMembers($_SESSION['eventid']);
-                $this->addInviteCode($_SESSION['eventid']);
                 $this->showInviteCodes($_SESSION['eventid']);
             }
-            echo "</div>"; // separateDivBox END
             echo "</div>"; // newFahrt       END
         }
     }
@@ -184,12 +179,14 @@ class Planner Extends Functions
     function listAllEvents() 
     {
 
+        
         // Event aus Liste als aktiv markieren:
         if (isset($_GET['active'])) {
             $this->setActive($_GET['active']);
         }
         echo "<div class='separateDivBox'>";
         echo "<h3>Alle Veranstaltungen</h3>";
+        $this->createNewEvent();
         $allevents = $this->sqlselect("SELECT * FROM eventlist");
 
         echo "<table class='kontoTable'>";
@@ -299,10 +296,11 @@ class Planner Extends Functions
      */
     function listAllEventAdministrators() 
     {
-        $this->createNewAdminOfEvent();
-        $this->deleteAdminOfEvent();
         echo "<div class='separateDivBox'>";
         echo "<h3>Administratoren</h3>";
+        
+        $this->createNewAdminOfEvent();
+        $this->deleteAdminOfEvent();
         $events = $this->sqlselect("SELECT id, eventname FROM eventlist");
         echo "<table class='kontoTable'>";
         for ($i = 0; $i < sizeof($events); $i++) {
@@ -326,6 +324,8 @@ class Planner Extends Functions
      */
     function createNewAdminOfEvent() 
     {
+        
+        echo "<div class=''>";
         // SPEICHERUNG
         if (isset($_GET['newuserid']) AND isset($_GET['neweventid'])) {
             $eventid = $_GET['neweventid'];
@@ -362,8 +362,6 @@ class Planner Extends Functions
         }
 
         // AUSGABE
-        echo "<div class='separateDivBox'>";
-        echo "<h3>Neuen Administrator erstellen</h3>";
         $eventlist = $this->sqlselect("SELECT * FROM eventlist");
         $userlist = $this->sqlselect("SELECT * FROM benutzer");
 
@@ -411,8 +409,7 @@ class Planner Extends Functions
         }
 
         // AUSGABE
-        echo "<div class='separateDivBox'>";
-        echo "<h3>Neue Veranstaltung</h3>";
+        echo "<div class=''>";
         echo "<form method=post />";
         echo "<input type=text name=eventname placeholder=Event-Name required />";
         echo "<button type=submit>OK</button>";
@@ -568,9 +565,8 @@ class Planner Extends Functions
         }
         
         // AUSGABE
-        echo "<div class='separateDivBox'>";
+        echo "<div class=''>";
         echo "<form method=post>";
-        echo "<h2>Gast hinzufügen</h2>";
         echo "<input type=text name=guestname placeholder=Gastname required />";
         echo "<input type=text name=guestmail placeholder=Mailadresse />";
         echo "<button type=submit>OK</button>";
@@ -588,7 +584,7 @@ class Planner Extends Functions
     function addInviteCode(int $eventid) 
     {
         
-        echo "<div class='separateDivBox'>";
+        echo "<div class=''>";
         // SPEICHERUNG
         if (isset($_POST['code'])) {
             $code = strip_tags(stripslashes($_POST['code']));
@@ -616,7 +612,6 @@ class Planner Extends Functions
 
         // AUSGABE
         echo "<form method=post>";
-        echo "<h2>Einladungscode hinzufügen</h2>";
         echo "<input type=text name=code placeholder=Code required />";
         echo "<button type=submit>OK</button>";
         echo "</form>";
@@ -633,8 +628,11 @@ class Planner Extends Functions
      */
     function showInviteCodes(int $eventid)
     {
-        $this->deleteCodeOfEvent();
         echo "<div class='separateDivBox'>";
+        
+        echo "<h3>Codeliste</h3>";
+        $this->addInviteCode($eventid);
+        $this->deleteCodeOfEvent();
         $codeslist = $this->sqlselect("SELECT * FROM eventinvitecodes WHERE eventid=$eventid");
         
         echo "<table class='kontoTable'>";
@@ -825,7 +823,25 @@ class Planner Extends Functions
      */
     function deleteEventGuest()
     {
+        if (isset($_GET['delUser']) AND isset($_GET['eventid'])) {
+            $userid = $_GET['delUser'];
+            $eventid = $_GET['eventid'];
 
+            if (is_numeric($userid) == true AND is_numeric($eventid) == true) {
+                if ($this->checkEventOwner($eventid) == true) {
+
+                    $sql = "DELETE FROM eventguests WHERE id=$userid AND eventid=$eventid LIMIT 1";
+                    if ($this->sqlInsertUpdateDelete($sql) == true) {
+                        echo "<p class='erfolg'>Der Gast wurde erfolgreich gelöscht.</p>";
+
+                    } else {
+                        echo "<p class='meldung'>Gast konnte nicht gelöscht werden.</p>";
+                    }
+                } else {
+                    echo "<p class='meldung'>Du hast nicht die Berechtigung einen Gast zu löschen.</p>";
+                }
+            }
+        }
     }
 
     /**
@@ -857,14 +873,23 @@ class Planner Extends Functions
      */
     function showEventMembers(int $eventid) 
     {
-        
         $memberlist = $this->sqlselect("SELECT * FROM eventguests WHERE eventid=$eventid");
         if ($this->checkEventOwner($eventid) == true) { 
             $owner = true;
         } else {
             $owner = false;
         }
-        echo "<h2>Gästeliste</h2>";
+
+        if ($owner == true) { 
+            $this->deleteEventGuest();
+            $this->zusageGuest();
+            $this->absageGuest();
+        }
+        
+        echo "<h3>Gästeliste</h3>";
+        if ($owner == true) { 
+            $this->addGuests();
+        }
         echo "<table class='kontoTable'>";
         echo "<thead>";
         echo "<td>Name</td>";

@@ -1072,6 +1072,9 @@ blockquote {
 .separateDivBox {
     margin-top: 20px;
     margin-bottom: 20px;
+    border-bottom: 2px solid gray;
+    padding-bottom: 5px;
+    padding-top: 5px;
 }
 .newFahrt {
     border: 1px solid grey;
