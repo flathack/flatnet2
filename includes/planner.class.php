@@ -29,7 +29,7 @@ require 'objekt/functions.class.php';
 class Planner Extends Functions
 {
     /**
-     * Comment
+     * Eventseite
      * 
      * @return void
      */
@@ -54,7 +54,7 @@ class Planner Extends Functions
     }
 
     /**
-     * Comment
+     * Startseite des Logins für den Event Planner
      * Index.php
      * 
      * @return void
@@ -69,6 +69,369 @@ class Planner Extends Functions
         }
         $this->eventSelector();
         $this->showFooter();
+    }
+
+    /**
+     * Administrationsstartseite
+     * 
+     * @return void
+     */
+    function mainEventAdministration() 
+    {
+        
+        $this->eventNavigation();
+        echo "<div class='innerBody'>";
+
+        if (!isset($_SESSION['username'])) {
+            echo "<p class='hinweis'>Um diese Seite zu sehen musst du an der Hauptseite angemeldet sein.</p>";
+        }
+
+        // Ansicht für Super Administratoren des Event Bereichs
+        if (isset($_SESSION['username'])) {
+            $this->superAdministration();
+        }
+        
+        // Ansicht für Administratoren eines Events
+        if (isset($_SESSION['username'])) {
+            if ($this->userHasRight(79, 0)) {
+                echo "<p class='hinweis'>Basic Administration ausgeblendet.</p>";
+            } else {
+                $this->basicEventsAdministration();
+            }
+        }
+        
+        echo "</div>";
+       
+
+        // Footer
+        $this->showFooter();
+    }
+
+    /**
+     * Comment
+     * 
+     * @return void
+     */
+    function superAdministration() 
+    {
+        if ($this->userHasRight(79, 0)) {
+            echo "<div class='newFahrt'>";
+            echo "<h2>Event Management</h2>";
+            echo "<p>Hier können Events angelegt und verwaltet werden</p>";
+
+            echo "<div class='separateDivBox'>";
+            $this->listAllEventAdministrators();
+            $this->createNewEvent();
+            $this->listAllEvents();
+
+            if (isset($_SESSION['eventid'])) {
+                $this->addGuests();
+                $this->showEventMembers($_SESSION['eventid']);
+                $this->addInviteCode($_SESSION['eventid']);
+                $this->showInviteCodes($_SESSION['eventid']);
+            }
+            echo "</div>"; // separateDivBox END
+            echo "</div>"; // newFahrt       END
+        }
+    }
+
+    /**
+     * Administration für Event Administratoren.
+     * 
+     * @return void
+     */
+    function basicEventsAdministration() 
+    {
+        if (isset($_SESSION['eventid'])) {
+            if ($this->checkEventOwner($_SESSION['eventid']) == true) {
+                echo "<div class='newFahrt'>";
+                $eventname = $this->getEventname($_SESSION['eventid']);
+                echo "<h2> " . $eventname . " Event Administration</h2>";
+                echo "<p>Hier kannst du dein eigenes Event administrieren.</p>";
+
+                $this->addGuests();
+                $this->showEventMembers($_SESSION['eventid']);
+
+                echo "</div>";
+            }
+            
+        }
+    }
+
+    /**
+     * Markiert ein Event als Aktiv
+     * 
+     * @param int $eventid EventID welches aktiviert werden soll
+     * 
+     * @return true
+     */
+    function setActive(int $eventid) 
+    {
+        // echo "<div class='hinweis'>";
+        if (isset($_SESSION['eventid'])) {
+            // echo "Derzeit Aktiv: " . $_SESSION['eventid'] . " <br> ";
+        }
+        // echo "Wird neu gesetzt: $eventid";
+        $_SESSION['eventid'] = $eventid;
+        // echo "</div>";
+    }
+
+    /**
+     * Listet alle auf dem Server verfügbaren Events auf.
+     * 
+     * @return void
+     */
+    function listAllEvents() 
+    {
+
+        // Event aus Liste als aktiv markieren:
+        if (isset($_GET['active'])) {
+            $this->setActive($_GET['active']);
+        }
+        echo "<div class='separateDivBox'>";
+        echo "<h3>Alle Veranstaltungen</h3>";
+        $allevents = $this->sqlselect("SELECT * FROM eventlist");
+
+        echo "<table class='kontoTable'>";
+        echo "<thead>";
+            echo "<td>ID</td><td>Datum</td><td>Name</td><td>Optionen</td>";
+        echo "</thead>";
+        for ($i = 0; $i < sizeof($allevents); $i++) {
+            $currentevent = 0;
+            // Checken ob aktuelles Event dem aus der Liste entspricht:
+            if (isset($_SESSION['eventid'])) {
+                if ($_SESSION['eventid'] == $allevents[$i]->id) {
+                    $currentevent = 1;
+                    $css = "yellow";
+                } else {
+                    $css = "";
+                }
+            } else {
+                $css = "";
+            }
+            
+            echo "<tbody id='$css'>";
+                echo "<td>" . $allevents[$i]->id . "</td>";
+                echo "<td>" . $allevents[$i]->timestamp . "</td>";
+                echo "<td>" . $allevents[$i]->eventname . "</td>";
+            if ($currentevent == 1) {
+                echo "<td>" . "<a class='greenLink'>aktiv</a>" . "</td>";
+            } else {
+                echo "<td>" . "<a class='buttonlink' href='?active=" . $allevents[$i]->id . "'>als aktiv markieren</a>" . "</td>";
+            }
+            echo "</tbody>";
+        }
+        echo "</table>";
+        echo "</div>";
+    }
+
+    /**
+     * Löscht einen Admin von einem Event
+     * 
+     * @return void
+     */
+    function deleteAdminOfEvent() 
+    {
+        if (isset($_GET['deladmin'])) {
+            if (isset($_GET['eventid'])) {
+                $userid = $_GET['deladmin'];
+                $eventid = $_GET['eventid'];
+                if (is_numeric($userid) == true AND is_numeric($eventid) == true) {
+                    $sql = "DELETE FROM eventadministrators WHERE userid=$userid AND eventid=$eventid LIMIT 1";
+                    if ($this->sqlInsertUpdateDelete($sql) == true) {
+                        echo "<p class='erfolg'>Administrator gelöscht.</p>";
+                    } else {
+                        echo "<p class='meldung'>Admin kann nicht gelöscht werden.</p>";
+                    }
+                }
+            }
+        }
+    }
+
+    /**
+     * Löscht einen InviteCode eines Events
+     * 
+     * @return void
+     */
+    function deleteCodeOfEvent()
+    {
+        if (isset($_GET['delInvCode'])) {
+            if (isset($_GET['eventid'])) {
+                $code = $_GET['delInvCode'];
+                $eventid = $_GET['eventid'];
+                if (is_numeric($code) == true AND is_numeric($eventid) == true) {
+                    $sql = "DELETE FROM eventinvitecodes WHERE eventid=$eventid AND id=$code LIMIT 1";
+
+                    // CODE USAGE LÖSCHEN
+                    $codeusages = $this->sqlselect("SELECT * FROM eventcodeusage WHERE codeid=$code");
+                    if (isset($codeusages[0]->codeid)) {
+                        $sql2 = "DELETE FROM eventcodeusage WHERE codeid=$code";
+                        if ($this->sqlInsertUpdateDelete($sql2) == true) {
+                            echo "<p class='erfolg'>Code Referenzen gelöscht</p>";
+                            $coderefs = true;
+                        } else {
+                            $coderefs = false;
+                            echo "<p class='meldung'>Code Referenzen konnten nicht gelöscht werden.</p>";
+                        }
+                    } else {
+                        echo "<p class='erfolg'>Code Referenzen nicht vorhanden.</p>";
+                        $coderefs = true;
+                    }
+                    
+                    if ($coderefs == true) {
+                        if ($this->sqlInsertUpdateDelete($sql) == true) {
+                            echo "<p class='erfolg'>Code gelöscht.</p>";
+                        } else {
+                            echo "<p class='meldung'>Code kann nicht gelöscht werden.</p>";
+                        }
+                    } else {
+                        echo "<p class='meldung'>Code kann nicht gelöscht werden, weil die Codeusages nicht gelöscht werden können.</p>";
+                    }
+                }
+            }
+        }
+    }
+
+    /**
+     * Listet alle Administratoren aller Events auf.
+     * 
+     * @return void
+     */
+    function listAllEventAdministrators() 
+    {
+        $this->createNewAdminOfEvent();
+        $this->deleteAdminOfEvent();
+        echo "<div class='separateDivBox'>";
+        echo "<h3>Administratoren</h3>";
+        $events = $this->sqlselect("SELECT id, eventname FROM eventlist");
+        echo "<table class='kontoTable'>";
+        for ($i = 0; $i < sizeof($events); $i++) {
+            $eventid = $events[$i]->id;
+        
+            echo "<thead><td> EventID : " .$events[$i]->id. "</td><td>". $this->getEventname($events[$i]->id) ."</td><td></td></thead>";
+            $admins = $this->sqlselect("SELECT * FROM eventadministrators WHERE eventid=$eventid");
+
+            for ($j = 0; $j < sizeof($admins); $j++) {
+                echo "<tbody><td>UserID : ".$admins[$j]->userid."</td><td>" . $this->getUserName($admins[$j]->userid) . "</td><td><a class='rightRedLink' href='?deladmin=".$admins[$j]->userid."&eventid=" .$events[$i]->id. "'>X</a></td></tbody>";
+            }
+        }
+        echo "</table>";
+        echo "</div>";
+    }
+
+    /**
+     * Erstellt einen neuen Administrator eines Events
+     * 
+     * @return void
+     */
+    function createNewAdminOfEvent() 
+    {
+        // SPEICHERUNG
+        if (isset($_GET['newuserid']) AND isset($_GET['neweventid'])) {
+            $eventid = $_GET['neweventid'];
+            $userid = $_GET['newuserid'];
+
+            if (is_numeric($eventid) == true AND is_numeric($userid) == true) {
+                // Check ob User existiert:
+                $correctuserid = $this->sqlselect("SELECT id,Name FROM benutzer WHERE id=$userid LIMIT 1");
+                if (isset($correctuserid[0]->id)) {
+                    // Benutzer existiert
+                    $newuserid = $correctuserid[0]->id;
+
+                    // Check ob Event existiert:
+                    $correcteventid = $this->sqlselect("SELECT id,eventname FROM eventlist WHERE id=$eventid LIMIT 1");
+                    if (isset($correcteventid[0]->id)) {
+                        // Event existiert
+                        $neweventid = $correcteventid[0]->id;
+
+                        $sql = "INSERT INTO eventadministrators (eventid, userid) VALUES ('$neweventid','$newuserid')";
+                        if ($this->sqlInsertUpdateDelete($sql) == true) {
+                            echo "<p class='erfolg'>Administrator gespeichert</p>";
+                        } else {
+                            echo "<p class='meldung'>Fehler beim speichern des neuen Administrators</p>";
+                        }
+                    } else {
+                        echo "<p class='meldung'>Das Event existiert nicht.</p>";
+                    }
+                } else {
+                    echo "<p class='meldung'>Benutzer existiert nicht.</p>";
+                }
+
+
+            }
+        }
+
+        // AUSGABE
+        echo "<div class='separateDivBox'>";
+        echo "<h3>Neuen Administrator erstellen</h3>";
+        $eventlist = $this->sqlselect("SELECT * FROM eventlist");
+        $userlist = $this->sqlselect("SELECT * FROM benutzer");
+
+        echo "<form method=get>";
+        echo "<select name=neweventid>";
+        for ($i = 0; $i < sizeof($eventlist); $i++) {
+            echo "<option value=".$eventlist[$i]->id.">".$eventlist[$i]->eventname."</option>";
+        }
+        echo "</select>";
+
+        echo "<select name=newuserid>";
+        for ($j = 0; $j < sizeof($userlist); $j++) {
+            echo "<option value=".$userlist[$j]->id.">".$userlist[$j]->Name."</option>";
+        }
+        echo "</select>";
+        echo "<button type=submit>OK</button>";
+        echo "</form>";
+
+        echo "<div>";
+    }
+
+    /**
+     * Erstellt ein neues Event
+     * 
+     * @return void
+     */
+    function createNewEvent() 
+    {
+        // SPEICHERUNG
+        if (isset($_POST['eventname'])) {
+            $eventname = strip_tags(stripslashes($_POST['eventname']));
+            $eventname = str_replace(' ', '-', $eventname);
+            $neweventname = preg_replace('/[^A-Za-z0-9\-]/', '', $eventname);
+            if (strlen($neweventname) > 5) {
+                
+                $sql = "INSERT INTO eventlist (eventname) VALUES ('$neweventname')";
+                if ($this->sqlInsertUpdateDelete($sql) == true) {
+                    echo "<p class='erfolg'>Erstellt.</p>";
+                } else {
+                    echo "<p class='meldung'>Fehler beim speichern ($neweventname)</p>";
+                }
+            } else {
+                echo "<p class='hinweis'>Name muss mehr als 5 Zeichen haben.</p>";
+            }
+        }
+
+        // AUSGABE
+        echo "<div class='separateDivBox'>";
+        echo "<h3>Neue Veranstaltung</h3>";
+        echo "<form method=post />";
+        echo "<input type=text name=eventname placeholder=Event-Name required />";
+        echo "<button type=submit>OK</button>";
+        echo "</form>";
+        echo "</div>";
+    }
+
+    /**
+     * Gibt den Namen des Events zurück.
+     * 
+     * @param int $eventid ID des Events
+     * 
+     * @return string
+     */
+    function getEventname(int $eventid) 
+    {
+        $eventname = $this->sqlselect("SELECT id, eventname FROM eventlist WHERE id=$eventid LIMIT 1");
+
+        return $eventname[0]->eventname;
     }
 
     /**
@@ -105,7 +468,7 @@ class Planner Extends Functions
             echo "<a href='/flatnet2/includes/logout.php'> Abmelden </a></p>";
             echo "<ul>";
                 
-            if ($this->userHasRight(36, 0) == "true") {
+            if ($this->userHasRight(36, 0) == true) {
                 echo "<li><a href='/flatnet2/admin/control.php'>Admin </a></li>";
                 echo "<li><a href='/flatnet2/informationen/impressum.php'>Impressum </a></li>";
                 echo "<li><a href='/flatnet2/uebersicht.php'>&Uuml;bersicht </a></li>";
@@ -140,8 +503,12 @@ class Planner Extends Functions
      */
     function showFooter() 
     {
+        // AUSGABE
         echo "<div class='innerBody'>";
-            echo "<p>EventPlanner by Steven Schödel (c) Version 9.10.2018";
+            echo "<p>EventPlanner by Steven Schödel (c) Version 9.10.2018 | ";
+            echo "<a href='/flatnet2/informationen/impressum.php'>Impressum</a>";
+
+            echo "</p>";
         echo "</div>";
     }
 
@@ -155,8 +522,11 @@ class Planner Extends Functions
         if (isset($_SESSION['username'])) {
             $this->eventAdministration();
         }
-        echo "<a class='buttonlink' href='event.php'>Event</a>";
-        echo "<a class='rightRedLink' href='index.php?eventchange'>Event verlassen</a>";
+        if (isset($_SESSION['eventid'])) {
+            echo "<a class='buttonlink' href='event.php'>" .$this->getEventname($_SESSION['eventid']). "</a>";
+        }
+        
+        echo "<a class='rightRedLink' href='index.php?eventchange'>Logout</a>";
         
     }
     /**
@@ -171,13 +541,109 @@ class Planner Extends Functions
     }
 
     /**
-     * Ermöglicht die Administration der Events die dem User zugeordnet sind.
+     * Fügt Gäste zum Event hinzu
      * 
      * @return void
      */
-    function mainEventAdministration() 
+    function addGuests() 
     {
-        $this->eventNavigation();
+        // SPEICHERUNG
+        if (isset($_POST['guestname'])) {
+            $guestname = strip_tags(stripslashes($_POST['guestname']));
+            $guestname = str_replace(' ', '-', $guestname);
+            $newguestname = preg_replace('/[^A-Za-z0-9\-]/', '', $guestname);
+            $eventid = $_SESSION['eventid'];
+
+            $mailadress = strip_tags($_POST['guestmail']);
+            if (strlen($newguestname) > 2) {
+                $sql = "INSERT INTO eventguests (guestname, guestmailaddress, eventid) VALUES ('$newguestname','$mailadress','$eventid')";
+                if ($this->sqlInsertUpdateDelete($sql) == true) {
+                    echo "<p class='erfolg'>Erfolgreich</p>";
+                } else {
+                    echo "<p class='meldung'>Gast konnte nicht hinzugefügt werden. Es gab einen Fehler beim speichern.</p>";
+                }
+            } else {
+                echo "<p class='hinweis'>Der Name des Gastes muss mehr als zwei Zeichen beinhalten.</p>";
+            }
+        }
+        
+        // AUSGABE
+        echo "<div class='separateDivBox'>";
+        echo "<form method=post>";
+        echo "<h2>Gast hinzufügen</h2>";
+        echo "<input type=text name=guestname placeholder=Gastname required />";
+        echo "<input type=text name=guestmail placeholder=Mailadresse />";
+        echo "<button type=submit>OK</button>";
+        echo "</form>";
+        echo "</div>";
+    }
+
+    /**
+     * Fügt einen neuen Code zu einem Event hinzu.
+     * 
+     * @param int $eventid ID des Events
+     * 
+     * @return void
+     */
+    function addInviteCode(int $eventid) 
+    {
+        
+        echo "<div class='separateDivBox'>";
+        // SPEICHERUNG
+        if (isset($_POST['code'])) {
+            $code = strip_tags(stripslashes($_POST['code']));
+            $code = str_replace(' ', '-', $code);
+            $newcode = preg_replace('/[^A-Za-z0-9\-]/', '', $code);
+
+            if (strlen($newcode) > 5) {
+                // CHECK IF CODE ALREADY IN USE:
+                $codealready = $this->sqlselect("SELECT * FROM eventinvitecodes WHERE eventinvitecode='$newcode' AND eventid=$eventid");
+                if (isset($codealready[0]->id)) {
+                    echo "<p class='meldung'>Der Code existiert bereits.</p>";
+                } else {
+                    $sql = "INSERT INTO eventinvitecodes (eventid, eventinvitecode) VALUES ('$eventid','$newcode')";
+                    if ($this->sqlInsertUpdateDelete($sql) == true) {
+                        echo "<p class='erfolg'>Erfolgreich</p>";
+                    } else {
+                        echo "<p class='meldung'>Code konnte nicht hinzugefügt werden. Es gab einen Fehler beim speichern.</p>";
+                    }
+                }
+                
+            } else {
+                echo "<p class='hinweis'>Der Code muss mindestens 5 Zeichen lang sein.</p>";
+            }
+        }
+
+        // AUSGABE
+        echo "<form method=post>";
+        echo "<h2>Einladungscode hinzufügen</h2>";
+        echo "<input type=text name=code placeholder=Code required />";
+        echo "<button type=submit>OK</button>";
+        echo "</form>";
+        echo "</div>";
+
+    }
+
+    /**
+     * Zeigt alle Einladungscodes für die Veranstaltung an.
+     * 
+     * @param int $eventid ID des Events
+     * 
+     * @return void
+     */
+    function showInviteCodes(int $eventid)
+    {
+        $this->deleteCodeOfEvent();
+        echo "<div class='separateDivBox'>";
+        $codeslist = $this->sqlselect("SELECT * FROM eventinvitecodes WHERE eventid=$eventid");
+        
+        echo "<table class='kontoTable'>";
+        echo "<thead><td>Code</td><td>Optionen</td></thead>";
+        for ($i = 0; $i < sizeof($codeslist); $i++) {
+            echo "<tbody><td>".$codeslist[$i]->eventinvitecode."</td><td><a href='?delInvCode=".$codeslist[$i]->id."&eventid=$eventid'>X</a></td></tbody>";
+        }
+        echo "</table>";
+        echo "</div>";
     }
 
     /**
@@ -220,7 +686,7 @@ class Planner Extends Functions
     }
 
     /**
-     * Comment
+     * LoginFeld für die Gäste der Events.
      * 
      * @return void
      */
@@ -302,9 +768,8 @@ class Planner Extends Functions
         if (isset($_SESSION['eventid'])) {
             // event und gast informationen
             //echo "<div class='newFahrt'>";
-            $eventid = $_SESSION['eventid'];
-            $eventname = $this->sqlselect("SELECT id,eventname FROM eventlist WHERE id=$eventid");
-            echo "<h1><a href='event.php'>" .$eventname[0]->eventname . "</a></h1>";
+            $eventname = $this->getEventname($_SESSION['eventid']);
+            echo "<h1><a href='event.php'>" .$eventname . "</a></h1>";
             echo "<h2>Hallo " . $_SESSION['eventguest'] . ", schön dich hier zu sehen!</h2>";
             
             echo "<div class='rightBody'>";
@@ -326,17 +791,61 @@ class Planner Extends Functions
      */
     function checkEventOwner(int $eventid) 
     {
-        $administrator = $this->sqlselect("SELECT * FROM eventlist WHERE id=$eventid LIMIT 1");
+        $administrator = $this->sqlselect("SELECT * FROM eventadministrators WHERE eventid=$eventid");
+        $found = 0;
         if (isset($_SESSION['username'])) {
-            $loggedinuser = $this->getUserID($_SESSION['username']);
-            if ($loggedinuser == $administrator[0]->eventowner) {
+            if ($this->userHasRight(78, 0) == true) {
+                // Benutzer ist SuperAdmin, daher darf er alles.
                 return true;
+                $found = 1;
             } else {
-                return false;
+                $loggedinuser = $this->getUserID($_SESSION['username']);
+                for ($i = 0; $i < sizeof($administrator); $i++) {
+                    if ($loggedinuser == $administrator[$i]->userid) {
+                        return true;
+                        $found = 1;
+                    }
+                }
+    
+                // Wenn kein EventAdministrator gefunden wird, false zurückgeben:
+                if ($found == 0) {
+                    return false;
+                }
             }
+            
         } else {
             return false;
         }
+    }
+
+    /**
+     * Löscht einen Gast aus einem Event
+     * 
+     * @return void
+     */
+    function deleteEventGuest()
+    {
+
+    }
+
+    /**
+     * Setzt die ZusageOption eines Gastes auf Zusage.
+     * 
+     * @return void
+     */
+    function zusageGuest()
+    {
+
+    }
+
+    /**
+     * Setzt die ZusageOption eines Gastes auf Absage.
+     * 
+     * @return void
+     */
+    function absageGuest()
+    {
+
     }
 
     /**
@@ -350,23 +859,38 @@ class Planner Extends Functions
     {
         
         $memberlist = $this->sqlselect("SELECT * FROM eventguests WHERE eventid=$eventid");
+        if ($this->checkEventOwner($eventid) == true) { 
+            $owner = true;
+        } else {
+            $owner = false;
+        }
         echo "<h2>Gästeliste</h2>";
         echo "<table class='kontoTable'>";
         echo "<thead>";
-            echo "<td>Name</td>";
-        if ($this->checkEventOwner($eventid) == true) {
+        echo "<td>Name</td>";
+        // RESTRICTED START
+        if ($owner == true) { 
             echo "<td>Mail</td>";
             echo "<td>Eingeloggt</td>";
-        }
-            
-            echo "<td>Zusage</td>";
+        } 
+        // RESTRICTED END
+
+        echo "<td>Zusage</td>";
+
+        // RESTRICTED START
+        if ($owner == true) { 
+            echo "<td>Options</td>";
+        } 
+        // RESTRICTED END
         echo "</thead>";
         for ($i = 0; $i < sizeof($memberlist); $i++) {
             echo "<tbody>"; 
                 echo "<td>";
                     echo $memberlist[$i]->guestname;
                 echo "</td>";
-            if ($this->checkEventOwner($eventid) == true) {
+
+            // RESTRICTED START
+            if ($owner == true) {
                     echo "<td>";
                         echo $memberlist[$i]->guestmailaddress;
                     echo "</td>";
@@ -377,7 +901,9 @@ class Planner Extends Functions
                     echo "nein";
                 }
                     echo "</td>";
-            }
+            } 
+            // RESTRICTED END
+            
                 echo "<td>";
             if ($memberlist[$i]->zusage == null) {
                 echo "nein";
@@ -385,6 +911,16 @@ class Planner Extends Functions
                 echo "ja";
             }
                 echo "</td>";
+            
+            // RESTRICTED START
+            if ($owner == true) {
+                echo "<td>";
+                    echo "<a href='?zusageUser=".$memberlist[$i]->id."&eventid=".$memberlist[$i]->eventid."'>Zusage</a>";
+                    echo "<a class='rightRedLink'href='?delUser=".$memberlist[$i]->id."&eventid=".$memberlist[$i]->eventid."'>X</a>";
+                echo "</td>";
+            }
+            // RESTRICTED END
+
             echo "</tbody>";
         }
         echo "</table>";
