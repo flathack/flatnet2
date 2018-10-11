@@ -828,6 +828,22 @@ class Functions extends Sql
     }
 
     /**
+     * Entfernt aus einem String Sonderzeichen und erlaubt nur Buchstaben und Zahlen
+     * 
+     * @param string $string String der Umgewandelt werden soll.
+     * 
+     * @return string
+     */
+    function checkString(string $string)
+    {
+        $string = strip_tags(stripslashes($string));
+        $string = str_replace(' ', '-', $string);
+        $string = preg_replace('/[^A-Za-z0-9\-]/', '', $string);
+
+        return $string;
+    }
+
+    /**
      * Zeigt Diagramme mit JQUERY an.
      * 
      * @param int $zahlen Wert

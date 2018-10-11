@@ -1202,7 +1202,8 @@ input[type=radio]:not(old):checked + label > span > span {
     margin-left: auto;
     margin-right: auto;
     margin-bottom: 10px;
-    box-shadow: 0px 0px 5px black;
+    margin-top: 10px;
+    box-shadow: 5px 5px 5px grey;
     width: 700px;
     padding: 10px;
     background: white;
@@ -1537,10 +1538,9 @@ input[type=radio]:not(old):checked + label > span > span {
 }
 .buttonlink {
     display: inline-block;
-    padding: 4px 7px;
+    padding: 2px 12px;
     font-size: 1em;
     border: 1px solid #3366FF;
-    box-shadow: 0px 0px 3px #3366FF;
     margin: 0px 2px 2px 2px;
     background-color: white;
     -webkit-transition: all 0.3s ease-in-out;
@@ -1550,7 +1550,6 @@ input[type=radio]:not(old):checked + label > span > span {
     transition: all 0.3s ease-in-out;
 }
 .buttonlink:hover {
-    box-shadow: 0px 0px 5px #3366FF;
     background-color: #dfdfff;
     -webkit-transition: all 0.3s ease-in-out;
     -moz-transition: all 0.3s ease-in-out;
@@ -1569,7 +1568,6 @@ input[type=submit]:focus {
     border: 1px solid #7575ff;
     text-shadow: none;
     text-decoration: none;
-    box-shadow: 0px 0px 10px #7575ff;
 }
 .buttonlinkMarked {
     display: inline-block;
@@ -1602,10 +1600,9 @@ input[type=submit]:focus {
 }
 .greenLink {
     display: inline-block;
-    padding: 3px 12px;
+    padding: 2px 12px;
     margin-bottom: 0;
     margin-left: 2px;
-    box-shadow: 0px 0px 5px #02620a;
     color: #02620a !important;
     background-color: white;
     border: 1px solid #02620a;
@@ -1618,13 +1615,39 @@ input[type=submit]:focus {
 .greenLink:hover {
     text-decoration: none;
     border: 1px solid #02620a;
-    text-shadow: 0px 0px 10px #02620a;
+    background-color: rgb(223, 248, 223);
     -webkit-transition: all 0.3s ease-in-out;
     -moz-transition: all 0.3s ease-in-out;
     -ms-transition: all 0.3s ease-in-out;
     -o-transition: all 0.3s ease-in-out;
     transition: all 0.3s ease-in-out;
 }
+
+.grayLink {
+    display: inline-block;
+    padding: 2px 12px;
+    margin-bottom: 0;
+    margin-left: 2px;
+    color: #afafaf !important;
+    background-color: rgb(255, 255, 255);
+    border: 1px solid #747474;
+    -webkit-transition: all 0.3s ease-in-out;
+    -moz-transition: all 0.3s ease-in-out;
+    -ms-transition: all 0.3s ease-in-out;
+    -o-transition: all 0.3s ease-in-out;
+    transition: all 0.3s ease-in-out;
+}
+.grayLink:hover {
+    text-decoration: none;
+    border: 1px solid #474747;
+    background-color: rgb(194, 194, 194);
+    -webkit-transition: all 0.3s ease-in-out;
+    -moz-transition: all 0.3s ease-in-out;
+    -ms-transition: all 0.3s ease-in-out;
+    -o-transition: all 0.3s ease-in-out;
+    transition: all 0.3s ease-in-out;
+}
+
 .redLink {
     display: inline-block;
     padding: 1px 5px;
@@ -1843,9 +1866,8 @@ input[type=submit] {
     -o-transition: all 0.3s ease-in-out;
     transition: all 0.3s ease-in-out;
     background: white;
-    padding: 4px 7px 4px 7px;
+    padding: 4px 12px 4px 12px;
     border: 1px solid #3366FF;
-    box-shadow: 0px 0px 2px #3366FF;
     cursor: pointer;
     color: #3366FF;
 }
@@ -2372,9 +2394,12 @@ input[type=password]:focus {
 .mainbody {
     background-color: white;
     padding: 10px;
+    min-height: 700px;
 }
 .mainbodyDark {
     background-color: white;
+    padding: 10px;
+    min-height: 700px;
     /* #373737; */
     
     padding: 10px;
@@ -2475,7 +2500,6 @@ input[type=password]:focus {
 }
 .innerBody {
     width: 75%;
-    border-bottom: 3px solid #292929;
 }
 .innerBody #long {
     width: 40%;
@@ -2487,6 +2511,7 @@ input[type=password]:focus {
     padding: 0 10px 0 10px;
     border-left: 2px solid grey;
     font-size: 1em;
+    background-color: white;
 }
 .sqlbox {
     margin-bottom: 10px;
@@ -2553,6 +2578,11 @@ input[type=password]:focus {
     color: white;
     text-decoration: underline;
 }
+
+.rightBody #yellow {
+    background-color: #ffeb94;
+}
+
 .rightBody li {
     list-style-type: none;
     background: #dfdfdf;
@@ -2613,7 +2643,6 @@ li a:visited:hover,
     background: white;
     margin-top: 5px;
     margin-bottom: 5px;
-    box-shadow: 0px 0px 5px #9b0000;
     display: inline-block;
     width: 99%;
 }
@@ -2634,7 +2663,6 @@ li a:visited:hover,
     margin-top: 5px;
     margin-bottom: 5px;
     background: white;
-    box-shadow: 0px 0px 5px #008600;
     display: inline-block;
     width: 99%;
 }
@@ -2677,7 +2705,7 @@ li a:visited:hover,
 .forumPost {
     border-collapse: collapse;
     width: 100%;
-    box-shadow: 0px 0px 10px black;
+    box-shadow: 5px 5px 5px grey;
     margin-bottom: 10px;
 }
 .forumPost thead {
