@@ -630,7 +630,13 @@ class Planner Extends Functions
     {
         $guestname = $this->sqlselect("SELECT id,guestname FROM eventguests WHERE id=$guestid LIMIT 1");
 
-        return $guestname[0]->guestname;
+        if (isset($guestname[0]->guestname)) {
+            return $guestname[0]->guestname;
+        } else {
+            return "Gast";
+        }
+
+        
     }
 
     /**
