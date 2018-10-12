@@ -84,7 +84,7 @@ class Planner Extends Functions
         echo "<div class=''>";
 
         if (!isset($_SESSION['username'])) {
-            echo "<p class='hinweis'>Um diese Seite zu sehen musst du an der Hauptseite angemeldet sein.</p>";
+            $this->infoMessage("Um diese Seite zu sehen musst du an der Hauptseite angemeldet sein.");
         }
 
         // Ansicht für Super Administratoren des Event Bereichs
@@ -326,15 +326,15 @@ class Planner Extends Functions
 
                         $sql = "INSERT INTO eventadministrators (eventid, userid) VALUES ('$neweventid','$newuserid')";
                         if ($this->sqlInsertUpdateDelete($sql) == true) {
-                            echo "<p class='erfolg'>Administrator gespeichert</p>";
+                            $this->erfolgMessage("Administrator gespeichert");
                         } else {
-                            echo "<p class='meldung'>Fehler beim speichern des neuen Administrators</p>";
+                            $this->errorMessage("Fehler beim speichern des neuen Administrators");
                         }
                     } else {
-                        echo "<p class='meldung'>Das Event existiert nicht.</p>";
+                        $this->errorMessage("Das Event existiert nicht.");
                     }
                 } else {
-                    echo "<p class='meldung'>Benutzer existiert nicht.</p>";
+                    $this->errorMessage("Benutzer existiert nicht.");
                 }
 
 
@@ -378,19 +378,19 @@ class Planner Extends Functions
                     if ($this->objectExists("SELECT id,eventname FROM eventlist WHERE eventname='$neweventname'") == false) {
                         $sql = "INSERT INTO eventlist (eventname) VALUES ('$neweventname')";
                         if ($this->sqlInsertUpdateDelete($sql) == true) {
-                            echo "<p class='erfolg'>Event $neweventname erstellt</p>";
+                            $this->erfolgMessage("Event $neweventname erstellt");
                         } else {
-                            echo "<p class='meldung'>Fehler beim speichern ($neweventname)</p>";
+                            $this->errorMessage("Fehler beim speichern ($neweventname)");
                         }
                     } else {
-                        echo "<p class='hinweis'>Eine Veranstaltung mit dem Namen $neweventname existiert bereits.</p>";
+                        $this->infoMessage("Eine Veranstaltung mit dem Namen $neweventname existiert bereits.");
                     }
                     
                 } else {
-                    echo "<p class='hinweis'>Name muss mehr als 5 Zeichen haben.</p>";
+                    $this->infoMessage("Name muss mehr als 5 Zeichen haben.");
                 }
             } else {
-                echo "<p class='hinweis'>Du benötigst Super Administration Rechte für diese Aktion.</p>";
+                $this->infoMessage("Du benötigst Super Administration Rechte für diese Aktion.");
             }
             
         }
@@ -537,27 +537,28 @@ class Planner Extends Functions
     function addGuests() 
     {
         // SPEICHERUNG
-        if (isset($_POST['guestname']) AND isset($_POST['guestcount'])) {
+        if (isset($_POST['guestname']) AND isset($_POST['guestcount']) AND isset($_POST['fullname'])) {
             $newguestname = $this->checkString($_POST['guestname']);
             $eventid = $_SESSION['eventid'];
 
             if (is_numeric($_POST['guestcount'])) {
                 $anzahl = $_POST['guestcount'];
                 $mailadress = strip_tags($_POST['guestmail']);
+                $fullname = strip_tags($_POST['fullname']);
                 if (strlen($newguestname) > 2) {
                     if ($this->objectExists("SELECT * FROM eventguests WHERE guestname='$newguestname' AND eventid=$eventid") == false) {
-                        $sql = "INSERT INTO eventguests (guestname, guestmailaddress, eventid, anzahl) VALUES ('$newguestname','$mailadress','$eventid', '$anzahl')";
+                        $sql = "INSERT INTO eventguests (guestname, guestmailaddress, eventid, anzahl, fullname) VALUES ('$newguestname','$mailadress','$eventid', '$anzahl','$fullname')";
                         if ($this->sqlInsertUpdateDelete($sql) == true) {
-                            echo "<p class='erfolg'>$newguestname erfolgreich hinzugefügt.</p>";
+                            $this->erfolgMessage("$newguestname erfolgreich hinzugefügt.");
                         } else {
-                            echo "<p class='meldung'>Gast konnte nicht hinzugefügt werden. Es gab einen Fehler beim speichern.</p>";
+                            $this->errorMessage("Gast konnte nicht hinzugefügt werden. Es gab einen Fehler beim speichern.");
                         }
                     } else {
-                        echo "<p class='hinweis'>Ein Gast mit dem Namen existiert bereits.</p>";
+                        $this->infoMessage("Ein Gast mit dem Namen existiert bereits.");
                     }
                     
                 } else {
-                    echo "<p class='hinweis'>Der Name des Gastes muss mehr als zwei Zeichen beeinhalten.</p>";
+                    $this->infoMessage("Der Name des Gastes muss mehr als zwei Zeichen beeinhalten.");
                 }
             }            
         }
@@ -565,7 +566,8 @@ class Planner Extends Functions
         // AUSGABE
         echo "<div class=''>";
         echo "<form method=post action='administration.php#gaesteliste'>";
-        echo "<input type=text name=guestname placeholder=Gastname required />";
+        echo "<input type=text name=guestname placeholder=Login-Token* required />";
+        echo "<input type=text name=fullname placeholder=Anzeigename* required />";
         echo "<input type=number name=guestcount placeholder=Anzahl value=1 required />";
         echo "<input type=text name=guestmail placeholder=Mailadresse />";
         echo "<button type=submit>OK</button>";
@@ -586,25 +588,23 @@ class Planner Extends Functions
         echo "<div class=''>";
         // SPEICHERUNG
         if (isset($_POST['code'])) {
-            $code = strip_tags(stripslashes($_POST['code']));
-            $code = str_replace(' ', '-', $code);
-            $newcode = preg_replace('/[^A-Za-z0-9\-]/', '', $code);
+            $newcode = $this->checkString($_POST['code']);
 
             if (strlen($newcode) > 5) {
                 // CHECK IF CODE ALREADY IN USE:
                 if ($this->objectExists("SELECT * FROM eventinvitecodes WHERE eventinvitecode='$newcode' AND eventid=$eventid") == false) {
-                    echo "<p class='hinweis'>Der Code ($newcode) existiert bereits und kann nicht hinzugefügt werden.</p>";
+                    $this->infoMessage("Der Code ($newcode) existiert bereits und kann nicht hinzugefügt werden.");
                 } else {
                     $sql = "INSERT INTO eventinvitecodes (eventid, eventinvitecode) VALUES ('$eventid','$newcode')";
                     if ($this->sqlInsertUpdateDelete($sql) == true) {
-                        echo "<p class='erfolg'>Erfolgreich</p>";
+                        $this->erfolgMessage("Erfolgreich");
                     } else {
-                        echo "<p class='meldung'>Code konnte nicht hinzugefügt werden. Es gab einen Fehler beim speichern.</p>";
+                        $this->errorMessage("Code konnte nicht hinzugefügt werden. Es gab einen Fehler beim speichern.");
                     }
                 }
                 
             } else {
-                echo "<p class='hinweis'>Der Code muss mindestens 5 Zeichen lang sein.</p>";
+                $this->infoMessage("Der Code muss mindestens 5 Zeichen lang sein.");
             }
         }
 
@@ -624,9 +624,14 @@ class Planner Extends Functions
      */
     function getGuestName(int $guestid) 
     {
-        $guestname = $this->sqlselect("SELECT id,guestname FROM eventguests WHERE id=$guestid LIMIT 1");
-        if (isset($guestname[0]->guestname)) {
-            return $guestname[0]->guestname;
+        $guestname = $this->sqlselect("SELECT id,guestname,fullname FROM eventguests WHERE id=$guestid LIMIT 1");
+        if (isset($guestname[0]->fullname)) {
+            if (strlen($guestname[0]->fullname) > 1) {
+                return $guestname[0]->fullname;
+            } else {
+                return "Gast " . $guestname[0]->id;
+            }
+            
         } else {
             return "Gast";
         }
@@ -697,11 +702,11 @@ class Planner Extends Functions
 
                         $this->sqlInsertUpdateDelete("UPDATE eventguests SET loggedin=1 WHERE guestname='$username'");
                     } else {
-                        echo "<p class='hinweis'>Name ist nicht bekannt, bitte wende dich an deinen Event-Veranstalter</p>";
+                        $this->infoMessage("Name ist nicht bekannt, bitte wende dich an deinen Event-Veranstalter");
                     }
 
                 } else {
-                    echo "<p class='hinweis'>Der Einladungscode existiert nicht. Bitte wende dich an deinen Event Veranstalter.</p>";
+                    $this->infoMessage("Der Einladungscode existiert nicht. Bitte wende dich an deinen Event Veranstalter.");
                 }
             }
         }
@@ -857,7 +862,7 @@ class Planner Extends Functions
                 echo "<p>Vielen Dank, dass du zugesagt hast!</p>";
                 echo "<a class='grayLink'>Du hast zugesagt</a>"; 
             } else {
-                echo "<p>Um an der Veranstaltung teilzunehmen, bitte auf Zusagen klicken.</p>";
+                 echo "<p class='dezentInfo'>Bitte Zusagen!</p>";
                 echo "<a class='greenLink' href='?zusageUser=".$userinfo[0]->id."'>Zusagen</a>"; 
             }
             
@@ -900,19 +905,28 @@ class Planner Extends Functions
     {
         // CHECK IF USER HASNT ZUGESAGT YET
         echo "<div class=''>";
-        echo "<h3>Blog</h3>";
+        echo "<h3><a name='blog'>Blog</a></h3>";
 
         $entries = $this->sqlselect("SELECT * FROM eventtexts WHERE eventid=$eventid ORDER BY sort DESC");
-
+        if ($this->checkEventOwner($_SESSION['eventid']) == true) {
+            $this->createNewBlogMessage($eventid);
+            $this->editBlogMessage($eventid);
+        }
+        
         echo "<table class='forumPost'>";
-        echo "<thead><td colspan=2></td></thead>";
+        echo "<thead><td colspan=3></td></thead>";
         for ($i = 0;$i < sizeof($entries); $i++) {
             echo "<thead id='small'>"; 
             echo "<td colspan=1>".$this->getUserName($entries[$i]->author)."</td>";
             echo "<td colspan=1>". $entries[$i]->timestamp ."</td>";
+            echo "<td>";
+            if ($this->checkEventOwner($eventid) == true) {
+                echo "<a href='?blogedit=".$entries[$i]->id."#blog'>Edit</a>";
+            }
+            echo "</td>";
             echo "</thead>";
             echo "<tbody>";
-                echo "<td colspan=2>"; 
+                echo "<td colspan=3>"; 
                     echo $entries[$i]->text;
                 echo "</td>";
             echo "</tbody>";
@@ -920,6 +934,120 @@ class Planner Extends Functions
         echo "</table>";
 
         echo "</div>";
+    }
+
+    /**
+     * Erstellt einen neuen Blog Eintrag
+     * 
+     * @param int $eventid EventID
+     * 
+     * @return void
+     */
+    function createNewBlogMessage(int $eventid) 
+    {
+        // SPEICHERUNG
+        if (isset($_POST['blogtext'])) {
+            $text = $_POST['blogtext'];
+            $counttext = $this->checkString($text);
+
+            if (strlen($counttext) > 10) {
+                if (isset($_SESSION['username'])) {
+                    $author = $this->getUserID($_SESSION['username']);
+                    $max = $this->sqlselect("SELECT sort,max(sort) as max FROM eventtexts WHERE eventid=$eventid");
+                    $count = $max[0]->max + 1;
+                    $sql = "INSERT INTO eventtexts (eventid, text, sort, author) VALUES ('$eventid','$text','$count','$author')";
+                    if ($this->sqlInsertUpdateDelete($sql) == true) {
+                        $this->erfolgMessage("Erfolgreich");
+                    } else {
+                        $this->errorMessage("Speichern nicht möglich.");
+                    }
+                    $this->infoMessage("$count : $sql");
+                } else {
+                    $this->infoMessage("Du kannst nur Einträge erstellen wenn du angemeldet bist.");
+                }
+            } else {
+                $this->infoMessage("Text muss mind. 10 Zeichen beeinhalten. Es waren nur " . strlen($counttext). " Zeichen.");
+            }
+        }
+
+        if (isset($_GET['newblog'])) {
+            echo "<div class='separateDivBox'>";
+            echo "<h2>Neuen Eintrag erstellen</h2>";
+            echo "<form method=post action='#blog'>";
+            if (isset($_POST['blogtext'])) {
+                $blogtext = $_POST['blogtext'];
+            } else {
+                $blogtext = "";
+            }
+            echo "<textarea class='ckeditor' name=blogtext>$blogtext</textarea><br>";
+            echo "<button class='rightGreenLink' type=submit>Speichern</button><br>";
+            echo "</form>";
+            echo "</div>";
+        }
+
+        // AUSGABE
+        echo "<div class=''>";
+        echo "<a class='buttonlink' href='?newblog#blog'>NEU</a>";
+        echo "</div>";
+    }
+
+    /**
+     * Erstellt einen neuen Blog Eintrag
+     * 
+     * @param int $eventid EventID
+     * 
+     * @return void
+     */
+    function editBlogMessage(int $eventid) 
+    {
+        // SPEICHERUNG
+        if (isset($_POST['editblogentry']) AND isset($_POST['editblogid'])) {
+            if ($this->checkEventOwner($eventid) == true) {
+                $text = $_POST['editblogentry'];
+                $counttext = $this->checkString($text);
+                
+                $id = $_POST['editblogid'];
+
+                if (is_numeric($id) == true) {
+                    if (strlen($counttext) > 10) {
+                        $sql = "UPDATE eventtexts SET text='$text' WHERE id='$id' LIMIT 1";
+                        if ($this->sqlInsertUpdateDelete($sql) == true) {
+                            $this->erfolgMessage("Erfolgreich.");
+                        } else {
+                            $this->errorMessage("Nicht erfolgreich.");
+                        }
+                    }
+                }
+            } else {
+                $this->infoMessage("Du hast keine Berechtigung");
+            }
+        }
+        if (isset($_GET['blogedit'])) {
+            // Rechte checken
+            if ($this->checkEventOwner($eventid) == true) {
+                $id = $_GET['blogedit'];
+                // Wert checken
+                if (is_numeric($id) == true) {
+                    $entry = $this->sqlselect("SELECT * FROM eventtexts WHERE id=$id AND eventid=$eventid LIMIT 1");
+
+                    // Blog auf verfügbarkeit checken:
+                    if (isset($entry[0]->id)) {
+                        
+                        // AUSGABE
+                        echo "<div class='newFahrt'>";
+                        echo "<form method=post>";
+                        echo "<input type=number value='" .$entry[0]->id . "' name='editblogid'  hidden />";
+                        echo "<textarea class='ckeditor' name='editblogentry'> " .$entry[0]->text . " </textarea>";
+                        echo "<button type=submit>Änderung speichern</button>";
+                        echo "</form>";
+                        echo "</div>";
+                    }
+                }
+                
+            } else {
+                $this->infoMessage("Du hast keine Berechtigung.");
+            }
+        }
     }
 
     /**
@@ -941,7 +1069,7 @@ class Planner Extends Functions
 
             $datetime2 = new DateTime($countdowns[$i]->enddate);
             $diff = $datetime1->diff($datetime2);
-            echo "<h2>Countdown: noch " . $diff->format('%a Tage') . "</h2>";
+            echo "<h2>Noch " . $diff->format('%a Tage') . "</h2>";
         }
         echo "</table>";
 
@@ -971,8 +1099,12 @@ class Planner Extends Functions
             } else {
                 $css = "";
             }
+            if (strlen($memberlist[$i]->fullname) > 1) {
+                echo "<li id='$css'>".$memberlist[$i]->fullname."</li>";
+            } else {
+                echo "<li>Gast $i</li>";
+            }
             
-            echo "<li id='$css'>".$memberlist[$i]->guestname."</li>";
         }
         echo "</ul>";
         echo "</div>";
@@ -1058,16 +1190,14 @@ class Planner Extends Functions
                     if ($this->checkEventOwner($eventid) == true OR $userid == $_SESSION['eventguest']) {
                         $sql = "UPDATE eventguests SET zusage=1 WHERE id='$userid' LIMIT 1";
                         if ($this->sqlInsertUpdateDelete($sql) == true) {
-                            echo "<p class='erfolg'>Zusage gespeichert.</p>";
-                        } else {
-                            // echo "<p class='hinweis'>Zusage konnte nicht gespeichert werden.</p>";
+                            $this->erfolgMessage("Zusage gespeichert.");
                         }
                     } else {
-                        echo "<p class='meldung'>Du kannst nur deine eigene Zusage erteilen!</p>";
+                        $this->errorMessage("Du kannst nur deine eigene Zusage erteilen!");
                     }
                     
                 } else {
-                    echo "<p class='meldung'>Der Benutzer $userid existiert nicht.</p>";
+                    $this->errorMessage("Der Benutzer $userid existiert nicht.");
                 }
 
             }
@@ -1091,16 +1221,13 @@ class Planner Extends Functions
                     if ($this->checkEventOwner($eventid) == true OR $userid == $_SESSION['eventguest']) {
                         $sql = "UPDATE eventguests SET zusage=NULL WHERE id='$userid' LIMIT 1";
                         if ($this->sqlInsertUpdateDelete($sql) == true) {
-                            echo "<p class='erfolg'>Absage gespeichert.</p>";
-                        } else {
-                            //echo "<p class='hinweis'>Absage konnte nicht gespeichert werden.</p>";
+                            $this->erfolgMessage("Absage gespeichert");
                         }
                     } else {
-                        echo "<p class='meldung'>Du kannst nur deine eigene Zusage erteilen!</p>";
+                        $this->errorMessage("Du kannst nur deine eigene Zusage erteilen!");
                     }
-
                 } else {
-                    echo "<p class='meldung'>Der Benutzer $userid existiert nicht.</p>";
+                    $this->errorMessage("Der Benutzer $userid existiert nicht.");
                 }
 
             }
@@ -1147,10 +1274,10 @@ class Planner Extends Functions
             if ($this->objectExists("SELECT id FROM eventguests WHERE id=$userid") == true) {
                 $sql = "UPDATE eventguests SET anzahl=$newcounter WHERE id=$userid LIMIT 1";
                 if ($this->sqlInsertUpdateDelete($sql) == true) {
-                    echo "<p class='erfolg'>Gastanzahl auf $newcounter geändert</p>";
+                    $this->erfolgMessage("Gastanzahl auf $newcounter geändert.");
                 }
             } else {
-                echo "<p class='hinweis'>Der Benutzer existiert nicht</p>";
+                $this->infoMessage("Der Benutzer existiert nicht.");
             }
         }
     }
@@ -1214,7 +1341,8 @@ class Planner Extends Functions
                 }
                 
             }
-            echo $memberlist[$i]->guestname; 
+
+            echo $memberlist[$i]->fullname ." / ". $memberlist[$i]->guestname; 
             if ($owner == true) {
                 if (strlen($memberlist[$i]->guestmailaddress) > 0) {  
                     echo "</a>";

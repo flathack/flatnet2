@@ -892,4 +892,46 @@ class Functions extends Sql
                     ';
         }
     }
+
+    /**
+     * Erstellt eine Ausgabe des Textes.
+     * 
+     * @param string $text Text der Dargestellt werden soll.
+     * 
+     * @return string
+     */
+    function infoMessage(string $text)
+    {
+        if (strlen($text) > 0) {
+            echo "<p class='hinweis'>" . $text . "</p>";
+        }
+    }
+
+    /**
+     * Erstellt eine Ausgabe des Textes.
+     * 
+     * @param string $text Text der Dargestellt werden soll.
+     * 
+     * @return string
+     */
+    function erfolgMessage(string $text)
+    {
+        if (strlen($text) > 0) {
+            echo "<p class='erfolg'>" . $text . "</p>";
+        }
+    }
+
+    /**
+     * Erstellt eine Ausgabe des Textes.
+     * 
+     * @param string $text Text der Dargestellt werden soll.
+     * 
+     * @return string
+     */
+    function errorMessage(string $text)
+    {
+        if (strlen($text) > 0) {
+            echo "<p class='meldung'>" . $text . "</p>";
+        }
+    }
 }
