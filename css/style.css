@@ -19,16 +19,15 @@ body {
     background-color: grey;
     background-repeat: repeat;
     background-attachment: fixed;
-    font-family: "Palatino Linotype", "Book Antiqua", Palatino, serif;
+    /* font-family: "Palatino Linotype", "Book Antiqua", Palatino, serif;*/
     font-size: 1em;
+    height: 100%;
+    width: 100%;
     font-style: normal;
     font-weight: normal;
     text-decoration: none;
 }
-#index {
-    background-image: none;
-    background-color: grey;
-}
+
 * {
     padding: 0px;
     margin: 0px;
@@ -372,8 +371,6 @@ blockquote {
     margin-right: 10px;
     padding: 5px;
     min-height: 120px;
-    border-radius: 10px;
-    width: 46%;
     display: inline-block;
     opacity: 0.6;
 }
@@ -385,8 +382,6 @@ blockquote {
     margin-right: 10px;
     padding: 5px;
     min-height: 120px;
-    border-radius: 10px;
-    width: 46%;
     display: inline-block;
     opacity: 0.6;
 }
@@ -399,10 +394,8 @@ blockquote {
     border: 1px solid grey;
     margin-bottom: 10px;
     margin-right: 10px;
-    border-radius: 10px;
     padding: 5px;
     min-height: 120px;
-    width: 46%;
     display: inline-block;
 }
 .bereichtoyota {
@@ -411,22 +404,18 @@ blockquote {
     border: 1px solid red;
     margin-bottom: 10px;
     margin-right: 10px;
-    border-radius: 10px;
     padding: 5px;
     min-height: 120px;
-    width: 46%;
     display: inline-block;
 }
 .bereichplanner {
     background-color: rgb(255, 255, 255);
-    box-shadow: 0px 0px 5px red;
-    border: 1px solid red;
+    box-shadow: 0px 0px 5px rgb(99, 0, 0);
+    border: 1px solid rgb(75, 67, 67);
     margin-bottom: 10px;
     margin-right: 10px;
-    border-radius: 10px;
     padding: 5px;
     min-height: 120px;
-    width: 46%;
     display: inline-block;
 }
 .bereichgebkalender {
@@ -437,8 +426,6 @@ blockquote {
     margin-right: 10px;
     padding: 5px;
     min-height: 120px;
-    border-radius: 10px;
-    width: 46%;
     display: inline-block;
 }
 .bereichguildwars {
@@ -452,8 +439,6 @@ blockquote {
     margin-right: 10px;
     padding: 5px;
     min-height: 120px;
-    width: 46%;
-    border-radius: 10px;
     display: inline-block;
 }
 .bereichfinanzen {
@@ -466,9 +451,7 @@ blockquote {
     margin-bottom: 10px;
     margin-right: 10px;
     padding: 5px;
-    border-radius: 10px;
     min-height: 120px;
-    width: 46%;
     display: inline-block;
 }
 .bereichforum {
@@ -481,9 +464,7 @@ blockquote {
     margin-bottom: 10px;
     margin-right: 10px;
     padding: 5px;
-    border-radius: 10px;
     min-height: 120px;
-    width: 46%;
     display: inline-block;
 }
 .adminKachel {
@@ -1218,7 +1199,7 @@ input[type=radio]:not(old):checked + label > span > span {
     background: #ebebeb;
     color: black;
     border: 1px solid #808080;
-    font-family: cursive;
+    /* font-family: cursive; */
 }
 .newChar input[type=text],
 .newChar input[type=number],
@@ -1236,7 +1217,7 @@ input[type=radio]:not(old):checked + label > span > span {
     color: black;
     border: 1px solid #808080;
     width: 200px;
-    font-family: cursive;
+    /*font-family: cursive;*/
 }
 .newChar textarea,
 .newCharWIDE textarea,
@@ -1246,7 +1227,7 @@ input[type=radio]:not(old):checked + label > span > span {
     margin-bottom: 15px;
     border: 1px solid grey;
     background-color: #ebebeb;
-    font-family: cursive;
+    /*font-family: cursive;*/
     width: 95%;
 }
 .showUsers {
@@ -2407,19 +2388,15 @@ input[type=password]:focus {
 }
 
 .login {
-    background: white;
-   /* background-image: url("../images/index-login.jpg");*/
     padding: 10px;
-    background-repeat: no-repeat;
-    background-position: right;
     width: 300px;
-    height: 600px;
-    margin-left: auto;
-    margin-right: auto;
-    margin-top: 20px;
-    border: 2px solid white;
+    min-height: 600px;
+    margin: auto;
     color: #000000;
-    box-shadow: 0px 0px 20px white;
+    box-shadow: 5px 5px 5px gray;
+    border-left: 1px solid gray;
+    border-top: 1px solid gray;
+    margin-top: 20px;
 }
 .login h1 a {
     font-size: 1.1em;
@@ -2440,29 +2417,22 @@ input[type=password]:focus {
     color: grey;
 }
 .login #register {
-    margin-top: 200px;
-    background-color: transparent;
     padding: 10px;
 }
-.login #optionen {
+.login #list {
+    border-bottom: 2px solid gray;
+    padding-bottom: 10px;
 }
-.login #optionen li {
-	display: inline;
-	margin: 0px;
-	padding: 0px;
+.login #list li {
+    list-style-type: none;
+    margin: 0px;
 }
-.login li a {
-	padding: 5px;
+.login #list li a {
 	color: #4f4f4f;
 }
 
 .logininfos {
-	margin-top: -400px;
-    background-color: white;
-    position: relative;
-    padding: 1px;
-    overflow-y: scroll;
-    max-height: 400px;
+    padding: 5px;
 }
 .login #DatenschutzInfos p,
 .login #DatenschutzInfos li,
@@ -2471,7 +2441,6 @@ input[type=password]:focus {
 .login #zweck p,
 .login #zweck li {
     font-size: 1em;
-    margin-left: 0px;
 }
 .login #DatenschutzInfos h2,
 .login #DatenschutzInfos h1,
@@ -2482,23 +2451,11 @@ input[type=password]:focus {
     font-size: 1em;
     color: grey;
 }
-.login #funktion {
-    width: 400px;
-    margin-left: 330px;
-    margin-top: -60px;
-}
+
 .login #loginFelder {
-	margin-top: 200px;
 	padding: 5px;
 }
-.login #loginFelder input[type=submit] {
-    box-shadow: 0px 0px 10px green;
-    border: 1px solid green;
-    color: green;
-    margin-left: 100px;
-    padding: 20px;
-    background-color: #ddffdd;
-}
+
 .innerBody {
     width: 75%;
 }

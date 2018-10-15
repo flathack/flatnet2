@@ -30,10 +30,10 @@ session_start();
         </div>
         <title>Steven.NET - Login</title>
     </head>
-    <body id='index'>
+    <body>
         <div class='login'>
             <h1><a href='?'>steven.net</a></h1>
-            <div id="optionen">
+            <div id='list'>
                 <?php 
                 if (isset($_GET['createUser'])) { 
                     echo "<li><a href='?'>Zur&uuml;ck zum Login</a></li>"; 
@@ -44,12 +44,16 @@ session_start();
                 <li><a href="#" class="" onclick="document.getElementById('Impressum').style.display = 'block'">Impressum</a></li>
                 <li><a href="#" class="" onclick="document.getElementById('DatenschutzInfos').style.display = 'block'">Datenschutzinformationen</a></li>
                 <li><a href="#" class="" onclick="document.getElementById('zweck').style.display = 'block'">Informationen zur Seite</a></li>
+                <li><a href="/flatnet2/planner/index.php">EventPlanner</a></li>
             </div>
-            <div id="loginFelder">
+            <div class="separateDivBox">
                 <p id='loginTitel'>Login</p>
                 <?php echo $indexlogin->anmeldeCheck(); ?>
             </div>
-            <div class="logininfos">
+            <div id="register">
+                <?php $indexlogin->registerNewUser(); ?>
+            </div>
+            <div class="">
                 <div style="display: none;" id="DatenschutzInfos">
                     <a href="?" class="rightRedLink">OK</a>
                     <?php require 'informationen/datenschutz.html'; ?>
@@ -63,11 +67,7 @@ session_start();
                     <?php require 'informationen/zweck.html'; ?>
                 </div>
             </div>
-            <div class="hinweis"><a href="/flatnet2/planner/index.php">Gehe zum EventPlanner</a></div>
             
-            <div id="register">
-                <?php $indexlogin->registerNewUser(); ?>
-            </div>
            
         </div>
         

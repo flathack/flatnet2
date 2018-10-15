@@ -67,6 +67,8 @@ class Planner Extends Functions
         // Administration
         if (isset($_SESSION['username'])) {
             $this->eventNavigation();
+        } else {
+            echo "<a class='grayLink' href='../index.php'>Admin</a>";
         }
         $this->eventSelector();
         $this->showFooter();
@@ -116,6 +118,7 @@ class Planner Extends Functions
         $this->listAllEvents();
 
         if (isset($_SESSION['eventid'])) {
+            $this->showManageCountdowns($_SESSION['eventid']);
             $this->showInviteCodes($_SESSION['eventid']);
             $this->showEventMembers($_SESSION['eventid']);
         }
@@ -491,7 +494,7 @@ class Planner Extends Functions
     {
         // AUSGABE
         echo "<div class=''>";
-            echo "<p>EventPlanner by Steven Schödel (c) Version 11.102018 | ";
+            echo "<p>EventPlanner by Steven Schödel (c) Version 15.102018 | ";
             echo "<a href='/flatnet2/informationen/impressum.php'>Impressum</a>";
 
             echo "</p>";
@@ -609,7 +612,7 @@ class Planner Extends Functions
         }
 
         // AUSGABE
-        echo "<form method=post>";
+        echo "<form method=post action='#codelist'>";
         echo "<input type=text name=code placeholder=Code required />";
         echo "<button type=submit>OK</button>";
         echo "</form>";
@@ -619,6 +622,8 @@ class Planner Extends Functions
 
     /**
      * Holt den Namen des Gastes
+     * 
+     * @param int $guestid GastID
      * 
      * @return void
      */
@@ -648,15 +653,15 @@ class Planner Extends Functions
     {
         echo "<div class='separateDivBox'>";
         
-        echo "<h3>Codeliste</h3>";
+        echo "<h3><a name='codelist'>Codeliste</a></h3>";
         $this->addInviteCode($eventid);
         $this->deleteCodeOfEvent();
         $codeslist = $this->sqlselect("SELECT * FROM eventinvitecodes WHERE eventid=$eventid");
         
         echo "<table class='kontoTable'>";
-        echo "<thead><td>Code</td><td>Optionen</td></thead>";
+        echo "<thead><td>Code</td><td id='width140px'>Optionen</td></thead>";
         for ($i = 0; $i < sizeof($codeslist); $i++) {
-            echo "<tbody><td>".$codeslist[$i]->eventinvitecode."</td><td><a href='?delInvCode=".$codeslist[$i]->id."&eventid=$eventid'>X</a></td></tbody>";
+            echo "<tbody><td>".$codeslist[$i]->eventinvitecode."</td><td><a href='?delInvCode=".$codeslist[$i]->id."&eventid=$eventid#codelist'>X</a></td></tbody>";
             $codeid = $codeslist[$i]->id;
             $usages = $this->sqlselect("SELECT * FROM eventcodeusage WHERE codeid=$codeid");
             if (isset($usages[0]->codeid)) {
@@ -671,6 +676,97 @@ class Planner Extends Functions
         }
         echo "</table>";
         echo "</div>";
+    }
+
+    /**
+     * Zeigt alle Countdowns an
+     * 
+     * @param int $eventid EventID
+     * 
+     * @return void
+     */
+    function showManageCountdowns(int $eventid) 
+    {
+        echo "<div class='separateDivBox'>";
+        echo "<h3><a name='countdowns'>Countdowns</a></h3>";
+        $this->addCountdown($eventid);
+        $this->deleteCountdown();
+
+        $cdlist = $this->sqlselect("SELECT * FROM eventcountdowns WHERE eventid=$eventid ORDER BY enddate");
+        echo "<table class='kontoTable'>";
+        echo "<thead><td>Enddate</td><td id='small'>Optionen</td></thead>";
+
+        for ($i = 0; $i < sizeof($cdlist); $i++) {
+            echo "<tbody>"; 
+            echo "<td>".$cdlist[$i]->enddate."</td><td><a href='?delCD=".$cdlist[$i]->id."&eventid=$eventid#countdowns'>X</a></td>"; 
+            
+            echo "</tbody>";
+        }
+        echo "</table>";
+        echo "</div>";
+    }
+
+    /**
+     * Fügt einen neuen Countdown zu einem Event hinzu.
+     * 
+     * @param int $eventid ID des Events
+     * 
+     * @return void
+     */
+    function addCountdown(int $eventid) 
+    {
+        
+        echo "<div class=''>";
+        // SPEICHERUNG
+        if (isset($_POST['Date'])) {
+            $date = $_POST['Date'];
+            if (isset($_POST['Date'])) {
+                if ($this->objectExists("SELECT * FROM eventcountdowns WHERE enddate='$date' AND eventid=$eventid") == true) {
+                    $this->infoMessage("Der Countdown ($date) existiert bereits und kann nicht hinzugefügt werden.");
+                } else {
+                    $sql = "INSERT INTO eventcountdowns (enddate, eventid) VALUES ('$date','$eventid')";
+                    if ($this->sqlInsertUpdateDelete($sql) == true) {
+                        $this->erfolgMessage("Erfolgreich");
+                    } else {
+                        $this->errorMessage("Countdown konnte nicht hinzugefügt werden. Es gab einen Fehler beim speichern.");
+                    }
+                }
+                
+            } else {
+                $this->infoMessage("Das angegebene Datum ist ungültig.");
+            }
+        }
+
+        // AUSGABE
+        echo "<form method=post action='#countdowns'>";
+        echo "<input type=date name=Date placeholder=Date required />";
+        echo "<button type=submit>OK</button>";
+        echo "</form>";
+        echo "</div>";
+
+    }
+
+    /**
+     * Löscht einen Countdown eines Events
+     * 
+     * @return void
+     */
+    function deleteCountdown()
+    {
+        if (isset($_GET['delCD'])) {
+            if (isset($_GET['eventid'])) {
+                $dateid = $_GET['delCD'];
+                $eventid = $_GET['eventid'];
+                if (is_numeric($eventid) == true AND is_numeric($dateid) == true) {
+                    $sql = "DELETE FROM eventcountdowns WHERE eventid=$eventid AND id=$dateid LIMIT 1";
+                    if ($this->sqlInsertUpdateDelete($sql) == true) {
+                        echo "<p class='erfolg'>Datum gelöscht.</p>";
+                    } else {
+                        echo "<p class='meldung'>Datum kann nicht gelöscht werden.</p>";
+                    }
+                }
+            }
+        }
     }
 
     /**
@@ -852,7 +948,12 @@ class Planner Extends Functions
             $userinfo = $this->sqlselect("SELECT * FROM eventguests WHERE id='$currentid' AND eventid=$eventid");
             
             // CHECK IF USER HASNT ZUGESAGT YET
-            echo "<div class='newFahrt'>";
+            if ($userinfo[0]->zusage == 1) { 
+
+                echo "<div class='erfolg'>";
+            } else {
+                echo "<div class='info'>";
+            }
             
             $this->absageGuest();
             $this->zusageGuest();
@@ -860,16 +961,16 @@ class Planner Extends Functions
             
             if ($userinfo[0]->zusage == 1) { 
                 echo "<p>Vielen Dank, dass du zugesagt hast!</p>";
-                echo "<a class='grayLink'>Du hast zugesagt</a>"; 
+                // echo "<a class='grayLink'>Du hast zugesagt</a>"; 
             } else {
-                 echo "<p class='dezentInfo'>Bitte Zusagen!</p>";
+                 echo "<p class=''>Bitte Zusagen!</p>";
                 echo "<a class='greenLink' href='?zusageUser=".$userinfo[0]->id."'>Zusagen</a>"; 
             }
             
             if ($userinfo[0]->zusage == 1) { 
                 echo "<a class='redLink' href='?absageUser=".$userinfo[0]->id."'>Absagen</a>"; 
             } else {
-                echo "<a class='grayLink'>Du nimmst nicht an der Veranstaltung teil.</a>";
+                // echo "<a class='grayLink'>Du nimmst nicht an der Veranstaltung teil.</a>";
             }
             
     
@@ -911,6 +1012,7 @@ class Planner Extends Functions
         if ($this->checkEventOwner($_SESSION['eventid']) == true) {
             $this->createNewBlogMessage($eventid);
             $this->editBlogMessage($eventid);
+            $this->delBlogMessage($eventid);
         }
         
         echo "<table class='forumPost'>";
@@ -972,7 +1074,7 @@ class Planner Extends Functions
 
         if (isset($_GET['newblog'])) {
             echo "<div class='separateDivBox'>";
-            echo "<h2>Neuen Eintrag erstellen</h2>";
+            echo "<h3>Neu</h3>";
             echo "<form method=post action='#blog'>";
             if (isset($_POST['blogtext'])) {
                 $blogtext = $_POST['blogtext'];
@@ -980,6 +1082,7 @@ class Planner Extends Functions
                 $blogtext = "";
             }
             echo "<textarea class='ckeditor' name=blogtext>$blogtext</textarea><br>";
+            echo "<a class='rightRedLink' href='?'>schließen</a>";
             echo "<button class='rightGreenLink' type=submit>Speichern</button><br>";
             echo "</form>";
             echo "</div>";
@@ -1039,6 +1142,8 @@ class Planner Extends Functions
                         echo "<input type=number value='" .$entry[0]->id . "' name='editblogid'  hidden />";
                         echo "<textarea class='ckeditor' name='editblogentry'> " .$entry[0]->text . " </textarea>";
                         echo "<button type=submit>Änderung speichern</button>";
+                        echo "<a class='grayLink' href='?delBlog=" .$entry[0]->id . "'>Löschen</a>";
+                        echo "<a class='rightRedLink' href='?'>schließen</a>";
                         echo "</form>";
                         echo "</div>";
                     }
@@ -1046,6 +1151,33 @@ class Planner Extends Functions
                 
             } else {
                 $this->infoMessage("Du hast keine Berechtigung.");
+            }
+        }
+    }
+
+    /**
+     * Löscht einen BlogEintrag
+     * 
+     * @param int $eventid EventID
+     * 
+     * @return void
+     */
+    function delBlogMessage(int $eventid)
+    {
+        if (isset($_GET['delBlog'])) {
+            if (is_numeric($_GET['delBlog']) == true) {
+                if ($this->checkEventOwner($eventid) == true) {
+                    $id = $_GET['delBlog'];
+                    $get = $this->sqlselect("SELECT id, eventid FROM eventtexts WHERE eventid=$eventid and id=$id LIMIT 1");
+                    if (isset($get[0]->id)) {
+                        $sql = "DELETE FROM eventtexts WHERE id=$id AND eventid=$eventid LIMIT 1";
+                        if ($this->sqlInsertUpdateDelete($sql) == true) {
+                            $this->erfolgMessage("Erfolgreich.");
+                        } else {
+                            $this->errorMessage("Löschen nicht erfolgreich.");
+                        }
+                    }
+                }
             }
         }
     }
@@ -1308,7 +1440,8 @@ class Planner Extends Functions
         }
         echo "<table class='kontoTable'>";
         echo "<thead>";
-        echo "<td>Login / Gastname</td>";
+        echo "<td id='small'>Login</td>";
+        echo "<td>Gastname</td>";
         echo "<td id='small'>Anzahl</td>";
         echo "<td id='small'>Zusage</td>";
         // RESTRICTED START
@@ -1328,14 +1461,17 @@ class Planner Extends Functions
                 $css = "";
             }
             echo "<tbody id='$css'>"; 
+            echo "<td>";
+            if ($memberlist[$i]->loggedin == 1) {
+                echo "<a href='?setGuest=".$memberlist[$i]->id."#gaesteliste'> &#10004; </a>";
+            } else {
+                echo "<a href='?setGuest=".$memberlist[$i]->id."#gaesteliste'> &#8855; </a>";
+            }
+            echo "</td>";
             // NAME
             echo "<td>";
             if ($owner == true) {
-                if ($memberlist[$i]->loggedin == 1) {
-                    echo "<a href='?setGuest=".$memberlist[$i]->id."#gaesteliste'> &#10004; </a>";
-                } else {
-                    echo "<a href='?setGuest=".$memberlist[$i]->id."#gaesteliste'> &#8855; </a>";
-                }
+                
                 if (strlen($memberlist[$i]->guestmailaddress) > 0) {
                     echo "<a href='mailto:".$memberlist[$i]->guestmailaddress."'> &#9993; "; 
                 }
@@ -1397,6 +1533,7 @@ class Planner Extends Functions
         $sumAnzahl = $this->sqlselect("SELECT *,sum(anzahl) as gesAnzahl FROM eventguests WHERE eventid=$eventid");
         $sumZusage = $this->sqlselect("SELECT *,sum(zusage) as zusagen FROM eventguests WHERE eventid=$eventid");
         echo "<tfoot>"; 
+        echo "<td></td>";
         echo"<td>Summe Gäste: ".$sumGuest[0]->count." </td>"; 
         echo "<td>".$sumAnzahl[0]->gesAnzahl."</td>"; 
         echo "<td>".$sumZusage[0]->zusagen."</td>"; 

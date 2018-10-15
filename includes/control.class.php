@@ -426,85 +426,52 @@ class Control extends Functions
     /**
      * Ordnet die Besitzer-Spalte einer Tabelle zu.
      * 
-     * @return string
+     * @return array
      */
     public function setBesitzerArray()
     {
 
         /**
          * Richtige Zuordnung
-         * 
-         * @var unknown
          */
         $zuordnung = array(
             "account_infos" => "besitzer",
             "adressbuch" => "xxx",
-            "amazon_infos" => "autor",
             "benutzer" => "xxx",
-            "blogtexte" => "autor",
             "blogkategorien" => "xxx",
+            "blogtexte" => "autor",
             "blog_kommentare" => "autor",
             "docu" => "autor",
-            "fahrkosten" => "besitzer",
-            "fahrkostenziele" => "besitzer",
-            "fahrzeuge" => "besitzer",
+            "eventadministrators" => "xxx",
+            "eventcodeusage" => "xxx",
+            "eventcountdowns" => "xxx",
+            "eventguests" => "xxx",
+            "eventinvitecodes" => "xxx",
+            "eventlist" => "xxx",
+            "eventtexts" => "xxx",
             "finanzen_jahresabschluss" => "besitzer",
             "finanzen_konten" => "besitzer",
             "finanzen_monatsabschluss" => "besitzer",
+            "finanzen_shares" => "besitzer",
             "finanzen_umsaetze" => "besitzer",
-            "gw_accounts" => "besitzer",
-            "gw_chars" => "besitzer",
             "gwcosts" => "besitzer",
             "gwmatlist" => "xxx",
             "gwusersmats" => "besitzer",
-            "learnkategorie" => "besitzer",
-            "learnlernkarte" => "besitzer",
+            "gw_accounts" => "besitzer",
+            "gw_chars" => "besitzer",
+            "hardwaredefinition" => "xxx",
+            "hardwaredeliverers" => "xxx",
+            "hardwaredeentries" => "xxx",
+            "hardwaredegarantietypes" => "xxx",
+            "hardwaredemanufacturers" => "xxx",
+            "hardwaredetypes" => "xxx",
             "log" => "besitzer",
-            "lernstatus" => "besitzer",
             "registercode" => "xxx",
             "rightkategorien" => "xxx",
             "rights" => "besitzer",
             "uebersicht_kacheln" => "xxx",
             "userrights" => "xxx",
             "vorschlaege" => "xxx",
-        );
-
-        /**
-         * Umgekehrte Zuordnung
-         * 
-         * @var unknown
-         */
-        $zuordnung2 = array(
-            "besitzer" => "account_infos",
-            "xxx" => "adressbuch",
-            "autor" => "amazon_infos",
-            "xxx" => "benutzer",
-            "autor" => "blogtexte",
-            "xxx" => "blogkategorien",
-            "autor" => "blog_kommentare",
-            "autor" => "docu",
-            "besitzer" => "fahrkosten",
-            "besitzer" => "fahrkostenziele",
-            "besitzer" => "fahrzeuge",
-            "besitzer" => "finanzen_jahresabschluss",
-            "besitzer" => "finanzen_konten",
-            "besitzer" => "finanzen_monatsabschluss",
-            "besitzer" => "finanzen_umsaetze",
-            "besitzer" => "gw_accounts",
-            "besitzer" => "gw_chars",
-            "besitzer" => "gwcosts",
-            "xxx" => "gwmatlist",
-            "besitzer" => "gwusersmats",
-            "besitzer" => "learnkategorie",
-            "besitzer" => "learnlernkarte",
-            "besitzer" => "log",
-            "besitzer" => "lernstatus",
-            "xxx" => "registercode",
-            "xxx" => "rightkategorien",
-            "besitzer" => "rights",
-            "xxx" => "uebersicht_kacheln",
-            "xxx" => "userrights",
-            "xxx" => "vorschlaege",
         );
 
         return $zuordnung;
