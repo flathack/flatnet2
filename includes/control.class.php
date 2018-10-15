@@ -1418,11 +1418,14 @@ class Control extends Functions
                     for ($i = 0; $i < sizeof($row); $i++) {
                         echo "<div class='newChar'>";
                         echo "<form method=post>";
-                        echo "<input type=text name=newCatName value='" . $row[$i]->kategorie . "' placeholder='Kategoriename' /><br>";
-                        echo "<input type=text id='long' name=newCatDescription value='" . $row[$i]->beschreibung . "' placeholder='Beschreibung' /><br>";
-                        echo "<input type=number name=newPotenz value='" . $row[$i]->rightPotenz . "' placeholder='Potenz von 2 eingeben' /><br>";
-                        echo "<input type=number name=newSortierung value='" . $row[$i]->sortierung . "' placeholder='Sortierung eingeben' /><br>";
-                        echo "<input type=submit name=submit value='OK' />";
+                        echo "<h3><a name='cat'>" . $row[$i]->kategorie . "</a></h3>";
+                        echo "<table class='kontoTable'>";
+                        echo "<tbody><td>Name</td><td><input type=text name=newCatName value='" . $row[$i]->kategorie . "' placeholder='Kategoriename' /></td></tbody>";
+                        echo "<tbody><td>Beschreibung</td><td><input type=text id='long' name=newCatDescription value='" . $row[$i]->beschreibung . "' placeholder='Beschreibung' /></td></tbody>";
+                        echo "<tbody><td>Potenz Value</td><td><input type=number name=newPotenz value='" . $row[$i]->rightPotenz . "' placeholder='Potenz von 2 eingeben' /></td></tbody>";
+                        echo "<tbody><td>Sortierung</td><td><input type=number name=newSortierung value='" . $row[$i]->sortierung . "' placeholder='Sortierung eingeben' /></td></tbody>";
+                        echo "<tbody><td colspan=2><input type=submit name=submit value='OK' /></td></tbody>";
+                        echo "</table>";
                         echo "</form>";
                         echo "</div>";
                     }
