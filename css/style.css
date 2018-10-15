@@ -1938,11 +1938,11 @@ input[type=password]:focus {
 }
 .alterUmsatz {
     padding: 10px;
-    box-shadow: 0px 0px 10px #4f4f4f;
-    border: 1px solid black;
+    box-shadow: 5px 5px 5px rgb(185, 185, 185);
+    border: 1px solid rgb(126, 126, 126);
     margin-top: 20px;
     margin-bottom: 20px;
-    background-color: #dfdfdf;
+    background-color: #ffffff;
 }
 .alterUmsatz h2 a {
     color: #2e2e2e;
@@ -1950,10 +1950,10 @@ input[type=password]:focus {
 .alterUmsatz input[type=text],
 .alterUmsatz input[type=date] {
     margin-bottom: 10px;
-    border: 1px solid #800000;
+    border: 1px solid #470000;
     width: 90%;
-    color: white;
-    background-color: dimgrey;
+    color: rgb(0, 0, 0);
+    background-color: rgb(219, 219, 219);
 }
 .alterUmsatz input[type=text]:focus,
 .alterUmsatz input[type=date]:focus {

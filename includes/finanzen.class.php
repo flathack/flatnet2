@@ -530,14 +530,14 @@ class FinanzenNEW extends functions
             echo "</thead>";
 
             echo "<thead>";
-            echo "<td>BuchNr.</td>";
+            echo "<td id='small'>BuchNr.</td>";
             echo "<td>Gegenkonto.</td>";
             echo "<td>Umsatz</td>";
-            echo "<td>Tag</td>";
-            echo "<td>Wert</td>";
-            echo "<td>Kategorien</td>";
-            echo "<td>Saldo</td>";
-            echo "<td>Optionen</td>";
+            echo "<td id='small'>Tag</td>";
+            echo "<td id='width140px'>Wert</td>";
+            echo "<td id='width140px'>Kategorien</td>";
+            echo "<td id='width140px'>Saldo</td>";
+            echo "<td id='small'>Optionen</td>";
 
             echo "</thead>";
 
@@ -659,11 +659,11 @@ class FinanzenNEW extends functions
 
                 $naechsterUmsatz = $this->sqlselect("SELECT *, month(datum) as monat, year(datum) as jahr FROM finanzen_umsaetze WHERE besitzer=$besitzer AND konto=$kontoID AND datum > '$curdate' ORDER BY datum ASC LIMIT 1");
 
-                echo "<tbody id='plus'><td colspan=7>$curdate In diesem Monat gibt es keine Ums&auml;tze, der n&auml;chste Umsatz lautet: </td></tbody>";
+                echo "<tbody id='plus'><td colspan=8>$curdate In diesem Monat gibt es keine Ums&auml;tze, der n&auml;chste Umsatz lautet: </td></tbody>";
 
                 for ($k = 0; $k < sizeof($naechsterUmsatz); $k++) {
                     $naechsterMonat = $naechsterUmsatz[$k]->monat;
-                    echo "<tbody id=''>" . "<td>" . $naechsterUmsatz[$k]->datum . "</td>" . "<td colspan=6>" . $naechsterUmsatz[$k]->umsatzName . ",  <a href='?konto=$kontoID&monat=$naechsterMonat&jahr=" . $naechsterUmsatz[$k]->jahr . "'>springe zu Monat</a></td>" . "</tbody>";
+                    echo "<tbody id=''>" . "<td colspan=2>" . $naechsterUmsatz[$k]->datum . "</td>" . "<td colspan=6>" . $naechsterUmsatz[$k]->umsatzName . ",  <a href='?konto=$kontoID&monat=$naechsterMonat&jahr=" . $naechsterUmsatz[$k]->jahr . "'>springe zu Monat</a></td>" . "</tbody>";
                 }
             }
             $differenz = number_format(round($zwischensumme - $startsaldo, 4), 2, ",", ".");
@@ -1503,7 +1503,7 @@ class FinanzenNEW extends functions
     }
 
     /**
-     * Ermöglicht es mehrere Buchungen auf einmal zu buchen.
+     * Zeigt mehrere Buchungen zum Thema.
      * 
      * @param object $umsatz   Derzeitiger Umsatz
      * @param int    $besitzer UserID
@@ -1527,6 +1527,10 @@ class FinanzenNEW extends functions
         $ergebnis = $this->sqlselect($select);
 
         if (isset($ergebnis[0]->id)) {
+            
+            $monat = $this->getMonatFromGet();
+            $kontoID = $this->getKontoIDFromGet();
+            $currentYear = $this->getJahrFromGet();
             $count = sizeof($ergebnis);
             $allowed = 5;
             if ($count > $allowed) {
@@ -1534,17 +1538,24 @@ class FinanzenNEW extends functions
             } else {
                 $max = $count;
             }
-            echo "<table class='flatnetTable'>";
-            echo "<h2>$count &auml;hnliche Zahlungen gefunden (Konto, Gegenkonto und Name gleich)</h2>";
+            echo "<p>$count &auml;hnliche Zahlungen gefunden (Konto, Gegenkonto und Name gleich)</p>";
+            echo "<table class='kontoTable'>";
+            echo "<thead>"; 
+            echo "<td id='small'>BuchNR</td>"; 
+            echo "<td>UmsatzText</td>"; 
+            echo "<td id='width140px'>Datum</td>"; 
+            echo "<td id='width70px'>Betrag</td>"; 
+            echo "<td id='small'></td>"; 
+            echo "</thead>";
             for ($i = 0; $i < $max; $i++) {
                 echo "<tbody><td>" . $ergebnis[$i]->buchungsnr . "</td>
                         <td>" . $ergebnis[$i]->umsatzName . "</td>
                         <td>" . $ergebnis[$i]->datum . "</td>
                         <td>" . $ergebnis[$i]->umsatzWert . "</td>
-                        <td>" . "<a href='?edit=" . $ergebnis[$i]->id . "'>edit</a>" . "</td></tbody>";
+                        <td>" . "<a href='?konto=$kontoID&monat=$monat&jahr=$currentYear&edit=" . $ergebnis[$i]->id . "#umsatz'>edit</a>" . "</td></tbody>";
             }
             if ($count > $max) {
-                echo "<tbody id=''><td colspan=5>weitere Zahlungen vorhanden ... </td></tbody>";
+                echo "<tbody id=''><td colspan=5>weitere</td></tbody>";
             }
             echo "</table>";
         }
@@ -1681,8 +1692,10 @@ class FinanzenNEW extends functions
                     echo "<input type=text name=umsatzWert value='" . $umsatzInfo[0]->umsatzWert . "' /><br>";
                     echo "<input type=date name=umsatzDatum value='" . $umsatzInfo[0]->datum . "'  /><br>";
                     echo "<input type=text name=link value='" . $umsatzInfo[0]->link . "'  /><br>";
-                    echo "<input type=submit name=alterUmsatz value=Speichern />";
-                    echo "<input type=submit name=loeschUmsatz value=L&ouml;schen />";
+                    //echo "<input type=submit name=alterUmsatz value=Speichern />";
+                    echo "<button type=submit name=alterUmsatz>Speichern</button>";
+                    //echo "<input type=submit name=loeschUmsatz value=L&ouml;schen />";
+                    echo "<button type=submit name=loeschUmsatz>L&ouml;schen</button>";
 
                     $this->regelmaessigeZahlung($umsatzInfo, $besitzer);
 
@@ -1708,11 +1721,12 @@ class FinanzenNEW extends functions
 
                     // Buchungsnummer herausfinden;
                     $objektBuchungsNr = $this->sqlselect("SELECT id, buchungsnr FROM finanzen_umsaetze WHERE id = '$id'");
-                    $buchungsnr = $objektBuchungsNr[0]->buchungsnr;
+                    
 
-                    if (!isset($buchungsnr) or $buchungsnr == "") {
+                    if (!isset($objektBuchungsNr[0]->buchungsnr) or $objektBuchungsNr[0]->buchungsnr == "") {
                         exit();
                     }
+                    $buchungsnr = $objektBuchungsNr[0]->buchungsnr;
                     if ($this->userHasRight(18, 0) == true) {
                         $delete = "DELETE FROM finanzen_umsaetze
                         WHERE besitzer='$besitzer' AND buchungsnr = '$buchungsnr' LIMIT 2";
