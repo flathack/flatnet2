@@ -28,7 +28,6 @@
         <body>
             <div class='mainbodyDark' id="monate">
                 <?php $finanzen->showNavigation(); ?>
-                <h2>Finanzverwaltung</h2>
                 <?php
                 // Zeigt die Finanzen an.
                 $finanzen->mainFinanzFunction();
