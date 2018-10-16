@@ -21,8 +21,6 @@ body {
     background-attachment: fixed;
     /* font-family: "Palatino Linotype", "Book Antiqua", Palatino, serif;*/
     font-size: 1em;
-    height: 100%;
-    width: 100%;
     font-style: normal;
     font-weight: normal;
     text-decoration: none;
@@ -2360,30 +2358,21 @@ input[type=password]:focus {
 }
 /* Ist der Hauptbody auf allen Seiten */
 
-#wrapper {/*
-    margin-left: auto;
-    margin-right: auto;
-    width: 90%;
-    min-width: 650px;
-    max-width: 1800px;
-    */
+#wrapper {
     background-color: transparent;
     border-left: 2px solid #2e2e2e;
     border-right: 2px solid #2e2e2e;
     border-bottom: 2px solid #2e2e2e;
-    opacity: .96
+    opacity: .96;
+    background-color: white;
 }
 .mainbody {
     background-color: white;
     padding: 10px;
-    min-height: 700px;
 }
 .mainbodyDark {
     background-color: white;
     padding: 10px;
-    min-height: 700px;
-    /* #373737; */
-    
     padding: 10px;
 }
 

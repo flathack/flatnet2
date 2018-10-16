@@ -823,17 +823,17 @@ class Gw_Charakter extends Guildwars
 
         //Abfangen, wenn kein Charakter gefunden wurde und die Variable leer ist.
         if (!isset($row[0]->besitzer)) {
-            echo "<p class='meldung'>Hör auf in der Adressleiste rumzuspielen!!!</p>";
+            $this->errorMessage("Der ausgewählte Charakter existiert nicht.");
             exit;
         }
         $charOwner = $row[0]->besitzer;
         if ($this->userHasRight("9", 0) == false and $currentUser != $charOwner) {
-            echo "<p class='meldung'>Du darfst dir diesen Charakter nicht ansehen.</p>";
+            $this->errorMessage("Du hast keine Berechtigung diesen Charakter auszusehen.");
             exit;
         }
 
         if ($row == "") {
-            echo "<p class='meldung'>Hör auf in der Adressleiste rumzuspielen!!!</p>";
+            $this->errorMessage("Der ausgewählte Charakter existiert nicht.");
             exit;
         }
     }
@@ -1229,7 +1229,16 @@ class Gw_Charakter extends Guildwars
         //bisherige gelöschte Stunden bekommen:
         $bisherigeStunden = $this->sqlselect("SELECT * FROM account_infos WHERE besitzer = '$userID' AND attribut = 'gw_geloschte_stunden' AND account = '$charAccount' LIMIT 1");
         //Neuen Wert ausrechnen
-        $neuerWert = $bisherigeStunden[0]->wert + $charInfos[0]->spielstunden;
+        if (isset($bisherigeStunden[0]->wert)) {
+
+            $neuerWert = $bisherigeStunden[0]->wert + $charInfos[0]->spielstunden;
+        } else {
+            if (isset($charInfos[0]->spielstunden)) {
+                $neuerWert = $charInfos[0]->spielstunden + 0;
+            } else {
+                $neuerWert = 0;
+            }
+        }
 
         //Update oder Insert durchführen.
         if (!isset($bisherigeStunden[0]->wert) or $bisherigeStunden[0]->wert == "") {
