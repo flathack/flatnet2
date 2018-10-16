@@ -451,6 +451,48 @@ class FinanzenNEW extends functions
     }
 
     /**
+     * Zeigt die Buchungsdescription an
+     * 
+     * @return void
+     */
+    function getBuchDesc(int $buchnr) 
+    {
+        $sql = "SELECT * FROM finanzen_buchungsnr_desc WHERE buchnr=$buchnr LIMIT 1";
+        $info = $this->sqlselect($sql);
+        if (isset($_POST['buchdesctext'])) {
+            
+            $text = $_POST['buchdesctext'];
+            if (strlen($text) > 0) {
+                if (!isset($info[0]->description)) {
+                    $sql = "INSERT INTO finanzen_buchungsnr_desc (buchnr, description) values ($buchnr, '$text')";
+                } else {
+                    $sql = "UPDATE finanzen_buchungsnr_desc SET description='$text' WHERE buchnr=$buchnr LIMIT 1";
+                }
+                if ($this->sqlInsertUpdateDelete($sql) == true) {
+                    $this->erfolgMessage("Erfolgreich");
+                } else {
+                    $this->errorMessage("Nicht Erfolgreich");
+                }
+            } else {
+                $this->infoMessage("Text leer");
+            }
+            
+        }
+        echo "<div class='newFahrt'>";
+        echo "<form method=post>";
+        if (isset($info[0]->description)) {
+
+            echo "<textarea name=buchdesctext class='ckeditor'> " .$info[0]->description . "</textarea>";
+        } else {
+            echo "<textarea name=buchdesctext class='ckeditor'> " ."" . "</textarea>";
+        }
+        echo "<button type=submit>OK</button>";
+        echo "</form>";
+        echo "</div>";
+        
+    }
+
+    /**
      * Zeigt den aktuellen Monat in der Finanz&uuml;bersicht an.
      *
      * @param int $besitzer    UserID
@@ -466,8 +508,11 @@ class FinanzenNEW extends functions
         $currentMonth = $monat;
         // get konto information
         $kontoinformation = $this->sqlselect("SELECT * FROM finanzen_konten WHERE id=$kontoID AND besitzer=$besitzer");
-
         $this->checkKontoSicherheit($kontoID);
+        if (isset($_GET['buchdesc']) AND is_numeric($_GET['buchdesc']) == true) {
+            $this->getBuchDesc($_GET['buchdesc']);
+        }
+        
 
         if ($kontoID > 0) {
             $umsaetze = $this->getUmsaetzeMonthFromKonto($currentMonth, $currentYear, $kontoID);
@@ -631,7 +676,10 @@ class FinanzenNEW extends functions
                     }
 
                     //OPTIONEN
-                    echo "<td>" . "<a href='?konto=$kontoID&monat=$monat&jahr=$currentYear&edit=" . $umsaetze[$i]->id . "'>edit</a>" . "</td>";
+                    echo "<td>"; 
+                        echo "<a href='?konto=$kontoID&monat=$monat&jahr=$currentYear&edit=" . $umsaetze[$i]->id . "'>edit</a>"; 
+                        echo "<a href='?konto=$kontoID&monat=$monat&jahr=$currentYear&buchdesc=" . $umsaetze[$i]->buchungsnr . "'>I</a>"; 
+                    echo "</td>";
                     echo "</tbody>";
 
                     // HEUTE Zeile anzeigen
