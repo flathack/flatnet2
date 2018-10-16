@@ -54,7 +54,6 @@ class FinanzenNEW extends functions
             // Informationsmeldungen
             $this->showErrors();
             $this->showFuturePastJahr();
-            $this->showFuturePastMonat();
             $this->checkJahresabschluss();
             $this->showJahresabschlussIfAvailable();
 
@@ -65,7 +64,11 @@ class FinanzenNEW extends functions
             if (isset($_GET['ganzesJahr'])) {
                 $this->showWholeYear($besitzer);
             } else {
-                $this->showCurrentMonthInKonto($besitzer);
+                
+                $kontoID = $this->getKontoIDFromGet();
+                $monat = $this->getMonatFromGet();
+                $currentYear = $this->getJahrFromGet();
+                $this->showMonthInKonto($besitzer, $kontoID, $monat, $currentYear);
             }
 
             $this->diagrammOptionen($besitzer);
@@ -241,7 +244,7 @@ class FinanzenNEW extends functions
 
         }
     }
-
+    
     /**
      * Stellt die Funktionalitaeten fuer das teilen von Konten zur Verfuegung
      * 
@@ -288,7 +291,7 @@ class FinanzenNEW extends functions
      * 
      * @return void
      */
-    public function mainAbrechnung($monat, $konto)
+    public function mainAbrechnung($monat, $konto, $currentYear)
     {
         $besitzer = $this->getUserID($_SESSION['username']);
         echo "<ul class='finanzNAV'>";
@@ -299,7 +302,7 @@ class FinanzenNEW extends functions
         $kontoname = $this->getKontoname($konto);
         echo "<h3>$kontoname Abrechnung f&uuml;r $monthname</h3>";
 
-        $this->showCurrentMonthInKonto($besitzer);
+        $this->showMonthInKonto($besitzer, $konto, $monat, $currentYear);
 
     }
 
@@ -450,22 +453,19 @@ class FinanzenNEW extends functions
     /**
      * Zeigt den aktuellen Monat in der Finanz&uuml;bersicht an.
      *
-     * @param int $besitzer UserID
+     * @param int $besitzer    UserID
+     * @param int $kontoID     KontoID
+     * @param int $monat       Monat
+     * @param int $currentYear Jahr
      * 
      * @return void
      */
-    public function showCurrentMonthInKonto($besitzer)
+    public function showMonthInKonto(int $besitzer, int $kontoID, int $monat, int $currentYear)
     {
         // Kontoinfo bekommen:
-        $kontoID = $this->getKontoIDFromGet();
-        $monat = $this->getMonatFromGet();
         $currentMonth = $monat;
         // get konto information
         $kontoinformation = $this->sqlselect("SELECT * FROM finanzen_konten WHERE id=$kontoID AND besitzer=$besitzer");
-
-        // jetziger Monat:
-
-        $currentYear = $this->getJahrFromGet();
 
         $this->checkKontoSicherheit($kontoID);
 
@@ -885,11 +885,11 @@ class FinanzenNEW extends functions
             echo "</div>";
         }
 
-        if (isset($_GET['gesamtesJahr']) and isset($_GET['kontoOpt']) and isset($_GET['jahr'])) {
+        if (isset($_GET['ganzesJahr']) and isset($_GET['konto']) and isset($_GET['ganzesJahr'])) {
 
-            $konto = $_GET['kontoOpt'];
+            $konto = $_GET['konto'];
 
-            $jahr = $_GET['jahr'];
+            $jahr = $_GET['ganzesJahr'];
 
             $query = "SELECT * FROM finanzen_umsaetze WHERE besitzer = $besitzer AND konto = $konto AND year(datum) = $jahr";
             $zahlen = $this->sqlselect($query);
@@ -907,21 +907,6 @@ class FinanzenNEW extends functions
             }
         }
 
-        if (isset($_GET['alles']) and isset($_GET['kontoOpt'])) {
-            $konto = $_GET['kontoOpt'];
-            $query = "SELECT * FROM finanzen_umsaetze WHERE besitzer = $besitzer AND konto = $konto";
-            $zahlen = $this->sqlselect($query);
-            $zwischensumme = 0;
-
-            for ($i = 0; $i < sizeof($zahlen); $i++) {
-                $zwischensumme = $zahlen[$i]->umsatzWert + $zwischensumme;
-                $arrayFuerDiagramm[$i] = $zwischensumme;
-            }
-
-            if (isset($arrayFuerDiagramm)) {
-                $this->showDiagramme($arrayFuerDiagramm, "700", "200");
-            }
-        }
     }
 
     /**
@@ -941,7 +926,6 @@ class FinanzenNEW extends functions
         echo "<li id='konten'><a href='konten.php'>Konten</a></li>";
         echo "<li id='shares'><a href='shares.php'>Shared Konten</a></li>";
         echo "<li><a href='?konto=$kontoID&monat=$monat&jahr=$jahr&newUeberweisung' >Neue Buchung</a></li>";
-        //   echo "<li><a href='?konto=$kontoID&monat=$monat&jahr=$jahr&checkJahresabschluesse' >Jahresabschlusscheck</a></li>";
         echo "</ul>";
         echo "</div>";
     }
@@ -956,9 +940,9 @@ class FinanzenNEW extends functions
     public function showMonateLinks()
     {
 
-        $jahr = $this->validateJahr();
-        $konto = $this->validateKonto();
-        $monat = $this->validateMonat();
+        $jahr = $this->getJahrFromGet();
+        $konto = $this->getKontoIDFromGet();
+        $monat = $this->getMonatFromGet();
         echo "<ul class='FinanzenMonate'>";
         if ($monat == 1) {
             $monatzurueck = 12;
@@ -1067,69 +1051,6 @@ class FinanzenNEW extends functions
     }
 
     /**
-     * Validiert das angebene Konto.
-     * 
-     * @return int $konto
-     */
-    public function validateKonto()
-    {
-        if (isset($_GET['konto'])) {
-
-            if (is_numeric($_GET['konto']) == true) {
-                $konto = $_GET['konto'];
-            } else {
-                $konto = 0;
-            }
-        } else {
-            $konto = 0;
-        }
-
-        return $konto;
-    }
-
-    /**
-     * Prüft ob der Monat das richtige Format hat.
-     * 
-     * @return int $monat
-     */
-    public function validateMonat()
-    {
-        if (isset($_GET['monat'])) {
-
-            if (is_numeric($_GET['monat']) == true) {
-                $monat = $_GET['monat'];
-            } else {
-                $monat = date("M");
-            }
-        } else {
-            $monat = date("M");
-        }
-
-        return $monat;
-    }
-
-    /**
-     * Prüft ob das Jahr das richtige Format hat.
-     * 
-     * @return int $monat
-     */
-    public function validateJahr()
-    {
-        if (isset($_GET['jahr'])) {
-            if (is_numeric($_GET['jahr']) == true) {
-                $jahr = $_GET['jahr'];
-            } else {
-                $jahr = date("Y");
-            }
-
-        } else {
-            $jahr = date("Y");
-        }
-
-        return $jahr;
-    }
-
-    /**
      * Zeigt die Links der Jahre an.
      * 
      * @return void
@@ -1137,9 +1058,9 @@ class FinanzenNEW extends functions
     public function showJahreLinks()
     {
 
-        $jahr = $this->validateJahr();
-        $konto = $this->validateKonto();
-        $monat = $this->validateMonat();
+        $jahr = $this->getJahrFromGet();
+        $konto = $this->getKontoIDFromGet();
+        $monat = $this->getMonatFromGet();
 
         echo "<ul class='FinanzenMonate'>";
 
@@ -1277,6 +1198,8 @@ class FinanzenNEW extends functions
 
     /**
      * Gibt das Jahr zur&uuml;ck.
+     * Min Jahr: 1930
+     * Max Jahr: 2090
      *
      * @return int|numeric
      */
@@ -1284,7 +1207,13 @@ class FinanzenNEW extends functions
     {
         if (isset($_GET['jahr'])) {
             if (is_numeric($_GET['jahr']) == true) {
-                $jahr = $_GET['jahr'];
+                $min = 1930;
+                $max = 2090;
+                if ($_GET['jahr'] > $max OR $_GET['jahr'] < $min) {
+                    $jahr = date("Y");
+                } else {
+                    $jahr = $_GET['jahr'];
+                }
             } else {
                 $jahr = date("Y");
             }
@@ -1305,12 +1234,7 @@ class FinanzenNEW extends functions
     {
         if (isset($_GET['jahr'])) {
 
-            if (is_numeric($_GET['jahr']) == true) {
-                $jahr = $_GET['jahr'];
-            } else {
-                $jahr = date("Y");
-            }
-
+            $jahr = $this->getJahrFromGet();
             $currentJahr = date("Y");
 
             if ($this->checkIfJahrIsInFuture($currentJahr, $jahr) == true) {
@@ -1320,33 +1244,6 @@ class FinanzenNEW extends functions
             if ($this->checkIfJahrIsInPast($currentJahr, $jahr) == true) {
                 echo "<p class='dezentInfo'>Das Jahr liegt in der Vergangenheit.";
             }
-        }
-    }
-
-    /**
-     * Deaktiviert
-     * Zeigt eine Meldung an, wenn der gew&auml;hlte Monat in der Zukunft liegt.
-     * 
-     * @return void
-     */
-    public function showFuturePastMonat()
-    {
-        if (isset($_GET['monat'])) {
-            /*
-            $monat = $_GET ['monat'];
-            $currentMonat = date ("m");
-
-            $jahr = $_GET['jahr'];
-            $currentJahr = date ("Y");
-
-            if ($this->checkIfMonatIsInFuture ( $currentMonat, $monat ) == true) {
-               echo "<p class='info'>Der Monat liegt in der Zukunft";
-            }
-            
-            if ($this->checkIfMonatIsInPast($currentMonat, $monat, $currentJahr, $jahr) == true) {
-               echo "<p class='dezentInfo'>Der Monat liegt in der Vergangenheit.";
-            }
-            */
         }
     }
 
@@ -1399,43 +1296,6 @@ class FinanzenNEW extends functions
         } else {
             return false;
         }
-    }
-
-    /**
-     * Prueft, ob Monat in der Vergangenheit liegt.
-     *
-     * @param int $currentMonat      derzeitiger Monat
-     * @param int $zuPruefenderMonat prüfender Monat
-     * @param int $currentJahr       derzeitiges Jahr
-     * @param int $pruefendesJahr    prüfender Jahr
-     * 
-     * @return boolean
-     */
-    public function checkIfMonatIsInPast($currentMonat, $zuPruefenderMonat, $currentJahr, $pruefendesJahr)
-    {
-        if ($this->checkIfJahrIsInFuture($currentJahr, $pruefendesJahr) == true) {
-            return false;
-        } else {
-            if ($zuPruefenderMonat < $currentMonat) {
-                return true;
-            } else {
-                return false;
-            }
-        }
-    }
-
-    /**
-     * Berechnet die Jahresabschluesse neu, 
-     * wenn sich in der Vergangenheit etwas geaendert hat.
-     *
-     * @param int $besitzer UserID
-     * @param int $konto    KontoID
-     * 
-     * @return void
-     */
-    public function reCalcJahresabschluesse($besitzer, $konto)
-    {
-        // EMPTY FUNCTION
     }
     
     /**
@@ -1637,13 +1497,7 @@ class FinanzenNEW extends functions
                     }
 
                     // ID mit Minuswert herausfinden:
-                    $minusObjekt = $this->sqlselect(
-                        "SELECT * 
-                        FROM finanzen_umsaetze 
-                        WHERE buchungsnr = '$buchungsnr' 
-                        AND umsatzWert < 0 
-                        LIMIT 1"
-                    );
+                    $minusObjekt = $this->sqlselect("SELECT * FROM finanzen_umsaetze WHERE buchungsnr = '$buchungsnr' AND umsatzWert < 0 LIMIT 1");
                     $minusID = $minusObjekt[0]->id;
 
                     // ID mit Minuswert herausfinden:
@@ -2350,12 +2204,12 @@ class FinanzenNEW extends functions
             if (isset($_POST['marked'])) {
                 $marked = $_POST['marked'];
 
-                echo "<div class='alterUmsatz'>";
+                echo "<div class='newFahrt'>";
                 echo "<form method=post>";
                 echo "<h2>Ums&auml;tze umbuchen</h2>";
                 $i = 0;
                 foreach ($marked as $buchung) {
-                    echo "<p>Buchungsnummer: <input type=number name=umbuchenNumbers[$i] value='$buchung' readonly /></p>";
+                    echo "<p>$i : Buchungsnummer: <input type=number name=umbuchenNumbers[$i] value='$buchung' readonly /></p>";
                     $i++;
                 }
 
@@ -2641,11 +2495,11 @@ class FinanzenNEW extends functions
             if ($this->objectExists($query) == true) {
                 $buchInfos = $this->sqlselect($query);
 
-                echo "<div class='newCharWIDE'><form method=post>";
+                echo "<div class='newFahrt'><form method=post>";
 
                 $this->umbuchungDurchfuehren($buchungsnr);
 
-                echo "<h2>Umsatzinformationen</h2>";
+                echo "<h2>Umsatz umbuchen</h2>";
                 echo "<table class='kontoTable'>";
                 for ($i = 0; $i < sizeof($buchInfos); $i++) {
                     if ($buchInfos[$i]->umsatzWert > 0) {
@@ -2954,8 +2808,8 @@ class FinanzenNEW extends functions
     {
         if (isset($_GET['konto']) and isset($_GET['jahr'])) {
 
-            $konto = $this->validateKonto();
-            $jahr = $this->validateJahr();
+            $konto = $this->getKontoIDFromGet();
+            $jahr = $this->getJahrFromGet();
             $besitzer = $this->GetUserID($_SESSION['username']);
             $query = "SELECT besitzer, jahr, wert, konto FROM finanzen_jahresabschluss WHERE besitzer=$besitzer AND $konto=$konto AND jahr=$jahr";
             $jahresabschlussFuerDiesesJahr = $this->sqlselect($query);

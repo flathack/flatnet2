@@ -49,7 +49,7 @@ class Planner Extends Functions
             $this->showEvent();
         }
 
-        // $this->showFooter();
+        $this->showFooter();
 
     }
 
@@ -493,10 +493,10 @@ class Planner Extends Functions
     function showFooter() 
     {
         // AUSGABE
-        echo "<div class=''>";
-            echo "<p>EventPlanner by Steven Schödel (c) Version 15.102018 | ";
-            echo "<a href='/flatnet2/informationen/impressum.php'>Impressum</a>";
-
+        echo "<div class='footer'>";
+            echo "<p>EventPlanner by Steven Schödel (c) Version 16.102018 | ";
+            echo "<a href='/flatnet2/informationen/impressum.php'>Impressum</a> | ";
+            echo "<a href='/index.php'>Login</a>";
             echo "</p>";
         echo "</div>";
     }
@@ -515,8 +515,9 @@ class Planner Extends Functions
         if (isset($_SESSION['eventid']) AND isset($_SESSION['eventguest'])) {
             echo "<li><a href='event.php'>" .$this->getEventname($_SESSION['eventid']). "</a></li>";
         }
-        
-        echo "<li><a href='index.php?eventchange'>Logout</a></li>";
+        if (isset($_SESSION['eventid'])) {
+            echo "<li><a href='index.php?eventchange'>Logout</a></li>";
+        }
         echo "</ul>";
         
     }
@@ -529,7 +530,10 @@ class Planner Extends Functions
     {   
         echo "<li><a href='index.php'>Login</a></li>";
         echo "<li><a href='administration.php'>Administration</a></li>";
-        echo "<li><a href='?guestlogout'>Gast ausloggen</a></li>";
+        if (isset($_SESSION['eventguest'])) {
+            echo "<li><a href='?guestlogout'>Gast ausloggen</a></li>";
+        }
+        
     }
 
     /**
@@ -595,7 +599,7 @@ class Planner Extends Functions
 
             if (strlen($newcode) > 5) {
                 // CHECK IF CODE ALREADY IN USE:
-                if ($this->objectExists("SELECT * FROM eventinvitecodes WHERE eventinvitecode='$newcode' AND eventid=$eventid") == false) {
+                if ($this->objectExists("SELECT * FROM eventinvitecodes WHERE eventinvitecode='$newcode' AND eventid=$eventid") == true) {
                     $this->infoMessage("Der Code ($newcode) existiert bereits und kann nicht hinzugefügt werden.");
                 } else {
                     $sql = "INSERT INTO eventinvitecodes (eventid, eventinvitecode) VALUES ('$eventid','$newcode')";
@@ -1234,7 +1238,7 @@ class Planner Extends Functions
             if (strlen($memberlist[$i]->fullname) > 1) {
                 echo "<li id='$css'>".$memberlist[$i]->fullname."</li>";
             } else {
-                echo "<li>Gast $i</li>";
+                echo "<li>Gast ".$memberlist[$i]->id."</li>";
             }
             
         }

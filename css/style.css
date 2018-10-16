@@ -1960,7 +1960,8 @@ input[type=password]:focus {
 }
 #konten #konten
 , #monate #monate
-, #shares #shares {
+, #shares #shares
+, #stat #stat {
 	display: inline-block;
     margin: 0px 0px 0px 0px;
     background-color: #820003;
@@ -1968,7 +1969,10 @@ input[type=password]:focus {
     padding: 5px;
 }
 
-#konten #konten a, #monate #monate a {
+#konten #konten a
+, #monate #monate a
+, #shares #shares a
+, #stat #stat a {
     color: white;
 }
 .FinanzenMonate {
@@ -2790,5 +2794,16 @@ input[type=checkbox]+label:hover {
     -ms-transition: all 0.3s ease-in-out;
     -o-transition: all 0.3s ease-in-out;
     transition: all 0.3s ease-in-out;
+}
+
+.footer p {
+    font-size: 0.8em;
+}
+.footer a, 
+.footer a:visited,
+.footer a:hover,
+.footer a:visited:hover {
+    color: black;
+    text-decoration: none;
 }
 /* ENDE DER CSS */

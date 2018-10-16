@@ -39,8 +39,9 @@
                 if (isset($_GET['month']) AND isset($_GET['konto'])) {
                     $monat = $_GET['month'];
                     $konto = $_GET['konto'];
-                    if (is_numeric($monat) AND is_numeric($konto)) {
-                        $finanzen->mainAbrechnung($monat, $konto);
+                    $currentYear = $finanzen->getJahrFromGet();
+                    if (is_numeric($monat) AND is_numeric($konto) AND is_numeric($currentYear)) {
+                        $finanzen->mainAbrechnung($monat, $konto, $currentYear);
                     }
                 }
                 ?>
