@@ -815,7 +815,7 @@ class Planner Extends Functions
      */
     function eventSelector() 
     {
-        echo "<div class='login'>";
+        echo "<div class='eventlogin'>";
         
         if (!isset($_SESSION['eventid']) OR !isset($_SESSION['eventguest'])) {
             
@@ -839,7 +839,7 @@ class Planner Extends Functions
                 echo "<button type=submit name=submit>Absenden</button>";
             echo "</form>";
         } else {
-            echo "<div class='login'>Du bist bereits eingeloggt. Um zur Veranstaltung zu wechseln klicke <a href='event.php'>hier</a> <br>"; 
+            echo "<div class=''>Du bist bereits eingeloggt. Um zur Veranstaltung zu wechseln klicke <a href='event.php'>hier</a> <br>"; 
             echo "oder klicke <a href='?eventchange'>hier</a> um dich abzumelden.";
             echo "</div>";
         }

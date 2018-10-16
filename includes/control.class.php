@@ -465,7 +465,7 @@ class Control extends Functions
             "hardwaredegarantietypes" => "xxx",
             "hardwaredemanufacturers" => "xxx",
             "hardwaredetypes" => "xxx",
-            "log" => "besitzer",
+            "log" => "xxx",
             "registercode" => "xxx",
             "rightkategorien" => "xxx",
             "rights" => "besitzer",
