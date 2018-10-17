@@ -453,9 +453,14 @@ class FinanzenNEW extends functions
     /**
      * Zeigt die Buchungsdescription an
      * 
+     * @param int $buchnr  Buchungsnummer
+     * @param int $kontoid KontoID
+     * @param int $monat   Monat
+     * @param int $jahr    Jahr
+     * 
      * @return void
      */
-    function getBuchDesc(int $buchnr) 
+    function getBuchDesc(int $buchnr, int $kontoid, int $monat, int $jahr, string $view) 
     {
         $sql = "SELECT * FROM finanzen_buchungsnr_desc WHERE buchnr=$buchnr LIMIT 1";
         $info = $this->sqlselect($sql);
@@ -478,15 +483,27 @@ class FinanzenNEW extends functions
             }
             
         }
-        echo "<div class='newFahrt'>";
-        echo "<form method=post>";
-        if (isset($info[0]->description)) {
 
-            echo "<textarea name=buchdesctext class='ckeditor'> " .$info[0]->description . "</textarea>";
+        // Ausgabe
+        echo "<div class='separateDivBox'>";
+        echo "<form method=post>";
+        echo "<h3></h3>";
+        if ($view == "edit") {
+            if (isset($info[0]->description)) {
+                echo "<textarea name=buchdesctext class='ckeditor'> " .$info[0]->description . "</textarea>";
+            } else {
+                echo "<textarea name=buchdesctext class='ckeditor'> " ."" . "</textarea>";
+            }
         } else {
-            echo "<textarea name=buchdesctext class='ckeditor'> " ."" . "</textarea>";
+            if (isset($info[0]->description)) {
+                echo "<div class='newFahrt'>";
+                echo $info[0]->description;
+                echo "</div>";
+            }
         }
+        
         echo "<button type=submit>OK</button>";
+        echo "<a class='rightRedLink' href='?konto=$kontoid&monat=$monat&jahr=$jahr'>Schließen</a>";
         echo "</form>";
         echo "</div>";
         
@@ -510,7 +527,11 @@ class FinanzenNEW extends functions
         $kontoinformation = $this->sqlselect("SELECT * FROM finanzen_konten WHERE id=$kontoID AND besitzer=$besitzer");
         $this->checkKontoSicherheit($kontoID);
         if (isset($_GET['buchdesc']) AND is_numeric($_GET['buchdesc']) == true) {
-            $this->getBuchDesc($_GET['buchdesc']);
+            $this->getBuchDesc($_GET['buchdesc'], $kontoID, $monat, $currentYear, "edit");
+        }
+
+        if (isset($_GET['buchdescview']) AND is_numeric($_GET['buchdescview']) == true) {
+            $this->getBuchDesc($_GET['buchdescview'], $kontoID, $monat, $currentYear, "view");
         }
         
 
@@ -571,7 +592,7 @@ class FinanzenNEW extends functions
             }
 
             $abrechnung = "<a href='abrechnung.php?month=" . $currentMonth . "&konto=" . $kontoinformation[0]->id . "'>Abrechnung</a>";
-            echo "<td colspan=8>Monat:<strong> $currentMonth </strong>im Jahr <strong>$currentYear</strong> $saldotext $mailinfo $abrechnung </td>";
+            echo "<td colspan=7>Monat:<strong> $currentMonth </strong>im Jahr <strong>$currentYear</strong> $saldotext $mailinfo $abrechnung </td>";
             echo "</thead>";
 
             echo "<thead>";
@@ -580,7 +601,7 @@ class FinanzenNEW extends functions
             echo "<td>Umsatz</td>";
             echo "<td id='small'>Tag</td>";
             echo "<td id='width140px'>Wert</td>";
-            echo "<td id='width140px'>Kategorien</td>";
+            // echo "<td id='width140px'>Kategorien</td>";
             echo "<td id='width140px'>Saldo</td>";
             echo "<td id='small'>Optionen</td>";
 
@@ -642,6 +663,11 @@ class FinanzenNEW extends functions
                     if (isset($umsaetze[$i]->link) and $umsaetze[$i]->link != "") {
                         echo "<a href='" . $umsaetze[$i]->link . "'>link</a>";
                     }
+                    $sql = "SELECT * FROM finanzen_buchungsnr_desc WHERE buchnr=" . $umsaetze[$i]->buchungsnr . " LIMIT 1";
+                    $infotext = $this->sqlselect($sql);
+                    if (isset($infotext[0]->buchnr)) {
+                        echo "<a href='?konto=$kontoID&monat=$monat&jahr=$currentYear&buchdescview=" . $umsaetze[$i]->buchungsnr . "' name=info>&#9432;</a>";
+                    }
                     echo "</td>";
 
                     //TAG
@@ -653,8 +679,8 @@ class FinanzenNEW extends functions
                     echo " &#8364;</td>";
 
                     //Kategorie
-                    $cat = $this->getCategoryForUmsatz($umsaetze[$i]->id);
-                    echo "<td>$cat</td>";
+                    // $cat = $this->getCategoryForUmsatz($umsaetze[$i]->id);
+                    // echo "<td>$cat</td>";
 
                     //SALDO
                     if ($kontoinfos[0]->art == 2) {
@@ -723,7 +749,7 @@ class FinanzenNEW extends functions
                     echo "<td></td>"; 
                 echo "</tfoot>";
             } else {
-                echo "<tfoot><td colspan=6 id='rightAlign'>Endsaldo: </td><td id='rightAlign'>" . number_format(round($zwischensumme, 2), 2, ",", ".") . " &#8364; </td><td></td></tfoot>";
+                echo "<tfoot><td colspan=5 id='rightAlign'>Endsaldo: </td><td id='rightAlign'>" . number_format(round($zwischensumme, 2), 2, ",", ".") . " &#8364; </td><td></td></tfoot>";
             }
 
             echo "</table>";
