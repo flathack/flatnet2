@@ -127,7 +127,7 @@ class Usermanager extends Functions
     public function userInfo()
     {
 
-        echo "<div class='gwEinstellungen'>";
+        echo "<div class='newFahrt'>";
         $user = $this->getUserID($_SESSION['username']);
         //General Account Information
         $select = "SELECT * FROM benutzer WHERE id = '$user'";
@@ -265,7 +265,7 @@ class Usermanager extends Functions
             if ($this->userHasRight("7", 0) == true) {
 
                 if ($altesPasswort == "") {
-                    echo "<p class='info'>Du musst erst etwas in die Felder eintragen :)</p>";
+                    echo "<p class='info'>Felder leer</p>";
                     return false;
                 }
 
@@ -409,18 +409,16 @@ class Usermanager extends Functions
         if (isset($_GET['passChange'])) {
             $this->changePass();
 
-            echo "<div class='gwEinstellungen'>";
+            echo "<div class=''>";
                 echo "<h2>Passwort ändern</h2>";
                 
                 echo "<form method='post'>";
-                    echo "<input type='password' name='oldPass' placeholder='Altes Passwort' />";
-                    echo "<input type='password' name='newPass' placeholder='Neues Passwort' />";
-                    echo "<input type='password' name='newPass2' placeholder='Neues Passwort wiederholen' />";
+                    echo "<input type='password' name='oldPass' placeholder='Altes Passwort' required />";
+                    echo "<input type='password' name='newPass' placeholder='Neues Passwort' required />";
+                    echo "<input type='password' name='newPass2' placeholder='Neues Passwort wiederholen' required />";
                     echo "<input type='submit' name='absenden' value='absenden' />";
                 echo "</form>";
             echo "</div>";
-
-            $this->manageGWAccounts();
         }
 
     }
@@ -437,7 +435,7 @@ class Usermanager extends Functions
 
             //Speicherung:
             $this->saveNewGWAcc();
-            echo "<div class='gwEinstellungen'>";
+            echo "<div class='newFahrt'>";
 
             $this->getInfoGWAcc();
             $this->editGWAcc();
@@ -502,9 +500,9 @@ class Usermanager extends Functions
                     } else {
                         $query = "INSERT INTO gw_accounts (besitzer, account, mail) VALUES ('$user','$nextAccNo','$mail')";
                         if ($this->sqlInsertUpdateDelete($query) == true) {
-                            echo "<div class='gwEinstellungen'><p class='erfolg'>Account angelegt</p></div>";
+                            echo "<div class='newFahrt'><p class='erfolg'>Account angelegt</p></div>";
                         } else {
-                            echo "<div class='gwEinstellungen'><p class='meldung'>Fehler</p></div>";
+                            echo "<div class='newFahrt'><p class='meldung'>Fehler</p></div>";
                         }
                     }
                 }
@@ -539,7 +537,7 @@ class Usermanager extends Functions
                 if (!isset($row[0]->mail)) {
                     $insert = "INSERT INTO gw_accounts (besitzer, account, mail) VALUES ('$user','1','Standard Account')";
                     if ($this->sqlInsertUpdateDelete($insert) == true) {
-                        echo "<div class='gwEinstellungen'>";
+                        echo "<div class='newFahrt'>";
 
                         echo "<p class='erfolg'>Dein Account wurde einmalig konfiguriert. Du kannst hier jetzt mehrere Accounts
                                         anlegen, falls du mehrere besitzt, und diese dann später in der Charakterübersicht wechseln!</p>";
@@ -687,10 +685,7 @@ class Usermanager extends Functions
                 }
 
             } else {
-                echo "<div class='meldung'>";
-                    echo "<h2>Fehler</h2>";
-                    echo "<p class=''>Der Hauptaccount kann nicht gelöscht werden</p>";
-                echo "</div>";
+                    echo "<p class='meldung'>Der Hauptaccount kann nicht gelöscht werden</p>";
             }
         }
     }

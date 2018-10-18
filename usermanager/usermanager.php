@@ -37,7 +37,6 @@
         <body>
             <div class='mainbody'>
             <?php $usermanager->subNav("profil"); ?>
-                <div class="mainBody">
                     <h2>Willkommen <?php echo $benutzername ?></h2>
                     <div>
                         <?php 
@@ -45,16 +44,19 @@
                             $usermanager->showProfile($_GET['user']); 
                         } 
                         ?>
-                    </div>
+                        
+                    <div class='rightBody'>
                     <?php $usermanager->showPassChange(); ?>
-                    <?php $usermanager->showUserList(); ?>
-                    <?php $usermanager->userInfo(); ?>
-                </div>
-            </div>
-            <div class='mainbody'>
-            <?php 
-            $usermanager->userBlogTexte();
-            ?>
+                    </div>
+                    <div class='innerBody'>
+                        <?php $usermanager->manageGWAccounts(); ?>
+                        <?php $usermanager->showUserList(); ?>
+                        <?php $usermanager->userInfo(); ?>
+                    </div>
+                    </div>
+                <?php 
+                $usermanager->userBlogTexte();
+                ?>
             </div>
         </body>
     </div>

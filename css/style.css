@@ -801,17 +801,6 @@ blockquote {
 }
 /* Benutzerprofil */
 
-.gwEinstellungen {
-    border: 1px solid grey;
-    background-image: url(../images/index-login.jpg);
-    overflow: hidden;
-    background-repeat: no-repeat;
-    background-position: top;
-    background-attachment: fixed;
-    padding: 5px;
-    margin: 5px;
-    background-color: white;
-}
 .optionLink {
     color: black !important;
     display: inline-block;

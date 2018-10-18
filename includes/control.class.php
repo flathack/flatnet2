@@ -449,7 +449,7 @@ class Control extends Functions
             "eventinvitecodes" => "xxx",
             "eventlist" => "xxx",
             "eventtexts" => "xxx",
-            "finanzen_buchungsnr_desc" => "xxx",
+            "finanzen_buchungsnr_desc" => "besitzer",
             "finanzen_jahresabschluss" => "besitzer",
             "finanzen_konten" => "besitzer",
             "finanzen_monatsabschluss" => "besitzer",

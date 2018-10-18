@@ -460,7 +460,7 @@ class FinanzenNEW extends functions
      * 
      * @return void
      */
-    function getBuchDesc(int $buchnr, int $kontoid, int $monat, int $jahr, string $view) 
+    function getBuchDesc(int $buchnr, int $kontoid, int $monat, int $jahr, string $view, int $besitzer) 
     {
         $sql = "SELECT * FROM finanzen_buchungsnr_desc WHERE buchnr=$buchnr LIMIT 1";
         $info = $this->sqlselect($sql);
@@ -469,7 +469,7 @@ class FinanzenNEW extends functions
             $text = $_POST['buchdesctext'];
             if (strlen($text) > 0) {
                 if (!isset($info[0]->description)) {
-                    $sql = "INSERT INTO finanzen_buchungsnr_desc (buchnr, description) values ($buchnr, '$text')";
+                    $sql = "INSERT INTO finanzen_buchungsnr_desc (buchnr, description, besitzer) values ($buchnr, '$text', '$besitzer')";
                 } else {
                     $sql = "UPDATE finanzen_buchungsnr_desc SET description='$text' WHERE buchnr=$buchnr LIMIT 1";
                 }
@@ -527,11 +527,11 @@ class FinanzenNEW extends functions
         $kontoinformation = $this->sqlselect("SELECT * FROM finanzen_konten WHERE id=$kontoID AND besitzer=$besitzer");
         $this->checkKontoSicherheit($kontoID);
         if (isset($_GET['buchdesc']) AND is_numeric($_GET['buchdesc']) == true) {
-            $this->getBuchDesc($_GET['buchdesc'], $kontoID, $monat, $currentYear, "edit");
+            $this->getBuchDesc($_GET['buchdesc'], $kontoID, $monat, $currentYear, "edit", $besitzer);
         }
 
         if (isset($_GET['buchdescview']) AND is_numeric($_GET['buchdescview']) == true) {
-            $this->getBuchDesc($_GET['buchdescview'], $kontoID, $monat, $currentYear, "view");
+            $this->getBuchDesc($_GET['buchdescview'], $kontoID, $monat, $currentYear, "view", $besitzer);
         }
         
 
@@ -2146,7 +2146,7 @@ class FinanzenNEW extends functions
                         echo "Verbindlichkeitskonto";
                     }
                     echo "</td>";
-                    echo "<td><a class='rightBlueLink' href='detail.php?editKonto=" . $konten[$i]->id . "'>Details</a></td><td>";
+                    echo "<td><a href='detail.php?editKonto=" . $konten[$i]->id . "'>Details</a></td><td>";
                     if ($konten[$i]->art == 2) {
                         echo "x";
                     } else {
@@ -2154,12 +2154,11 @@ class FinanzenNEW extends functions
                         echo $summe . " €";
                     }
                     echo "</td></tbody>";
-                    // echo "</div>";
                 }
             }
             $inactive = $this->sqlselect("SELECT id, count(*) as anzahl FROM finanzen_konten WHERE besitzer=$besitzer AND aktiv=0");
             if ($inactive[0]->anzahl == 0) {
-                echo "<tbody><td colspan=6>Zur Zeit hast du keine deaktivierten Konten</td></tbody>";
+                echo "<tbody><td colspan=6>Zur Zeit hast du keine Konten in diesem Bereich</td></tbody>";
             }
             echo "</table>";
             echo "</div>";
