@@ -1635,7 +1635,7 @@ class FinanzenNEW extends functions
                     if (isset($isshared[0]->target_user)) {
                         echo "<p class='meldung'>Du darfst ein fremdes Konto nicht bearbeiten!</p>";
                     } else {
-                        echo "<p class='meldung'>Diese Umsatznummer existiert nicht oder du bist nicht der Besitzer dieses Kontos!</p>";
+                        $this->infoMessage("Umsatz existiert nicht");
                     }
                     //   echo "</div>";
                 }
@@ -1652,20 +1652,31 @@ class FinanzenNEW extends functions
                     
 
                     if (!isset($objektBuchungsNr[0]->buchungsnr) or $objektBuchungsNr[0]->buchungsnr == "") {
-                        exit();
-                    }
-                    $buchungsnr = $objektBuchungsNr[0]->buchungsnr;
-                    if ($this->userHasRight(18, 0) == true) {
-                        $delete = "DELETE FROM finanzen_umsaetze
-                        WHERE besitzer='$besitzer' AND buchungsnr = '$buchungsnr' LIMIT 2";
-                        if ($this->sqlInsertUpdateDelete($delete) == true) {
-                            echo "<p class='erfolg'>Umsatz gel&ouml;scht</p>";
-                        } else {
-                            echo "<p class='erfolg'>Fehler</p>";
-                        }
+                        $this->infoMessage("Das Objekt ist nicht vorhanden");
                     } else {
-                        echo "<p class='meldung'>Keine Berechtigung</p>";
+                        $buchungsnr = $objektBuchungsNr[0]->buchungsnr;
+                        if ($this->userHasRight(18, 0) == true) {
+                            
+                            if ($this->objectExists("SELECT * FROM finanzen_buchungsnr_desc WHERE buchnr=$buchungsnr") == true) {
+                                if ($this->sqlInsertUpdateDelete("DELETE FROM finanzen_buchungsnr_desc WHERE buchnr=$buchungsnr") == true) {
+                                    $this->erfolgMessage("Umsatzinformationen gelöscht");
+                                }
+                            }
+                            if ($this->objectExists("SELECT * FROM finanzen_buchungsnr_desc WHERE buchnr=$buchungsnr") == false) { 
+                                if ($this->sqlInsertUpdateDelete("DELETE FROM finanzen_umsaetze WHERE besitzer=$besitzer AND buchungsnr=$buchungsnr LIMIT 2") == true) {
+                                    $this->erfolgMessage("Umsatz gelöscht");
+                                } else {
+                                    $this->errorMessage("Fehler beim löschen des Umsatzes");
+                                }
+                            } else {
+                                $this->errorMessage("Umsatzinformationen konnten nicht gelöscht werden, daher wird der Umsatz nicht gelöscht.");
+                            }
+                            
+                        } else {
+                            echo "<p class='meldung'>Keine Berechtigung</p>";
+                        }
                     }
+                    
                 }
             }
         }
@@ -2098,8 +2109,8 @@ class FinanzenNEW extends functions
             // Inaktive Konten
             echo "<div class='innerBody'>";
             echo "<h3>Nicht sichtbare Konten</h3>";
-            echo "<table class='flatnetTable'>";
-            echo "<thead><td>ID</td><td>Name</td><td>Art</td><td>Konto Details</td><td>Saldo</td><td>Mail</td></thead>";
+            echo "<table class='kontoTable'>";
+            echo "<thead><td>ID</td><td>Name</td><td>Art</td><td>Konto Details</td><td>Saldo</td></thead>";
             for ($i = 0; $i < sizeof($konten); $i++) {
                 $select2 = "SELECT sum(umsatzWert) as summe FROM finanzen_umsaetze WHERE konto=" . $konten[$i]->id . " AND datum <= CURDATE()";
                 $umsaetze = $this->sqlselect($select2);
@@ -2113,7 +2124,28 @@ class FinanzenNEW extends functions
                     }
                     // echo "<div class='$mark'>";
                     echo "<tbody>";
-                    echo "<td>" . $konten[$i]->id . ":</td><td> <a href='index.php?konto=" . $konten[$i]->id . "'>" . $konten[$i]->konto . "</td><td>" . $konten[$i]->art . "</a></td>";
+                    echo "<td>" . $konten[$i]->id . "</td><td> <a href='index.php?konto=" . $konten[$i]->id . "'>" . $konten[$i]->konto; 
+                    if (isset($konten[$i]->mail) AND strlen($konten[$i]->mail) > 0) {
+                        echo "<a href='mailto:".$konten[$i]->mail."'>mail</a>";
+                    }
+                    echo "</td>";
+                    echo "<td>"; 
+                    if ($konten[$i]->art == 0) {
+                        echo "Standard";
+                    }
+                    if ($konten[$i]->art == 1) {
+                        echo "Guthabenkonto";
+                    }
+                    if ($konten[$i]->art == 2) {
+                        echo "Kein Saldo";
+                    }
+                    if ($konten[$i]->art == 3) {
+                        echo "Forderungskonto";
+                    }
+                    if ($konten[$i]->art == 4) {
+                        echo "Verbindlichkeitskonto";
+                    }
+                    echo "</td>";
                     echo "<td><a class='rightBlueLink' href='detail.php?editKonto=" . $konten[$i]->id . "'>Details</a></td><td>";
                     if ($konten[$i]->art == 2) {
                         echo "x";
@@ -2121,9 +2153,13 @@ class FinanzenNEW extends functions
                         $summe = $umsaetze[0]->summe + 0;
                         echo $summe . " €";
                     }
-                    echo "</td><td>" . $konten[$i]->mail . "</td></tbody>";
+                    echo "</td></tbody>";
                     // echo "</div>";
                 }
+            }
+            $inactive = $this->sqlselect("SELECT id, count(*) as anzahl FROM finanzen_konten WHERE besitzer=$besitzer AND aktiv=0");
+            if ($inactive[0]->anzahl == 0) {
+                echo "<tbody><td colspan=6>Zur Zeit hast du keine deaktivierten Konten</td></tbody>";
             }
             echo "</table>";
             echo "</div>";
@@ -2159,7 +2195,9 @@ class FinanzenNEW extends functions
     {
         if (isset($_GET['neuesKonto'])) {
 
-            echo "<div class='newFahrt'>";
+            echo "<div class='newChar'>";
+            
+            echo "<a href='?' class='rightRedLink'>X</a>";
 
             $konten = $this->getAllKonten($besitzer);
             if (!isset($konten[0]->id) and !isset($konten[1]->id)) {
@@ -2174,23 +2212,28 @@ class FinanzenNEW extends functions
                         Erstelle nun zwei Konten, die Mailadresse kannst du erstmal leer lassen.</p>";
 
             }
+            echo "<form method=post>";
 
-            echo "Kontoname: <br><form method=post><input type=text name=newKonto value='' placeholder='Kontoname' /><br>";
-            echo "Mailadresse f&uuml;r das Konto: <br><input type=text name=mail value='' placeholder=Mail /><br>";
-            echo "<br><button type=submit name=insertNewKonto>Speichern</button>";
-            echo "</form></div>";
+            echo "<table class='kontoTable'>";
+            echo "<tbody><td>Kontoname*</td><td><input type=text name=newKonto value='' placeholder='Kontoname*' required /></td></tbody>";
+            echo "<tbody><td>Mailadresse f&uuml;r das Konto</td><td><input type=text name=mail value='' placeholder=Mail /></td></tbody>";
+            echo "<tbody><td colspan=2><button type=submit name=insertNewKonto>Speichern</button></td></tbody>";
+            echo "</table>";
+
+            echo "</form>";
 
             if (isset($_POST['insertNewKonto']) and $this->userHasRight("18", 0) == true) {
                 $konto = $_POST['newKonto'];
                 $mail = $_POST['mail'];
                 if ($konto != "") {
                     if ($this->createNewKonto($besitzer, $konto, $mail) == true) {
-                        echo "<p class='erfolg'>Konto wurde erstellt.";
+                        $this->erfolgMessage("Konto wurde erstellt.");
                     } else {
-                        echo "<p class='meldung'>Es gab einen Fehler beim erstellen des Kontos</p>";
+                        $this->infoMessage("Das Konto $konto konnte nicht erstellt werden");
                     }
                 }
             }
+            echo "</div>";
         }
     }
 
@@ -2205,13 +2248,20 @@ class FinanzenNEW extends functions
      */
     public function createNewKonto($besitzer, $kontoname, $mail)
     {
-        $query = "INSERT INTO finanzen_konten (besitzer,konto,aktiv,mail) VALUES ('$besitzer','$kontoname',1,'$mail')";
-
-        if ($this->sqlInsertUpdateDelete($query) == true) {
-            return true;
-        } else {
+        // check ob Konto bereits existiert
+        $check = $this->sqlselect("SELECT id,besitzer,konto FROM finanzen_konten WHERE besitzer=$besitzer AND konto='$kontoname' LIMIT 1");
+        if (isset($check[0]->konto)) {
             return false;
+        } else {
+            $query = "INSERT INTO finanzen_konten (besitzer,konto,aktiv,mail) VALUES ('$besitzer','$kontoname',1,'$mail')";
+
+            if ($this->sqlInsertUpdateDelete($query) == true) {
+                return true;
+            } else {
+                return false;
+            }
         }
+        
     }
 
     /**
@@ -2650,21 +2700,27 @@ class FinanzenNEW extends functions
             $select2 = "SELECT id, besitzer, konto FROM finanzen_umsaetze WHERE besitzer=$besitzer AND konto=$konto";
             if ($this->objectExists($select) == true and $this->objectExists($select2) == false) {
 
-                $delquery = "DELETE FROM finanzen_konten WHERE besitzer=$besitzer AND id=$konto";
+                $delquery = "DELETE FROM finanzen_konten WHERE besitzer=$besitzer AND id=$konto LIMIT 1";
                 $delAbschluesseQuery = "DELETE FROM finanzen_monatsabschluss WHERE konto=$konto";
                 $delAbschluesseQuery2 = "DELETE FROM finanzen_jahresabschluss WHERE konto=$konto";
+                $delShares = "DELETE FROM finanzen_shares WHERE konto_id=$konto";
 
                 if ($this->sqlInsertUpdateDelete($delquery) == true) {
-                    //Monatsabschl&uuml;sse l&ouml;schen ...
-                    $this->sqlInsertUpdateDelete($delAbschluesseQuery);
-                    //Jahresabschl&uuml;sse l&ouml;schen ...
-                    $this->sqlInsertUpdateDelete($delAbschluesseQuery2);
-                    echo "<p class='info'>Konto wurde gel&ouml;scht.</p>";
+                    if ($this->sqlInsertUpdateDelete($delAbschluesseQuery) == true) {
+                        $this->erfolgMessage("Monatsabschlüsse gelöscht");
+                    }
+                    if ($this->sqlInsertUpdateDelete($delAbschluesseQuery2) == true) {
+                        $this->erfolgMessage("Jahresabschlüsse gelöscht");
+                    }
+                    if ($this->sqlInsertUpdateDelete($delShares) == true) {
+                        $this->erfolgMessage("Shares gelöscht.");
+                    }
+                    $this->erfolgMessage("Konto wurde gel&ouml;scht.");
                 } else {
                     echo "<p class='meldung'>Beim l&ouml;schen ist ein Fehler aufgetreten.</p>";
                 }
             } else {
-                echo "<p class='meldung'>Konto darf nicht gel&ouml;scht werden, entweder das Konto existiert nicht, oder es sind noch Buchungen auf dem Konto vorhanden.</p>";
+                $this->errorMessage("Konto darf nicht gel&ouml;scht werden, entweder das Konto existiert nicht, oder es sind noch Buchungen auf dem Konto vorhanden.");
             }
         }
     }
