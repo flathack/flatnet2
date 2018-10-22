@@ -1140,26 +1140,6 @@ input[type=radio]:not(old):checked + label > span > span {
     color: black;
     position: relative;
 }
-
-.publicInfo #plus {
-	background-color: #ffb9b9;
-	border-radius: 5px;
-}
-.publicInfo #minus {
-	background-color: #e8ffe8;
-	border-radius: 5px;
-}
-.publicInfo {
-    border-left: 1px solid grey;
-    border-right: 1px solid grey;
-    border-bottom: 1px solid grey;
-    margin-bottom: 15px;
-    padding: 5px;
-    margin-top: 10px;
-    background: white;
-    color: black;
-    position: relative;
-}
 .einleitung {
 	background-color: #e1e1e1;
 	padding: 3px;
