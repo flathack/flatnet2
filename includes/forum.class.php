@@ -45,9 +45,9 @@ class Forum extends Functions
             $userID = $this->getUserID($_SESSION['username']);
             $row = $this->sqlselect($selectCategories);
 
-            echo "<table class='forum'>";
+            echo "<table class='kontoTable'>";
 
-            echo "<thead><td>Steven.NET Forum</td><td>Themen</td></thead>";
+            echo "<thead><td>Steven.NET Forum</td><td id='small'>Themen</td></thead>";
 
             for ($i = 0; $i < sizeof($row); $i++) {
 
@@ -65,7 +65,7 @@ class Forum extends Functions
                         $anzahlPosts = $anzahlPosts[0]->anzahl;
                         //Wenn der Check bestanden ist, dann anzeigen.
                         echo "<tbody><td><a href='?blogcategory=" . $row[$i]->id . "'><strong>" . $row[$i]->kategorie . "</strong></a>
-                        <br>" . $row[$i]->beschreibung . "</td><td>$anzahlPosts</td></tbody>";
+                        <br><p>" . $row[$i]->beschreibung . "</p></td><td>$anzahlPosts</td></tbody>";
                     }
                 }
 
@@ -77,7 +77,7 @@ class Forum extends Functions
             }
 
             echo "<tbody><td><a href='?publicArea'><strong>Public Area</strong></a>
-                        <br>Shows Public Information</td><td></td></tbody>";
+                        <p>Shows Public Information</p></td><td></td></tbody>";
 
             echo "</table>";
         }
@@ -131,20 +131,20 @@ class Forum extends Functions
 
             $row = $this->sqlselect($selectBlogEintraege);
 
-            echo "<a href='?' class='highlightedLink'>Zurück</a> ";
+            echo "<a href='?' class='rightBlueLink'>Zurück</a> ";
             if (isset($_GET['blogcategory'])) {
                 $category = $_GET['blogcategory'];
             }
             echo "<a href='/flatnet2/blog/addBlogEntry.php?blogcategory=$category' class='greenLink'>Neues Thema</a>";
 
-            echo "<table class='forum'>";
+            echo "<table class='kontoTable'>";
             echo "
                 <thead>
                     <td id='titel'>Titel</td>
-                    <td>Autor</td>
-                    <td>Antworten</td>
-                    <td id='datum'>Erstelldatum</td>
-                    <td></td>
+                    <td id='width140px'>Autor</td>
+                    <td id='small'>Antworten</td>
+                    <td id='width200px'>Erstelldatum</td>
+                    <td id='small'></td>
 
                 </thead>";
             for ($i = 0; $i < sizeof($row); $i++) {
@@ -173,12 +173,14 @@ class Forum extends Functions
                     } else {
                         $publicLink = "";
                     }
-
+                    $date = "" . $row[$i]->jahr . "-" . $row[$i]->monat . "-" . $row[$i]->tag . "";
                     echo "<tbody>
-                    <td><a href='/flatnet2/blog/blogentry.php?showblogid=" . $row[$i]->id . "&ursprungKategorie=" . $row[$i]->kategorie . "'>" . $row[$i]->titel . "</a> $publicLink</td>
+                    <td><a href='/flatnet2/blog/blogentry.php?showblogid=" . $row[$i]->id . "&ursprungKategorie=" . $row[$i]->kategorie . "'>" . $row[$i]->titel . "</a> $publicLink"; 
+                    echo "<p>".substr(stripslashes($row[$i]->text), 0, 30)."</p>";
+                    echo "</td>
                     <td><a href='/flatnet2/usermanager/usermanager.php'>$autor</a></td>
                     <td> $menge </td>";
-                    echo "<td>" . $row[$i]->tag . "." . $row[$i]->monat . "." . $row[$i]->jahr . " " . $row[$i]->stunde . ":" . $row[$i]->minute . " Uhr" . "</td>";
+                    echo "<td>$date | " . $row[$i]->stunde . ":" . $row[$i]->minute . " Uhr" . "</td>";
                     if ($row[$i]->status == 1) {
                         $offen = "&#10004;";
                     } else { 
