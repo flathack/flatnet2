@@ -46,6 +46,9 @@
                 exit;
             }
             ?>
+            <div id='home'>
+                    <?php $guildwars->SubNav("guildwars"); ?>
+                    </div>
                 <div class='GWtopBody'>
                     <div id='left'>
                         <?php $guildwars->selectUser(); ?>
@@ -59,9 +62,7 @@
                         <a href="?createNewChar=yes#charErstellen" class="greenLink">Neuen Charakter</a>
                         <a href="?createNewChar=yes&namen#charErstellen" class="greenLink">Namegen</a>
                     </div>
-                    <div id='home'>
-                    <?php $guildwars->SubNav("guildwars"); ?>
-                    </div>
+                    
             
                 </div>
                 <?php echo $guildwars->newChar(); ?>
@@ -71,11 +72,10 @@
                 } 
                 ?>
                 
-                <?php $guildwars->globalCharInfos(); ?>
-                
                 <div class='showChars'>
                     <?php echo $guildwars->showChars(); ?>
                 </div>
+                <?php $guildwars->globalCharInfos(); ?>
             </div>
 
         </body>

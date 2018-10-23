@@ -312,7 +312,7 @@ class Datenbanken extends Functions
                 echo "";
                 echo "<form method=post>";
                 
-                    echo "<div id='draggable' class='newChar'>";
+                    echo "<div class='newFahrt'>";
                         echo "<a href='?' class='highlightedLink'>Exit</a></h2>";
                         echo "<h2>Eingabebereich</h2>";
 
@@ -387,7 +387,7 @@ class Datenbanken extends Functions
                             // Notizen
                             echo "<tr>";
                             echo "<td colspan='4'>";
-                                echo "<textarea name='notizen' class='ckeditor'>$notizen</textarea>";
+                                //echo "<textarea name='notizen' class='ckeditor'>$notizen</textarea>";
                             echo "</td>";
                             echo "</tr>";
 
@@ -438,7 +438,7 @@ class Datenbanken extends Functions
                     $skype = $_POST["skype"];
                     $facebook = $_POST["facebook"];
                     $geburtstag = $_POST["geburtstag"];
-                    $notizen = $_POST["notizen"];
+                    // $notizen = $_POST["notizen"];
                     if ($nachname == "" or $vorname == "") {
                         echo "<p class='meldung'>Eingabefehler. Es muss mindestens ein Vorname 
                         und ein Nachname eingegeben werden. <a href='?eintragenja=1' class='buttonlink'>Zurόck</a></p>";
@@ -446,10 +446,10 @@ class Datenbanken extends Functions
                         $eintrag = "
                             INSERT INTO adressbuch (geburtstag, vorname, nachname, strasse, hausnummer, postleitzahl,
                             stadt, bundesland, land, telefon1, telefon2, telefon3, telefon4, telefon1art, telefon2art,
-                            telefon3art, telefon4art, email, skype, facebook, fax, gruppe, notizen) VALUES ('$geburtstag',
+                            telefon3art, telefon4art, email, skype, facebook, fax, gruppe) VALUES ('$geburtstag',
                             '$vorname','$nachname','$strasse','$hausnummer','$postleitzahl','$stadt','$bundesland','$land'
                             ,'$telefon1','$telefon2','$telefon3','$telefon4','$telefon1art','$telefon2art','$telefon3art',
-                            '$telefon4art','$email','$skype','$facebook','$fax','$gruppe','$notizen'
+                            '$telefon4art','$email','$skype','$facebook','$fax','$gruppe'
                         )";
 
                         if ($this->sqlInsertUpdateDelete($eintrag) == true) {
@@ -479,17 +479,17 @@ class Datenbanken extends Functions
             echo "<table class='kontoTable'>";
             echo "<thead>";
                 echo "<td>Name</td>"; 
-                echo "<td>Telefonnummer</td>"; 
-                echo "<td>E-Mail</td>"; 
+                echo "<td id='width140px'>Telefonnummer</td>"; 
+                // echo "<td>E-Mail</td>"; 
                 echo "<td>Gruppe</td>"; 
                 echo "<td>Geburtstag</td>";
             echo "</thead>";
             for ($i = 0; $i < sizeof($row); $i++) {
 
                 echo "<tbody>";
-                echo "<td><a href='eintrag.php?bearbeiten=" . $row[$i]->id . "'>" . $row[$i]->vorname . " " . $row[$i]->nachname . "</a></td>";
-                echo "<td>" . $row[$i]->telefon1art . " - " . $row[$i]->telefon1 . "</td>";
-                echo "<td><a href='mailto:" . $row[$i]->email . "'>" . $row[$i]->email . "</a></td>";
+                echo "<td><a href='eintrag.php?bearbeiten=" . $row[$i]->id . "'>" . substr($row[$i]->vorname, 0, 10) . " " . substr($row[$i]->nachname, 0, 10) . "</a></td>";
+                echo "<td>" . $row[$i]->telefon1 . "</td>";
+                // echo "<td><a href='mailto:" . $row[$i]->email . "'>" . $row[$i]->email . "</a></td>";
                 echo "<td>" . $row[$i]->gruppe . "</td>";
                 if ($row[$i]->geburtstag == "0000-00-00") {
                     echo "<td></td>";

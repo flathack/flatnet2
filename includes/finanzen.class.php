@@ -582,10 +582,10 @@ class FinanzenNEW extends functions
             $kontoinfos = $this->sqlselect("SELECT * FROM finanzen_konten WHERE id=$kontoID");
 
             if ($kontoinfos[0]->art == 2) {
-                echo "<thead><td colspan=8 id='notOK'>Dieses Konto hat keinen Saldo!</td></thead>";
+                echo "<thead><td colspan=6 id='notOK'>Dieses Konto hat keinen Saldo!</td></thead>";
             }
             if ($kontoinfos[0]->art == 1) {
-                echo "<thead><td colspan=8 id='ok'>Guthabenkonto</td></thead>";
+                echo "<thead><td colspan=6 id='ok'>Guthabenkonto</td></thead>";
             }
 
             // Keinen Startsaldo anzeigen:
@@ -603,18 +603,17 @@ class FinanzenNEW extends functions
             }
 
             $abrechnung = "<a href='abrechnung.php?month=" . $currentMonth . "&konto=" . $kontoinformation[0]->id . "'>Abrechnung</a>";
-            echo "<td colspan=7>Monat:<strong> $currentMonth </strong>im Jahr <strong>$currentYear</strong> $saldotext $mailinfo $abrechnung </td>";
+            echo "<td colspan=6>Monat:<strong> $currentMonth </strong>im Jahr <strong>$currentYear</strong> $saldotext $mailinfo $abrechnung </td>";
             echo "</thead>";
 
             echo "<thead>";
-            echo "<td id='small'>BuchNr.</td>";
-            echo "<td>Gegenkonto.</td>";
-            echo "<td>Umsatz</td>";
+            echo "<td id='small'></td>";
+            echo "<td></td>";
+            echo "<td id='width200px'>Umsatz</td>";
             echo "<td id='small'>Tag</td>";
-            echo "<td id='width140px'>Wert</td>";
+            echo "<td id=''>Wert</td>";
             // echo "<td id='width140px'>Kategorien</td>";
-            echo "<td id='width140px'>Saldo</td>";
-            echo "<td id='small'>Optionen</td>";
+            echo "<td>Saldo</td>";
 
             echo "</thead>";
 
@@ -670,7 +669,9 @@ class FinanzenNEW extends functions
                     echo "<td>" . $nameGegenkonto[0]->konto . "</td>";
 
                     //Umsatz
-                    echo "<td>" . $umsaetze[$i]->umsatzName;
+                    echo "<td><a href='?konto=$kontoID&monat=$monat&jahr=$currentYear&edit=" . $umsaetze[$i]->id . "'>" . $umsaetze[$i]->umsatzName . "</a>";
+                    
+                    echo "<a href='?konto=$kontoID&monat=$monat&jahr=$currentYear&buchdesc=" . $umsaetze[$i]->buchungsnr . "'>I</a>"; 
                     if (isset($umsaetze[$i]->link) and $umsaetze[$i]->link != "") {
                         echo "<a href='" . $umsaetze[$i]->link . "'>link</a>";
                     }
@@ -711,12 +712,6 @@ class FinanzenNEW extends functions
                             echo "</a>";
                         echo "</td>";
                     }
-
-                    //OPTIONEN
-                    echo "<td>"; 
-                        echo "<a href='?konto=$kontoID&monat=$monat&jahr=$currentYear&edit=" . $umsaetze[$i]->id . "'>edit</a>"; 
-                        echo "<a href='?konto=$kontoID&monat=$monat&jahr=$currentYear&buchdesc=" . $umsaetze[$i]->buchungsnr . "'>I</a>"; 
-                    echo "</td>";
                     echo "</tbody>";
 
                     // HEUTE Zeile anzeigen
@@ -757,10 +752,9 @@ class FinanzenNEW extends functions
                 echo "<tfoot>";
                     echo "<td colspan=6 id='rightAlign'>Endsaldo: </td>";
                     echo "<td id='rightAlign'> - </td>"; 
-                    echo "<td></td>"; 
                 echo "</tfoot>";
             } else {
-                echo "<tfoot><td colspan=5 id='rightAlign'>Endsaldo: </td><td id='rightAlign'>" . number_format(round($zwischensumme, 2), 2, ",", ".") . " &#8364; </td><td></td></tfoot>";
+                echo "<tfoot><td colspan=5 id='rightAlign'>Endsaldo: </td><td id='rightAlign'>" . number_format(round($zwischensumme, 2), 2, ",", ".") . " &#8364; </td></tfoot>";
             }
 
             echo "</table>";
@@ -773,7 +767,7 @@ class FinanzenNEW extends functions
             }
             // Zeigt das Diagramm an
             if (isset($zahlen)) {
-                $this->showDiagramme($zahlen, "970", "200");
+                $this->showDiagramme($zahlen, "400", "200");
             }
         } else {
             echo "<div class='newCharWIDE'><h3>Um Fortzufahren musst du ein Konto ausw&auml;hlen</h3>";
@@ -988,7 +982,7 @@ class FinanzenNEW extends functions
             }
 
             if (isset($arrayFuerDiagramm)) {
-                $this->showDiagramme($arrayFuerDiagramm, "700", "200");
+                $this->showDiagramme($arrayFuerDiagramm, "400", "200");
             }
         }
 
@@ -1872,7 +1866,7 @@ class FinanzenNEW extends functions
                 $kontoID = $this->getKontoIDFromGet();
                 $monat = $this->getMonatFromGet();
                 $jahr = $this->getJahrFromGet();
-                echo "<div class='newChar'>";
+                echo "<div class='newFahrt'>";
 
                 //   echo "<a href='#' onclick='window.history.go(-1)' target='_self' class='highlightedLink'>Zur&uuml;ck</a>";
                 echo "<a href='?konto=$kontoID&monat=$monat&jahr=$jahr' target='_self' class='highlightedLink'>Zur&uuml;ck</a>";

@@ -138,15 +138,15 @@ class Forum extends Functions
             echo "<a href='/flatnet2/blog/addBlogEntry.php?blogcategory=$category' class='greenLink'>Neues Thema</a>";
 
             echo "<table class='kontoTable'>";
-            echo "
-                <thead>
-                    <td id='titel'>Titel</td>
-                    <td id='width140px'>Autor</td>
-                    <td id='small'>Antworten</td>
-                    <td id='width200px'>Erstelldatum</td>
-                    <td id='small'></td>
+            echo "";
+            echo "<thead>";
+            echo "<td id='titel'>Titel</td>";
+            //echo "<td id='width140px'>Autor</td>";
+            echo "<td id='small'></td>";
+            echo "<td id=''></td>";
+            echo "<td id='small'></td>";
 
-                </thead>";
+            echo "</thead>";
             for ($i = 0; $i < sizeof($row); $i++) {
 
                 $lockedInfo = $this->sqlselect("SELECT * FROM blogtexte WHERE id = '" . $row[$i]->id . "'");
@@ -179,10 +179,10 @@ class Forum extends Functions
                     
                     $text = substr(strip_tags(stripslashes($row[$i]->text)), 0, 30);
                     echo "<p>".$text."</p>";
-                    echo "</td>
-                    <td><a href='/flatnet2/usermanager/usermanager.php'>$autor</a></td>
-                    <td> $menge </td>";
-                    echo "<td>$date | " . $row[$i]->stunde . ":" . $row[$i]->minute . " Uhr" . "</td>";
+                    echo "</td>";
+                    echo "<td> $menge </td>";
+                    echo "<td>$date | "; 
+                    echo "<br>" . $row[$i]->stunde . ":" . $row[$i]->minute . " " . " <br><a href='/flatnet2/usermanager/usermanager.php'>$autor</a></td>";
                     if ($row[$i]->status == 1) {
                         $offen = "&#10004;";
                     } else { 

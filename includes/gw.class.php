@@ -766,10 +766,6 @@ class Gw_Charakter extends Guildwars
             $getAnzahlAnzahl = $getAnzahlGwCharsGrund[0]->anzahl;
             $getAnzahlAnzahl = $getAnzahlAnzahl / 3;
 
-            for ($i = 0; $i < $getAnzahlAnzahl; $i++) {
-                $ausgabe .= "<br><br><br><br><br><br><br><br><br><br>";
-            }
-
             return $ausgabe;
         }
     }
@@ -1294,7 +1290,7 @@ class Gw_Charakter extends Guildwars
             $eigeneStundenGesamt = $EigeneGelöschteStunden[0]->summe + $alleEigenenStunden[0]->summe;
             $allePlusGelöschte = $alleSpielstunden[0]->summe + $gelöschteStundenGesamt[0]->summe;
             if ($allePlusGelöschte > 0) {
-                $prozent = round($alleEigenenStunden[0]->summe / $alleSpielstunden[0]->summe * 100, 2);
+                $prozent = round(($alleEigenenStunden[0]->summe + 1) / ($alleSpielstunden[0]->summe + 1) * 100, 2);
             } else {
                 $prozent = 0;
             }
@@ -1480,7 +1476,7 @@ class Gw_Handwerk extends Guildwars
                 , "Zutaten zum Kochen"
                 , "Festliche Materialien"];
 
-            echo "<div class='newChar'><form method=post action='#newMats'>";
+            echo "<div class='newFahrt'><form method=post action='#newMats'>";
 
             echo "<h2><a name='newMats'>Neue Materialien erstellen</a></h2>";
             echo "<a href='?reload#newMats' class='buttonlink' >Seite neu laden</a>";
@@ -1491,8 +1487,8 @@ class Gw_Handwerk extends Guildwars
             echo "<h3>Informationen</h3>";
             echo "<p>Es gibt derzeit " . $max[0]->max . " Materialien. </p>";
 
-            echo "<table class='flatnetTable'>";
-            echo "<thead><td>Name</td><td>Kategorie</td><td>Preis in Kupfer beim Kaufmann</td></thead>";
+            echo "<table class='kontoTable'>";
+            echo "<thead><td>Name</td><td>Kategorie</td><td>Preis</td></thead>";
             for ($i = 0; $i < 10; $i++) {
                 echo "<tbody>";
                 echo "<td><input type=text name=newMatName[$i] value='' placeholder='Materialname' /></td>";

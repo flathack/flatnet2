@@ -604,12 +604,7 @@ class Functions extends Sql
             }
 
             if ($this->userHasRight(67, 0) == true) {
-                echo "<li><a href='http://localhost/phpmyadmin/' target='_blank' class='extern'>PMA Local</a></li>
-                <li><a href='https://bernd.php-friends.de:4443/' target='_blank' class='extern'>Verwaltungskonsole</a></li>";
-
-            }
-            if ($this->userHasRight(67, 0) == true) {
-                echo "<li><a href='/flatnet2/admin/sqlcheck.php' target='_blank' class='extern'>SQL Checker</a></li>";
+                echo "<li><a href='https://bernd.php-friends.de:4443/' target='_blank' class='extern'>Verwaltungskonsole</a></li>";
 
             }
 
@@ -628,6 +623,25 @@ class Functions extends Sql
     }
 
     /**
+     * Zeigt den Footer an
+     * 
+     * @return void
+     */
+    function showFooter() 
+    {
+        echo "<ul>";
+            echo "<li><a href='/flatnet2/informationen/impressum.php'>Impressum</a></li>";
+            echo "<li><a href='/flatnet2/informationen/quellen.php'>Quellen</a></li>";
+        if ($this->userHasRight(36, 0) == "true") {
+            echo "<li><a href='/flatnet2/admin/control.php'>Admin</a></li>";
+            echo "<li><a href='/flatnet2/informationen/dokumentation.php'>Dokumentation</a></li>";
+        } else {
+            echo "<li><a href='/flatnet2/informationen/kontakt.php'>Kontakt</a></li>";
+        }
+        echo "</ul>";
+    }
+
+    /**
      * Gibt den Header wieder.
      * 
      * @return void
@@ -642,7 +656,7 @@ class Functions extends Sql
         echo '<link rel="apple-touch-icon" sizes="76x76" href="/apple-icon-76x76.png">';
         echo '<script src="/flatnet2/tools/ckeditor/ckeditor.js"></script>';
         echo '<link href="/flatnet2/css/style.css" type="text/css" rel="stylesheet" />';
-        echo "<meta name='viewport' content='width=500, initial-scale=1'>";
+        echo "<meta name='viewport' content='width=390, initial-scale=1'>";
 
         // Quellen für JQUERY Scripte
         echo "<script src='//code.jquery.com/jquery-1.10.2.js'></script>";
@@ -655,10 +669,10 @@ class Functions extends Sql
         session_start();
         echo "<header class='header'>";
 
-        echo "<div class='userInfo'>";
+        echo "<div class='userInfo'>"; // USERINFO Start
 
         if (isset($_SESSION["username"])) {
-            echo "<p>Willkommen " . "<strong><a href='/flatnet2/usermanager/usermanager.php'>" . $_SESSION['username'] . "</a></strong> | ";
+            echo "<p><strong><a href='/flatnet2/usermanager/usermanager.php'>" . $_SESSION['username'] . "</a></strong> | ";
             echo "<a href='/flatnet2/includes/logout.php'> Abmelden </a></p>";
         } else {
             echo "<p class='hinweis'>Du hast versucht auf eine Seite zuzugreifen, 
@@ -669,26 +683,15 @@ class Functions extends Sql
             </header>";
             exit;
         }
-        echo "<ul>
-            <li><a href='/flatnet2/informationen/impressum.php'>Impressum</a></li>
-            <li><a href='/flatnet2/informationen/quellen.php'>Quellen</a></li>";
-        if ($this->userHasRight(36, 0) == "true") {
-            echo "<li><a href='/flatnet2/admin/control.php'>Admin</a></li>";
-            echo "<li><a href='/flatnet2/informationen/dokumentation.php'>Dokumentation</a></li>";
-        } else {
-            echo "<li><a href='/flatnet2/informationen/kontakt.php'>Kontakt</a></li>";
-        }
-        echo "</ul>
-            <div id='suche'>
-            <form method='get'>
-            <input type=text name='suche' value='' placeholder='Suche ...' id='suche' />
-            <input type=submit value='OK' id='sucheSubmit' />
-            </form>";
+        
+        echo "<div id='suche'>";
+        echo "<form method='get'>";
+        echo "<input type=text name='suche' value='' placeholder='Suche ...' id='suche' />";
+        echo "<input type=submit value='OK' id='sucheSubmit' />";
+        echo "</form>";
+        echo "</div>"; 
 
-        // Benachrichtigungscenter:
-        //    $this->benachrichtigungsCenter();
-
-        echo "</div></div>";
+        echo "</div>"; // Userinfo ENDE
 
         // Zeigt die Navigation an:
         $this->showNaviLinks();
@@ -741,7 +744,7 @@ class Functions extends Sql
             echo "<div class='InfoCenter'>";
             $docuInfo = $this->sqlselect("SELECT *, month(timestamp) AS monat, day(timestamp) AS tag, year(timestamp) AS jahr FROM docu ORDER BY timestamp DESC LIMIT 1");
             if (isset($docuInfo[0]->text)) {
-                echo "<a href='/flatnet2/informationen/hilfe.php'>" . $docuInfo[0]->tag . "." . $docuInfo[0]->monat . "." . $docuInfo[0]->jahr . "</a>: " . substr($docuInfo[0]->text, 0, 80);
+                echo "<a href='/flatnet2/informationen/hilfe.php'>" . $docuInfo[0]->tag . "." . $docuInfo[0]->monat . "." . $docuInfo[0]->jahr . "</a>: " . strip_tags(substr($docuInfo[0]->text, 0, 80));
             }
             echo "</div>";
         }
@@ -871,7 +874,7 @@ class Functions extends Sql
             }
             $data .= "]";
 
-            echo '<canvas id="buyers" width=' . $width . ' height=' . $height . '></canvas>';
+            echo '<canvas id="buyers" width= . "100%" .  height=' . $height . '></canvas>';
             echo '
                 <script>
                 var buyerData = {

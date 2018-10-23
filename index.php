@@ -17,7 +17,7 @@ session_start();
 <!DOCTYPE html>
 <html>
     <head>
-        <meta name='viewport' content='width=500, initial-scale=1'>
+        <meta name='viewport' content='width=390, initial-scale=1'>
         <link href="/flatnet2/css/style.css" type="text/css" rel="stylesheet" />
         <link rel="icon" href="/favicon.ico" type="image/x-icon" />
         <?php 

@@ -95,27 +95,28 @@ class Uebersicht extends Functions
 
             echo "<table class='kontoTable'>";
 
-            echo "<thead><td>ID</td>
-                    <td>Name</td>
-                    <td>Link</td>
-                    <td>Beschreibung</td>
-                    <td>Sortierung</td>
-                    <td>Aktiv</td>
-                    <td>Css ID</td>
-                    <td>RightID</td>
-                    <td></td>
-                    </thead>";
+            echo "<thead>"; 
+                //echo "<td>ID</td>";
+                echo "<td>Name</td>";
+                //echo "<td>Link</td>";
+                //echo "<td>Beschreibung</td>";
+                echo "<td>Sortierung</td>";
+                //echo "<td>Aktiv</td>";
+                //echo "<td>Css ID</td>";
+                //echo "<td>RightID</td>";
+                echo "<td></td>";
+            echo "</thead>";
             for ($i = 0; $i < sizeof($kacheln); $i++) {
 
                 echo "<tbody>";
-                echo "<td>" . $kacheln[$i]->id . "</td>";
+                //echo "<td>" . $kacheln[$i]->id . "</td>";
                 echo "<td>" . $kacheln[$i]->name . "</td>";
-                echo "<td>" . $kacheln[$i]->link . "</td>";
-                echo "<td>" . $kacheln[$i]->beschreibung . "</td>";
+                //echo "<td>" . $kacheln[$i]->link . "</td>";
+                //echo "<td>" . $kacheln[$i]->beschreibung . "</td>";
                 echo "<td>" . $kacheln[$i]->sortierung . "</td>";
-                echo "<td>" . $kacheln[$i]->active . "</td>";
-                echo "<td>" . $kacheln[$i]->cssID . "</td>";
-                echo "<td>" . $kacheln[$i]->rightID . "</td>";
+                //echo "<td>" . $kacheln[$i]->active . "</td>";
+                //echo "<td>" . $kacheln[$i]->cssID . "</td>";
+                //echo "<td>" . $kacheln[$i]->rightID . "</td>";
                 echo "<td>" . "<a href='admin/control.php?action=3&table=uebersicht_kacheln'>edit</a>" . "</td>";
                 echo "</tbody>";
 
@@ -187,11 +188,11 @@ class Uebersicht extends Functions
             } else {
                 $active = "";
             }
-            echo "<input id='name' type=text name=name value='" . $name . "' placeholder=Name />";
-            echo "<input id='link' type=text name=link value='" . $link . "' placeholder=Link />";
-            echo "<input id='desc' type=text name=beschreibung value='" . $beschreibung . "' placeholder=Beschreibung />";
-            echo "<input id='sort' type=number name=sortierung value='" . $sortierung . "' placeholder=sort />";
-            echo "<input id='css' type=text name=css value='" . $css . "' placeholder=css />";
+            echo "<input id='name' type=text name=name value='" . $name . "' placeholder=Name required />";
+            echo "<input id='link' type=text name=link value='" . $link . "' placeholder=Link required />";
+            echo "<input id='desc' type=text name=beschreibung value='" . $beschreibung . "' placeholder=Beschreibung required />";
+            echo "<input id='sort' type=number name=sortierung value='" . $sortierung . "' placeholder=sort required />";
+            echo "<input id='css' type=text name=css value='" . $css . "' placeholder=css required />";
 
             echo "<select name=rightID>";
             $getAllRights = $this->sqlselect("SELECT * FROM userrights ORDER BY kategorie, id");
@@ -203,11 +204,10 @@ class Uebersicht extends Functions
                 echo "</option>";
             }
             echo "</select>";
-
-            //   echo "<input id='right' type=number name=rightID value='" .$rightID. "' placeholder=Recht />";
             echo "<input id='checkbox' type=checkbox checked value='" . $active . "' name=active /><label for=active>Aktiv</label>";
             echo "<input id='submit' type=submit value=speichern />";
-            echo "</form></div>";
+            echo "</form>"; 
+            echo "</div>";
         }
     }
 
@@ -322,8 +322,8 @@ class Uebersicht extends Functions
         for ($i = 0; $i < sizeof($kacheln); $i++) {
             if ($this->userHasRight($kacheln[$i]->rightID, 0) == false) {
                 //   echo "<div class='bereichINACTIVE'>";
-                echo "<h2> - </h2>";
-                echo "<p></p>";
+                // echo "<h2> - </h2>";
+                // echo "<p></p>";
                 $this->changeStatus($kacheln[$i]->id);
                 //   echo "</div>";
             }
@@ -355,7 +355,7 @@ class Uebersicht extends Functions
             echo "<div class='adminKachel'>";
 
             echo "<h2>Administrationsübersicht</h2>";
-            if ($this->userHasRight("54", 0) == true) {
+            if ($this->userHasRight(54, 0) == true) {
                 echo "<a class='buttonlink' href='?newEntry'>Neue Kachel</a>";
                 echo "<a class='buttonlink' href='?editEntry'>Kacheln bearbeiten</a>";
             }
@@ -366,7 +366,7 @@ class Uebersicht extends Functions
                 echo "<li>" . $gesperrteUser[$i]->Name . " ist gesperrt <a class='redLink' href='/flatnet2/admin/control.php?statusID=" . $gesperrteUser[$i]->id . "&status=entsperren&userverw=1&action=1'>entsperren</a></li>";
             }
             echo "</div>";
-            if ($this->userHasRight("54", 0) == true and isset($_GET['editEntry'])) {
+            if ($this->userHasRight(54, 0) == true and isset($_GET['editEntry'])) {
                 $this->showEditEntry();
             }
 
