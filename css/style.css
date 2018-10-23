@@ -2335,13 +2335,9 @@ input[type=password]:focus {
     opacity: .96;
     background-color: white;
 }
-.mainbody {
-    background-color: white;
-    padding: 10px;
-}
+.mainbody,
 .mainbodyDark {
     background-color: white;
-    padding: 10px;
     padding: 10px;
 }
 

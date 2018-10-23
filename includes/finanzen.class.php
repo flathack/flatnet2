@@ -1001,10 +1001,10 @@ class FinanzenNEW extends functions
 
         echo "<div class='finanzNAV'>";
         echo "<ul>";
-        echo "<li id='monate'><a href='index.php'>Finanzverwaltung - Startseite</a></li>";
+        echo "<li id='monate'><a href='index.php'>Start</a></li>";
         echo "<li id='konten'><a href='konten.php'>Konten</a></li>";
-        echo "<li id='shares'><a href='shares.php'>Shared Konten</a></li>";
-        echo "<li><a href='?konto=$kontoID&monat=$monat&jahr=$jahr&newUeberweisung' >Neue Buchung</a></li>";
+        echo "<li id='shares'><a href='shares.php'>Shared</a></li>";
+        echo "<li><a href='?konto=$kontoID&monat=$monat&jahr=$jahr&newUeberweisung' >Neu</a></li>";
         echo "</ul>";
         echo "</div>";
     }
@@ -2115,10 +2115,8 @@ class FinanzenNEW extends functions
             echo "<div class='innerBody'>";
             echo "<h3>Nicht sichtbare Konten</h3>";
             echo "<table class='kontoTable'>";
-            echo "<thead><td>ID</td><td>Name</td><td>Art</td><td>Konto Details</td><td>Saldo</td></thead>";
+            echo "<thead><td>ID</td><td>Name</td><td>Art</td></thead>";
             for ($i = 0; $i < sizeof($konten); $i++) {
-                $select2 = "SELECT sum(umsatzWert) as summe FROM finanzen_umsaetze WHERE konto=" . $konten[$i]->id . " AND datum <= CURDATE()";
-                $umsaetze = $this->sqlselect($select2);
                 if ($konten[$i]->aktiv == 0) {
                     if ($konten[$i]->art == 1) {
                         $mark = "Guthabenkonto";
@@ -2129,7 +2127,7 @@ class FinanzenNEW extends functions
                     }
                     // echo "<div class='$mark'>";
                     echo "<tbody>";
-                    echo "<td>" . $konten[$i]->id . "</td><td> <a href='index.php?konto=" . $konten[$i]->id . "'>" . $konten[$i]->konto; 
+                    echo "<td><a href='detail.php?editKonto=" . $konten[$i]->id . "'>" . $konten[$i]->id . "</a></td><td> <a href='index.php?konto=" . $konten[$i]->id . "'>" . $konten[$i]->konto; 
                     if (isset($konten[$i]->mail) AND strlen($konten[$i]->mail) > 0) {
                         echo "<a href='mailto:".$konten[$i]->mail."'>mail</a>";
                     }
@@ -2151,14 +2149,7 @@ class FinanzenNEW extends functions
                         echo "Verbindlichkeitskonto";
                     }
                     echo "</td>";
-                    echo "<td><a href='detail.php?editKonto=" . $konten[$i]->id . "'>Details</a></td><td>";
-                    if ($konten[$i]->art == 2) {
-                        echo "x";
-                    } else {
-                        $summe = $umsaetze[0]->summe + 0;
-                        echo $summe . " €";
-                    }
-                    echo "</td></tbody>";
+                    echo "</tbody>";
                 }
             }
             $inactive = $this->sqlselect("SELECT id, count(*) as anzahl FROM finanzen_konten WHERE besitzer=$besitzer AND aktiv=0");

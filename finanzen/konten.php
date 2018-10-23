@@ -26,10 +26,11 @@
             <title>Steven.NET Finanzen</title>
         </head>
         <body>
+            
+            <div class='mainbodyDark' id="konten">
             <div class="rightBody">
                 <?php $finanzen->mainStatistikFunction(); ?>
             </div>
-            <div class='mainbodyDark' id="konten">
                 <?php $finanzen->showNavigation(); ?>
                 <h2>Kontoverwaltung</h2>
                 <?php 
