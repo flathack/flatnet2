@@ -176,7 +176,9 @@ class Forum extends Functions
                     $date = "" . $row[$i]->jahr . "-" . $row[$i]->monat . "-" . $row[$i]->tag . "";
                     echo "<tbody>
                     <td><a href='/flatnet2/blog/blogentry.php?showblogid=" . $row[$i]->id . "&ursprungKategorie=" . $row[$i]->kategorie . "'>" . $row[$i]->titel . "</a> $publicLink"; 
-                    echo "<p>".substr(stripslashes($row[$i]->text), 0, 30)."</p>";
+                    
+                    $text = substr(strip_tags(stripslashes($row[$i]->text)), 0, 30);
+                    echo "<p>".$text."</p>";
                     echo "</td>
                     <td><a href='/flatnet2/usermanager/usermanager.php'>$autor</a></td>
                     <td> $menge </td>";
