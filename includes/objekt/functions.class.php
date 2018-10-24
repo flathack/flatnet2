@@ -684,10 +684,10 @@ class Functions extends Sql
             exit;
         }
         
-        echo "<div id='suche'>";
+        echo "<div class='suche'>";
         echo "<form method='get'>";
         echo "<input type=text name='suche' value='' placeholder='Suche ...' id='suche' />";
-        echo "<input type=submit value='OK' id='sucheSubmit' />";
+        echo "<input type=submit value='OK' />";
         echo "</form>";
         echo "</div>"; 
 

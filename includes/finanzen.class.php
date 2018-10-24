@@ -2202,7 +2202,7 @@ class FinanzenNEW extends functions
     {
         if (isset($_GET['neuesKonto'])) {
 
-            echo "<div class='newChar'>";
+            echo "<div class='newFahrt'>";
             
             echo "<a href='?' class='rightRedLink'>X</a>";
 

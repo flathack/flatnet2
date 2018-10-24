@@ -84,11 +84,21 @@ button {
     margin-bottom: 5px;
     margin-top: 5px;
     color: rgb(0, 0, 0);
+    -webkit-transition: all 0.3s ease-in-out;
+    -moz-transition: all 0.3s ease-in-out;
+    -ms-transition: all 0.3s ease-in-out;
+    -o-transition: all 0.3s ease-in-out;
+    transition: all 0.3s ease-in-out;
 }
 button:hover {
 	background-color: rgb(255, 255, 255);
 	color: rgb(0, 0, 160);
 	border: 1px solid rgb(0, 0, 160);
+    -webkit-transition: all 0.3s ease-in-out;
+    -moz-transition: all 0.3s ease-in-out;
+    -ms-transition: all 0.3s ease-in-out;
+    -o-transition: all 0.3s ease-in-out;
+    transition: all 0.3s ease-in-out;
 }
 /* Link mit Bild*/
 
@@ -146,6 +156,22 @@ blockquote {
 /*
  * Suchleiste
  */
+
+.suche input[type=submit] {
+     padding: 1px;
+     border: 1px solid gray;
+     color: gray;
+}
+.suche input[type=submit]:hover {
+    padding: 1px;
+    border: 1px solid gray;
+    background-color: gray;
+    color: white;
+}
+.suche input[type=text] {
+    padding: 2px;
+    width: 50px;
+}
 
 .invSuchErgeb {
     border: 1px solid #aa0004;
@@ -1852,11 +1878,21 @@ input[type=submit]:hover {
     border: 1px solid red;
     background: orange;
     padding: 3px;
+    -webkit-transition: all 0.3s ease-in-out;
+    -moz-transition: all 0.3s ease-in-out;
+    -ms-transition: all 0.3s ease-in-out;
+    -o-transition: all 0.3s ease-in-out;
+    transition: all 0.3s ease-in-out;
 }
 #buttonFocus:hover {
     border: 1px solid red;
     background: #dd4800;
     text-decoration: none;
+    -webkit-transition: all 0.3s ease-in-out;
+    -moz-transition: all 0.3s ease-in-out;
+    -ms-transition: all 0.3s ease-in-out;
+    -o-transition: all 0.3s ease-in-out;
+    transition: all 0.3s ease-in-out;
 }
 /* Inputbutton Einstellungen ende */
 
@@ -2730,9 +2766,6 @@ li a:visited:hover,
 /* CHECKBOXES */
 /* Einstellungen der Radio Buttons */
 
-input[type=checkbox] {
-    /*	display: none; */
-}
 input[type=checkbox]+label {
     display: inline-block;
     border-radius: 5px 0px 5px 0px;
