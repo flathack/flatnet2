@@ -473,6 +473,8 @@ class FinanzenNEW extends functions
      */
     function getBuchDesc(int $buchnr, int $kontoid, int $monat, int $jahr, string $view, int $besitzer) 
     {
+        
+        echo "<div class='separateDivBox'>";
         $sql = "SELECT * FROM finanzen_buchungsnr_desc WHERE buchnr=$buchnr LIMIT 1";
         $info = $this->sqlselect($sql);
         if (isset($_POST['buchdesctext'])) {
@@ -496,7 +498,6 @@ class FinanzenNEW extends functions
         }
 
         // Ausgabe
-        echo "<div class='separateDivBox'>";
         echo "<form method=post>";
         echo "<h3></h3>";
         if ($view == "edit") {
@@ -607,11 +608,11 @@ class FinanzenNEW extends functions
             echo "</thead>";
 
             echo "<thead>";
-            echo "<td id='small'></td>";
-            echo "<td></td>";
-            echo "<td id='width200px'>Umsatz</td>";
+            echo "<td id='small'>ID</td>";
+            echo "<td>Konto</td>";
+            echo "<td>Umsatz</td>";
             echo "<td id='small'>Tag</td>";
-            echo "<td id=''>Wert</td>";
+            echo "<td>Wert</td>";
             // echo "<td id='width140px'>Kategorien</td>";
             echo "<td>Saldo</td>";
 
@@ -1146,11 +1147,19 @@ class FinanzenNEW extends functions
         $currentYear = date("Y");
 
         //Previous Year:
+        $jahrprev3 = $jahr - 3;
+        $jahrprev2 = $jahr - 2;
         $jahrprev = $jahr - 1;
         $jahrforw = $jahr + 1;
+        $jahrforw2 = $jahr + 2;
+        $jahrforw3 = $jahr + 3;
+        echo "<li id=''><a href='?konto=$konto&monat=$monat&jahr=$jahrprev3'>$jahrprev3</a></li>";
+        echo "<li id=''><a href='?konto=$konto&monat=$monat&jahr=$jahrprev2'>$jahrprev2</a></li>";
         echo "<li id=''><a href='?konto=$konto&monat=$monat&jahr=$jahrprev'>$jahrprev</a></li>";
         echo "<li id='selected'><a href='?konto=$konto&monat=$monat&jahr=$jahr'>$jahr</a></li>";
         echo "<li id=''><a href='?konto=$konto&monat=$monat&jahr=$jahrforw'>$jahrforw</a></li>";
+        echo "<li id=''><a href='?konto=$konto&monat=$monat&jahr=$jahrforw2'>$jahrforw2</a></li>";
+        echo "<li id=''><a href='?konto=$konto&monat=$monat&jahr=$jahrforw3'>$jahrforw3</a></li>";
         echo "</ul>";
     }
 
@@ -1525,6 +1534,7 @@ class FinanzenNEW extends functions
         if ($this->userHasRight(18, 0) == true) {
             if (isset($_GET['edit'])) {
 
+                echo "<div id='' class='alterUmsatz'>";
                 $kontoLink = $this->getKontoIDFromGet();
                 $monat = $this->getMonatFromGet();
                 $jahr = $this->getJahrFromGet();
@@ -1534,6 +1544,7 @@ class FinanzenNEW extends functions
                 $umsatzInfo = $this->sqlselect("SELECT * FROM finanzen_umsaetze WHERE id = '$id' and besitzer = '$besitzer'");
 
                 if (isset($_POST['alterUmsatz'])) {
+
                     $text = $_POST['umsatzName'];
                     if (isset($_POST['link'])) {
                         $link = $_POST['link'];
@@ -1611,7 +1622,6 @@ class FinanzenNEW extends functions
                 }
 
                 if (isset($umsatzInfo[0]->id)) {
-                    echo "<div id='' class='alterUmsatz'>";
                     echo "<a href='?konto=$kontoLink&monat=$monat&jahr=$jahr' class='rightRedLink'>schließen</a>";
                     echo "<form method=post>";
                     echo "<h2><a name=umsatz>" . $umsatzInfo[0]->umsatzName . "</a></h2>";
@@ -1633,7 +1643,6 @@ class FinanzenNEW extends functions
                     $this->regelmaessigeZahlung($umsatzInfo, $besitzer);
 
                     echo "</form>";
-                    echo "</div>";
                 } else {
                     //   echo "<div id='' class='alterUmsatz'>";
                     $isshared = $this->sqlselect("SELECT * FROM finanzen_shares WHERE konto_id=$kontoLink AND target_user=$besitzer");
@@ -1644,6 +1653,7 @@ class FinanzenNEW extends functions
                     }
                     //   echo "</div>";
                 }
+                
 
                 if (isset($_POST['loeschUmsatz'])) {
                     $text = $_POST['umsatzName'];
@@ -1683,6 +1693,8 @@ class FinanzenNEW extends functions
                     }
                     
                 }
+                
+                echo "</div>"; // Ende der Anzeige des Divs
             }
         }
     }

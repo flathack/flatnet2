@@ -354,10 +354,10 @@ class Uebersicht extends Functions
         if ($this->userHasRight("45", 0) == true) {
             echo "<div class='adminKachel'>";
 
-            echo "<h2>Administrationsübersicht</h2>";
+            echo "<h2><a name=admin>Administrationsübersicht</a></h2>";
             if ($this->userHasRight(54, 0) == true) {
-                echo "<a class='buttonlink' href='?newEntry'>Neue Kachel</a>";
-                echo "<a class='buttonlink' href='?editEntry'>Kacheln bearbeiten</a>";
+                echo "<a class='buttonlink' href='?newEntry#admin'>Neu</a>";
+                echo "<a class='buttonlink' href='?editEntry#admin'>Edit</a>";
             }
             $select = "SELECT * FROM benutzer WHERE versuche >= 3";
             $gesperrteUser = $this->sqlselect($select);

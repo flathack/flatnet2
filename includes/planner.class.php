@@ -437,6 +437,7 @@ class Planner Extends Functions
         echo '<link rel="apple-touch-icon" sizes="76x76" href="/apple-icon-76x76.png">';
         echo '<script src="/flatnet2/tools/ckeditor/ckeditor.js"></script>';
         echo '<link href="/flatnet2/css/style.css" type="text/css" rel="stylesheet" />';
+        echo "<meta name='viewport' content='width=500, initial-scale=0.7'>";
 
         // Quellen für JQUERY Scripte
         echo "<script src='//code.jquery.com/jquery-1.10.2.js'></script>";
@@ -453,13 +454,11 @@ class Planner Extends Functions
         echo "<div class='userInfo'>";
 
         if (isset($_SESSION["username"])) {
-            echo "<p>Willkommen " . "<strong><a href='/flatnet2/usermanager/usermanager.php'>" . $_SESSION['username'] . "</a></strong> | ";
+            echo "<p><strong><a href='/flatnet2/usermanager/usermanager.php'>" . $_SESSION['username'] . "</a></strong> | ";
             echo "<a href='/flatnet2/includes/logout.php'> Abmelden </a></p>";
             echo "<ul>";
                 
             if ($this->userHasRight(36, 0) == true) {
-                echo "<li><a href='/flatnet2/admin/control.php'>Admin </a></li>";
-                echo "<li><a href='/flatnet2/informationen/impressum.php'>Impressum </a></li>";
                 echo "<li><a href='/flatnet2/uebersicht.php'>&Uuml;bersicht </a></li>";
             } else {
                 echo "<li><a href='/flatnet2/informationen/impressum.php'>Impressum</a></li>";
