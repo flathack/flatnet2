@@ -207,7 +207,7 @@ class Usermanager extends Functions
             $menge = $mengeGrund[0]->anzahl;
 
             for ($i = 0; $i < sizeof($row2); $i++) {
-                echo "<div class='newChar'><a href='/flatnet2/blog/blogentry.php?showblogid=" . $row2[$i]->id . "'>" . $row2[$i]->titel . "</a><br>";
+                echo "<div class='newFahrt'><a href='/flatnet2/blog/blogentry.php?showblogid=" . $row2[$i]->id . "'>" . $row2[$i]->titel . "</a><br>";
                 echo $row2[$i]->tag . "." . $row2[$i]->monat . "." . $row2[$i]->jahr . " / " . $row2[$i]->stunde . ":" . $row2[$i]->minute . " Uhr";
 
                 echo "<br>";
@@ -382,15 +382,15 @@ class Usermanager extends Functions
             if (isset($_POST['realNameabsenden'])) {
                 if ($_POST['realUserName'] == "") {
                     //Ist das Feld leer?
-                    echo "<div class='newChar'><p class='meldung'>Name ist leer</p></div>";
+                    echo "<div class='newFahrt'><p class='meldung'>Name ist leer</p></div>";
                 } else {
                     $realName = $_POST['realUserName'];
                     $sqlupdate = "UPDATE benutzer SET realName='$realName' WHERE Name='$user' LIMIT 1";
                     $ergebnis = mysql_query($sqlupdate);
                     if ($ergebnis == true) {
-                        echo "<div class='newChar'><p class='erfolg'>Realname hinzugefügt <a href='?'>OK</a></p></div>";
+                        echo "<div class='newFahrt'><p class='erfolg'>Realname hinzugefügt <a href='?'>OK</a></p></div>";
                     } else {
-                        echo "<div class='newChar'><p class='meldung'>Es ist ein Fehler aufgetreten</p></div>";
+                        echo "<div class='newFahrt'><p class='meldung'>Es ist ein Fehler aufgetreten</p></div>";
                     }
                 }
             }

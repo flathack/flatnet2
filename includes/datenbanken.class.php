@@ -648,9 +648,6 @@ class Datenbanken extends Functions
                         $query .= " ORDER BY tag, vorname";
                     }
 
-                    //$query zur άberprόfungszwecken anzeigen:
-                    //echo "<div class='newChar'>" . $query . " Grφίe von SelectedGroups:" . sizeof($selectedGroups) .  " | Counter: $counterFόrOR</div>";
-
                     //Aus Datenbank laden:
                     $getGeburtstage = $this->sqlselect($query);
 

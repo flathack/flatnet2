@@ -128,9 +128,6 @@ class Control extends Functions
             echo "<thead>
                     <td>ID</td>
                     <td>Benutzername</td>
-                    <td>Titel</td>
-                    <td><a href='?action=6'>Rechte</a>
-                    <td><a href='?action=5'>Forum Rechte</a>
                     </td><td>Versuche</td>
                     <td>Optionen</td></thead>";
             $benutzerliste = "SELECT timestamp
@@ -158,22 +155,20 @@ class Control extends Functions
                 }
                 echo ">";
                 echo "<td>" . $row[$i]->id . "</td>";
-                echo "<td><a href='?bearb=" . $row[$i]->id . "&userverw=1#bearbeiten'>" . $row[$i]->Name . "</a></td>";
+                echo "<td>";
                 if (isset($row[$i]->titel) and $row[$i]->titel != "") {
-                    $titel = "id='smallLink' class='rightRedLink'";
+                    $titel = "id='smallLink' class='redLink'";
                 } else {
                     $titel = "";
                 }
-                echo "<td><span $titel>" . $row[$i]->titel . "</span></td>";
-                echo "<td>" . $row[$i]->rights . "</td>";
-                echo "<td>" . $row[$i]->forumRights . "</td>";
+                echo "<span $titel>" . $row[$i]->titel . "</span> <a href='?bearb=" . $row[$i]->id . "&userverw=1#bearbeiten'>" . $row[$i]->Name . "</a></td>";
+                
                 if ($row[$i]->versuche == 3) {
                     echo "<td>gesperrt</td>";
                 } else {
                     echo "<td>" . $row[$i]->versuche . "</td>";
                 }
                 echo "<td>
-                <a href='?bearb=" . $row[$i]->id . "&userverw=1' class='rightBlueLink'>Edit</a>
                 <a href='?statusID=" . $row[$i]->id . "&status=entsperren&userverw=1&action=1' class='rightGreenLink'>entsperren</a>
                 <a href='?statusID=" . $row[$i]->id . "&status=sperren&userverw=1&action=1' class='rightRedLink'>sperren</a>
                 </td>";
@@ -197,7 +192,7 @@ class Control extends Functions
         if ($this->userHasRight(38, 0) == true) {
             echo "<a href='?regnewuser' class='buttonlink'>Neuer Benutzer</a><br>";
             if (isset($_GET['regnewuser'])) {
-                echo "<div class='newChar'>";
+                echo "<div class='newFahrt'>";
                 echo "<a href=\"?\"  class='highlightedLink'>X</a>";
                 echo "<h2>Einen neuen Benutzer anlegen</h2>";
                 echo "
@@ -1006,7 +1001,7 @@ class Control extends Functions
             // Input Felder für das Eintragen von einem Recht in die DB
             if (isset($_GET['new'])) {
                 if ($_GET['new'] == "right") {
-                    echo "<div class='newChar'>";
+                    echo "<div class='newFahrt'>";
                     echo "<a href=\"?action=6\"  class='highlightedLink'>X</a>";
                     echo "<h2>Neues Recht erstellen</h2>";
                     echo "<form method=post>";
@@ -1178,7 +1173,7 @@ class Control extends Functions
 
         if ($this->userHasRight(48, 0) == true) {
 
-            echo "<table class='flatnetTable'>";
+            echo "<table class='kontoTable'>";
             echo "<thead><td>Kategorie</td><td>Rechte</td><td>Optionen</td></thead>";
             $selectCategories = "SELECT *
                     , year(timestamp) AS jahr
@@ -1224,7 +1219,7 @@ class Control extends Functions
                     $max = $getMaxPotenz[0]->max + 1;
                 }
 
-                echo "<div class='newChar'>";
+                echo "<div class='newFahrt'>";
                 echo "<h2>Kategorie erstellen</h2>";
                 echo "<form method=post>";
                 echo "<table>";
@@ -1384,7 +1379,7 @@ class Control extends Functions
                     $select = "SELECT * FROM blogkategorien WHERE id = '$editid'";
                     $row = $this->sqlselect($select);
                     for ($i = 0; $i < sizeof($row); $i++) {
-                        echo "<div class='newChar'>";
+                        echo "<div class='newFahrt'>";
                         echo "<form method=post>";
                         echo "<h3><a name='cat'>" . $row[$i]->kategorie . "</a></h3>";
                         echo "<table class='kontoTable'>";

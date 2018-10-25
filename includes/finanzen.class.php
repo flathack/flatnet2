@@ -771,7 +771,7 @@ class FinanzenNEW extends functions
                 $this->showDiagramme($zahlen, "400", "200");
             }
         } else {
-            echo "<div class='newCharWIDE'><h3>Um Fortzufahren musst du ein Konto ausw&auml;hlen</h3>";
+            echo "<div class='newFahrt'><h3>Um Fortzufahren musst du ein Konto ausw&auml;hlen</h3>";
 
             echo "</div>";
         }
@@ -1401,7 +1401,7 @@ class FinanzenNEW extends functions
         // Wenn eine Buchung korrupt ist:
         if ($kontostand[0]->summe > 0 or $kontostand[0]->summe < 0) {
 
-            echo "<div class='newChar'>";
+            echo "<div class='newFahrt'>";
             echo "Achtung, es wurde ein Fehler in mindestens einer Buchung entdeckt.
                 Die Werte innerhalb einer Buchungsnummer sind unterschiedlich,
                 dies kann verschiedene Gr&uuml;nde haben. Der Administrator wurde &uuml;ber
@@ -2422,7 +2422,7 @@ class FinanzenNEW extends functions
                 exit();
             }
 
-            echo "<div class='newCharWIDE'>";
+            echo "<div class='newFahrt'>";
             echo "<h2>Detailinformationen von " . $kontoInfo[0]->konto . "</h2>";
             echo "<a class='rightBlueLink' href='index.php?konto=" . $kontoInfo[0]->id . "'>Gehe zu diesem Konto</a>";
 
@@ -2729,32 +2729,6 @@ class FinanzenNEW extends functions
             } else {
                 $this->errorMessage("Konto darf nicht gel&ouml;scht werden, entweder das Konto existiert nicht, oder es sind noch Buchungen auf dem Konto vorhanden.");
             }
-        }
-    }
-
-    /**
-     * Zeigt eine Saldenübersicht an.
-     * 
-     * @param int $besitzer UserId
-     * 
-     * @return void
-     */
-    public function saldenUebersicht($besitzer)
-    {
-        if (isset($_GET['Salden'])) {
-            echo "<div>";
-            $select = "SELECT * FROM finanzen_konten WHERE besitzer=$besitzer";
-            $konten = $this->sqlselect($select);
-
-            for ($i = 0; $i < sizeof($konten); $i++) {
-                $select2 = "SELECT sum(umsatzWert) as summe FROM finanzen_umsaetze WHERE konto=" . $konten[$i]->id;
-                $umsaetze = $this->sqlselect($select2);
-                echo "<div class='newChar'>";
-                echo "<h2>" . $konten[$i]->konto . "</h2>";
-                echo "Summe: " . $umsaetze[0]->summe;
-                echo "</div>";
-            }
-            echo "</div>";
         }
     }
 

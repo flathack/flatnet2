@@ -33,7 +33,7 @@ $kontakt->logged_in();
                 </div>
             </div>
             <div class="docuEintrag">
-                <div class="newChar">
+                <div class="newFahrt">
                     <h2>Anfrage an den Administrator senden...</h2>
                     <form method=post>
                         <input type="text" name="vorschlagText" id="titel"

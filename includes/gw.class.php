@@ -109,7 +109,7 @@ class Guildwars extends Functions
         $f = substr($f, 1, 20);
         $nachname1 = substr($nachname1, 1, 20);
         $nachname2 = substr($nachname2, 1, 20);
-        echo "<div class='newChar'>";
+        echo "<div class='newFahrt'>";
         echo "Name 1: $m | $nachname1 <br>";
         echo "Name 2: $f | $nachname2 <br>";
         echo "</div>";
@@ -860,7 +860,7 @@ class Gw_Charakter extends Guildwars
                     $username = $_SESSION['selectGWUser'];
                     $userID = $this->getUserID($_SESSION['selectGWUser']);
 
-                    $ausgabe .= "<div id='draggable' class='newChar'>";
+                    $ausgabe .= "<div id='draggable' class='newFahrt'>";
                     if ($username != $_SESSION['username']) {
                         $ausgabe .= "<p class='info'>Achtung, du legst einen Charakter für <strong>$username</strong> an.</p>";
                     }

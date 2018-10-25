@@ -84,7 +84,7 @@ class Quiz extends Functions
                 $fragen = $this->sqlselect($query);
 
                 for ($i = 0; $i < sizeof($fragen); $i++) {
-                    echo "<div class='newCharWIDE'>";
+                    echo "<div class='newFahrt'>";
                     echo "<h2>" . $fragen[$i]->frage_text . "</h2>";
                     echo "<form method=post>";
                     $frageid = $fragen[$i]->id;
@@ -103,7 +103,7 @@ class Quiz extends Functions
                     echo "</form>";
                     echo "</div>";
                 }
-                echo "<div class='newCharWIDE'>";
+                echo "<div class='newFahrt'>";
                 if (isset($_POST['answer']) and isset($_POST['frageid'])) {
                     $answers = $_POST['answer'];
                     $frageid = $_POST['frageid'];
