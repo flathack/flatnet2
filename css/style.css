@@ -2220,6 +2220,9 @@ input[type=password]:focus {
     background-color: #ffc4c4;
     color: #b70004;
 }
+.kontoTable #positiv {
+    text-align: right;
+}
 .kontoTable #yellow {
 	background-color: #ffffd2;
 	font-weight: bold;

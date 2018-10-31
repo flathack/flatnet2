@@ -71,7 +71,7 @@ class FinanzenNEW extends functions
                 $this->showMonthInKonto($besitzer, $kontoID, $monat, $currentYear);
             }
 
-            $this->diagrammOptionen($besitzer);
+            //$this->diagrammOptionen($besitzer);
             // automatische Jahresabschluss-Generation.
             $this->erstelleJahresabschluesseFromOldEintraegen();
 
@@ -866,33 +866,53 @@ class FinanzenNEW extends functions
         if (isset($_GET['konto']) and isset($_GET['ganzesJahr'])) {
             $jahr = $_GET['ganzesJahr'];
             $konto = $_GET['konto'];
+            $currentYear = $jahr;
 
             $this->deleteMarkedUmsaetze($besitzer);
 
             $query = "SELECT *, day(datum) as tag, year(datum) as jahr, month(datum) as monat
             FROM finanzen_umsaetze	WHERE konto = $konto HAVING jahr=$jahr ORDER BY monat,tag,id";
             $umsaetze = $this->sqlselect($query);
-
-            $startSaldo = $this->getJahresabschluesseBISJETZT($konto, $jahr);
+            $summeJahresabschluesseBisJetzt = $this->getJahresabschluesseBISJETZT($konto, $currentYear);
+            
+            $diesesJahr = date("Y");
+            if ($this->checkIfJahrIsInFuture($diesesJahr, $currentYear) == true) {
+                echo "<p class=hinweis>Das Jahr $currentYear liegt in der Zukunft</p>";
+                $getSaldoUntilNow = $this->sqlselect(
+                    "SELECT sum(umsatzWert) as summe
+                    FROM finanzen_umsaetze
+                    WHERE konto = $konto
+                    AND year(datum) < $currentYear"
+                );
+                $startSaldo = $getSaldoUntilNow[0]->summe;
+            } else {
+                $startSaldo = $summeJahresabschluesseBisJetzt;
+            }
 
             $zwischensumme = round($startSaldo, 4);
+            if ($startSaldo < 0) {
+                $startstatus = " id='notOK' ";
+            } else {
+                $startstatus = " id='ok' ";
+            }
             echo "<form method=post>";
             echo "<table class='kontoTable'>";
             echo "<thead>" 
-            . "<td>Mark</td>" 
-            . "<td>Buchungsnr</td>" 
+            . "<td id='small'>Mark</td>" 
+            . "<td id='small'>BuchNR</td>" 
             . "<td>Gegenkonto</td>" 
             . "<td>Umsatz</td>" 
-            . "<td>Wert</td>" 
-            . "<td>Tag</td>" 
-            . "<td>Saldo</td>" 
+            . "<td id='width70px'>Wert</td>" 
+            . "<td id='small'>Tag</td>" 
+            . "<td id='width140px'>Saldo</td>" 
             . "</thead>";
             echo "<thead>" 
             . "<td><input type=submit name=delete value=delete /></td>" 
-            . "<td>" 
-            . "Startsaldo: $startSaldo" 
+            . "<td colspan=2>" 
+            . "" 
             . "</td>" 
-            . "<td colspan=5><a href='export.php?year=$jahr&konto=$konto'>EXPORT TO CSV</a></td>"
+            . "<td colspan=3><a href='export.php?year=$jahr&konto=$konto'>EXPORT TO CSV</a></td>"
+            . "<td $startstatus>".number_format(round($startSaldo, 4), 2, ",", ".")." €</td>"
             . "</thead>";
 
             if (!isset($umsaetze[0]->id)) {
@@ -904,10 +924,15 @@ class FinanzenNEW extends functions
                 // Monatszeilen einfuegen
                 if (isset($umsaetze[$i - 1]->monat)) {
                     if ($umsaetze[$i - 1]->monat != $umsaetze[$i]->monat) {
+                        if ($zwischensumme < 0) {
+                            $status = " id='notOK' ";
+                        } else {
+                            $status = " id='ok' ";
+                        }
                         echo "<thead><td></td><td colspan=5><a href='#" 
                         . $this->getMonthName($umsaetze[$i]->monat) 
                         . "'>" . $this->getMonthName($umsaetze[$i]->monat) 
-                        . "</a></td><td>$zwischensumme &#8364;</td></thead>";
+                        . "</a></td><td $status>".number_format(round($zwischensumme, 4), 2, ",", ".")." €</td></thead>";
                     }
                 }
 
@@ -929,18 +954,38 @@ class FinanzenNEW extends functions
                 echo "<td><a href='?konto=" . $umsaetze[$i]->gegenkonto . "&monat=" . $umsaetze[$i]->monat . "&jahr=$jahr&selected=" . $umsaetze[$i]->buchungsnr . "'>" . $umsaetze[$i]->buchungsnr . "</a></td>";
                 echo "<td>" . $nameGegenkonto[0]->konto . "</td>";
                 echo "<td>" . $umsaetze[$i]->umsatzName . "</td>";
-                echo "<td $zelle>" . $umsaetze[$i]->umsatzWert . "</td>";
+                
+                echo "<td $zelle>" . number_format(round($umsaetze[$i]->umsatzWert, 4), 2, ",", ".") . " €</td>";
                 echo "<td>" . $umsaetze[$i]->tag . "</td>";
 
                 // Berechnung Zwischensumme:
                 $zwischensumme = $zwischensumme + $umsaetze[$i]->umsatzWert;
-
-                echo "<td>" . $zwischensumme . "</td>";
+                if ($zwischensumme < 0) {
+                    $zelle2 = " id='rot' ";
+                } else {
+                    $zelle2 = " id='positiv' ";
+                }
+                echo "<td $zelle2>" . number_format(round($zwischensumme, 4), 2, ",", ".") . " €</td>";
                 echo "</tbody>";
             }
-            echo "<tfoot><td><input type=submit name=delete value=delete /></td><td colspan=6>Endsaldo: $zwischensumme</td></tfoot>";
+            echo "<tfoot><td><input type=submit name=delete value=delete /></td><td colspan=6>Endsaldo: ".number_format(round($zwischensumme, 4), 2, ",", ".")."</td></tfoot>";
+            
             echo "</table>";
             echo "</form>";
+            echo "<div>";
+            echo "<h2>Auswertung</h2>";
+            echo "<table class='kontoTable'>";
+            echo "<tbody><td>Startsaldo: ".number_format(round($startSaldo, 4), 2, ",", ".")." €</td><td> Endsaldo: ".number_format(round($zwischensumme, 4), 2, ",", ".")." €</td></tbody>";
+            $diff = $zwischensumme - $startSaldo;
+            echo "<tbody><td colspan=2>Differenz: ".number_format(round($diff, 4), 2, ",", ".")." €</td></tbody>";
+            echo "</table>";
+            $zwischensumme2 = 0;
+            for ($j = 0; $j < sizeof($umsaetze); $j++) {
+                $zwischensumme2 = $umsaetze[$j]->umsatzWert + $zwischensumme2;
+                $arrayFuerDiagramm[$j] = $zwischensumme2;
+            }
+            $this->showDiagramme($arrayFuerDiagramm, 900, 200);
+            echo "</div>";
         }
 
     }
@@ -983,7 +1028,7 @@ class FinanzenNEW extends functions
             }
 
             if (isset($arrayFuerDiagramm)) {
-                $this->showDiagramme($arrayFuerDiagramm, "400", "200");
+                $this->showDiagramme($arrayFuerDiagramm, "900", "200");
             }
         }
 

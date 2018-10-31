@@ -850,13 +850,13 @@ class Functions extends Sql
     /**
      * Zeigt Diagramme mit JQUERY an.
      * 
-     * @param int $zahlen Wert
-     * @param int $width  Breite
-     * @param int $height Höhe
+     * @param array $zahlen Wert
+     * @param int   $width  Breite
+     * @param int   $height Höhe
      * 
      * @return void
      */
-    public function showDiagramme($zahlen, $width, $height)
+    public function showDiagramme(array $zahlen, int $width, int $height)
     {
 
         if (isset($zahlen[0])) {
@@ -874,7 +874,7 @@ class Functions extends Sql
             }
             $data .= "]";
 
-            echo '<canvas id="buyers" width= . "100%" .  height=' . $height . '></canvas>';
+            echo '<canvas id="buyers" width= . "$width" .  height=' . $height . '></canvas>';
             echo '
                 <script>
                 var buyerData = {
