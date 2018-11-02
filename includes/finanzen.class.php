@@ -1108,62 +1108,62 @@ class FinanzenNEW extends functions
         echo "</li>";
 
         echo "<li ";
-        if ($monat == 1) {
+        if ($monat == 1 AND !isset($_GET['ganzesJahr'])) {
             echo " id='selected' ";
         }
         echo "><a href='?konto=$konto&monat=1&jahr=$jahr'>Januar</a></li>";
         echo "<li ";
-        if ($monat == 2) {
+        if ($monat == 2 AND !isset($_GET['ganzesJahr'])) {
             echo " id='selected' ";
         }
         echo "><a href='?konto=$konto&monat=2&jahr=$jahr'>Februar</a></li>";
         echo "<li ";
-        if ($monat == 3) {
+        if ($monat == 3 AND !isset($_GET['ganzesJahr'])) {
             echo " id='selected' ";
         }
         echo "><a href='?konto=$konto&monat=3&jahr=$jahr'>M&auml;rz</a></li>";
         echo "<li ";
-        if ($monat == 4) {
+        if ($monat == 4 AND !isset($_GET['ganzesJahr'])) {
             echo " id='selected' ";
         }
         echo "><a href='?konto=$konto&monat=4&jahr=$jahr'>April</a></li>";
         echo "<li ";
-        if ($monat == 5) {
+        if ($monat == 5 AND !isset($_GET['ganzesJahr'])) {
             echo " id='selected' ";
         }
         echo "><a href='?konto=$konto&monat=5&jahr=$jahr'>Mai</a></li>";
         echo "<li ";
-        if ($monat == 6) {
+        if ($monat == 6 AND !isset($_GET['ganzesJahr'])) {
             echo " id='selected' ";
         }
         echo "><a href='?konto=$konto&monat=6&jahr=$jahr'>Juni</a></li>";
         echo "<li ";
-        if ($monat == 7) {
+        if ($monat == 7 AND !isset($_GET['ganzesJahr'])) {
             echo " id='selected' ";
         }
         echo "><a href='?konto=$konto&monat=7&jahr=$jahr'>Juli</a></li>";
         echo "<li ";
-        if ($monat == 8) {
+        if ($monat == 8 AND !isset($_GET['ganzesJahr'])) {
             echo " id='selected' ";
         }
         echo "><a href='?konto=$konto&monat=8&jahr=$jahr'>August</a></li>";
         echo "<li ";
-        if ($monat == 9) {
+        if ($monat == 9 AND !isset($_GET['ganzesJahr'])) {
             echo " id='selected' ";
         }
         echo "><a href='?konto=$konto&monat=9&jahr=$jahr'>September</a></li>";
         echo "<li ";
-        if ($monat == 10) {
+        if ($monat == 10 AND !isset($_GET['ganzesJahr'])) {
             echo " id='selected' ";
         }
         echo "><a href='?konto=$konto&monat=10&jahr=$jahr'>Oktober</a></li>";
         echo "<li ";
-        if ($monat == 11) {
+        if ($monat == 11 AND !isset($_GET['ganzesJahr'])) {
             echo " id='selected' ";
         }
         echo "><a href='?konto=$konto&monat=11&jahr=$jahr'>November</a></li>";
         echo "<li ";
-        if ($monat == 12) {
+        if ($monat == 12 AND !isset($_GET['ganzesJahr'])) {
             echo " id='selected' ";
         }
         echo "><a href='?konto=$konto&monat=12&jahr=$jahr'>Dezember</a></li>";
@@ -1287,7 +1287,7 @@ class FinanzenNEW extends functions
 
             for ($i = 0; $i < sizeof($konten); $i++) {
 
-                if ($konten[$i]->aktiv == 1) {
+                if ($konten[$i]->aktiv == 1 OR $konten[$i]->id == $konto) {
                     echo "<li ";
                     if ($konto == $konten[$i]->id) {
                         echo " id='selected' ";
@@ -1706,6 +1706,7 @@ class FinanzenNEW extends functions
                     echo "<button type=submit name=alterUmsatz>Speichern</button>";
                     //echo "<input type=submit name=loeschUmsatz value=L&ouml;schen />";
                     echo "<button type=submit name=loeschUmsatz>L&ouml;schen</button>";
+                    echo "<a class='buttonlink' href='detail.php?umbuchungBuchNr=".$umsatzInfo[0]->buchungsnr ."&editKonto=".$umsatzInfo[0]->konto ."'>Umbuchen</a>";
 
                     $this->regelmaessigeZahlung($umsatzInfo, $besitzer);
 
