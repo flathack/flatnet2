@@ -984,7 +984,9 @@ class FinanzenNEW extends functions
                 $zwischensumme2 = $umsaetze[$j]->umsatzWert + $zwischensumme2;
                 $arrayFuerDiagramm[$j] = $zwischensumme2;
             }
-            $this->showDiagramme($arrayFuerDiagramm, 900, 200);
+            if (isset($arrayFuerDiagramm[0])) {
+                $this->showDiagramme($arrayFuerDiagramm, 900, 200);
+            }
             echo "</div>";
         }
 
@@ -1064,8 +1066,12 @@ class FinanzenNEW extends functions
      */
     public function showMonateLinks()
     {
-
-        $jahr = $this->getJahrFromGet();
+        if (isset($_GET['ganzesJahr']) AND is_numeric($_GET['ganzesJahr'])) {
+            $jahr = $_GET['ganzesJahr'];
+        } else {
+            $jahr = $this->getJahrFromGet();
+        }
+        
         $konto = $this->getKontoIDFromGet();
         $monat = $this->getMonatFromGet();
         echo "<ul class='FinanzenMonate'>";
@@ -1167,8 +1173,14 @@ class FinanzenNEW extends functions
         echo "</li>";
 
         /* Ganzes Jahr anzeigen*/
-        echo "<li>";
-        echo "<a href='?konto=$konto&ganzesJahr=$jahr'>JAHR $jahr</a>";
+        if (isset($_GET['ganzesJahr'])) {
+            $wholeYearSelected = " id='selected' ";
+        } else {
+            $wholeYearSelected = " id='' ";
+        }
+        echo "<li $wholeYearSelected>";
+        
+        echo "<a  href='?konto=$konto&ganzesJahr=$jahr'>JAHR $jahr</a>";
         echo "</li>";
 
         echo "</ul>";
@@ -1182,8 +1194,12 @@ class FinanzenNEW extends functions
      */
     public function showJahreLinks()
     {
-
-        $jahr = $this->getJahrFromGet();
+        if (isset($_GET['ganzesJahr']) AND is_numeric($_GET['ganzesJahr'])) {
+            $jahr = $_GET['ganzesJahr'];
+        } else {
+            $jahr = $this->getJahrFromGet();
+        }
+        
         $konto = $this->getKontoIDFromGet();
         $monat = $this->getMonatFromGet();
 
@@ -1198,13 +1214,19 @@ class FinanzenNEW extends functions
         $jahrforw = $jahr + 1;
         $jahrforw2 = $jahr + 2;
         $jahrforw3 = $jahr + 3;
-        echo "<li id=''><a href='?konto=$konto&monat=$monat&jahr=$jahrprev3'>$jahrprev3</a></li>";
-        echo "<li id=''><a href='?konto=$konto&monat=$monat&jahr=$jahrprev2'>$jahrprev2</a></li>";
-        echo "<li id=''><a href='?konto=$konto&monat=$monat&jahr=$jahrprev'>$jahrprev</a></li>";
-        echo "<li id='selected'><a href='?konto=$konto&monat=$monat&jahr=$jahr'>$jahr</a></li>";
-        echo "<li id=''><a href='?konto=$konto&monat=$monat&jahr=$jahrforw'>$jahrforw</a></li>";
-        echo "<li id=''><a href='?konto=$konto&monat=$monat&jahr=$jahrforw2'>$jahrforw2</a></li>";
-        echo "<li id=''><a href='?konto=$konto&monat=$monat&jahr=$jahrforw3'>$jahrforw3</a></li>";
+        if (isset($_GET['ganzesJahr'])) {
+            echo "<li id=''><a href='?konto=$konto&monat=$monat&ganzesJahr=$jahrprev'>$jahrprev</a></li>";
+            echo "<li id='selected'><a href='?konto=$konto&monat=$monat&ganzesJahr=$jahr'>$jahr</a></li>";
+            echo "<li id=''><a href='?konto=$konto&monat=$monat&ganzesJahr=$jahrforw'>$jahrforw</a></li>";
+        } else {
+            echo "<li id=''><a href='?konto=$konto&monat=$monat&jahr=$jahrprev3'>$jahrprev3</a></li>";
+            echo "<li id=''><a href='?konto=$konto&monat=$monat&jahr=$jahrprev2'>$jahrprev2</a></li>";
+            echo "<li id=''><a href='?konto=$konto&monat=$monat&jahr=$jahrprev'>$jahrprev</a></li>";
+            echo "<li id='selected'><a href='?konto=$konto&monat=$monat&jahr=$jahr'>$jahr</a></li>";
+            echo "<li id=''><a href='?konto=$konto&monat=$monat&jahr=$jahrforw'>$jahrforw</a></li>";
+            echo "<li id=''><a href='?konto=$konto&monat=$monat&jahr=$jahrforw2'>$jahrforw2</a></li>";
+            echo "<li id=''><a href='?konto=$konto&monat=$monat&jahr=$jahrforw3'>$jahrforw3</a></li>";
+        }
         echo "</ul>";
     }
 
