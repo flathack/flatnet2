@@ -602,8 +602,11 @@ class FinanzenNEW extends functions
             } else {
                 $mailinfo = "| Send <a href='mailto:" . $kontoinformation[0]->mail . "'>MAIL</a>";
             }
-
-            $abrechnung = "<a href='abrechnung.php?month=" . $currentMonth . "&konto=" . $kontoinformation[0]->id . "'>Abrechnung</a>";
+            if (isset($kontoinformation[0]->id)) {
+                $abrechnung = "<a href='abrechnung.php?month=" . $currentMonth . "&konto=" . $kontoinformation[0]->id . "'>Abrechnung</a>";
+            } else {
+                $abrechnung = "";
+            }
             echo "<td colspan=6>Monat:<strong> $currentMonth </strong>im Jahr <strong>$currentYear</strong> $saldotext $mailinfo $abrechnung </td>";
             echo "</thead>";
 
