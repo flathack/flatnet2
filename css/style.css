@@ -2144,6 +2144,22 @@ input[type=password]:focus {
 .kontoTable #small {
     width: 50px;
 }
+.kontoTable #vergangenheit {
+    background-color: rgb(245, 245, 245);
+}
+.kontoTable #vergangenheit:hover {
+    background-color: rgb(236, 236, 236);
+}
+.kontoTable #zukunft {
+    background-color: rgb(255, 247, 247);
+}
+.kontoTable #zukunft td,
+.kontoTable #vergangenheit td {
+    border-bottom: 1px solid rgb(194, 194, 194);
+}
+.kontoTable #zukunft:hover {
+    background-color: rgb(255, 235, 235);
+}
 
 .kontoTable input[type=text],
 .kontoTable input[type=date] {

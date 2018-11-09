@@ -582,30 +582,6 @@ class FinanzenNEW extends functions
             // Bei Konten Art 2 wird kein Saldo angezeigt ...
             $kontoinfos = $this->sqlselect("SELECT * FROM finanzen_konten WHERE id=$kontoID");
 
-            if ($kontoinfos[0]->art == 2) {
-                echo "<thead><td colspan=6 id='notOK'>Dieses Konto hat keinen Saldo!</td></thead>";
-            }
-            if ($kontoinfos[0]->art == 1) {
-                echo "<thead><td colspan=6 id='ok'>Guthabenkonto</td></thead>";
-            }
-
-            // Keinen Startsaldo anzeigen:
-            if ($kontoinfos[0]->art == 2) {
-                $saldotext = "";
-            } else {
-                $saldotext = "/ Startsaldo diesen Monat: <strong>$startsaldo €";
-            }
-            echo "<thead>";
-
-            if (!isset($kontoinformation[0]->mail) or $kontoinformation[0]->mail == "") {
-                $mailinfo = "| Keine Mail";
-            } else {
-                $mailinfo = "| Send <a href='mailto:" . $kontoinformation[0]->mail . "'>MAIL</a>";
-            }
-
-            $abrechnung = "<a href='abrechnung.php?month=" . $currentMonth . "&konto=" . $kontoinformation[0]->id . "'>Abrechnung</a>";
-            echo "<td colspan=6>Monat:<strong> $currentMonth </strong>im Jahr <strong>$currentYear</strong> $saldotext $mailinfo $abrechnung </td>";
-            echo "</thead>";
 
             echo "<thead>";
             echo "<td id='small'>ID</td>";
@@ -614,7 +590,7 @@ class FinanzenNEW extends functions
             echo "<td id='small'>Tag</td>";
             echo "<td>Wert</td>";
             // echo "<td id='width140px'>Kategorien</td>";
-            echo "<td>Saldo</td>";
+            echo "<td>Saldo (Start : $startsaldo)</td>";
 
             echo "</thead>";
 
@@ -657,9 +633,16 @@ class FinanzenNEW extends functions
                     } else { 
                         $selected = "";
                     }
+                    $timestamp = time();
+                    $heuteCheck = date("Y-m-d", $timestamp);
+                    if ($umsaetze[$i]->datum > $heuteCheck) {
+                        $zukunft = " id='zukunft' ";
+                    } else {
+                        $zukunft = " id='vergangenheit' ";
+                    }
 
                     //START
-                    echo "<tbody $selected>";
+                    echo "<tbody $selected $zukunft>";
 
                     //BuchungsNR
                     echo "<td><a href='?konto=" . $umsaetze[$i]->gegenkonto . "&monat=$monat&jahr=$currentYear&selected=" . $umsaetze[$i]->buchungsnr . "'>" . $umsaetze[$i]->buchungsnr . "</a></td>";
@@ -689,7 +672,7 @@ class FinanzenNEW extends functions
                     //WERT
                     echo "<td $zelle>"; 
                         echo number_format(round($umsaetze[$i]->umsatzWert, 4), 2, ",", ".");
-                    echo " &#8364;</td>";
+                    echo "</td>";
 
                     //Kategorie
                     // $cat = $this->getCategoryForUmsatz($umsaetze[$i]->id);
@@ -709,7 +692,7 @@ class FinanzenNEW extends functions
                             $w = round($zwischensumme, 4);
                             $link = "konto=$k&targetkonto=$tk&monat=$monat&jahr=$currentYear&wert=$w&newUeberweisung";
                             echo "<a id='nostyle' href='?$link'>";
-                                echo number_format(round($zwischensumme, 4), 2, ",", ".") . " &#8364;";
+                                echo number_format(round($zwischensumme, 4), 2, ",", ".") . "";
                             echo "</a>";
                         echo "</td>";
                     }
@@ -718,13 +701,14 @@ class FinanzenNEW extends functions
                     // HEUTE Zeile anzeigen
                     $timestamp = time();
                     $heute = date("Y-m-d", $timestamp);
-                    if ($umsaetze[$i]->datum < $heute 
-                        AND isset($umsaetze[$i + 1]->datum) 
-                        AND $umsaetze[$i + 1]->datum >= $heute
+                    if (isset($umsaetze[$i-1]->datum)
+                        AND $umsaetze[$i-1]->datum < $heute 
+                        AND isset($umsaetze[$i]->datum) 
+                        AND $umsaetze[$i]->datum >= $heute
                     ) {
                         $heute = date("d.m.Y", $timestamp);
                         echo "<tbody id='today'>"; 
-                            echo "<td colspan='7'><a name='heute'>Heute ist der $heute</a> n&auml;chster Umsatz: " . $umsaetze[$i + 1]->umsatzName . "</td>"; 
+                            echo "<td colspan='7'><a name='heute'>$heute</a>: Demnächst : " . $umsaetze[$i + 1]->umsatzName . "</td>"; 
                         echo "</tbody>";
                     }
                 }
@@ -1172,17 +1156,6 @@ class FinanzenNEW extends functions
         echo "<a href='?konto=$konto&monat=$monatvor&jahr=$jahrvor'> &raquo; </a>";
         echo "</li>";
 
-        /* Ganzes Jahr anzeigen*/
-        if (isset($_GET['ganzesJahr'])) {
-            $wholeYearSelected = " id='selected' ";
-        } else {
-            $wholeYearSelected = " id='' ";
-        }
-        echo "<li $wholeYearSelected>";
-        
-        echo "<a  href='?konto=$konto&ganzesJahr=$jahr'>JAHR $jahr</a>";
-        echo "</li>";
-
         echo "</ul>";
 
     }
@@ -1208,25 +1181,27 @@ class FinanzenNEW extends functions
         $currentYear = date("Y");
 
         //Previous Year:
-        $jahrprev3 = $jahr - 3;
-        $jahrprev2 = $jahr - 2;
         $jahrprev = $jahr - 1;
         $jahrforw = $jahr + 1;
-        $jahrforw2 = $jahr + 2;
-        $jahrforw3 = $jahr + 3;
         if (isset($_GET['ganzesJahr'])) {
             echo "<li id=''><a href='?konto=$konto&monat=$monat&ganzesJahr=$jahrprev'>$jahrprev</a></li>";
             echo "<li id='selected'><a href='?konto=$konto&monat=$monat&ganzesJahr=$jahr'>$jahr</a></li>";
             echo "<li id=''><a href='?konto=$konto&monat=$monat&ganzesJahr=$jahrforw'>$jahrforw</a></li>";
         } else {
-            echo "<li id=''><a href='?konto=$konto&monat=$monat&jahr=$jahrprev3'>$jahrprev3</a></li>";
-            echo "<li id=''><a href='?konto=$konto&monat=$monat&jahr=$jahrprev2'>$jahrprev2</a></li>";
             echo "<li id=''><a href='?konto=$konto&monat=$monat&jahr=$jahrprev'>$jahrprev</a></li>";
             echo "<li id='selected'><a href='?konto=$konto&monat=$monat&jahr=$jahr'>$jahr</a></li>";
             echo "<li id=''><a href='?konto=$konto&monat=$monat&jahr=$jahrforw'>$jahrforw</a></li>";
-            echo "<li id=''><a href='?konto=$konto&monat=$monat&jahr=$jahrforw2'>$jahrforw2</a></li>";
-            echo "<li id=''><a href='?konto=$konto&monat=$monat&jahr=$jahrforw3'>$jahrforw3</a></li>";
         }
+        /* Ganzes Jahr anzeigen*/
+        if (isset($_GET['ganzesJahr'])) {
+            $wholeYearSelected = " id='selected' ";
+        } else {
+            $wholeYearSelected = " id='' ";
+        }
+        echo "<li $wholeYearSelected>";
+        
+        echo "<a  href='?konto=$konto&ganzesJahr=$jahr'>JAHR $jahr</a>";
+        echo "</li>";
         echo "</ul>";
     }
 
@@ -2601,7 +2576,7 @@ class FinanzenNEW extends functions
                     $heute = date("Y-m-d", $timestamp);
                     if ($getKontoBuchungen[$i]->datum < $heute and isset($getKontoBuchungen[$i + 1]->datum) and $getKontoBuchungen[$i + 1]->datum >= $heute) {
                         $heute = date("d.m.Y", $timestamp);
-                        echo "<tbody id='error'><td colspan='7'><a name='heute'>Heute ist der $heute</a> n&auml;chster Umsatz: " . $getKontoBuchungen[$i + 1]->umsatzName . "</td></tbody>";
+                        echo "<tbody id='error'><td colspan='7'><a name='heute'>Heute: $heute</a> n&auml;chster Umsatz: " . $getKontoBuchungen[$i + 1]->umsatzName . "</td></tbody>";
                     }
 
                     echo "<tbody>";
