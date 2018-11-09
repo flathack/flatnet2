@@ -581,8 +581,6 @@ class FinanzenNEW extends functions
             // Update vom 30.12.2016:
             // Bei Konten Art 2 wird kein Saldo angezeigt ...
             $kontoinfos = $this->sqlselect("SELECT * FROM finanzen_konten WHERE id=$kontoID");
-
-
             echo "<thead>";
             echo "<td id='small'>ID</td>";
             echo "<td>Konto</td>";
