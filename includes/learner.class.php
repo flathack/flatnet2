@@ -97,6 +97,7 @@ class Learner extends Functions
     function learnerWelcome() 
     {
         echo "<div class='VokUebung'>";
+        
         $this->setgetLang();
         $this->setgetkat();
         $this->uebungsSelector();
@@ -119,6 +120,7 @@ class Learner extends Functions
 
         echo "</ul>";
         $this->showLang();
+        $this->csvImport();
         echo "</div>";
     }
 
@@ -243,6 +245,79 @@ class Learner extends Functions
             
         } else {
             echo "Keine Sprache ausgewaehlt.";
+        }
+    }
+
+    function csvImport() {
+
+        if (isset($_GET['vokAdminAktivate'])) {
+            $_SESSION['vokAdministration'] = "ON";
+        }
+        if (isset($_GET['vokAdminDeaktivate'])) {
+            unset($_SESSION['vokAdministration']);
+        }
+
+        if (isset($_SESSION['vokAdministration'])) {
+            echo "<a href='?vokAdminDeaktivate'>admin. off</a>";
+        } else {
+            echo "<a href='?vokAdminAktivate'>admin. on</a>";
+        }
+        if ($this->userHasRight(73, 0) == true AND isset($_SESSION['vokAdministration'])) {
+            echo "<div>";
+                echo "<h2>IMPORT</h2>";
+                if (isset($_POST["import"])) {
+    
+                    $fileName = $_FILES["file"]["tmp_name"];
+                    
+                    if ($_FILES["file"]["size"] > 0) {
+                        
+                        $file = fopen($fileName, "r");
+                        
+                        while (($column = fgetcsv($file, 10000, ",")) !== FALSE) {
+                            $sqlInsert = "INSERT INTO vokabelliste (vok_name_ori,vok_name_ueb,vok_kat,vok_desc)
+                                   values ('" . $column[0] . "','" . $column[1] . "','" . $column[2] . "','" . $column[3] . "')";
+                            if ($this->sqlInsertUpdateDelete($sqlInsert) == true) {
+                                echo "OK - ";
+                            } else {
+                                echo "ERROR - ";
+                            }
+                        }
+                    }
+                }
+                echo '
+                <script type="text/javascript">
+                    $(document).ready(
+                    function() {
+                        $("#frmCSVImport").on(
+                        "submit",
+                        function() {
+
+                            $("#response").attr("class", "");
+                            $("#response").html("");
+                            var fileType = ".csv";
+                            var regex = new RegExp("([a-zA-Z0-9\s_\\.\-:])+("
+                                    + fileType + ")$");
+                            if (!regex.test($("#file").val().toLowerCase())) {
+                                $("#response").addClass("error");
+                                $("#response").addClass("display-block");
+                                $("#response").html(
+                                        "Invalid File. Upload : <b>" + fileType
+                                                + "</b> Files.");
+                                return false;
+                            }
+                            return true;
+                        });
+                    });
+                </script>
+                ';
+                echo "<form class=\"form-horizontal\" action=\"\" method=\"post\" name=\"uploadCSV\" enctype=\"multipart/form-data\">";
+                echo "<div class=\"input-row\">";
+                echo "<label class=\"col-md-4 control-label\">CSV-Datei ausw&auml;hlen</label> <input type=file name=file id=file accept=\".csv\">";
+                echo "<button type=submit id=submit name=import class=\"btn-submit\">Import</button>";
+                echo "</div>";
+                echo "<div id=\"labelError\"></div>";
+                echo "</form>";
+            echo "</div>";
         }
     }
 
