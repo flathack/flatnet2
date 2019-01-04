@@ -15,9 +15,10 @@
              * @license    https://www.gnu.org/licenses/gpl-3.0.txt GNU/GPLv3
              * @link       none
              */
-            require '../includes/planner.class.php';
+            require '../includes/learner.class.php';
             $learner = NEW Learner;
-            $learner->header(); ?>
+            $learner->newheader(); 
+            $learner->userHasRightPruefung(70);?>
             <title>Steven.NET-Vokabeln lernen</title>
         </head>
         <body>

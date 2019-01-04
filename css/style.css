@@ -289,6 +289,7 @@ blockquote {
 #forum #forum,
 #profil #profil,
 #adressbuch #adressbuch,
+#learner #learner,
 #toyota #toyota,
 #planner #planner,
 #gebkalender #gebkalender,
@@ -1985,12 +1986,17 @@ input[type=password]:focus {
 #konten #konten
 , #monate #monate
 , #shares #shares
-, #stat #stat {
+, #stat #stat
+, .finanzNAV #selected {
 	display: inline-block;
     margin: 0px 0px 0px 0px;
     background-color: #820003;
     color: white;
     padding: 5px;
+}
+
+.finanzNAV #selected a {
+    color: white;
 }
 
 #konten #konten a
@@ -2295,6 +2301,23 @@ input[type=password]:focus {
     width: auto;
     border: none;
 }
+
+.VokUebung {
+    margin-left: auto;
+    margin-right: auto;
+    width: 370px;
+    border: 1px solid black;
+    padding-left: 20px;
+    padding-right: 20px;
+    padding-top: 5px;
+    padding-bottom: 20px;
+}
+
+.vokabel {
+    margin-top: 20px;
+    font-size: 2em;
+}
+
 /* FlatnetTable eigene Tabelle für die Flatnet Seite */
 
 .flatnetTable {
