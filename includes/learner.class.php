@@ -120,10 +120,81 @@ class Learner extends Functions
 
         echo "</ul>";
         $this->showLang();
+        $this->showStats();
         $this->csvImport();
         echo "</div>";
     }
 
+    /**
+     * Zeigt die Stats an
+     * 
+     * @return void
+     */
+    function showStats()
+    {
+        if (isset($_SESSION['vokabelkat'])) {
+            echo "<div>";
+            $vokkat = $_SESSION['vokabelkat'];
+            $voksanzahl = $this->getObjektInfo("SELECT count(*) as anzahl FROM vokabelliste WHERE vok_kat=$vokkat");
+            $voksthiskat = $this->getObjektInfo("SELECT * FROM vokabelliste WHERE vok_kat=$vokkat");
+            $positiv = 0; // Anzahl aller positiven Bewertungen
+            $negativ = 0; // Anzahl aller negativen Bewertungen
+            $positivvokabel = 0; // Vokabel die insgesamt bestanden ist.
+            $nochniepositiv = 0; // Anzahl Vokabeln die noch nie positiv waren.
+            $needed = 5; // benötigte Anzahl von positiven Bewertungen bevor die Vokabel bestanden ist.
+            for ($i = 0; $i < sizeof($voksthiskat); $i++) {
+                $id = $voksthiskat[$i]->id;
+                $getfortschritt = $this->getObjektInfo("SELECT * FROM vokabelnfortschritt WHERE vokabel_id=$id LIMIT 1");
+                // Abfrage ob Vokabel positiv ist und hochzaehlen
+                if (isset($getfortschritt[0]->positiv)) {
+                    $positiv = $getfortschritt[0]->positiv + $positiv;
+                } else {
+                    $nochniepositiv++;
+                }
+                // Abfrage ob Vokabel negativ ist und hochzaehlen
+                if (isset($getfortschritt[0]->negativ)) {
+                    $negativ = $getfortschritt[0]->negativ + $negativ;
+                }
+                // Abfrage ob die Vokabel insgesamt bestanden ist.
+                if (isset($getfortschritt[0]->negativ) and isset($getfortschritt[0]->positiv)) {
+                    // Vokabel wurde mal negativ bewertet.
+                    if ($getfortschritt[0]->positiv > $getfortschritt[0]->negativ) {
+                        if ($getfortschritt[0]->positiv > $needed) {
+                            $positivvokabel++;
+                        }
+                    }
+                } else {
+                    // Vokabel die nur Positiv ist:
+                    if (isset($getfortschritt[0]->positiv)) {
+                        if ($getfortschritt[0]->positiv > $needed) {
+                            $positivvokabel++;
+                        }
+                    }
+                }
+            }
+            // Berechnung Abschluss:
+            if ($positivvokabel > 0) {
+                $abschluss = round($positivvokabel / $voksanzahl[0]->anzahl * 100,2);
+            } else {
+                $abschluss = 0;
+            }
+            echo "<ul class='finanzNAV'>";
+            echo "<li>Abschluss Lektion: $abschluss %</li>";
+            // echo "<li>Vokabeln: " .$voksanzahl[0]->anzahl. "</li>";
+            //echo "<li>Gesamt Positiv: $positiv</li>";
+            //echo "<li>Gesamt Negativ: $negativ</li>";
+            echo "<li>Noch nie positiv: $nochniepositiv</li>";
+            echo "<li>Bestanden: $positivvokabel</li>";
+            echo "</ul>";
+            echo "</div>";
+        }
+    }
+
+    /**
+     * Setzt die Session Var language
+     * 
+     * @return void
+     */
     function setgetLang() 
     {
 
@@ -131,12 +202,17 @@ class Learner extends Functions
             if (is_numeric($_GET['setLang']) == true) {
                 $_SESSION['language'] = $_GET['setLang'];
 
-                # Vokabel-Kategorie loeschen:
+                // Vokabel-Kategorie loeschen:
                 unset($_SESSION['vokabelkat']);
             }
         }
     }
 
+    /**
+     * Setzt die Kategorie
+     * 
+     * @return void
+     */
     function setgetKat() 
     {
 
@@ -146,7 +222,12 @@ class Learner extends Functions
             }
         }
     }
-
+    
+    /**
+     * Setzt die Option von welcher Sprache gelernt werden soll.
+     * 
+     * @return void
+     */
     function uebungsSelector() 
     {
         if (!isset($_SESSION['LangDiff'])) {
@@ -185,14 +266,21 @@ class Learner extends Functions
                 echo "<li"; 
                 if (isset($_SESSION['vokabelkat'])) {
                     if ($_SESSION['vokabelkat'] == $kategorien[$i]->id) {
+                        $id = $kategorien[$i]->id;
+                        $voksanzahl = $this->getObjektInfo("SELECT count(*) as anzahl FROM vokabelliste WHERE vok_kat=$id");
+                        $anzahl = " (" .$voksanzahl[0]->anzahl . ")";
                         echo " id='selected' ";
+                    } else {
+                        $anzahl = "";
                     }
+                } else {
+                    $anzahl = "";
                 }
-                echo "><a href='?setKat=".$kategorien[$i]->id."'>" .$kategorien[$i]->kat_name. "</a></li>";
+                echo "><a href='?setKat=".$kategorien[$i]->id."'>" .$kategorien[$i]->kat_name. "$anzahl</a></li>";
             }
             echo "</ul></div>";
 
-            # Vokabeln anzeigen:
+            // Vokabeln anzeigen:
 
             if (isset($_SESSION['vokabelkat'])) {
                 $kategorie = $_SESSION['vokabelkat'];
@@ -229,53 +317,47 @@ class Learner extends Functions
                 }
 
                 echo "<div class='spacer'>";
-                    $this->setPositiv();
-                    $this->setNegativ();
-                    if (isset($vokid)) {
-                        echo "<button onclick=\"document.getElementById('versteckt').style.display = 'block'\">L&ouml;sung</button>";
-                        echo "<a class='greenLink' href='?weiterPositiv&vokid=".$vokid."'>Postiv</a>";
-                        echo "<a class='redLink' href='?weiterNegativ&vokid=".$vokid."'>Negativ</a>";
-                    } else {
-                        echo "<p class='hinweis'>In dieser Lektion sind keine Vokabeln vorhanden.</p>";
-                    }
-                    
+                $this->setPositiv();
+                $this->setNegativ();
+                if (isset($vokid)) {
+                    echo "<button onclick=\"document.getElementById('versteckt').style.display = 'block'\">L&ouml;sung</button>";
+                    echo "<a class='greenLink' href='?weiterPositiv&vokid=".$vokid."'>Postiv</a>";
+                    echo "<a class='redLink' href='?weiterNegativ&vokid=".$vokid."'>Negativ</a>";
+                } else {
+                    echo "<p class='hinweis'>In dieser Lektion sind keine Vokabeln vorhanden.</p>";
+                }
                 echo "</div>";
-
             }
-            
         } else {
             echo "Keine Sprache ausgewaehlt.";
         }
     }
 
-    function csvImport() {
-
-        if (isset($_GET['vokAdminAktivate'])) {
-            $_SESSION['vokAdministration'] = "ON";
-        }
-        if (isset($_GET['vokAdminDeaktivate'])) {
-            unset($_SESSION['vokAdministration']);
-        }
-
-        if (isset($_SESSION['vokAdministration'])) {
-            echo "<a href='?vokAdminDeaktivate'>admin. off</a>";
-        } else {
-            echo "<a href='?vokAdminAktivate'>admin. on</a>";
-        }
-        if ($this->userHasRight(73, 0) == true AND isset($_SESSION['vokAdministration'])) {
-            echo "<div>";
+    function csvImport() 
+    {
+        if ($this->userHasRight(71, 0) == true) {
+            if (isset($_GET['vokAdminAktivate'])) {
+                $_SESSION['vokAdministration'] = "ON";
+            }
+            if (isset($_GET['vokAdminDeaktivate'])) {
+                unset($_SESSION['vokAdministration']);
+            }
+    
+            if (isset($_SESSION['vokAdministration'])) {
+                echo "<a href='?vokAdminDeaktivate'>admin. off</a>";
+            } else {
+                echo "<a href='?vokAdminAktivate'>admin. on</a>";
+            }
+            if ($this->userHasRight(71, 0) == true AND isset($_SESSION['vokAdministration'])) {
+                echo "<div>";
                 echo "<h2>IMPORT</h2>";
                 if (isset($_POST["import"])) {
-    
                     $fileName = $_FILES["file"]["tmp_name"];
-                    
                     if ($_FILES["file"]["size"] > 0) {
-                        
                         $file = fopen($fileName, "r");
-                        
                         while (($column = fgetcsv($file, 10000, ",")) !== FALSE) {
                             $sqlInsert = "INSERT INTO vokabelliste (vok_name_ori,vok_name_ueb,vok_kat,vok_desc)
-                                   values ('" . $column[0] . "','" . $column[1] . "','" . $column[2] . "','" . $column[3] . "')";
+                                values ('" . $column[0] . "','" . $column[1] . "','" . $column[2] . "','" . $column[3] . "')";
                             if ($this->sqlInsertUpdateDelete($sqlInsert) == true) {
                                 echo "OK - ";
                             } else {
@@ -284,41 +366,43 @@ class Learner extends Functions
                         }
                     }
                 }
-                echo '
-                <script type="text/javascript">
-                    $(document).ready(
-                    function() {
-                        $("#frmCSVImport").on(
-                        "submit",
+                    echo '
+                    <script type="text/javascript">
+                        $(document).ready(
                         function() {
-
-                            $("#response").attr("class", "");
-                            $("#response").html("");
-                            var fileType = ".csv";
-                            var regex = new RegExp("([a-zA-Z0-9\s_\\.\-:])+("
-                                    + fileType + ")$");
-                            if (!regex.test($("#file").val().toLowerCase())) {
-                                $("#response").addClass("error");
-                                $("#response").addClass("display-block");
-                                $("#response").html(
-                                        "Invalid File. Upload : <b>" + fileType
-                                                + "</b> Files.");
-                                return false;
-                            }
-                            return true;
+                            $("#frmCSVImport").on(
+                            "submit",
+                            function() {
+    
+                                $("#response").attr("class", "");
+                                $("#response").html("");
+                                var fileType = ".csv";
+                                var regex = new RegExp("([a-zA-Z0-9\s_\\.\-:])+("
+                                        + fileType + ")$");
+                                if (!regex.test($("#file").val().toLowerCase())) {
+                                    $("#response").addClass("error");
+                                    $("#response").addClass("display-block");
+                                    $("#response").html(
+                                            "Invalid File. Upload : <b>" + fileType
+                                                    + "</b> Files.");
+                                    return false;
+                                }
+                                return true;
+                            });
                         });
-                    });
-                </script>
-                ';
-                echo "<form class=\"form-horizontal\" action=\"\" method=\"post\" name=\"uploadCSV\" enctype=\"multipart/form-data\">";
-                echo "<div class=\"input-row\">";
-                echo "<label class=\"col-md-4 control-label\">CSV-Datei ausw&auml;hlen</label> <input type=file name=file id=file accept=\".csv\">";
-                echo "<button type=submit id=submit name=import class=\"btn-submit\">Import</button>";
+                    </script>
+                    ';
+                    echo "<form class=\"form-horizontal\" action=\"\" method=\"post\" name=\"uploadCSV\" enctype=\"multipart/form-data\">";
+                    echo "<div class=\"input-row\">";
+                    echo "<label class=\"col-md-4 control-label\">CSV-Datei ausw&auml;hlen</label> <input type=file name=file id=file accept=\".csv\">";
+                    echo "<button type=submit id=submit name=import class=\"btn-submit\">Import</button>";
+                    echo "</div>";
+                    echo "<div id=\"labelError\"></div>";
+                    echo "</form>";
                 echo "</div>";
-                echo "<div id=\"labelError\"></div>";
-                echo "</form>";
-            echo "</div>";
+            }
         }
+        
     }
 
     function setPositiv() 
