@@ -236,18 +236,28 @@ class Learner extends Functions
         if (isset($_GET['setLangDiff'])) {
             $_SESSION['LangDiff'] = $_GET['setLangDiff'];
         }
-        echo "<div class='spacer'><ul class='finanzNAV'>";
+        echo "<div class=''><ul class='finanzNAV'>";
 
         echo "<li"; 
         if ($_SESSION['LangDiff'] == 0) {
             echo " id='selected' ";
         }
-        echo "><a href='?setLangDiff=0'>Deutsch - Fremdsprache</a></li>";
+        
+        if ($_SESSION['LangDiff'] == 1) {
+            echo"><a href='?setLangDiff=0'>&#8634;</a></li>";
+        } else {
+            echo "><a href='?setLangDiff=0'>Deutsch - Fremdsprache</a></li>";
+        }
+        
         echo "<li"; 
         if ($_SESSION['LangDiff'] == 1) {
             echo " id='selected' ";
         }
-        echo"><a href='?setLangDiff=1'>Fremdsprache - Deutsch</a></li>";
+        if ($_SESSION['LangDiff'] == 0) {
+            echo"><a href='?setLangDiff=1'>&#8634;</a></li>";
+        } else {
+            echo"><a href='?setLangDiff=1'>Fremdsprache - Deutsch</a></li>";
+        }
         echo "</ul></div>";
     }
 
@@ -344,9 +354,9 @@ class Learner extends Functions
             }
     
             if (isset($_SESSION['vokAdministration'])) {
-                echo "<a href='?vokAdminDeaktivate'>admin. off</a>";
+                echo "<p class='spacer'><a class='buttonlink' href='?vokAdminDeaktivate'>admin. off</a></p>";
             } else {
-                echo "<a href='?vokAdminAktivate'>admin. on</a>";
+                echo "<p class='spacer'><a class='buttonlink' href='?vokAdminAktivate'>admin. on</a></p>";
             }
             if ($this->userHasRight(71, 0) == true AND isset($_SESSION['vokAdministration'])) {
                 echo "<div>";

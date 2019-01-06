@@ -366,6 +366,7 @@ blockquote {
 .bereichgebkalender h2,
 .bereichguildwars h2,
 .bereichforum h2,
+.bereichlearner h2,
 .bereichfinanzen h2,
 .bereichadministration h2,
 .bereichprofil h2,
@@ -380,6 +381,7 @@ blockquote {
 .bereichgebkalender h2:hover,
 .bereichguildwars h2:hover,
 .bereichforum h2:hover,
+.bereichlearner h2:hover,
 .bereichfinanzen h2:hover,
 .bereichadministration h2:hover,
 .bereichprofil h2:hover,
@@ -393,6 +395,7 @@ blockquote {
 .bereichgebkalender p,
 .bereichguildwars p,
 .bereichforum p,
+.bereichlearner p,
 .bereichfinanzen p,
 .bereichadministration p,
 .bereichprofil p,
@@ -406,6 +409,7 @@ blockquote {
 .bereichgebkalender a,
 .bereichguildwars a,
 .bereichforum a,
+.bereichlearner a,
 .bereichfinanzen a,
 .bereichadministration a,
 .bereichprofil a,
@@ -437,6 +441,19 @@ blockquote {
 .bereichadressbuch {
     background-color: rgb(255, 255, 255);
     background-image: url(../images/tiles/adressbuch.png);
+    background-repeat: no-repeat;
+    background-position: right;
+    box-shadow: 0px 0px 5px grey;
+    border: 1px solid grey;
+    margin: 5px;
+    padding: 5px;
+    width: 370px;
+    min-height: 120px;
+    display: inline-block;
+}
+.bereichlearner {
+    background-color: rgb(255, 255, 255);
+    background-image: url(../images/tiles/birne.png);
     background-repeat: no-repeat;
     background-position: right;
     box-shadow: 0px 0px 5px grey;
@@ -2306,10 +2323,11 @@ input[type=password]:focus {
     margin-left: auto;
     margin-right: auto;
     width: 300px;
-    border: 1px solid black;
+    border: 1px solid gray;
+    border-radius: 10px;
     padding-left: 20px;
     padding-right: 20px;
-    padding-top: 5px;
+    padding-top: 0px;
     padding-bottom: 20px;
 }
 

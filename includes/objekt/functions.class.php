@@ -656,7 +656,7 @@ class Functions extends Sql
         echo '<link rel="apple-touch-icon" sizes="76x76" href="/apple-icon-76x76.png">';
         echo '<script src="/flatnet2/tools/ckeditor/ckeditor.js"></script>';
         echo '<link href="/flatnet2/css/style.css" type="text/css" rel="stylesheet" />';
-        echo "<meta name='viewport' content='width=390, initial-scale=1'>";
+        echo "<meta name='viewport' content='width=380, initial-scale=0.9'>";
 
         // Quellen für JQUERY Scripte
         echo "<script src='//code.jquery.com/jquery-1.10.2.js'></script>";
