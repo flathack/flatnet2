@@ -45,17 +45,15 @@
                         } 
                         ?>
                         
-                    <div class='rightBody'>
-                    <?php $usermanager->showPassChange(); ?>
-                    </div>
                     <div class='innerBody'>
                         <?php $usermanager->manageGWAccounts(); ?>
                         <?php $usermanager->showUserList(); ?>
                         <?php $usermanager->userInfo(); ?>
+                        <?php $usermanager->showPassChange(); ?>
                     </div>
                     </div>
                 <?php 
-                $usermanager->userBlogTexte();
+                // $usermanager->userBlogTexte();
                 ?>
             </div>
         </body>

@@ -108,13 +108,11 @@ class Usermanager extends Functions
 
             for ($i = 0; $i < sizeof($rowUser); $i++) {
                 echo "<div class='gwstart1'>";
-                    echo "<div id='gwnekromant'>";
+                    echo "<div id='gwelementarmagier'>";
                         echo "<h2><a href='?user=" . $rowUser[$i]->Name . "'>" . $rowUser[$i]->Name . "</a></h2>";
                     echo "</div>";
                 echo "</div>";
             }
-            echo "<br><br><br><br><br><br><br><br><br><br><br>";
-            echo "<br><br><br><br><br><br><br><br>";
         }
     }
 
@@ -138,44 +136,14 @@ class Usermanager extends Functions
             $name = "Kein Realname";
         }
         echo "<div id='left'>";
-        echo "<h2>Allgemein</h2>";
-        echo "<br>Realname: " . $name;
-        echo "<br>Dein Account existiert seit dem: " . $row[0]->timestamp . " ";
-        echo "<br>Du hast die ID: " . $row[0]->id . "";
-        echo "<br>und die Rechte " . $row[0]->rights . "";
+        echo "<h2>Informationen</h2>";
+        echo "<br>Account erstellt: " . $row[0]->timestamp . " ";
         echo "</div>";
-
-        //Guildwars Account Information
-        $select = "SELECT count(*) as anzahl FROM gw_chars WHERE besitzer = '$user'";
-        $mengeGrund = $this->sqlselect($select);
-        $menge = $mengeGrund[0]->anzahl;
-        echo "<div id=''>";
-        echo "<h2>Guildwars</h2>";
-        echo "<p>Du hast " . $menge . " Charakter</p></div>";
-
-        //Dokumentation Account Information
-        $select = "SELECT count(*) as anzahl FROM docu WHERE autor = '$user'";
-        $mengeGrund = $this->sqlselect($select);
-        $menge = $mengeGrund[0]->anzahl;
-        echo "<div id=''>";
-        echo "<h2>Dokumentation</h2>";
-        echo "<p>Anzahl der Einträge in der Dokumentation: " . $menge;
-        echo "</div>";
-
         //Vorschläge Account Information
         $select = "SELECT count(*) as anzahl FROM vorschlaege WHERE autor = '$user'";
         $mengeGrund = $this->sqlselect($select);
         $menge = $mengeGrund[0]->anzahl;
         echo "<div id=''>";
-        echo "</div>";
-
-        //Vorschläge Account Information
-        $select = "SELECT count(*) as anzahl FROM blogtexte WHERE autor = '$user'";
-        $mengeGrund = $this->sqlselect($select);
-        $menge = $mengeGrund[0]->anzahl;
-        echo "<div id=''>";
-        echo "<h2>Foreneinträge</h2>";
-        echo "<p>Anzahl: " . $menge;
         echo "</div>";
         echo "</div>";
     }
@@ -407,16 +375,15 @@ class Usermanager extends Functions
     public function showPassChange()
     {
         if (isset($_GET['passChange'])) {
+            echo "<div class='newFahrt'>";
             $this->changePass();
-
-            echo "<div class=''>";
                 echo "<h2>Passwort ändern</h2>";
                 
                 echo "<form method='post'>";
-                    echo "<input type='password' name='oldPass' placeholder='Altes Passwort' required />";
-                    echo "<input type='password' name='newPass' placeholder='Neues Passwort' required />";
-                    echo "<input type='password' name='newPass2' placeholder='Neues Passwort wiederholen' required />";
-                    echo "<input type='submit' name='absenden' value='absenden' />";
+                    echo "<input type=password name=oldPass placeholder='Altes Passwort' required /><br>";
+                    echo "<input type=password name=newPass placeholder='Neues Passwort' required /><br>";
+                    echo "<input type=password name=newPass2 placeholder='Neues Passwort wiederholen' required /><br>";
+                    echo "<input type=submit name=absenden value='absenden' />";
                 echo "</form>";
             echo "</div>";
         }
