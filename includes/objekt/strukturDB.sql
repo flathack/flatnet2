@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 4.8.3
+-- version 4.8.4
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Erstellungszeit: 10. Okt 2018 um 07:55
--- Server-Version: 10.1.35-MariaDB
--- PHP-Version: 7.2.9
+-- Erstellungszeit: 07. Jan 2019 um 07:34
+-- Server-Version: 10.1.37-MariaDB
+-- PHP-Version: 7.3.0
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET AUTOCOMMIT = 0;
@@ -32,10 +32,10 @@ CREATE TABLE `account_infos` (
   `id` int(11) NOT NULL,
   `timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `besitzer` int(11) NOT NULL,
-  `attribut` varchar(250) COLLATE latin1_general_ci NOT NULL,
-  `wert` varchar(250) COLLATE latin1_general_ci NOT NULL,
+  `attribut` varchar(250) COLLATE utf8_german2_ci NOT NULL,
+  `wert` varchar(250) COLLATE utf8_german2_ci NOT NULL,
   `account` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_german2_ci;
 
 -- --------------------------------------------------------
 
@@ -46,30 +46,30 @@ CREATE TABLE `account_infos` (
 CREATE TABLE `adressbuch` (
   `id` int(11) NOT NULL,
   `timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  `vorname` varchar(30) COLLATE latin1_general_ci NOT NULL,
-  `nachname` varchar(30) COLLATE latin1_general_ci NOT NULL,
-  `strasse` varchar(40) COLLATE latin1_general_ci NOT NULL,
-  `hausnummer` varchar(15) COLLATE latin1_general_ci NOT NULL,
+  `vorname` varchar(30) COLLATE utf8_german2_ci NOT NULL,
+  `nachname` varchar(30) COLLATE utf8_german2_ci NOT NULL,
+  `strasse` varchar(40) COLLATE utf8_german2_ci NOT NULL,
+  `hausnummer` varchar(15) COLLATE utf8_german2_ci NOT NULL,
   `postleitzahl` int(5) NOT NULL,
-  `bundesland` varchar(30) COLLATE latin1_general_ci NOT NULL,
-  `land` varchar(50) COLLATE latin1_general_ci NOT NULL,
-  `telefon1` varchar(50) COLLATE latin1_general_ci NOT NULL,
-  `telefon2` varchar(50) COLLATE latin1_general_ci NOT NULL,
-  `telefon3` varchar(50) COLLATE latin1_general_ci NOT NULL,
-  `telefon4` varchar(50) COLLATE latin1_general_ci NOT NULL,
-  `telefon1art` varchar(50) COLLATE latin1_general_ci NOT NULL,
-  `telefon2art` varchar(50) COLLATE latin1_general_ci NOT NULL,
-  `telefon3art` varchar(50) COLLATE latin1_general_ci NOT NULL,
-  `telefon4art` varchar(50) COLLATE latin1_general_ci NOT NULL,
-  `skype` varchar(50) COLLATE latin1_general_ci NOT NULL,
-  `facebook` varchar(100) COLLATE latin1_general_ci NOT NULL,
-  `notizen` text COLLATE latin1_general_ci NOT NULL,
-  `fax` varchar(50) COLLATE latin1_general_ci NOT NULL,
-  `gruppe` varchar(50) COLLATE latin1_general_ci NOT NULL,
-  `email` varchar(50) COLLATE latin1_general_ci NOT NULL,
+  `bundesland` varchar(30) COLLATE utf8_german2_ci NOT NULL,
+  `land` varchar(50) COLLATE utf8_german2_ci NOT NULL,
+  `telefon1` varchar(50) COLLATE utf8_german2_ci NOT NULL,
+  `telefon2` varchar(50) COLLATE utf8_german2_ci NOT NULL,
+  `telefon3` varchar(50) COLLATE utf8_german2_ci NOT NULL,
+  `telefon4` varchar(50) COLLATE utf8_german2_ci NOT NULL,
+  `telefon1art` varchar(50) COLLATE utf8_german2_ci NOT NULL,
+  `telefon2art` varchar(50) COLLATE utf8_german2_ci NOT NULL,
+  `telefon3art` varchar(50) COLLATE utf8_german2_ci NOT NULL,
+  `telefon4art` varchar(50) COLLATE utf8_german2_ci NOT NULL,
+  `skype` varchar(50) COLLATE utf8_german2_ci NOT NULL,
+  `facebook` varchar(100) COLLATE utf8_german2_ci NOT NULL,
+  `notizen` text COLLATE utf8_german2_ci NOT NULL,
+  `fax` varchar(50) COLLATE utf8_german2_ci NOT NULL,
+  `gruppe` varchar(50) COLLATE utf8_german2_ci NOT NULL,
+  `email` varchar(50) COLLATE utf8_german2_ci NOT NULL,
   `geburtstag` date NOT NULL,
-  `stadt` varchar(50) COLLATE latin1_general_ci NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci;
+  `stadt` varchar(50) COLLATE utf8_german2_ci NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_german2_ci;
 
 -- --------------------------------------------------------
 
@@ -79,15 +79,15 @@ CREATE TABLE `adressbuch` (
 
 CREATE TABLE `benutzer` (
   `id` int(10) NOT NULL,
-  `Name` varchar(20) COLLATE latin1_general_ci NOT NULL,
-  `Passwort` char(128) COLLATE latin1_general_ci NOT NULL COMMENT 'als MD5 Hash',
+  `Name` varchar(20) COLLATE utf8_german2_ci NOT NULL,
+  `Passwort` char(128) COLLATE utf8_german2_ci NOT NULL COMMENT 'als MD5 Hash',
   `timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `rights` bigint(20) NOT NULL COMMENT 'Rechte des Benutzers',
   `forumRights` bigint(20) NOT NULL COMMENT 'Rechte zum Anzeigen von Inhalten im Forum',
   `versuche` int(3) DEFAULT NULL COMMENT 'Versuche für den Login',
-  `realName` varchar(50) COLLATE latin1_general_ci NOT NULL COMMENT 'Echter Name des Benutzers',
-  `titel` varchar(250) COLLATE latin1_general_ci NOT NULL COMMENT 'Titel des Benutzers'
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci;
+  `realName` varchar(50) COLLATE utf8_german2_ci NOT NULL COMMENT 'Echter Name des Benutzers',
+  `titel` varchar(250) COLLATE utf8_german2_ci NOT NULL COMMENT 'Titel des Benutzers'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_german2_ci;
 
 --
 -- Daten für Tabelle `benutzer`
@@ -105,12 +105,12 @@ INSERT INTO `benutzer` (`id`, `Name`, `Passwort`, `timestamp`, `rights`, `forumR
 CREATE TABLE `blogkategorien` (
   `id` int(11) NOT NULL,
   `timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  `kategorie` varchar(254) COLLATE latin1_general_ci NOT NULL,
-  `beschreibung` varchar(300) COLLATE latin1_general_ci NOT NULL COMMENT 'Beschreibung der Kategorien',
+  `kategorie` varchar(254) COLLATE utf8_german2_ci NOT NULL,
+  `beschreibung` varchar(300) COLLATE utf8_german2_ci NOT NULL COMMENT 'Beschreibung der Kategorien',
   `rightPotenz` int(11) NOT NULL COMMENT 'Potenz zur Berechnung des Wertes, Potenz von 2',
   `rightWert` bigint(20) NOT NULL COMMENT 'Wert der Potenz, wenn sie ausgerechnet ist.',
   `sortierung` int(11) DEFAULT NULL COMMENT 'Sortierung zur Anzeige im Forum'
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_german2_ci;
 
 -- --------------------------------------------------------
 
@@ -127,7 +127,7 @@ CREATE TABLE `blogtexte` (
   `text` text CHARACTER SET utf8 NOT NULL,
   `status` tinyint(1) DEFAULT NULL,
   `locked` tinyint(1) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_german2_ci;
 
 -- --------------------------------------------------------
 
@@ -139,9 +139,9 @@ CREATE TABLE `blog_kommentare` (
   `id` int(11) NOT NULL,
   `timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `autor` int(11) NOT NULL,
-  `text` text COLLATE latin1_general_ci NOT NULL,
+  `text` text COLLATE utf8_german2_ci NOT NULL,
   `blogid` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_german2_ci;
 
 -- --------------------------------------------------------
 
@@ -152,9 +152,16 @@ CREATE TABLE `blog_kommentare` (
 CREATE TABLE `docu` (
   `id` int(11) NOT NULL COMMENT 'Primary Key',
   `timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'Erstellungsdatum des Eintrags',
-  `text` text COLLATE latin1_general_ci NOT NULL COMMENT 'Text des Eintrags',
+  `text` text COLLATE utf8_german2_ci NOT NULL COMMENT 'Text des Eintrags',
   `autor` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci COMMENT='hilfe.php';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_german2_ci COMMENT='hilfe.php';
+
+--
+-- Daten für Tabelle `docu`
+--
+
+INSERT INTO `docu` (`id`, `timestamp`, `text`, `autor`) VALUES
+(1, '2019-01-04 08:38:50', '<p>Willkommen Das ist eine TestAnk&uuml;ndigung</p>\r\n', 1);
 
 -- --------------------------------------------------------
 
@@ -166,7 +173,6 @@ CREATE TABLE `eventadministrators` (
   `eventid` int(11) NOT NULL,
   `userid` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_german2_ci;
-
 
 -- --------------------------------------------------------
 
@@ -247,7 +253,7 @@ CREATE TABLE `finanzen_jahresabschluss` (
   `jahr` int(11) NOT NULL,
   `wert` decimal(10,2) NOT NULL,
   `konto` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_german2_ci;
 
 -- --------------------------------------------------------
 
@@ -258,13 +264,13 @@ CREATE TABLE `finanzen_jahresabschluss` (
 CREATE TABLE `finanzen_konten` (
   `id` int(11) NOT NULL,
   `timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `konto` varchar(250) COLLATE latin1_general_ci NOT NULL,
+  `konto` varchar(250) COLLATE utf8_german2_ci NOT NULL,
   `besitzer` int(11) NOT NULL,
   `aktiv` tinyint(4) NOT NULL,
-  `notizen` text COLLATE latin1_general_ci NOT NULL,
+  `notizen` text COLLATE utf8_german2_ci NOT NULL,
   `art` int(11) NOT NULL,
-  `mail` varchar(200) COLLATE latin1_general_ci NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci;
+  `mail` varchar(200) COLLATE utf8_german2_ci NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_german2_ci;
 
 -- --------------------------------------------------------
 
@@ -280,7 +286,7 @@ CREATE TABLE `finanzen_monatsabschluss` (
   `year` int(11) NOT NULL,
   `wert` decimal(10,2) NOT NULL,
   `konto` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_german2_ci;
 
 -- --------------------------------------------------------
 
@@ -292,7 +298,7 @@ CREATE TABLE `finanzen_shares` (
   `besitzer` int(11) NOT NULL COMMENT 'Share_Holder',
   `konto_id` int(11) NOT NULL COMMENT 'Fremdschlüssel KontoID',
   `target_user` int(11) NOT NULL COMMENT 'User, der dass Konto sehen darf.'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_german2_ci;
 
 -- --------------------------------------------------------
 
@@ -307,11 +313,11 @@ CREATE TABLE `finanzen_umsaetze` (
   `besitzer` int(11) NOT NULL,
   `konto` int(11) NOT NULL,
   `gegenkonto` int(11) NOT NULL,
-  `umsatzName` varchar(250) COLLATE latin1_general_ci NOT NULL,
+  `umsatzName` varchar(250) COLLATE utf8_german2_ci NOT NULL,
   `umsatzWert` decimal(10,2) NOT NULL,
   `datum` date NOT NULL,
-  `link` varchar(500) COLLATE latin1_general_ci NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci;
+  `link` varchar(500) COLLATE utf8_german2_ci NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_german2_ci;
 
 -- --------------------------------------------------------
 
@@ -323,10 +329,10 @@ CREATE TABLE `gwcosts` (
   `id` int(11) NOT NULL,
   `timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `besitzer` int(11) NOT NULL,
-  `text` varchar(250) COLLATE latin1_general_ci NOT NULL,
+  `text` varchar(250) COLLATE utf8_german2_ci NOT NULL,
   `wert` decimal(10,2) NOT NULL,
   `kaufdat` date NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_german2_ci;
 
 -- --------------------------------------------------------
 
@@ -338,10 +344,10 @@ CREATE TABLE `gwmatlist` (
   `id` int(11) NOT NULL,
   `timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `matID` int(11) NOT NULL,
-  `matName` varchar(254) COLLATE latin1_general_ci NOT NULL,
+  `matName` varchar(254) COLLATE utf8_german2_ci NOT NULL,
   `matPrice` decimal(10,0) DEFAULT NULL,
   `kategorie` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_german2_ci;
 
 --
 -- Daten für Tabelle `gwmatlist`
@@ -690,7 +696,7 @@ INSERT INTO `gwmatlist` (`id`, `timestamp`, `matID`, `matName`, `matPrice`, `kat
 (340, '2015-08-25 09:14:05', 140, 'Geschmolzene Scherbe', NULL, 3),
 (341, '2015-08-25 09:14:05', 141, 'Gletscher-Scherbe', NULL, 3),
 (342, '2015-08-25 09:14:05', 145, 'Zerstörer-Kern', NULL, 3),
-(343, '2015-08-25 09:19:21', 173, 'Batzen von Rückständen des Ältesten-Geists', NULL, 4),
+(343, '2015-08-25 09:19:21', 173, 'Batzen von Rückständen des ßltesten-Geists', NULL, 4),
 (344, '2015-08-25 09:19:21', 174, 'Spule dicker elonischer Schnur', NULL, 4),
 (345, '2015-08-25 09:19:21', 175, 'Spule Seidenwebfaden', NULL, 4),
 (346, '2015-08-25 09:19:21', 176, 'Mithrilliumbrocken', NULL, 4),
@@ -701,11 +707,11 @@ INSERT INTO `gwmatlist` (`id`, `timestamp`, `matID`, `matName`, `matPrice`, `kat
 (351, '2015-08-25 09:19:21', 186, 'Deldrimor-Stahlbarren', NULL, 4),
 (352, '2015-10-28 19:26:49', 352, 'Haufen aus Leinsamen', NULL, 1),
 (353, '2015-10-28 19:27:12', 353, 'Mühlstein', NULL, 1),
-(354, '2015-10-28 19:31:55', 354, 'Phiole mit Leinsamen-Öl', NULL, 2),
+(354, '2015-10-28 19:31:55', 354, 'Phiole mit Leinsamen-ßl', NULL, 2),
 (355, '2015-10-28 19:31:55', 355, 'Blatt-Fossil', NULL, 2),
 (356, '2015-10-28 19:31:55', 356, 'Stachel-Dorn', NULL, 2),
 (357, '2015-10-28 19:31:55', 357, 'Haufen rauer Sand', NULL, 2),
-(358, '2015-10-28 19:34:49', 375, 'Flaschen Luftschiff-Öl', NULL, 4),
+(358, '2015-10-28 19:34:49', 375, 'Flaschen Luftschiff-ßl', NULL, 4),
 (359, '2015-10-28 19:36:31', 384, 'Süßwasserperle', NULL, 5),
 (360, '2015-10-30 20:18:21', 385, 'Cassavawurzel', NULL, 6),
 (361, '2015-10-30 20:18:21', 386, 'Beutel mit Cassavamehl', NULL, 6),
@@ -783,7 +789,7 @@ CREATE TABLE `gwusersmats` (
   `matID` int(11) NOT NULL,
   `matAnzahl` int(11) NOT NULL,
   `account` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_german2_ci;
 
 -- --------------------------------------------------------
 
@@ -796,8 +802,8 @@ CREATE TABLE `gw_accounts` (
   `timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `besitzer` int(11) NOT NULL,
   `account` int(11) NOT NULL,
-  `mail` varchar(250) COLLATE latin1_general_ci NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci;
+  `mail` varchar(250) COLLATE utf8_german2_ci NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_german2_ci;
 
 -- --------------------------------------------------------
 
@@ -809,20 +815,20 @@ CREATE TABLE `gw_chars` (
   `id` int(11) NOT NULL,
   `timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   `besitzer` int(11) NOT NULL,
-  `name` varchar(254) COLLATE latin1_general_ci NOT NULL,
+  `name` varchar(254) COLLATE utf8_german2_ci NOT NULL,
   `geboren` date NOT NULL,
-  `rasse` varchar(50) COLLATE latin1_general_ci NOT NULL,
-  `klasse` varchar(50) COLLATE latin1_general_ci NOT NULL,
+  `rasse` varchar(50) COLLATE utf8_german2_ci NOT NULL,
+  `klasse` varchar(50) COLLATE utf8_german2_ci NOT NULL,
   `stufe` tinyint(3) NOT NULL,
-  `handwerk1` varchar(50) COLLATE latin1_general_ci NOT NULL,
-  `handwerk2` varchar(50) COLLATE latin1_general_ci NOT NULL,
+  `handwerk1` varchar(50) COLLATE utf8_german2_ci NOT NULL,
+  `handwerk2` varchar(50) COLLATE utf8_german2_ci NOT NULL,
   `handwerk1stufe` smallint(3) NOT NULL,
   `handwerk2stufe` smallint(3) NOT NULL,
   `erkundung` smallint(3) NOT NULL,
   `spielstunden` smallint(6) NOT NULL,
-  `notizen` text COLLATE latin1_general_ci NOT NULL,
+  `notizen` text COLLATE utf8_german2_ci NOT NULL,
   `account` int(11) DEFAULT NULL COMMENT 'Welchem Account dieser Charakter zugeordnet ist'
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_german2_ci;
 
 -- --------------------------------------------------------
 
@@ -934,9 +940,9 @@ CREATE TABLE `log` (
   `id` int(11) NOT NULL,
   `timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `benutzer` int(11) NOT NULL,
-  `log_text` text COLLATE utf16_german2_ci NOT NULL,
-  `ip_adress` varchar(15) COLLATE utf16_german2_ci NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf16 COLLATE=utf16_german2_ci;
+  `log_text` text COLLATE utf8_german2_ci NOT NULL,
+  `ip_adress` varchar(15) COLLATE utf8_german2_ci NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_german2_ci;
 
 -- --------------------------------------------------------
 
@@ -947,13 +953,13 @@ CREATE TABLE `log` (
 CREATE TABLE `registercode` (
   `id` int(11) NOT NULL,
   `timestamp` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00' ON UPDATE CURRENT_TIMESTAMP,
-  `code` varchar(250) COLLATE latin1_general_ci NOT NULL,
+  `code` varchar(250) COLLATE utf8_german2_ci NOT NULL,
   `used` int(11) NOT NULL COMMENT 'Wurde er benutzt',
   `usageTimes` int(11) NOT NULL,
-  `usedBy` varchar(250) COLLATE latin1_general_ci NOT NULL COMMENT 'Welcher Benutzer hat ihn eingelöst.',
-  `ipadress` varchar(15) COLLATE latin1_general_ci NOT NULL COMMENT 'Ipadress des Benutzers',
+  `usedBy` varchar(250) COLLATE utf8_german2_ci NOT NULL COMMENT 'Welcher Benutzer hat ihn eingelöst.',
+  `ipadress` varchar(15) COLLATE utf8_german2_ci NOT NULL COMMENT 'Ipadress des Benutzers',
   `rights` bigint(20) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_german2_ci;
 
 -- --------------------------------------------------------
 
@@ -963,15 +969,15 @@ CREATE TABLE `registercode` (
 
 CREATE TABLE `rightkategorien` (
   `id` int(11) NOT NULL,
-  `name` varchar(254) COLLATE latin1_general_ci NOT NULL COMMENT 'Name der Kategorie'
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci;
+  `name` varchar(254) COLLATE utf8_german2_ci NOT NULL COMMENT 'Name der Kategorie'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_german2_ci;
 
 --
 -- Daten für Tabelle `rightkategorien`
 --
 
 INSERT INTO `rightkategorien` (`id`, `name`) VALUES
-(1, 'Öffentlich'),
+(1, 'ßffentlich'),
 (2, 'Administrator'),
 (3, 'Forum'),
 (4, 'Ankündigungen'),
@@ -995,7 +1001,7 @@ CREATE TABLE `rights` (
   `timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `besitzer` int(11) NOT NULL COMMENT 'Dieser Benutzer hat das Recht',
   `right_id` int(11) NOT NULL COMMENT 'Rechte ID aus der Tabelle userrights'
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_german2_ci;
 
 --
 -- Daten für Tabelle `rights`
@@ -1063,6 +1069,9 @@ INSERT INTO `rights` (`timestamp`, `besitzer`, `right_id`) VALUES
 ('2015-09-24 03:56:35', 1, 67),
 ('2015-09-24 04:21:18', 1, 68),
 ('2015-12-04 22:48:32', 1, 69),
+('2019-01-04 08:13:57', 1, 70),
+('2019-01-04 08:14:00', 1, 71),
+('2019-01-04 12:48:13', 1, 72),
 ('2016-02-22 06:18:25', 1, 73),
 ('2016-02-22 06:18:28', 1, 77),
 ('2018-10-08 06:36:39', 1, 78),
@@ -1080,14 +1089,14 @@ INSERT INTO `rights` (`timestamp`, `besitzer`, `right_id`) VALUES
 CREATE TABLE `uebersicht_kacheln` (
   `id` int(11) NOT NULL,
   `timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  `name` varchar(250) COLLATE latin1_general_ci NOT NULL COMMENT 'Name der Kachel',
-  `link` varchar(250) COLLATE latin1_general_ci NOT NULL COMMENT 'Link zur Startseite der Kachel',
-  `beschreibung` varchar(250) COLLATE latin1_general_ci NOT NULL COMMENT 'Beschreibung der Kachel',
+  `name` varchar(250) COLLATE utf8_german2_ci NOT NULL COMMENT 'Name der Kachel',
+  `link` varchar(250) COLLATE utf8_german2_ci NOT NULL COMMENT 'Link zur Startseite der Kachel',
+  `beschreibung` varchar(250) COLLATE utf8_german2_ci NOT NULL COMMENT 'Beschreibung der Kachel',
   `sortierung` int(11) NOT NULL COMMENT 'Sortierung',
   `active` tinyint(4) DEFAULT NULL COMMENT 'Kachel aktiviert',
-  `cssID` varchar(250) COLLATE latin1_general_ci NOT NULL,
+  `cssID` varchar(250) COLLATE utf8_german2_ci NOT NULL,
   `rightID` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_german2_ci;
 
 --
 -- Daten für Tabelle `uebersicht_kacheln`
@@ -1097,10 +1106,11 @@ INSERT INTO `uebersicht_kacheln` (`id`, `timestamp`, `name`, `link`, `beschreibu
 (1, '2016-02-04 08:08:04', 'Adressbuch', '/flatnet2/datenbank/datenbanken.php', 'Zeigt ein einfaches Adressbuch an.', 1, 1, 'adressbuch', 13),
 (3, '2016-02-04 08:08:08', 'Forum', '/flatnet2/forum/index.php', 'Zeigt ein Forum an', 2, 1, 'forum', 13),
 (8, '2016-02-04 08:08:11', 'Guildwars', '/flatnet2/guildwars/start.php', 'Verwaltung für Guildwars Charakter und Handwerk', 3, 1, 'guildwars', 3),
-(9, '2016-02-04 08:08:14', 'Finanzbereich', '/flatnet2/finanzen/index.php', 'Eine Finanzverwaltung für langfristige Budget-Planung', 4, 1, 'finanzen', 17),
+(9, '2016-02-04 08:08:14', 'Finanzbereich', '/flatnet2/finanzen/index.php', 'Eine Finanzverwaltung für Budget-Planung', 4, 1, 'finanzen', 17),
 (12, '2015-12-06 20:59:50', 'Geburtstagskalender', '/flatnet2/datenbank/kalender.php', 'Basis Geburtstagskalender', 100, 1, 'gebkalender', 22),
-(13, '2018-10-09 06:25:08', 'Toyota', '/flatnet2/toyota/index.php', 'Toyota Bereich', 100, 0, 'toyota', 81),
-(14, '2018-10-08 06:36:23', 'Planner', '/flatnet2/planner/index.php', 'Event Planner', 5000, 1, 'planner', 78);
+(14, '2018-10-08 06:36:23', 'Planner', '/flatnet2/planner/index.php', 'Event Planner', 5000, 1, 'planner', 78),
+(15, '2019-01-04 08:13:43', 'Administration', '/flatnet2/admin/control.php', 'Administration', 100, 1, 'administration', 36),
+(16, '2019-01-04 08:14:36', 'Lernbereich', '/flatnet2/learner/index.php', 'Lernbereich', 1, 1, 'learner', 70);
 
 -- --------------------------------------------------------
 
@@ -1112,10 +1122,10 @@ CREATE TABLE `userrights` (
   `id` int(11) NOT NULL,
   `timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'Erstellungsdatum',
   `kategorie` int(11) NOT NULL COMMENT 'Ermöglicht eine Kategorisierung',
-  `recht` text COLLATE latin1_general_ci NOT NULL,
+  `recht` text COLLATE utf8_german2_ci NOT NULL,
   `potenz` int(11) NOT NULL,
   `dezimalerWert` bigint(20) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_german2_ci;
 
 --
 -- Daten für Tabelle `userrights`
@@ -1203,6 +1213,108 @@ INSERT INTO `userrights` (`id`, `timestamp`, `kategorie`, `recht`, `potenz`, `de
 -- --------------------------------------------------------
 
 --
+-- Tabellenstruktur für Tabelle `vokabelkategorien`
+--
+
+CREATE TABLE `vokabelkategorien` (
+  `id` int(11) NOT NULL,
+  `timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `kat_name` varchar(100) COLLATE utf8_german2_ci NOT NULL,
+  `sprach_id` int(11) NOT NULL,
+  `lektion_nr` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_german2_ci;
+
+--
+-- Daten für Tabelle `vokabelkategorien`
+--
+
+INSERT INTO `vokabelkategorien` (`id`, `timestamp`, `kat_name`, `sprach_id`, `lektion_nr`) VALUES
+(1, '2019-01-04 12:12:23', '1', 1, 1),
+(2, '2019-01-04 12:12:27', '2', 1, 2),
+(3, '2019-01-04 12:12:29', '3', 1, 3),
+(4, '2019-01-04 12:12:32', '4', 1, 4),
+(5, '2019-01-04 12:12:34', '5', 1, 5),
+(6, '2019-01-04 12:12:50', '6', 1, 6),
+(7, '2019-01-04 12:13:36', '7', 1, 7),
+(8, '2019-01-04 12:13:46', '8', 1, 8),
+(9, '2019-01-04 12:15:04', '9', 1, 9),
+(10, '2019-01-04 12:15:04', '10', 1, 10),
+(11, '2019-01-04 12:15:04', '11', 1, 11),
+(12, '2019-01-04 12:15:04', '12', 1, 12),
+(13, '2019-01-04 12:15:04', '13', 1, 13),
+(14, '2019-01-04 12:15:04', '14', 1, 14),
+(15, '2019-01-04 12:15:04', '15', 1, 15),
+(16, '2019-01-04 12:15:04', '16', 1, 16),
+(17, '2019-01-04 12:15:04', '17', 1, 17),
+(18, '2019-01-04 12:15:04', '18', 1, 18),
+(19, '2019-01-04 12:15:04', '19', 1, 19),
+(20, '2019-01-04 12:15:04', '20', 1, 20);
+
+-- --------------------------------------------------------
+
+--
+-- Tabellenstruktur für Tabelle `vokabelliste`
+--
+
+CREATE TABLE `vokabelliste` (
+  `id` int(11) NOT NULL,
+  `timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `vok_name_ori` varchar(100) COLLATE utf8_german2_ci NOT NULL COMMENT 'Originalsprache',
+  `vok_name_ueb` varchar(100) COLLATE utf8_german2_ci NOT NULL COMMENT 'Uebersetzung',
+  `vok_kat` int(11) NOT NULL COMMENT 'FK_Kategorie',
+  `vok_desc` text COLLATE utf8_german2_ci NOT NULL COMMENT 'Zusatzinfos'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_german2_ci;
+
+--
+-- Daten für Tabelle `vokabelliste`
+--
+
+INSERT INTO `vokabelliste` (`id`, `timestamp`, `vok_name_ori`, `vok_name_ueb`, `vok_kat`, `vok_desc`) VALUES
+(1, '2019-01-04 07:50:15', 'わたち', 'ich', 1, ''),
+(2, '2019-01-04 10:24:15', 'わたち2', 'ich2', 1, ''),
+(3, '2019-01-04 10:24:15', 'わたち3', 'ich3', 1, ''),
+(4, '2019-01-04 10:24:15', 'わたち4', 'ich4', 1, ''),
+(10, '2019-01-07 06:14:46', 'むずかしい', 'schwierig schwierig schwierig', 8, ''),
+(11, '2019-01-04 14:10:43', 'やさしい', 'einfach', 8, ''),
+(12, '2019-01-04 14:10:43', 'たかい', 'teuer', 8, ''),
+(13, '2019-01-04 14:10:43', 'やすい', 'billig', 8, ''),
+(14, '2019-01-04 14:10:43', 'あつい', 'heiß', 8, '');
+
+-- --------------------------------------------------------
+
+--
+-- Tabellenstruktur für Tabelle `vokabelnfortschritt`
+--
+
+CREATE TABLE `vokabelnfortschritt` (
+  `user_id` int(11) NOT NULL,
+  `vokabel_id` int(11) NOT NULL,
+  `positiv` int(11) NOT NULL,
+  `negativ` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_german2_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Tabellenstruktur für Tabelle `vokabeln_sprachauswahl`
+--
+
+CREATE TABLE `vokabeln_sprachauswahl` (
+  `id` int(11) NOT NULL,
+  `timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `sprach_name` varchar(100) COLLATE utf8_german2_ci NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_german2_ci;
+
+--
+-- Daten für Tabelle `vokabeln_sprachauswahl`
+--
+
+INSERT INTO `vokabeln_sprachauswahl` (`id`, `timestamp`, `sprach_name`) VALUES
+(1, '2019-01-04 07:55:25', 'Japanisch');
+
+-- --------------------------------------------------------
+
+--
 -- Tabellenstruktur für Tabelle `vorschlaege`
 --
 
@@ -1210,10 +1322,10 @@ CREATE TABLE `vorschlaege` (
   `id` int(11) NOT NULL,
   `timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   `autor` int(11) NOT NULL,
-  `text` text COLLATE latin1_general_ci NOT NULL,
-  `status` varchar(20) COLLATE latin1_general_ci NOT NULL,
-  `ipadress` varchar(15) COLLATE latin1_general_ci DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci;
+  `text` text COLLATE utf8_german2_ci NOT NULL,
+  `status` varchar(20) COLLATE utf8_german2_ci NOT NULL,
+  `ipadress` varchar(15) COLLATE utf8_german2_ci DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_german2_ci;
 
 --
 -- Indizes der exportierten Tabellen
@@ -1432,6 +1544,30 @@ ALTER TABLE `userrights`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Indizes für die Tabelle `vokabelkategorien`
+--
+ALTER TABLE `vokabelkategorien`
+  ADD PRIMARY KEY (`id`,`sprach_id`) USING BTREE;
+
+--
+-- Indizes für die Tabelle `vokabelliste`
+--
+ALTER TABLE `vokabelliste`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indizes für die Tabelle `vokabelnfortschritt`
+--
+ALTER TABLE `vokabelnfortschritt`
+  ADD PRIMARY KEY (`user_id`,`vokabel_id`);
+
+--
+-- Indizes für die Tabelle `vokabeln_sprachauswahl`
+--
+ALTER TABLE `vokabeln_sprachauswahl`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indizes für die Tabelle `vorschlaege`
 --
 ALTER TABLE `vorschlaege`
@@ -1481,31 +1617,31 @@ ALTER TABLE `blog_kommentare`
 -- AUTO_INCREMENT für Tabelle `docu`
 --
 ALTER TABLE `docu`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Primary Key';
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Primary Key', AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT für Tabelle `eventguests`
 --
 ALTER TABLE `eventguests`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT für Tabelle `eventinvitecodes`
 --
 ALTER TABLE `eventinvitecodes`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT für Tabelle `eventlist`
 --
 ALTER TABLE `eventlist`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT für Tabelle `eventtexts`
 --
 ALTER TABLE `eventtexts`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT für Tabelle `finanzen_konten`
@@ -1595,7 +1731,7 @@ ALTER TABLE `hardwaretypes`
 -- AUTO_INCREMENT für Tabelle `log`
 --
 ALTER TABLE `log`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT für Tabelle `registercode`
@@ -1613,13 +1749,31 @@ ALTER TABLE `rightkategorien`
 -- AUTO_INCREMENT für Tabelle `uebersicht_kacheln`
 --
 ALTER TABLE `uebersicht_kacheln`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
 
 --
 -- AUTO_INCREMENT für Tabelle `userrights`
 --
 ALTER TABLE `userrights`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=83;
+
+--
+-- AUTO_INCREMENT für Tabelle `vokabelkategorien`
+--
+ALTER TABLE `vokabelkategorien`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
+
+--
+-- AUTO_INCREMENT für Tabelle `vokabelliste`
+--
+ALTER TABLE `vokabelliste`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
+
+--
+-- AUTO_INCREMENT für Tabelle `vokabeln_sprachauswahl`
+--
+ALTER TABLE `vokabeln_sprachauswahl`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT für Tabelle `vorschlaege`
