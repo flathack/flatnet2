@@ -22,9 +22,7 @@
             <title>Steven.NET-Vokabeln lernen</title>
         </head>
         <body>
-            <div class='mainbody'>
-                <?php $learner->learnerWelcome(); ?>
-            </div>
+        <?php $learner->learnerWelcome(); ?>
         </body>
     </div>
 </html>
