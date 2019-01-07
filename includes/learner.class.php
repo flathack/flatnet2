@@ -109,21 +109,25 @@ class Learner extends Functions
     function getSprachen() 
     {
         $getsprachen = $this->getObjektInfo("SELECT * FROM vokabeln_sprachauswahl");
-    
-        echo "<ul class='finanzNAV'>";
-        for ($i = 0; $i < sizeof($getsprachen); $i++) {
-            
-            echo "<li"; 
-            if (isset($_SESSION['language'])) {
-                if ($_SESSION['language'] == $getsprachen[$i]->id) {
-                    echo " id=selected ";
-                }
-            }
-            echo">";
-                echo "<a href='?setLang=".$getsprachen[$i]->id."'>" . $getsprachen[$i]->sprach_name . "</a>";
-            echo "</li>";
+        if (sizeof($getsprachen) == 1) {
+            $_SESSION['language'] = $getsprachen[0]->id;
+            // echo "<span>".$getsprachen[0]->sprach_name."</span>";
         }
 
+        if (sizeof($getsprachen) > 1) {
+            echo "<ul class='finanzNAV'>";
+            for ($i = 0; $i < sizeof($getsprachen); $i++) {
+                echo "<li"; 
+                if (isset($_SESSION['language'])) {
+                    if ($_SESSION['language'] == $getsprachen[$i]->id) {
+                        echo " id=selected ";
+                    }
+                }
+                echo">";
+                    echo "<a href='?setLang=".$getsprachen[$i]->id."'>" . $getsprachen[$i]->sprach_name . "</a>";
+                echo "</li>";
+            }
+        }
         echo "</ul>";
     }
 
@@ -169,7 +173,6 @@ class Learner extends Functions
             }
         }
         
-
         // Bearbeitungsmodus
         echo "</ul>";
     }
@@ -266,7 +269,7 @@ class Learner extends Functions
                 //echo "<li>Gesamt Negativ: $negativ</li>";
                 echo "<li>Nie positiv: $nochniepositiv</li>";
                 // echo "<li>Bestanden: $positivvokabel</li>";
-                echo "<li>Gesamt: $allUebungen</li>";
+                echo "<li>Total $allUebungen</li>";
                 echo "</div>";
             }
             
@@ -435,7 +438,7 @@ class Learner extends Functions
                 }
             }
         } else {
-            echo "<p class='hinweis'>Keine Sprache ausgewaehlt.</p>";
+            echo "<p class='hinweis'>Bitte Sprache wählen</p>";
         }
     }
 
