@@ -977,7 +977,7 @@ CREATE TABLE `rightkategorien` (
 --
 
 INSERT INTO `rightkategorien` (`id`, `name`) VALUES
-(1, 'ßffentlich'),
+(1, 'Öffentlich'),
 (2, 'Administrator'),
 (3, 'Forum'),
 (4, 'Ankündigungen'),
@@ -986,7 +986,7 @@ INSERT INTO `rightkategorien` (`id`, `name`) VALUES
 (7, 'Adressbuch'),
 (8, 'Fahrkosten (dep)'),
 (9, 'Starcitizen (dep)'),
-(10, 'Lernbereich (dep)'),
+(10, 'Vokabeltrainer'),
 (11, 'Gesundheit (dep)'),
 (12, 'EventPlanner'),
 (13, 'Toyota');
@@ -1197,8 +1197,8 @@ INSERT INTO `userrights` (`id`, `timestamp`, `kategorie`, `recht`, `potenz`, `de
 (67, '2015-09-24 03:55:15', 2, 'SEHEN: Links zu externen Ressourcen', 0, 0),
 (68, '2015-09-24 04:20:49', 2, 'SEHEN: Rechtekategorie-Verwaltung', 0, 0),
 (69, '2015-11-05 04:39:56', 5, 'DO: Darf neue Materialien im Handwerksbereich anlegen und verwalten', 0, 0),
-(70, '2015-11-25 19:36:24', 10, 'Leeres Recht', 0, 0),
-(71, '2015-11-25 19:36:36', 10, 'Leeres Recht', 0, 0),
+(70, '2015-11-25 19:36:24', 10, 'Sehen des Lernbereichs', 0, 0),
+(71, '2015-11-25 19:36:36', 10, 'Admin-Berechtigungen Lernbereich', 0, 0),
 (72, '2015-11-25 19:37:21', 10, 'Leeres Recht', 0, 0),
 (73, '2016-02-07 20:49:17', 2, 'Darf die Übersichtkacheln administrieren', 0, 0),
 (74, '2016-02-07 20:49:30', 11, 'Leeres Recht', 0, 0),

@@ -37,14 +37,13 @@ session_start();
             <div id='list'>
                 <?php 
                 if (isset($_GET['createUser'])) { 
-                    echo "<li><a href='?'>Zur&uuml;ck zum Login</a></li>"; 
+                    // echo "<li><a href='?'>Zur&uuml;ck zum Login</a></li>"; 
                 } else { 
-                    echo "<li><a href='?createUser'>Account erstellen</a></li>"; 
+                    // echo "<li><a href='?createUser'>Account erstellen</a></li>"; 
                 }
                 ?>
                 <li><a href="#" class="" onclick="document.getElementById('Impressum').style.display = 'block'">Impressum</a></li>
                 <li><a href="#" class="" onclick="document.getElementById('DatenschutzInfos').style.display = 'block'">Datenschutzinformationen</a></li>
-                <li><a href="#" class="" onclick="document.getElementById('zweck').style.display = 'block'">Informationen zur Seite</a></li>
                 <li><a href="/flatnet2/planner/index.php">EventPlanner</a></li>
             </div>
             <div class="separateDivBox">

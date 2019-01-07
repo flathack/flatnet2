@@ -44,21 +44,15 @@ class Learner extends Functions
         echo '<script src="/flatnet2/tools/ckeditor/ckeditor.js"></script>';
         echo '<link href="/flatnet2/css/style.css" type="text/css" rel="stylesheet" />';
         echo "<meta name='viewport' content='width=390, initial-scale=1'>";
-
         // Quellen für JQUERY Scripte
         echo "<script src='//code.jquery.com/jquery-1.10.2.js'></script>";
         echo "<script src='//code.jquery.com/ui/1.11.4/jquery-ui.js'></script>";
         echo "<script src='/flatnet2/Chart.min.js'></script>";
-
         // Verschiebbare Fenster
         echo '<script> $(function() { $( "#draggable" ).draggable(); }); </script>';
-
         session_start();
-
         echo "<header class='header'>";
-
         echo "<div class='userInfo'>";
-
         if (isset($_SESSION["username"])) {
             echo "<p><strong><a href='/flatnet2/usermanager/usermanager.php'>" . $_SESSION['username'] . "</a></strong> | ";
             echo "<a href='/flatnet2/includes/logout.php'> Abmelden </a></p>";
@@ -73,19 +67,11 @@ class Learner extends Functions
         } else {
             echo "<p></p>";
         }
-        
         echo "</div>";
-
         // Überschrift
         echo "<div id='ueberschrift'>";
             echo "<h1><a href='/flatnet2/learner/index.php'>Vokabeltrainer</a></h1>";
         echo "</div>";
-
-        if (isset($_SESSION['username'])) {
-            // $this->showNaviLinks();
-        }
-        
-
         // Ende Header
         echo "</header>";
     }
@@ -96,14 +82,34 @@ class Learner extends Functions
      */
     function learnerWelcome() 
     {
-        echo "<div class='VokUebung'>";
+        echo "<div class='outerUebung'>";
+
+        if(isset($_SESSION['username'])) {
+            $this->setgetLang();
+            $this->setgetkat();
+            $this->uebungsSelector();
+            $this->getSprachen();
+            echo "<div class='innerUebung'>";
+            $this->showLang();
+            if (!isset($_GET['showAll'])) {
+                $this->showStats();
+            }
+            $this->showAllVokablen();
+            $this->csvImport();
+            echo "</div>";
+            $this->showLinks();
+            echo "</div>";
+        } else {
+            echo "<div class='mainbody'>Bitte erst anmelden <a href='/flatnet2/index.php'>Login</a></div>";
+        }
         
-        $this->setgetLang();
-        $this->setgetkat();
-        $this->uebungsSelector();
+        
+    }
 
+    function getSprachen() 
+    {
         $getsprachen = $this->getObjektInfo("SELECT * FROM vokabeln_sprachauswahl");
-
+    
         echo "<ul class='finanzNAV'>";
         for ($i = 0; $i < sizeof($getsprachen); $i++) {
             
@@ -119,10 +125,71 @@ class Learner extends Functions
         }
 
         echo "</ul>";
-        $this->showLang();
-        $this->showStats();
-        $this->csvImport();
+    }
+
+    function learnfooter() 
+    {
+        echo "<div class='footer'>"; 
+            echo "<p><br>Version 2019-01-07 by Steven Schödel</p>"; 
         echo "</div>";
+    }
+
+    function showLinks() 
+    {
+        echo "<ul class='finanzNAV'>";
+
+        // Alle Vokabeln anzeigen
+        if (isset($_SESSION['vokabelkat'])) {
+            if (isset($_GET['showAll'])) {
+
+                echo "<li><a href='?'>Ausblenden</a></li>";
+            } else {
+
+                echo "<li><a href='?showAll'>Vokabelliste</a></li>";
+            }
+        }
+
+        // Admin LINK
+        if ($this->userHasRight(71, 0) == true) {
+            if (isset($_SESSION['vokAdministration'])) {
+                echo "<li><a id='selected' href='?vokAdminDeaktivate'>admin. off</a></li>";
+            } else {
+                echo "<li><a id='' href='?vokAdminAktivate'>Admin</a></li>";
+            }
+        }
+        
+        // Lernmodus (standard)
+        if ($this->userHasRight(72, 0) == true) {
+            if (isset($_SESSION['language'])) {
+                echo "<li id=''><a href='/flatnet2/admin/control.php?action=3&table=vokabelliste'>Bearbeiten</a>";
+            }
+        } else {
+            if (isset($_SESSION['language'])) {
+                echo "<li id=''><a href='/flatnet2/informationen/kontakt.php'>Vorschlag</a>";
+            }
+        }
+        
+
+        // Bearbeitungsmodus
+        echo "</ul>";
+    }
+
+    function showAllVokablen() 
+    {
+        if (isset($_GET['showAll'])) {
+            if (isset($_SESSION['vokabelkat'])) {
+                $vokid = $_SESSION['vokabelkat'];
+                $allvoks = $this->getObjektInfo("SELECT * FROM vokabelliste WHERE vok_kat=$vokid");
+                echo "<table class='kontoTable'>";
+                for ($i = 0; $i < sizeof($allvoks); $i++) {
+                    echo "<tbody>";
+                        echo "<td>" . $allvoks[$i]->vok_name_ori . "</td>";
+                        echo "<td>" . $allvoks[$i]->vok_name_ueb . "</td>";
+                    echo "</tbody>";
+                }
+                echo "</table>";
+            }
+        }
     }
 
     /**
@@ -177,6 +244,9 @@ class Learner extends Functions
                 $userid = $this->getUserID($_SESSION['username']);
                 $getAllUebungen = $this->getObjektInfo("SELECT sum(positiv) as positivSum, sum(negativ) as negativSum FROM vokabelnfortschritt WHERE user_id=$userid");
                 $allUebungen = $getAllUebungen[0]->positivSum + $getAllUebungen[0]->negativSum + 0;
+                if ($allUebungen > 999) {
+                    $allUebungen = round($allUebungen / 1000, 2) . " k";
+                }
             } else {
 
                 $allUebungen = 0;
@@ -188,15 +258,18 @@ class Learner extends Functions
             } else {
                 $abschluss = 0;
             }
-            echo "<ul class='dezentInfo'>";
-            echo "<li>Abschluss: $abschluss %</li>";
-            // echo "<li>Vokabeln: " .$voksanzahl[0]->anzahl. "</li>";
-            //echo "<li>Gesamt Positiv: $positiv</li>";
-            //echo "<li>Gesamt Negativ: $negativ</li>";
-            echo "<li>Nie positiv: $nochniepositiv</li>";
-            echo "<li>Bestanden: $positivvokabel</li>";
-            echo "<li>Übungen gesamt: $allUebungen</li>";
-            echo "</ul>";
+            if ($voksanzahl[0]->anzahl > 0) {
+                echo "<div class='footer'>";
+                echo "<li>Abschluss: $abschluss %</li>";
+                // echo "<li>Vokabeln: " .$voksanzahl[0]->anzahl. "</li>";
+                //echo "<li>Gesamt Positiv: $positiv</li>";
+                //echo "<li>Gesamt Negativ: $negativ</li>";
+                echo "<li>Nie positiv: $nochniepositiv</li>";
+                // echo "<li>Bestanden: $positivvokabel</li>";
+                echo "<li>Gesamt: $allUebungen</li>";
+                echo "</div>";
+            }
+            
             echo "</div>";
         }
     }
@@ -255,7 +328,7 @@ class Learner extends Functions
         }
         
         if ($_SESSION['LangDiff'] == 1) {
-            echo"><a href='?setLangDiff=0'>&#8634;</a></li>";
+            echo"><a href='?setLangDiff=0'>&harr;</a></li>";
         } else {
             echo "><a href='?setLangDiff=0'>Deutsch - Fremdsprache</a></li>";
         }
@@ -265,7 +338,7 @@ class Learner extends Functions
             echo " id='selected' ";
         }
         if ($_SESSION['LangDiff'] == 0) {
-            echo"><a href='?setLangDiff=1'>&#8634;</a></li>";
+            echo"><a href='?setLangDiff=1'>&harr;</a></li>";
         } else {
             echo"><a href='?setLangDiff=1'>Fremdsprache - Deutsch</a></li>";
         }
@@ -280,6 +353,15 @@ class Learner extends Functions
             # Kategorien anzeigen:
             $sprachid = $_SESSION['language'];
             $kategorien = $this->getObjektInfo("SELECT * FROM vokabelkategorien WHERE sprach_id=$sprachid");
+
+            // Abfragen ob Vokabelliste angezeigt wird
+
+            if (isset($_GET['showAll'])) {
+                echo "<a class='buttonlink' href='?'>Liste ausblenden</a>";
+                $showall = "&showAll";
+            } else {
+                $showall = "";
+            }
 
             echo "<div class='spacer'><ul class='finanzNAV'>";
             for ($i = 0; $i < sizeof($kategorien); $i++) {
@@ -297,13 +379,13 @@ class Learner extends Functions
                 } else {
                     $anzahl = "";
                 }
-                echo "><a href='?setKat=".$kategorien[$i]->id."'>" .$kategorien[$i]->kat_name. "$anzahl</a></li>";
+                echo "><a href='?setKat=".$kategorien[$i]->id."$showall'>" .$kategorien[$i]->kat_name. "$anzahl</a></li>";
             }
             echo "</ul></div>";
 
             // Vokabeln anzeigen:
 
-            if (isset($_SESSION['vokabelkat'])) {
+            if (isset($_SESSION['vokabelkat']) AND !isset($_GET['showAll'])) {
                 $kategorie = $_SESSION['vokabelkat'];
                 $userid = $this->getUserID($_SESSION['username']);
                 $vokabeln = $this->getObjektInfo("SELECT * FROM vokabelliste WHERE vok_kat=$kategorie ORDER BY rand() LIMIT 1");
@@ -341,12 +423,16 @@ class Learner extends Functions
                 $this->setNegativ();
                 if (isset($vokid)) {
                     echo "<button class='positiv' onclick=\"document.getElementById('versteckt').style.display = 'block'\">L&ouml;sung</button>";
-                    echo "<a class='positiv' href='?weiterPositiv&vokid=".$vokid."'>Postiv</a>";
-                    echo "<a class='negativ' href='?weiterNegativ&vokid=".$vokid."'>Negativ</a>";
+                    echo "<a class='positiv' href='?weiterPositiv&vokid=".$vokid."'>Richtig</a>";
+                    echo "<a class='negativ' href='?weiterNegativ&vokid=".$vokid."'>Falsch</a>";
                 } else {
                     echo "<p class='hinweis'>In dieser Lektion sind keine Vokabeln vorhanden.</p>";
                 }
                 echo "</div>";
+            } else {
+                if (!isset($_GET['showAll'])) {
+                    echo "<div class='hinweis'>Bitte Lektion auswählen</div>";
+                }
             }
         } else {
             echo "<p class='hinweis'>Keine Sprache ausgewaehlt.</p>";
@@ -362,12 +448,6 @@ class Learner extends Functions
             if (isset($_GET['vokAdminDeaktivate'])) {
                 unset($_SESSION['vokAdministration']);
             }
-    
-            if (isset($_SESSION['vokAdministration'])) {
-                echo "<p class='spacer'><a class='buttonlink' href='?vokAdminDeaktivate'>admin. off</a></p>";
-            } else {
-                echo "<p class='spacer'><a class='buttonlink' href='?vokAdminAktivate'>admin. on</a></p>";
-            }
             if ($this->userHasRight(71, 0) == true AND isset($_SESSION['vokAdministration'])) {
                 echo "<div>";
                 echo "<h2>IMPORT</h2>";
@@ -375,15 +455,22 @@ class Learner extends Functions
                     $fileName = $_FILES["file"]["tmp_name"];
                     if ($_FILES["file"]["size"] > 0) {
                         $file = fopen($fileName, "r");
+                        echo "<table class='kontoTable'>";
                         while (($column = fgetcsv($file, 10000, ",")) !== FALSE) {
-                            $sqlInsert = "INSERT INTO vokabelliste (vok_name_ori,vok_name_ueb,vok_kat,vok_desc)
-                                values ('" . $column[0] . "','" . $column[1] . "','" . $column[2] . "','" . $column[3] . "')";
-                            if ($this->sqlInsertUpdateDelete($sqlInsert) == true) {
-                                echo "OK - ";
+                            if (strlen($column[1]) > 0 AND strlen($column[2]) > 0 AND is_numeric($column[2]) == true AND $column[2] > 0) {
+                                $sqlInsert = "INSERT INTO vokabelliste (vok_name_ori,vok_name_ueb,vok_kat)
+                                values ('" . $column[0] . "','" . $column[1] . "','" . $column[2] . "')";
+                                if ($this->sqlInsertUpdateDelete($sqlInsert) == true) {
+                                    echo "<tbody><td>OK</td><td>".$column[0]."</td><td>" . $column[1] . "</td></tbody>";
+                                } else {
+                                    echo "<tbody><td>ERROR</td><td>".$column[0]."</td><td>" . $column[1] . "</td></tbody>";
+                                }
                             } else {
-                                echo "ERROR - ";
+                                echo "<tbody><td>REQ ERROR</td><td>".$column[0]."</td><td>" . $column[1] . " - " . $column[2] . "</td></tbody>";
                             }
+                            
                         }
+                        echo "</table>";
                     }
                 }
                     echo '
@@ -414,7 +501,7 @@ class Learner extends Functions
                     ';
                     echo "<form class=\"form-horizontal\" action=\"\" method=\"post\" name=\"uploadCSV\" enctype=\"multipart/form-data\">";
                     echo "<div class=\"input-row\">";
-                    echo "<label class=\"col-md-4 control-label\">CSV-Datei ausw&auml;hlen</label> <input type=file name=file id=file accept=\".csv\">";
+                    echo "<label class=\"col-md-4 control-label\">CSV-Datei ausw&auml;hlen</label> <input type=file name=file id=file accept=\".txt\">";
                     echo "<button type=submit id=submit name=import class=\"btn-submit\">Import</button>";
                     echo "</div>";
                     echo "<div id=\"labelError\"></div>";

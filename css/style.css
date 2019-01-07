@@ -2338,17 +2338,18 @@ input[type=password]:focus {
     border: none;
 }
 
-.VokUebung {
+.outerUebung {
     margin-left: auto;
     margin-right: auto;
+    margin-bottom: 5px;
     width: 300px;
-    border: 1px solid gray;
-    box-shadow: 5px 5px 10px rgba(85, 85, 85, 0.808);
-    border-radius: 10px;
-    padding-left: 20px;
-    padding-right: 20px;
-    padding-top: 0px;
-    padding-bottom: 20px;
+    /* border: 1px solid gray;*/
+    box-shadow: 5px 0px 10px rgba(85, 85, 85, 0.808);
+    border-radius: 0px;
+    padding: 0px;
+}
+.innerUebung {
+    padding: 10px;
 }
 
 .positiv {
@@ -2958,6 +2959,11 @@ input[type=checkbox]+label:hover {
 
 .footer p {
     font-size: 0.8em;
+}
+.footer li {
+    font-size: 0.8em;
+    display: inline-block;
+    margin: 3px;
 }
 .footer a, 
 .footer a:visited,
