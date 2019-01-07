@@ -451,6 +451,19 @@ blockquote {
     min-height: 120px;
     display: inline-block;
 }
+.bereichadministration {
+    background-color: rgb(255, 255, 255);
+    background-image: url(../images/tiles/administration.png);
+    background-repeat: no-repeat;
+    background-position: right;
+    box-shadow: 0px 0px 5px grey;
+    border: 1px solid grey;
+    margin: 5px;
+    padding: 5px;
+    width: 370px;
+    min-height: 120px;
+    display: inline-block;
+}
 .bereichlearner {
     background-color: rgb(255, 255, 255);
     background-image: url(../images/tiles/birne.png);
@@ -478,6 +491,9 @@ blockquote {
     background-color: rgb(255, 255, 255);
     box-shadow: 0px 0px 5px rgb(99, 0, 0);
     border: 1px solid rgb(75, 67, 67);
+    background-image: url(../images/tiles/event.png);
+    background-repeat: no-repeat;
+    background-position: right;
     margin: 5px;
     padding: 5px;
     width: 370px;
@@ -487,6 +503,9 @@ blockquote {
 .bereichgebkalender {
     background-color: white;
     box-shadow: 0px 0px 5px grey;
+    background-image: url(../images/tiles/kalender.png);
+    background-repeat: no-repeat;
+    background-position: right;
     border: 1px solid grey;
     margin: 5px;
     padding: 5px;
@@ -2324,6 +2343,7 @@ input[type=password]:focus {
     margin-right: auto;
     width: 300px;
     border: 1px solid gray;
+    box-shadow: 5px 5px 10px rgba(85, 85, 85, 0.808);
     border-radius: 10px;
     padding-left: 20px;
     padding-right: 20px;
@@ -2331,9 +2351,64 @@ input[type=password]:focus {
     padding-bottom: 20px;
 }
 
+.positiv {
+    display: inline-block;
+    padding: 10px 15px;
+    margin-bottom: 0;
+    margin-right: 10px;
+    margin-left: 2px;
+    color: #02620a !important;
+    background-color: white;
+    border: 1px solid #02620a;
+    -webkit-transition: all 0.3s ease-in-out;
+    -moz-transition: all 0.3s ease-in-out;
+    -ms-transition: all 0.3s ease-in-out;
+    -o-transition: all 0.3s ease-in-out;
+    transition: all 0.3s ease-in-out;
+}
+.positiv:hover {
+    text-decoration: none;
+    border: 1px solid #02620a;
+    background-color: rgb(223, 248, 223);
+    -webkit-transition: all 0.3s ease-in-out;
+    -moz-transition: all 0.3s ease-in-out;
+    -ms-transition: all 0.3s ease-in-out;
+    -o-transition: all 0.3s ease-in-out;
+    transition: all 0.3s ease-in-out;
+}
+.negativ {
+    display: inline-block;
+    padding: 10px 15px;
+    margin-bottom: 0;
+    margin-right: 10px;
+    margin-left: 2px;
+    color: #620202 !important;
+    background-color: white;
+    border: 1px solid #620202;
+    -webkit-transition: all 0.3s ease-in-out;
+    -moz-transition: all 0.3s ease-in-out;
+    -ms-transition: all 0.3s ease-in-out;
+    -o-transition: all 0.3s ease-in-out;
+    transition: all 0.3s ease-in-out;
+}
+.negativ:hover {
+    text-decoration: none;
+    border: 1px solid #620202;
+    background-color: rgb(255, 210, 210);
+    -webkit-transition: all 0.3s ease-in-out;
+    -moz-transition: all 0.3s ease-in-out;
+    -ms-transition: all 0.3s ease-in-out;
+    -o-transition: all 0.3s ease-in-out;
+    transition: all 0.3s ease-in-out;
+}
+
+.right {
+    float: right;
+}
+
 .vokabel {
     margin-top: 20px;
-    font-size: 2em;
+    font-size: 1.8em;
 }
 
 /* FlatnetTable eigene Tabelle für die Flatnet Seite */
@@ -2723,6 +2798,11 @@ li a:visited:hover,
 }
 .dezentInfo a {
     color: black;
+}
+.dezentInfo li {
+    display: inline-block;
+    margin: 0px 10px 2px 0px;
+    padding: 2px;
 }
 .gruppierung {
     border: 1px solid transparent;

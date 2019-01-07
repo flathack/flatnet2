@@ -172,19 +172,30 @@ class Learner extends Functions
                     }
                 }
             }
+            // Berechnung alle Übungen
+            if (isset($_SESSION['username'])) {
+                $userid = $this->getUserID($_SESSION['username']);
+                $getAllUebungen = $this->getObjektInfo("SELECT sum(positiv) as positivSum, sum(negativ) as negativSum FROM vokabelnfortschritt WHERE user_id=$userid");
+                $allUebungen = $getAllUebungen[0]->positivSum + $getAllUebungen[0]->negativSum + 0;
+            } else {
+
+                $allUebungen = 0;
+            }
+
             // Berechnung Abschluss:
             if ($positivvokabel > 0) {
                 $abschluss = round($positivvokabel / $voksanzahl[0]->anzahl * 100,2);
             } else {
                 $abschluss = 0;
             }
-            echo "<ul class='finanzNAV'>";
-            echo "<li>Abschluss Lektion: $abschluss %</li>";
+            echo "<ul class='dezentInfo'>";
+            echo "<li>Abschluss: $abschluss %</li>";
             // echo "<li>Vokabeln: " .$voksanzahl[0]->anzahl. "</li>";
             //echo "<li>Gesamt Positiv: $positiv</li>";
             //echo "<li>Gesamt Negativ: $negativ</li>";
-            echo "<li>Noch nie positiv: $nochniepositiv</li>";
+            echo "<li>Nie positiv: $nochniepositiv</li>";
             echo "<li>Bestanden: $positivvokabel</li>";
+            echo "<li>Übungen gesamt: $allUebungen</li>";
             echo "</ul>";
             echo "</div>";
         }
@@ -311,17 +322,16 @@ class Learner extends Functions
                         $negativ = 0;
                     }
                     if ($_SESSION['LangDiff'] == 1) {
-                        echo "<div class='vokabel'>"; 
-                        echo "<p>" . $vokabeln[$j]->vok_name_ori . " ($positiv/$negativ)</p>";
-                        echo '<p id="versteckt" style="display:none;">' . $vokabeln[$j]->vok_name_ueb. '</p>';
+                        echo "<div>"; 
+                        echo "<p><span class='vokabel'>" . $vokabeln[$j]->vok_name_ori . "</span> <span class='right'>(pos. $positiv / neg. $negativ)</span></p>";
+                        echo '<p><span class="vokabel" id="versteckt" style="display:none;">' . $vokabeln[$j]->vok_name_ueb. '</span></p>';
                         echo "</div>";
                         
                     }
                     if ($_SESSION['LangDiff'] == 0) {
-                        echo "<div class='vokabel'>"; 
-                        echo "<div>" . $vokabeln[$j]->vok_name_ueb . " ($positiv/$negativ)</p>";
-                        echo '<p id="versteckt" style="display:none;">' . $vokabeln[$j]->vok_name_ori. '</p>';
-                        echo "</div>";
+                        echo "<div>"; 
+                        echo "<p><span class='vokabel'>" . $vokabeln[$j]->vok_name_ueb . "</span> <span class='right'>(pos. $positiv / neg. $negativ)</span></p>";
+                        echo '<p><span class="vokabel" id="versteckt" style="display:none;">' . $vokabeln[$j]->vok_name_ori. '</span></p>';
                         echo "</div>";
                     }
                 }
@@ -330,16 +340,16 @@ class Learner extends Functions
                 $this->setPositiv();
                 $this->setNegativ();
                 if (isset($vokid)) {
-                    echo "<button onclick=\"document.getElementById('versteckt').style.display = 'block'\">L&ouml;sung</button>";
-                    echo "<a class='greenLink' href='?weiterPositiv&vokid=".$vokid."'>Postiv</a>";
-                    echo "<a class='redLink' href='?weiterNegativ&vokid=".$vokid."'>Negativ</a>";
+                    echo "<button class='positiv' onclick=\"document.getElementById('versteckt').style.display = 'block'\">L&ouml;sung</button>";
+                    echo "<a class='positiv' href='?weiterPositiv&vokid=".$vokid."'>Postiv</a>";
+                    echo "<a class='negativ' href='?weiterNegativ&vokid=".$vokid."'>Negativ</a>";
                 } else {
                     echo "<p class='hinweis'>In dieser Lektion sind keine Vokabeln vorhanden.</p>";
                 }
                 echo "</div>";
             }
         } else {
-            echo "Keine Sprache ausgewaehlt.";
+            echo "<p class='hinweis'>Keine Sprache ausgewaehlt.</p>";
         }
     }
 
