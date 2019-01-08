@@ -2964,6 +2964,17 @@ input[type=checkbox]+label:hover {
     font-size: 0.8em;
     display: inline-block;
     margin: 3px;
+    padding: 2px;
+}
+.footer #selected {
+    background-color: gray;
+    border-radius: 5px;
+    padding: 5px;
+    color: white;
+}
+
+.footer #selected a {
+    color: white;
 }
 .footer a, 
 .footer a:visited,

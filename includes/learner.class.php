@@ -87,6 +87,7 @@ class Learner extends Functions
         if(isset($_SESSION['username'])) {
             $this->setgetLang();
             $this->setgetkat();
+            $this->setVokSchwierigkeit();
             $this->uebungsSelector();
             $this->getSprachen();
             echo "<div class='innerUebung'>";
@@ -264,16 +265,51 @@ class Learner extends Functions
             if ($voksanzahl[0]->anzahl > 0) {
                 echo "<div class='footer'>";
                 echo "<li>Abschluss: $abschluss %</li>";
-                // echo "<li>Vokabeln: " .$voksanzahl[0]->anzahl. "</li>";
-                //echo "<li>Gesamt Positiv: $positiv</li>";
-                //echo "<li>Gesamt Negativ: $negativ</li>";
                 echo "<li>Nie positiv: $nochniepositiv</li>";
-                // echo "<li>Bestanden: $positivvokabel</li>";
                 echo "<li>Total $allUebungen</li>";
+
+                echo "<li";
+                if (!isset($_SESSION['vokIntensiv']) AND !isset($_SESSION['vokLeicht'])) {
+                    echo " id='selected' "; 
+                }
+                echo "><a href='?normal'>Alle</a></li>";
+                echo "<li";
+                if (isset($_SESSION['vokIntensiv'])) {
+                    echo " id='selected' "; 
+                }
+                echo "><a href='?intensiv'>Schwer</a></li>";
+
+                echo "<li";
+                if (isset($_SESSION['vokLeicht'])) {
+                    echo " id='selected' "; 
+                }
+                echo "><a href='?good'>Leicht</a></li>";
                 echo "</div>";
             }
             
             echo "</div>";
+        }
+    }
+
+    /**
+     * Setzt die Vokabelschwierigkeit 
+     * anhand der negativen und positiven Bewertungen der Vokabeln.
+     * 
+     * @return void
+     */
+    function setVokSchwierigkeit() 
+    {
+        if (isset($_GET['good'])) {
+            $_SESSION['vokLeicht'] = 1;
+            unset($_SESSION['vokIntensiv']);
+        }
+        if (isset($_GET['intensiv'])) {
+            $_SESSION['vokIntensiv'] = 1;
+            unset($_SESSION['vokLeicht']);
+        }
+        if (isset($_GET['normal'])) {
+            unset($_SESSION['vokIntensiv']);
+            unset($_SESSION['vokLeicht']);
         }
     }
 
@@ -291,6 +327,8 @@ class Learner extends Functions
 
                 // Vokabel-Kategorie loeschen:
                 unset($_SESSION['vokabelkat']);
+                unset($_SESSION['vokIntensiv']);
+                unset($_SESSION['vokLeicht']);
             }
         }
     }
@@ -348,6 +386,11 @@ class Learner extends Functions
         echo "</ul></div>";
     }
 
+    /**
+     * Zeigt die Vokabeln an.
+     * 
+     * @return void
+     */
     function showLang() 
     {
 
@@ -391,7 +434,44 @@ class Learner extends Functions
             if (isset($_SESSION['vokabelkat']) AND !isset($_GET['showAll'])) {
                 $kategorie = $_SESSION['vokabelkat'];
                 $userid = $this->getUserID($_SESSION['username']);
-                $vokabeln = $this->getObjektInfo("SELECT * FROM vokabelliste WHERE vok_kat=$kategorie ORDER BY rand() LIMIT 1");
+
+                # Vokabeln besorgen.
+                ## Wenn "alle" ausgewählt ist
+                if (!isset($_SESSION['vokLeicht']) AND !isset($_SESSION['vokIntensiv'])) {
+                    $vokabeln = $this->getObjektInfo("SELECT * FROM vokabelliste WHERE vok_kat=$kategorie ORDER BY rand() LIMIT 1");
+                }
+
+                ## Wenn "Leicht" ausgewählt ist
+                if (isset($_SESSION['vokLeicht'])) {
+                    $vokabeln = $this->getObjektInfo("SELECT 
+                     vokabelliste.id
+                    ,vokabelliste.vok_kat
+                    ,vokabelliste.vok_name_ori
+                    ,vokabelliste.vok_name_ueb
+                    ,vokabelnfortschritt.vokabel_id
+                    ,vokabelnfortschritt.user_id
+                    ,vokabelnfortschritt.positiv
+                    ,vokabelnfortschritt.negativ
+                    FROM vokabelliste INNER JOIN vokabelnfortschritt ON vokabelliste.id=vokabelnfortschritt.vokabel_id 
+                    WHERE vokabelnfortschritt.user_id=$userid AND vokabelliste.vok_kat=$kategorie AND 
+                    vokabelnfortschritt.positiv > vokabelnfortschritt.negativ ORDER BY rand() LIMIT 1");
+                }
+
+                ## Wenn Schwer ausgewählt ist.
+                if (isset($_SESSION['vokIntensiv'])) {
+                    $vokabeln = $this->getObjektInfo("SELECT 
+                     vokabelliste.id
+                    ,vokabelliste.vok_kat
+                    ,vokabelliste.vok_name_ori
+                    ,vokabelliste.vok_name_ueb
+                    ,vokabelnfortschritt.vokabel_id
+                    ,vokabelnfortschritt.user_id
+                    ,vokabelnfortschritt.positiv
+                    ,vokabelnfortschritt.negativ
+                    FROM vokabelliste INNER JOIN vokabelnfortschritt ON vokabelliste.id=vokabelnfortschritt.vokabel_id 
+                    WHERE vokabelnfortschritt.user_id=$userid AND vokabelliste.vok_kat=$kategorie AND 
+                    vokabelnfortschritt.positiv < vokabelnfortschritt.negativ ORDER BY rand() LIMIT 1");
+                }
 
                 for ($j = 0; $j < sizeof($vokabeln); $j++) {
                     $vokid = $vokabeln[$j]->id;
@@ -429,7 +509,7 @@ class Learner extends Functions
                     echo "<a class='positiv' href='?weiterPositiv&vokid=".$vokid."'>Richtig</a>";
                     echo "<a class='negativ' href='?weiterNegativ&vokid=".$vokid."'>Falsch</a>";
                 } else {
-                    echo "<p class='hinweis'>In dieser Lektion sind keine Vokabeln vorhanden.</p>";
+                    echo "<p class='hinweis'>Mit dieser Auswahl wurden keine Vokabeln gefunden.</p>";
                 }
                 echo "</div>";
             } else {
