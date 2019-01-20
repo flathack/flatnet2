@@ -18,7 +18,9 @@
             require '../includes/learner.class.php';
             $learner = NEW Learner;
             $learner->newheader(); 
-            //$learner->userHasRightPruefung(70);?>
+            //$learner->userHasRightPruefung(70);
+            $suche = isset($_GET['suche']) ? $_GET['suche'] : '';
+            echo $learner->learnSuche($suche);?>
             <title>Steven.NET-Vokabeln lernen</title>
         </head>
         <body>

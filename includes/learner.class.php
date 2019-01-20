@@ -72,6 +72,14 @@ class Learner extends Functions
         echo "<div id='ueberschrift'>";
             echo "<h1><a href='/flatnet2/learner/index.php'>Vokabeltrainer</a></h1>";
         echo "</div>";
+        
+
+        echo "<div class=''>";
+        echo "<form method='get'>";
+        echo "<input type=text name='suche' value='' placeholder='Suche ...' id='suche' />";
+        echo "<input type=submit value='OK' />";
+        echo "</form>";
+        echo "</div>"; 
         // Ende Header
         echo "</header>";
     }
@@ -107,6 +115,77 @@ class Learner extends Functions
         
     }
 
+    /**
+     * Suche für den Learn Bereich
+     * 
+     * @return void
+     */
+    public function learnSuche($suchWort)
+    {
+        if ($this->userHasRight(70, 0) == true) {
+            if (isset($suchWort) and $suchWort != "") {
+
+                $table = "vokabelliste";
+
+                $besitzer = $this->getUserID($_SESSION['username']);
+
+                // Suche mit Wildcards best&uuml;cken
+                $suchWort = "%" . $suchWort . "%";
+
+                // Spalten der Tabelle selektieren:
+                $colums = "SHOW COLUMNS FROM $table";
+
+                $rowSpalten = $this->sqlselect($colums);
+
+                // SuchQuery bauen:
+                // Start String:
+                $querySuche = "SELECT *
+                FROM $table
+                WHERE (id LIKE '$suchWort' ";
+
+                // echo "$querySuche";
+
+                // OR + Spaltenname LIKE Suchwort
+                for ($i = 0; $i < sizeof($rowSpalten); $i++) {
+                    $querySuche .= " OR " . $rowSpalten[$i]->Field . " LIKE '$suchWort'";
+                }
+                // Klammer am Ende schließen-
+                $querySuche .= ")";
+
+                // Query f&uuml;r die Suche
+                $suchfeld = $this->sqlselect($querySuche);
+
+                echo "<div class='outerUebung'><div class='mainbody'>";
+                echo "Suche: <strong>($suchWort)</strong>:";
+                echo "<table class='kontoTable'>";
+                for ($i = 0; $i < sizeof($suchfeld); $i++) {
+                    echo "<tbody>";
+                        echo "<td>" .$suchfeld[$i]->vok_name_ori. "</td>";
+                        echo "<td>" .$suchfeld[$i]->vok_name_ueb. "</td>";
+                        echo "<td>" .$suchfeld[$i]->vok_kat. "</td>";
+                    echo "</tbody>";
+                }
+
+                if (!isset($suchfeld[0]->vok_name_ori)) {
+                    echo "<tbody>";
+                        echo "<td>" . "Kein Ergebnis für $suchWort" . "</td>";
+                    echo "</tbody>";
+                }
+
+                echo "<a class='rightRedLink' href='?'>Zurück</a>";
+                
+                echo "</table>";
+
+                echo "</div></div>";
+            }
+        }
+    }
+
+    /**
+     * Gibt die Sprachen aus
+     * 
+     * @return void
+     */
     function getSprachen() 
     {
         $getsprachen = $this->getObjektInfo("SELECT * FROM vokabeln_sprachauswahl");
