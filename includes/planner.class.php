@@ -880,6 +880,7 @@ class Planner Extends Functions
     {
         if (isset($_GET['eventchange'])) {
             unset($_SESSION['eventid']);
+            unset($_SESSION['eventguest']);
         }
     }
 
