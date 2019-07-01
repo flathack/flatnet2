@@ -699,14 +699,13 @@ class FinanzenNEW extends functions
                     // HEUTE Zeile anzeigen
                     $timestamp = time();
                     $heute = date("Y-m-d", $timestamp);
-                    if (isset($umsaetze[$i-1]->datum)
-                        AND $umsaetze[$i-1]->datum < $heute 
-                        AND isset($umsaetze[$i]->datum) 
-                        AND $umsaetze[$i]->datum >= $heute
+                    if ($umsaetze[$i]->datum < $heute 
+                        AND isset($umsaetze[$i + 1]->datum) 
+                        AND $umsaetze[$i + 1]->datum >= $heute
                     ) {
                         $heute = date("d.m.Y", $timestamp);
                         echo "<tbody id='today'>"; 
-                            echo "<td colspan='7'><a name='heute'>$heute</a>: Demnächst : " . $umsaetze[$i + 1]->umsatzName . "</td>"; 
+                            echo "<td colspan='7'><a name='heute'>Heute ist der $heute</a> n&auml;chster Umsatz: " . $umsaetze[$i + 1]->umsatzName . "</td>"; 
                         echo "</tbody>";
                     }
                 }
