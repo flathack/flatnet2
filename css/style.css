@@ -15,8 +15,8 @@ html {
     overflow: scroll;
 }
 body {
-    background-image: url(../images/gwbackground.jpg);
-    background-color: grey;
+    background-image: url(../images/WallpaperDisney.png);
+    background-color: white;
     background-repeat: repeat;
     background-attachment: fixed;
     /* font-family: "Palatino Linotype", "Book Antiqua", Palatino, serif;*/
@@ -43,9 +43,9 @@ h1 {
 h2 {
     padding-top: 2px;
     padding-bottom: 2px;
-    font-size: 1.3em;
+    font-size: 1.4em;
     margin: none;
-    color: #3f3f3f;
+    color: #000000;
 }
 h3,
 h5,
@@ -1122,13 +1122,15 @@ blockquote {
 .separateDivBox {
     margin-top: 20px;
     margin-bottom: 20px;
-    border-bottom: 2px solid gray;
+    border-bottom: 2px solid rgb(233, 233, 233);
     padding-bottom: 5px;
     padding-top: 5px;
 }
 .newFahrt {
     border: 1px solid grey;
     box-shadow: 5px 5px 5px grey;
+    background-color: white;
+    border-radius: 10px;
     padding: 10px;
     margin-top: 10px;
     margin-bottom: 10px;
@@ -2001,6 +2003,12 @@ input[type=password]:focus {
     color: red;
     background-color: #ffd7d8;
 }
+
+.finanzNAV {
+    background-color: white;
+    padding: 5px;
+    border-radius: 10px;
+}
 .finanzNAV li {
     display: inline-block;
     margin: 0px 0px 0px 0px;
@@ -2539,11 +2547,9 @@ input[type=password]:focus {
     border-right: 2px solid #2e2e2e;
     border-bottom: 2px solid #2e2e2e;
     opacity: .96;
-    background-color: white;
 }
 .mainbody,
 .mainbodyDark {
-    background-color: white;
     padding: 10px;
 }
 
@@ -2627,6 +2633,8 @@ input[type=password]:focus {
 
 .innerBody {
     margin-right: 250px;
+    background-color: white;
+    border-radius: 10px;
 }
 .innerBody #long {
     width: 40%;
@@ -2639,6 +2647,7 @@ input[type=password]:focus {
     border-left: 2px solid grey;
     font-size: 1em;
     background-color: white;
+    border-radius: 5px;
 }
 .sqlbox {
     margin-bottom: 10px;
@@ -2824,6 +2833,34 @@ li a:visited:hover,
     width: 160px;
     margin-left: 0px;
 }
+
+/* Event Posts*/
+
+.eventPost {
+    border-collapse: collapse;
+    width: 100%;
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+.eventPost thead {
+    font-size: 1.1em;
+    color: gray;
+    background-color: rgb(233, 233, 233);
+}
+
+.eventPost tbody {
+    border: 1px solid rgb(233, 233, 233);
+}
+
+.eventPost tbody #minheight {
+    min-height: 200px;
+}
+
+.eventPost td {
+    padding: 10px 5px 10px 5px;
+}
+
 /* FORUM */
 
 .forumPost {
@@ -2959,6 +2996,7 @@ input[type=checkbox]+label:hover {
 
 .footer p {
     font-size: 0.8em;
+    margin-top: 50px;
 }
 .footer li {
     font-size: 0.8em;

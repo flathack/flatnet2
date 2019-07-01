@@ -493,7 +493,7 @@ class Planner Extends Functions
     {
         // AUSGABE
         echo "<div class='footer'>";
-            echo "<p>EventPlanner by Steven Schödel (c) Version 16.102018 | ";
+            echo "<p>EventPlanner by Steven Schödel (c) Version 01.072019 | ";
             echo "<a href='/flatnet2/informationen/impressum.php'>Impressum</a> | ";
             echo "<a href='/index.php'>Login</a>";
             echo "</p>";
@@ -920,9 +920,11 @@ class Planner Extends Functions
         if (isset($_SESSION['eventid']) AND isset($_SESSION['eventguest'])) {
             // event und gast informationen
             //echo "<div class='newFahrt'>";
+            echo "<div class='innerBody'>";
             $eventname = $this->getEventname($_SESSION['eventid']);
             echo "<h1><a href='event.php'>" .$eventname . "</a></h1>";
-            echo "<h2>Hallo " . $this->getGuestName($_SESSION['eventguest']) . ", schön dich hier zu sehen!</h2>";
+            echo "<h2>Willkommen  " . $this->getGuestName($_SESSION['eventguest']) . "</h2>";
+            echo "</div>";
             
             echo "<div class='rightBody'>";
                 $this->askUserForZusage($_SESSION['eventid']);
@@ -947,15 +949,16 @@ class Planner Extends Functions
     function askUserForZusage(int $eventid) 
     {
         if (isset($_SESSION['eventguest'])) {
+            echo "<div class='newFahrt'>";
             $currentid = $_SESSION['eventguest'];
             $userinfo = $this->sqlselect("SELECT * FROM eventguests WHERE id='$currentid' AND eventid=$eventid");
             
             // CHECK IF USER HASNT ZUGESAGT YET
             if ($userinfo[0]->zusage == 1) { 
 
-                echo "<div class='erfolg'>";
+                echo "<div class=''>";
             } else {
-                echo "<div class='info'>";
+                echo "<div class=''>";
             }
             
             $this->absageGuest();
@@ -977,7 +980,7 @@ class Planner Extends Functions
             }
             
     
-            echo "</div>";
+            echo "</div></div>";
         }
         
     }
@@ -992,10 +995,10 @@ class Planner Extends Functions
     function askUserForCount(int $eventid) 
     {
         // CHECK IF USER HASNT ZUGESAGT YET
-        echo "<div class='newFahrt'>";
-        echo "<p>Bitte teilen uns mit, mit wie vielen Personen du bei der Veranstaltung erscheinst.</p>";
+        // echo "<div class='newFahrt'>";
+        // echo "<p>Bitte teilen uns mit, mit wie vielen Personen du bei der Veranstaltung erscheinst.</p>";
 
-        echo "</div>";
+        // echo "</div>";
     }
 
     /**
@@ -1009,7 +1012,6 @@ class Planner Extends Functions
     {
         // CHECK IF USER HASNT ZUGESAGT YET
         echo "<div class=''>";
-        echo "<h3><a name='blog'>Blog</a></h3>";
 
         $entries = $this->sqlselect("SELECT * FROM eventtexts WHERE eventid=$eventid ORDER BY sort DESC");
         if ($this->checkEventOwner($_SESSION['eventid']) == true) {
@@ -1018,22 +1020,22 @@ class Planner Extends Functions
             $this->delBlogMessage($eventid);
         }
         
-        echo "<table class='forumPost'>";
-        echo "<thead><td colspan=3></td></thead>";
+        echo "<table class='eventPost'>";
+        # echo "<thead><td colspan=3></td></thead>";
         for ($i = 0;$i < sizeof($entries); $i++) {
             echo "<thead id='small'>"; 
-            echo "<td colspan=1>".$this->getUserName($entries[$i]->author)."</td>";
-            echo "<td colspan=1>". $entries[$i]->timestamp ."</td>";
-            echo "<td>";
+            echo "<td colspan=1>Autor - ".$this->getUserName($entries[$i]->author)."</td>";
+            echo "<td colspan=2>Datum - ". $entries[$i]->timestamp ."";
+            // echo "<td>";
             if ($this->checkEventOwner($eventid) == true) {
-                echo "<a href='?blogedit=".$entries[$i]->id."#blog'>Edit</a>";
+                echo "<a class='rightGreenLink' href='?blogedit=".$entries[$i]->id."#blog'>Edit</a>";
             }
             echo "</td>";
             echo "</thead>";
             echo "<tbody>";
-                echo "<td colspan=3>"; 
+                echo "<td colspan=3><div id='minheight'>"; 
                     echo $entries[$i]->text;
-                echo "</td>";
+                echo "</div></td>";
             echo "</tbody>";
         }
         echo "</table>";
@@ -1066,7 +1068,7 @@ class Planner Extends Functions
                     } else {
                         $this->errorMessage("Speichern nicht möglich.");
                     }
-                    $this->infoMessage("$count : $sql");
+                    // $this->infoMessage("$count : $sql");
                 } else {
                     $this->infoMessage("Du kannst nur Einträge erstellen wenn du angemeldet bist.");
                 }
@@ -1199,14 +1201,12 @@ class Planner Extends Functions
         $countdowns = $this->sqlselect("SELECT * FROM eventcountdowns WHERE eventid=$eventid ORDER BY enddate");
 
         $datetime1 = new DateTime(date("Y-m-d"));
-        echo "<table class='kontoTable'>";
         for ($i = 0; $i < sizeof($countdowns); $i++) {
 
             $datetime2 = new DateTime($countdowns[$i]->enddate);
             $diff = $datetime1->diff($datetime2);
-            echo "<h2>Noch " . $diff->format('%a Tage') . "</h2>";
+            echo "<h2>Noch " . $diff->format('%a Tage') . ", dann ist es soweit.</h2>";
         }
-        echo "</table>";
 
         echo "</div>";
     }
@@ -1235,7 +1235,8 @@ class Planner Extends Functions
                 $css = "";
             }
             if (strlen($memberlist[$i]->fullname) > 1) {
-                echo "<li id='$css'>".$memberlist[$i]->fullname."</li>";
+                // echo "<li id='$css'>".$memberlist[$i]->fullname."</li>";
+                echo "<li>Gast ".$memberlist[$i]->id."</li>";
             } else {
                 echo "<li>Gast ".$memberlist[$i]->id."</li>";
             }
