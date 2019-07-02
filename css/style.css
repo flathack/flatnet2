@@ -275,8 +275,9 @@ blockquote {
 }
 .header #navigation li a:link:hover,
 .header #navigation li a:visited:hover {
-    border: 1px solid #ffbfbf;
+    border: 1px solid #91a1ff;
     color: white;
+    border-radius: 5px;
     -webkit-transition: all 0.4s ease-in-out;
     -moz-transition: all 0.4s ease-in-out;
     -ms-transition: all 0.4s ease-in-out;
@@ -301,9 +302,9 @@ blockquote {
 #quellen #quellen,
 #finanzen #finanzen,
 #impressum #impressum {
-    border-bottom: 2px solid rgb(253, 0, 0);
-    background-color: #9e0003;
-    box-shadow: 0px 0px 10px rgb(255, 0, 0);
+    border-bottom: 2px solid rgb(0, 25, 253);
+    background-color: #0b009e;
+    box-shadow: 0px 0px 10px rgb(0, 25, 253);
     color: white;
     -webkit-transition: all 0.4s ease-in-out;
     -moz-transition: all 0.4s ease-in-out;
@@ -2013,15 +2014,15 @@ input[type=password]:focus {
     display: inline-block;
     margin: 0px 0px 0px 0px;
     padding: 5px;
-    color: #b30004;
-    border-bottom: 1px solid #820003;
+    color: #0003b3;
+    border-bottom: 1px solid #0003b3;
 }
 .finanzNAV li:hover {
-    background-color: #820003;
+    background-color: #0003b3;
     color: white;
 }
 .finanzNAV li a {
-    color: #820003;
+    color: #0003b3;
 }
 .finanzNAV li a:hover, .finanzNAV li a:visited:hover {
     text-decoration: none;
@@ -2034,7 +2035,7 @@ input[type=password]:focus {
 , .finanzNAV #selected {
 	display: inline-block;
     margin: 0px 0px 0px 0px;
-    background-color: #820003;
+    background-color: #000982;
     color: white;
     padding: 5px;
 }
@@ -2057,10 +2058,10 @@ input[type=password]:focus {
     color: black;
 }
 .FinanzenMonate #selected {
-    background-color: #820003;
+    background-color: #000982;
     color: white;
-    border: 1px solid #820003;
-    border-bottom: 2px solid red;
+    border: 1px solid #000982;
+    border-bottom: 2px solid rgb(25, 0, 255);
 }
 .FinanzenMonate #selected a {
     color: white;
@@ -2071,11 +2072,11 @@ input[type=password]:focus {
     padding: 5px;
     margin: 0px 5px 5px 0px;
     border: 1px solid transparent;
-    border-bottom: 1px solid #820003;
+    border-bottom: 1px solid #020082;
 }
 .FinanzenMonate li:hover {
     background-color: white;
-    border: 1px solid #820003;
+    border: 1px solid #00076b;
 }
 .FinanzenMonate a:hover {
 	text-decoration: none;
@@ -2682,11 +2683,28 @@ input[type=password]:focus {
 #kalender #kalender,
 #calc #calc,
 #marked {
-    color: white;
-    border-bottom: 2px solid red;
-    background-color: rgb(77, 0, 0);
+    color: rgb(0, 0, 0);
+    border-bottom: 2px solid rgb(20, 0, 201);
+    background-color: rgb(199, 199, 199);
 
 }
+
+#home #home a,
+#handwerk #handwerk a,
+#kalender #kalender a,
+#calc #calc a,
+#marked a {
+    color: rgb(0, 0, 0);
+}
+
+#home #home a:hover,
+#handwerk #handwerk a:hover,
+#kalender #kalender a:hover,
+#calc #calc a:hover,
+#marked a:hover {
+    color: rgb(255, 255, 255);
+}
+
 .rightOuterBody {
     overflow: hidden;
     padding: 5px;
@@ -2698,7 +2716,7 @@ input[type=password]:focus {
     margin-left: 5px;
 }
 .rightOuterBody li a {
-    color: black;
+    color: rgb(0, 0, 0);
     border: 2px solid transparent;
     padding: 3px 5px 3px 5px;
     text-decoration: none;
@@ -2707,7 +2725,7 @@ input[type=password]:focus {
 .rightOuterBody li a:visited:hover {
     color: white;
     text-decoration: none;
-    background-color: rgb(100, 0, 0);
+    background-color: rgb(219, 212, 255);
 }
 
 .rightBody #yellow {
