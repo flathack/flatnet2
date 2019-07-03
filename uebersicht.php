@@ -22,6 +22,14 @@
         $uebersicht->header();
         $uebersicht->logged_in("redirect", "index.php");
         ?>
+        <style>
+            body {
+                background-image: url(images/gwbackground.jpg);
+                background-color: white;
+                background-repeat: repeat;
+                background-attachment: fixed;
+            }
+        </style>
         <title>Steven.NET - Home</title>
     </head>
     <body>

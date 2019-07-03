@@ -15,10 +15,10 @@ html {
     overflow: scroll;
 }
 body {
-    background-image: url(../images/WallpaperDisney.png);
+    /*background-image: url(../images/gwbackground.jpg);
     background-color: white;
     background-repeat: repeat;
-    background-attachment: fixed;
+    background-attachment: fixed;*/
     /* font-family: "Palatino Linotype", "Book Antiqua", Palatino, serif;*/
     font-size: 1em;
     font-style: normal;

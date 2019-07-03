@@ -1,4 +1,8 @@
 <!DOCTYPE html>
+<head>
+
+</head>
+
 <html id="planner">
     <div id="wrapper">
         <head>
@@ -18,6 +22,14 @@
             require '../includes/planner.class.php';
             $planner = NEW Planner;
             $planner->newheader(); ?>
+            <style>
+            body {
+                background-image: url(../images/WallpaperDisney.png);
+                background-color: white;
+                background-repeat: repeat;
+                background-attachment: fixed;
+            }
+            </style>
             <title>Steven.NET-Event Planner</title>
         </head>
         <body>

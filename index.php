@@ -30,6 +30,14 @@ session_start();
         ?> 
         </div>
         <title>Steven.NET - Login</title>
+        <style>
+            body {
+                background-image: url(images/gwbackground.jpg);
+                background-color: white;
+                background-repeat: no-repeat;
+                background-attachment: fixed;
+            }
+        </style>
     </head>
     <body>
         <div class='login'>
