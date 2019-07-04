@@ -166,6 +166,7 @@ blockquote {
     color: rgb(139, 139, 139);
     margin-bottom: 10px;
     height: 80px;
+    overflow: hidden;
 }
 /*
  * Suchleiste
@@ -383,7 +384,7 @@ blockquote {
 .bereichadministration h2:hover,
 .bereichprofil h2:hover,
 .bereichINACTIVE h2:hover {
-    color: rgba(109, 0, 0, 0.911);
+    color: rgb(0, 39, 99);
     text-decoration: none !important;
 }
 .bereichadressbuch p,
@@ -433,21 +434,21 @@ blockquote {
     opacity: 0.6;
 }
 .bereichadressbuch {
-    background-color: rgb(143, 255, 148);
+    background-color: rgb(185, 255, 189);
     border: 1px solid transparent;
     margin: 2px;
     padding: 5px;
     min-height: 120px;
 }
 .bereichadministration {
-    background-color: rgb(242, 255, 124);
+    background-color: rgb(247, 255, 180);
     border: 1px solid transparent;
     margin: 2px;
     padding: 5px;
     min-height: 120px;
 }
 .bereichlearner {
-    background-color: rgb(255, 145, 145);
+    background-color: rgb(255, 193, 193);
     border: 1px solid transparent;
     margin: 2px;
     padding: 5px;
@@ -455,35 +456,35 @@ blockquote {
 }
 
 .bereichplanner {
-    background-color: rgb(151, 255, 250);
+    background-color: rgb(209, 255, 253);
     border: 1px solid transparent;
     margin: 2px;
     padding: 5px;
     min-height: 120px;
 }
 .bereichgebkalender {
-    background-color: rgb(255, 153, 221);
+    background-color: rgb(255, 203, 238);
     border: 1px solid transparent;
     margin: 2px;
     padding: 5px;
     min-height: 120px;
 }
 .bereichguildwars {
-    background-color: rgb(255, 128, 128);
+    background-color: rgb(255, 197, 197);
     border: 1px solid transparent;
     margin: 2px;
     padding: 5px;
     min-height: 120px;
 }
 .bereichfinanzen {
-    background-color: #86ffaf;
+    background-color: #c8ffdb;
     border: 1px solid transparent;
     margin: 2px;
     padding: 5px;
     min-height: 120px;
 }
 .bereichforum {
-    background-color: #9090ff;
+    background-color: #d0d0ff;
     background-repeat: no-repeat;
     background-position: top;
     border: 1px solid transparent;
@@ -1952,16 +1953,19 @@ input[type=password]:focus {
 .finanzNAV li {
     display: inline-block;
     margin: 0px 0px 0px 0px;
-    padding: 5px;
+    padding: 10px 15px 10px 15px;
     color: #0003b3;
-    border-bottom: 1px solid #0003b3;
+    border-bottom: 2px solid blue;
 }
 .finanzNAV li:hover {
-    background-color: #0003b3;
+    background-color: #383838;
+    color: white;
+}
+.finanzNAV li:hover a {
     color: white;
 }
 .finanzNAV li a {
-    color: #0003b3;
+    color: #383838;
 }
 .finanzNAV li a:hover, .finanzNAV li a:visited:hover {
     text-decoration: none;
@@ -1974,9 +1978,9 @@ input[type=password]:focus {
 , .finanzNAV #selected {
 	display: inline-block;
     margin: 0px 0px 0px 0px;
-    background-color: #000982;
+    background-color: #383838;
     color: white;
-    padding: 5px;
+    padding: 10px;
 }
 
 .finanzNAV #selected a {
@@ -1997,9 +2001,8 @@ input[type=password]:focus {
     color: black;
 }
 .FinanzenMonate #selected {
-    background-color: #000982;
+    background-color: #383838;
     color: white;
-    border: 1px solid #000982;
     border-bottom: 2px solid rgb(25, 0, 255);
 }
 .FinanzenMonate #selected a {
@@ -2008,7 +2011,7 @@ input[type=password]:focus {
 .FinanzenMonate li {
     display: inline-block;
     background-color: #ebebeb;
-    padding: 5px;
+    padding: 10px;
     margin: 0px 5px 5px 0px;
     border: 1px solid transparent;
     border-bottom: 1px solid #020082;
@@ -2168,7 +2171,7 @@ input[type=password]:focus {
     font-style: italic;
 }
 .kontoTable thead td {
-    padding: 5px;
+    padding: 10px;
     border-left: 1px solid grey;
     border-right: 1px solid grey;
 }
