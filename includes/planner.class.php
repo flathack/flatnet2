@@ -470,14 +470,16 @@ class Planner Extends Functions
         
         echo "</div>";
 
+        if (isset($_SESSION['username'])) {
+            $this->showNaviLinks();
+        }
+
         // Überschrift
         echo "<div id='ueberschrift'>";
             echo "<h1><a href='/flatnet2/planner/index.php'>Event Planner</a></h1>";
         echo "</div>";
 
-        if (isset($_SESSION['username'])) {
-            $this->showNaviLinks();
-        }
+        
         
 
         // Ende Header

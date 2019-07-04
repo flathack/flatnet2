@@ -278,6 +278,38 @@ class Uebersicht extends Functions
     }
 
     /**
+     * Zeigt die neue Startseite an
+     * 
+     * @return void
+     */
+    function newUebersicht()
+    {
+        $kacheln = $this->sqlselect("SELECT * FROM uebersicht_kacheln WHERE active=1 ORDER BY sortierung, name, id");
+        $kachelnInactive = $this->sqlselect("SELECT * FROM uebersicht_kacheln WHERE active=0 ORDER BY sortierung, name, id");
+        $kachelnGesperrt = $this->sqlselect("SELECT * FROM uebersicht_kacheln WHERE active=2 ORDER BY sortierung, name, id");
+
+        //Normale Kacheln
+        //Counter zum erkennen von Nutzern ohne Berechtigungen f�r eine Seite
+        $counter = 0;
+        for ($i = 0; $i < sizeof($kacheln); $i++) {
+
+            if ($this->userHasRight($kacheln[$i]->rightID, 0) == true) {
+                $counter++;
+                echo "<div class=bereich" . $kacheln[$i]->cssID . ">";
+                # echo "<div class=standardkachel>";
+                echo "<a href='" . $kacheln[$i]->link . "'><h2>" . $kacheln[$i]->name . "</h2></a>";
+
+                echo "<p>";
+                echo $kacheln[$i]->beschreibung;
+                echo "</p>";
+                # $this->changeStatus($kacheln[$i]->id);
+                echo "</div>";
+
+            }
+        }
+    }
+
+    /**
      * Zeigt die Kacheluebersicht an.
      * 
      * @return void
@@ -301,7 +333,7 @@ class Uebersicht extends Functions
                 echo "<p>";
                 echo $kacheln[$i]->beschreibung;
                 echo "</p>";
-                $this->changeStatus($kacheln[$i]->id);
+                # $this->changeStatus($kacheln[$i]->id);
                 echo "</div>";
 
             }

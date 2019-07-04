@@ -68,6 +68,9 @@ class Learner extends Functions
             echo "<p></p>";
         }
         echo "</div>";
+        if (isset($_SESSION['username'])) {
+            $this->showNaviLinks();
+        }
         // Überschrift
         echo "<div id='ueberschrift'>";
             echo "<h1><a href='/flatnet2/learner/index.php'>Vokabeltrainer</a></h1>";

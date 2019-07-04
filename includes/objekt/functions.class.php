@@ -648,24 +648,19 @@ class Functions extends Sql
      */
     public function header()
     {
-        // header("Content-type:text/html; charset=utf-8");
-        // echo '<meta http-equiv="content-type" content="text/html; charset=utf-8" />';
         echo '<link rel="apple-touch-icon" sizes="57x57" href="/apple-icon-57x57.png">';
         echo '<link rel="apple-touch-icon" sizes="60x60" href="/apple-icon-60x60.png">';
         echo '<link rel="apple-touch-icon" sizes="72x72" href="/apple-icon-72x72.png">';
         echo '<link rel="apple-touch-icon" sizes="76x76" href="/apple-icon-76x76.png">';
         echo '<script src="/flatnet2/tools/ckeditor/ckeditor.js"></script>';
         echo '<link href="/flatnet2/css/style.css" type="text/css" rel="stylesheet" />';
-        echo "<meta name='viewport' content='width=380, initial-scale=0.9'>";
-
+        echo "<meta name='viewport' content='width=460, initial-scale=0.9'>";
         // Quellen für JQUERY Scripte
         echo "<script src='//code.jquery.com/jquery-1.10.2.js'></script>";
         echo "<script src='//code.jquery.com/ui/1.11.4/jquery-ui.js'></script>";
         echo "<script src='/flatnet2/Chart.min.js'></script>";
-
         // Verschiebbare Fenster
         echo '<script> $(function() { $( "#draggable" ).draggable(); }); </script>';
-
         session_start();
         echo "<header class='header'>";
 
@@ -696,8 +691,7 @@ class Functions extends Sql
         // Zeigt die Navigation an:
         $this->showNaviLinks();
 
-        echo "
-        <div id='ueberschrift'>
+        echo "<div id='ueberschrift'>
         <h1><a href='/flatnet2/uebersicht.php'>Steven.NET</a></h1>
         </div>";
 
@@ -717,7 +711,7 @@ class Functions extends Sql
 
         $kacheln = $this->sqlselect("SELECT * FROM uebersicht_kacheln WHERE active=1 ORDER BY sortierung");
         if ($this->userHasRight(7, 0) == "true") {
-            echo "<li>	<a href='/flatnet2/uebersicht.php' id='uebersicht'>Startseite</a></li>";
+            echo "<li>	<a href='/flatnet2/uebersicht.php' id='uebersicht'>Start</a></li>";
         }
 
         for ($i = 0; $i < sizeof($kacheln); $i++) {
