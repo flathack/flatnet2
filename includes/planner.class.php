@@ -43,7 +43,7 @@ class Planner Extends Functions
             echo "</div>";
         }
         // Navigation
-        $this->eventNavigation();
+        
         
         if (isset($_SESSION['eventid'])) {
             $this->showEvent();
@@ -82,7 +82,7 @@ class Planner Extends Functions
     function mainEventAdministration() 
     {
         
-        $this->eventNavigation();
+        #$this->eventNavigation();
         echo "<div class=''>";
 
         if (!isset($_SESSION['username'])) {
@@ -97,8 +97,6 @@ class Planner Extends Functions
             $this->superAdministration();
         }
         echo "</div>";
-       
-
         // Footer
         $this->showFooter();
     }
@@ -111,10 +109,12 @@ class Planner Extends Functions
     function superAdministration() 
     {
         echo "<div class='newFahrt'>";
+        
+        $this->eventNavigation();
         echo "<h2>Event Management</h2>";
         echo "<p>Hier können Events angelegt und verwaltet werden</p>";
 
-        $this->listAllEventAdministrators();
+        
         $this->listAllEvents();
 
         if (isset($_SESSION['eventid'])) {
@@ -348,7 +348,7 @@ class Planner Extends Functions
         $eventlist = $this->sqlselect("SELECT * FROM eventlist");
         $userlist = $this->sqlselect("SELECT * FROM benutzer");
 
-        echo "<form method=get action='administration.php#admins'>";
+        echo "<form method=get action='#admins'>";
         echo "<select name=neweventid>";
         for ($i = 0; $i < sizeof($eventlist); $i++) {
             echo "<option value=".$eventlist[$i]->id.">".$eventlist[$i]->eventname."</option>";
@@ -494,12 +494,12 @@ class Planner Extends Functions
     function showFooter() 
     {
         // AUSGABE
-        echo "<div class='footer'>";
-            echo "<p>EventPlanner by Steven Schödel (c) Version 01.072019 | ";
+        echo "<div class='newFahrt'><div class='footer'>";
+            echo "<p>EventPlanner by Steven Schödel (c) Version 04.072019 | ";
             echo "<a href='/flatnet2/informationen/impressum.php'>Impressum</a> | ";
             echo "<a href='/index.php'>Login</a>";
             echo "</p>";
-        echo "</div>";
+        echo "</div></div>";
     }
 
     /**
@@ -529,8 +529,9 @@ class Planner Extends Functions
      */
     function eventAdministration() 
     {   
-        echo "<li><a href='index.php'>Login</a></li>";
-        echo "<li><a href='administration.php'>Administration</a></li>";
+        echo "<li><a id='login' href='index.php'>Login</a></li>";
+        echo "<li><a id='evadmin' href='administration.php'>Administration</a></li>";
+        echo "<li><a id='supadmin' href='superadmin.php'>Superadmin</a></li>";
         if (isset($_SESSION['eventguest'])) {
             echo "<li><a href='?guestlogout'>Gast ausloggen</a></li>";
         }
