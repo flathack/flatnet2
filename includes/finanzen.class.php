@@ -471,7 +471,7 @@ class FinanzenNEW extends functions
      * 
      * @return void
      */
-    function getBuchDesc(int $buchnr, int $kontoid, int $monat, int $jahr, string $view, int $besitzer) 
+    function getBuchDesc(int $buchnr, int $kontoid, int $monat, int $jahr, string $view) 
     {
         
         echo "<div class='separateDivBox'>";
@@ -481,15 +481,16 @@ class FinanzenNEW extends functions
             
             $text = $_POST['buchdesctext'];
             if (strlen($text) > 0) {
+                $text = strip_tags($text, '<br><a><p><h1><h2><h3><h4><table><thead><tbody><tr><td>');
                 if (!isset($info[0]->description)) {
-                    $sql = "INSERT INTO finanzen_buchungsnr_desc (buchnr, description, besitzer) values ($buchnr, '$text', '$besitzer')";
+                    $sql = "INSERT INTO finanzen_buchungsnr_desc (buchnr, description) values ($buchnr, '$text')";
                 } else {
                     $sql = "UPDATE finanzen_buchungsnr_desc SET description='$text' WHERE buchnr=$buchnr LIMIT 1";
                 }
                 if ($this->sqlInsertUpdateDelete($sql) == true) {
                     $this->erfolgMessage("Erfolgreich");
                 } else {
-                    $this->errorMessage("Nicht Erfolgreich");
+                    $this->errorMessage("Die Beschreibung konnte nicht gespeichert werden.");
                 }
             } else {
                 $this->infoMessage("Text leer");
@@ -499,7 +500,6 @@ class FinanzenNEW extends functions
 
         // Ausgabe
         echo "<form method=post>";
-        echo "<h3></h3>";
         if ($view == "edit") {
             if (isset($info[0]->description)) {
                 echo "<textarea name=buchdesctext class='ckeditor'> " .$info[0]->description . "</textarea>";
@@ -513,12 +513,10 @@ class FinanzenNEW extends functions
                 echo "</div>";
             }
         }
-        
         echo "<button type=submit>OK</button>";
         echo "<a class='rightRedLink' href='?konto=$kontoid&monat=$monat&jahr=$jahr'>Schließen</a>";
         echo "</form>";
         echo "</div>";
-        
     }
 
     /**
