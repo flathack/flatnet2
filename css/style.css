@@ -2726,33 +2726,28 @@ li a:visited:hover,
 
 .meldung {
     color: #9b0000;
-    padding: 5px;
+    padding: 10px;
     border: 1px solid #9b0000;
     background: white;
     margin-top: 5px;
     margin-bottom: 5px;
-    display: inline-block;
-    width: 99%;
 }
 .info {
     color: #931e00;
-    padding: 5px;
+    padding: 10px;
     border: 1px solid #CC2900;
     background: white;
     margin-top: 5px;
     margin-bottom: 5px;
-    display: inline-block;
     width: 95%;
 }
 .erfolg {
     color: #008000;
-    padding: 5px;
+    padding: 10px;
     border: 1px solid #008000;
     margin-top: 5px;
     margin-bottom: 5px;
     background: white;
-    display: inline-block;
-    width: 99%;
 }
 .erfolg a {
     color: #008000;
