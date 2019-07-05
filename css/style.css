@@ -163,8 +163,8 @@ blockquote {
 .header {
     padding: 10px;
     background-color: #fafafa;
+    border-bottom: 2px solid gray;
     color: rgb(139, 139, 139);
-    margin-bottom: 10px;
     height: 80px;
     overflow: hidden;
 }
@@ -2577,8 +2577,8 @@ input[type=password]:focus {
 
 .innerBody {
     margin-right: 250px;
-    background-color: white;
     border-radius: 10px;
+    background-color: white;
 }
 .innerBody #long {
     width: 40%;
@@ -2591,7 +2591,6 @@ input[type=password]:focus {
     border-left: 2px solid grey;
     font-size: 1em;
     background-color: white;
-    border-radius: 5px;
 }
 .sqlbox {
     margin-bottom: 10px;

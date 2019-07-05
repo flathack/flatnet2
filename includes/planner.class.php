@@ -495,7 +495,7 @@ class Planner Extends Functions
     {
         // AUSGABE
         echo "<div class='newFahrt'><div class='footer'>";
-            echo "<p>EventPlanner by Steven Schödel (c) Version 04.072019 | ";
+            echo "<p>EventPlanner by Steven Schödel (c) Version 05.072019 | ";
             echo "<a href='/flatnet2/informationen/impressum.php'>Impressum</a> | ";
             echo "<a href='/index.php'>Login</a>";
             echo "</p>";
@@ -923,21 +923,19 @@ class Planner Extends Functions
     {
         if (isset($_SESSION['eventid']) AND isset($_SESSION['eventguest'])) {
             // event und gast informationen
-            //echo "<div class='newFahrt'>";
-            echo "<div class='innerBody'>";
-            $eventname = $this->getEventname($_SESSION['eventid']);
-            echo "<h1><a href='event.php'>" .$eventname . "</a></h1>";
-            echo "<h2>Willkommen  " . $this->getGuestName($_SESSION['eventguest']) . "</h2>";
-            echo "</div>";
-            
+            echo "<div class=''>";
             echo "<div class='rightBody'>";
                 $this->askUserForZusage($_SESSION['eventid']);
                 $this->askUserForCount($_SESSION['eventid']);
                 $this->showSmallGuestList();
             echo "</div>";
             echo "<div class='innerBody'>";
-                $this->showCountdowns($_SESSION['eventid']);
-                $this->showBlogMessages($_SESSION['eventid']);
+            $eventname = $this->getEventname($_SESSION['eventid']);
+            echo "<h1><a href='event.php'>" .$eventname . "</a></h1>";
+            echo "<h2>Willkommen  " . $this->getGuestName($_SESSION['eventguest']) . "</h2>";
+            $this->showCountdowns($_SESSION['eventid']);
+            $this->showBlogMessages($_SESSION['eventid']);
+            echo "</div>";
             echo "</div>";
             
         }
@@ -953,38 +951,26 @@ class Planner Extends Functions
     function askUserForZusage(int $eventid) 
     {
         if (isset($_SESSION['eventguest'])) {
-            echo "<div class='newFahrt'>";
+            echo "<div class=''>";
             $currentid = $_SESSION['eventguest'];
             $userinfo = $this->sqlselect("SELECT * FROM eventguests WHERE id='$currentid' AND eventid=$eventid");
-            
-            // CHECK IF USER HASNT ZUGESAGT YET
-            if ($userinfo[0]->zusage == 1) { 
-
-                echo "<div class=''>";
-            } else {
-                echo "<div class=''>";
-            }
-            
+                     
             $this->absageGuest();
             $this->zusageGuest();
-            
             
             if ($userinfo[0]->zusage == 1) { 
                 echo "<p>Vielen Dank, dass du zugesagt hast!</p>";
                 // echo "<a class='grayLink'>Du hast zugesagt</a>"; 
             } else {
-                 echo "<p class=''>Bitte Zusagen!</p>";
+                 echo "<h3>Bitte Zusagen!</h3>";
                 echo "<a class='greenLink' href='?zusageUser=".$userinfo[0]->id."'>Zusagen</a>"; 
             }
             
             if ($userinfo[0]->zusage == 1) { 
                 echo "<a class='redLink' href='?absageUser=".$userinfo[0]->id."'>Absagen</a>"; 
-            } else {
-                // echo "<a class='grayLink'>Du nimmst nicht an der Veranstaltung teil.</a>";
             }
-            
-    
-            echo "</div></div>";
+
+            echo "</div>";
         }
         
     }
@@ -1025,14 +1011,14 @@ class Planner Extends Functions
         }
         
         echo "<table class='eventPost'>";
-        # echo "<thead><td colspan=3></td></thead>";
         for ($i = 0;$i < sizeof($entries); $i++) {
+            $avatar = $this->getAvatarLink($entries[$i]->author);
             echo "<thead id='small'>"; 
-            echo "<td colspan=1>Autor - ".$this->getUserName($entries[$i]->author)."</td>";
+            echo "<td colspan=1><h3><img height=15 width=15 src=$avatar /> ".$this->getUserName($entries[$i]->author)."</h3></td>";
             echo "<td colspan=2>Datum - ". $entries[$i]->timestamp ."";
             // echo "<td>";
             if ($this->checkEventOwner($eventid) == true) {
-                echo "<a class='rightGreenLink' href='?blogedit=".$entries[$i]->id."#blog'>Edit</a>";
+                echo "<a class='buttonlink' href='?blogedit=".$entries[$i]->id."#blog'>Edit</a>";
             }
             echo "</td>";
             echo "</thead>";

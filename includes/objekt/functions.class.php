@@ -178,6 +178,27 @@ class Functions extends Sql
     }
 
     /**
+     * Gibt den Namen des Benutzers aus.
+     *
+     * @param int $userid UserID
+     *
+     * @return String $avatar
+     */
+    public function getAvatarLink($userid)
+    {
+        // Namen des Benutzers auswählen:
+        $selectUsername = "SELECT id, avatar FROM benutzer WHERE id = '$userid' LIMIT 1";
+        $rowUsername = $this->sqlselect($selectUsername);
+        if (isset($rowUsername[0]->avatar)) {
+            $avatar = $rowUsername[0]->avatar;
+        } else {
+            $avatar = "nolink";
+        }
+        return $avatar;
+
+    }
+
+    /**
      * Gibt die ID der kategorie aus.
      *
      * @param String $kategorieName Name der Kategorie

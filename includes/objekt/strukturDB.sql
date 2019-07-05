@@ -86,7 +86,8 @@ CREATE TABLE `benutzer` (
   `forumRights` bigint(20) NOT NULL COMMENT 'Rechte zum Anzeigen von Inhalten im Forum',
   `versuche` int(3) DEFAULT NULL COMMENT 'Versuche für den Login',
   `realName` varchar(50) COLLATE utf8_german2_ci NOT NULL COMMENT 'Echter Name des Benutzers',
-  `titel` varchar(250) COLLATE utf8_german2_ci NOT NULL COMMENT 'Titel des Benutzers'
+  `titel` varchar(250) COLLATE utf8_german2_ci NOT NULL COMMENT 'Titel des Benutzers',
+  `avatar` varchar(250) COLLATE utf8_german2_ci NOT NULL COMMENT 'Link zum Avatar des Nutzers'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_german2_ci;
 
 --
