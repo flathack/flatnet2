@@ -930,6 +930,9 @@ class Planner Extends Functions
                 $this->showSmallGuestList();
             echo "</div>";
             echo "<div class='innerBody'>";
+            echo "<ul class='finanzNAV'>";
+            $this->eventAdministration();
+            echo "</ul>";
             $eventname = $this->getEventname($_SESSION['eventid']);
             echo "<h1><a href='event.php'>" .$eventname . "</a></h1>";
             echo "<h2>Willkommen  " . $this->getGuestName($_SESSION['eventguest']) . "</h2>";
