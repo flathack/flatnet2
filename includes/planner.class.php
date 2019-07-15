@@ -933,12 +933,38 @@ class Planner Extends Functions
             $eventname = $this->getEventname($_SESSION['eventid']);
             echo "<h1><a href='event.php'>" .$eventname . "</a></h1>";
             echo "<h2>Willkommen  " . $this->getGuestName($_SESSION['eventguest']) . "</h2>";
+            $this->showWelcomeMessage($_SESSION['eventid']);
             $this->showCountdowns($_SESSION['eventid']);
             $this->showBlogMessages($_SESSION['eventid']);
             echo "</div>";
             echo "</div>";
             
         }
+    }
+
+    function showWelcomeMessage($eventid)
+    {
+        echo "<div class=''>";
+        $welcomemsg = $this->sqlselect("SELECT * FROM eventlist WHERE id=$eventid LIMIT 1");
+        $welcomeid = $welcomemsg[0]->post_id;
+        if (isset($welcomeid)) {
+            $entries = $this->sqlselect("SELECT * FROM eventtexts WHERE id=$welcomeid LIMIT 1");
+        
+            echo "<table class='eventPost'>";
+            for ($i = 0;$i < sizeof($entries); $i++) {
+                $avatar = $this->getAvatarLink($entries[$i]->author);
+                
+                echo "<tbody>";
+                    echo "<td colspan=3><div id='minheight'>"; 
+                        echo $entries[$i]->text;
+                    echo "</div></td>";
+                echo "</tbody>";
+            }
+            echo "</table>";
+    
+            echo "</div>";
+        }
+        
     }
 
     /**
