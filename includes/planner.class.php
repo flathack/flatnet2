@@ -1032,7 +1032,7 @@ class Planner Extends Functions
         // CHECK IF USER HASNT ZUGESAGT YET
         echo "<div class=''>";
 
-        $entries = $this->sqlselect("SELECT * FROM eventtexts WHERE eventid=$eventid ORDER BY sort DESC");
+        $entries = $this->sqlselect("SELECT * FROM eventtexts WHERE eventid=$eventid ORDER BY timestamp DESC");
         if ($this->checkEventOwner($_SESSION['eventid']) == true) {
             $this->createNewBlogMessage($eventid);
             $this->editBlogMessage($eventid);
