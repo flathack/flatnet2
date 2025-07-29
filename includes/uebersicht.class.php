@@ -282,7 +282,7 @@ class Uebersicht extends Functions
      * 
      * @return void
      */
-    function newUebersicht()
+    public function newUebersicht()
     {
         $kacheln = $this->sqlselect("SELECT * FROM uebersicht_kacheln WHERE active=1 ORDER BY sortierung, name, id");
         $kachelnInactive = $this->sqlselect("SELECT * FROM uebersicht_kacheln WHERE active=0 ORDER BY sortierung, name, id");

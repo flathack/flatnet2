@@ -34,7 +34,7 @@ class Learner extends Functions
      * 
      * @return void
      */
-    function newheader() 
+    public function newheader()
     {
         echo '<meta http-equiv="content-type" content="text/html; charset=utf-8" />';
         echo '<link rel="apple-touch-icon" sizes="57x57" href="/apple-icon-57x57.png">';
@@ -91,7 +91,7 @@ class Learner extends Functions
      * 
      * @return void
      */
-    function learnerWelcome() 
+    public function learnerWelcome()
     {
         echo "<div class='outerUebung'>";
 
@@ -189,7 +189,7 @@ class Learner extends Functions
      * 
      * @return void
      */
-    function getSprachen() 
+    public function getSprachen()
     {
         $getsprachen = $this->getObjektInfo("SELECT * FROM vokabeln_sprachauswahl");
         if (sizeof($getsprachen) == 1) {
@@ -214,14 +214,14 @@ class Learner extends Functions
         echo "</ul>";
     }
 
-    function learnfooter() 
+    public function learnfooter()
     {
         echo "<div class='footer'>"; 
             echo "<p><br>Version 2019-01-07 by Steven Schödel</p>"; 
         echo "</div>";
     }
 
-    function showLinks() 
+    public function showLinks()
     {
         echo "<ul class='finanzNAV'>";
 
@@ -260,7 +260,7 @@ class Learner extends Functions
         echo "</ul>";
     }
 
-    function showAllVokablen() 
+    public function showAllVokablen()
     {
         if (isset($_GET['showAll'])) {
             if (isset($_SESSION['vokabelkat'])) {
@@ -283,7 +283,7 @@ class Learner extends Functions
      * 
      * @return void
      */
-    function showStats()
+    public function showStats()
     {
         if (isset($_SESSION['vokabelkat'])) {
             echo "<div>";
@@ -379,7 +379,7 @@ class Learner extends Functions
      * 
      * @return void
      */
-    function setVokSchwierigkeit() 
+    public function setVokSchwierigkeit()
     {
         if (isset($_GET['good'])) {
             $_SESSION['vokLeicht'] = 1;
@@ -400,7 +400,7 @@ class Learner extends Functions
      * 
      * @return void
      */
-    function setgetLang() 
+    public function setgetLang()
     {
 
         if (isset($_GET['setLang'])) {
@@ -420,7 +420,7 @@ class Learner extends Functions
      * 
      * @return void
      */
-    function setgetKat() 
+    public function setgetKat()
     {
 
         if (isset($_GET['setKat'])) {
@@ -435,7 +435,7 @@ class Learner extends Functions
      * 
      * @return void
      */
-    function uebungsSelector() 
+    public function uebungsSelector()
     {
         if (!isset($_SESSION['LangDiff'])) {
             $_SESSION['LangDiff'] = 0;
@@ -473,7 +473,7 @@ class Learner extends Functions
      * 
      * @return void
      */
-    function showLang() 
+    public function showLang()
     {
 
         if (isset($_SESSION['language'])) {
@@ -604,7 +604,7 @@ class Learner extends Functions
         }
     }
 
-    function csvImport() 
+    public function csvImport()
     {
         if ($this->userHasRight(71, 0) == true) {
             if (isset($_GET['vokAdminAktivate'])) {
@@ -677,7 +677,7 @@ class Learner extends Functions
         
     }
 
-    function setPositiv() 
+    public function setPositiv()
     {
         if (isset($_GET['weiterPositiv']) AND isset($_GET['vokid'])) {
             $vokid = $_GET['vokid'];
@@ -696,7 +696,7 @@ class Learner extends Functions
         }
     }
 
-    function setNegativ() 
+    public function setNegativ()
     {
         if (isset($_GET['weiterNegativ']) AND isset($_GET['vokid'])) {
             $vokid = $_GET['vokid'];

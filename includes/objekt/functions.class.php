@@ -648,7 +648,7 @@ class Functions extends Sql
      * 
      * @return void
      */
-    function showFooter() 
+    public function showFooter()
     {
         echo "<ul>";
             echo "<li><a href='/flatnet2/informationen/impressum.php'>Impressum</a></li>";
@@ -853,7 +853,7 @@ class Functions extends Sql
      * 
      * @return string
      */
-    function checkString(string $string)
+    public function checkString(string $string)
     {
         $string = strip_tags(stripslashes($string));
         $string = str_replace(' ', '-', $string);
@@ -919,7 +919,7 @@ class Functions extends Sql
      * 
      * @return string
      */
-    function infoMessage(string $text)
+    public function infoMessage(string $text)
     {
         if (strlen($text) > 0) {
             echo "<p class='hinweis'>" . $text . "</p>";
@@ -933,7 +933,7 @@ class Functions extends Sql
      * 
      * @return string
      */
-    function erfolgMessage(string $text)
+    public function erfolgMessage(string $text)
     {
         if (strlen($text) > 0) {
             echo "<p class='erfolg'>" . $text . "</p>";
@@ -947,7 +947,7 @@ class Functions extends Sql
      * 
      * @return string
      */
-    function errorMessage(string $text)
+    public function errorMessage(string $text)
     {
         if (strlen($text) > 0) {
             echo "<p class='meldung'>" . $text . "</p>";

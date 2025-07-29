@@ -33,7 +33,7 @@ class Sql
      * 
      * @return $db
      */
-    function connectToDB() 
+    public function connectToDB()
     {
         $this->connectToDBNewWay();
     }
@@ -43,7 +43,7 @@ class Sql
      * 
      * @return $db
      */
-    function connectToDBNewWay()
+    public function connectToDBNewWay()
     {
         try {
             $dbname = $this->getDBName();
@@ -72,7 +72,7 @@ class Sql
      * 
      * @return string
      */
-    function getDBName() 
+    public function getDBName()
     {
         $name = "62_flathacksql1";
         return $name;
@@ -85,7 +85,7 @@ class Sql
      * 
      * @return void
      */
-    function sqlDelete(string $tabelle) 
+    public function sqlDelete(string $tabelle)
     {
         if (isset($_GET['loeschen']) AND isset($_GET['loeschid']) ) {
                 
@@ -129,7 +129,7 @@ class Sql
      * 
      * @return void
      */
-    function sqlDeleteCustom(string $query) 
+    public function sqlDeleteCustom(string $query)
     {
         if (isset($_GET['loeschen']) AND isset($_GET['loeschid'])) {
             $id = $_GET['loeschid'];
@@ -169,7 +169,7 @@ class Sql
      * 
      * @return boolean
      */
-    function sqlInsertUpdateDelete(string $query) 
+    public function sqlInsertUpdateDelete(string $query)
     {
         
         $db = $this->connectToDBNewWay();
@@ -193,7 +193,7 @@ class Sql
      * 
      * @return boolean
      */
-    function sqlInsertUpdateDeleteHW(string $query) 
+    public function sqlInsertUpdateDeleteHW(string $query)
     {
         $db = $this->connectToDBNewWay();
         $affected_rows = $db->exec($query);
@@ -213,7 +213,7 @@ class Sql
      * 
      * @return boolean
      */
-    function sqlDbCheck(string $relation_name, array $structure) 
+    public function sqlDbCheck(string $relation_name, array $structure)
     {
         
         echo "<li>$relation_name</li>";
@@ -247,7 +247,7 @@ class Sql
      * 
      * @return boolean
      */
-    function logme(string $received_query) 
+    public function logme(string $received_query)
     {
         if (isset($_SESSION['username'])) {
             $username = $_SESSION['username'];
@@ -292,7 +292,7 @@ class Sql
      * 
      * @return int
      */
-    function getAmount(string $query) 
+    public function getAmount(string $query)
     {
         $db = $this->connectToDBNewWay();
         $stmt = $db->query($query);
@@ -307,7 +307,7 @@ class Sql
      * 
      * @return object
      */
-    function getObjektInfo(string $query) 
+    public function getObjektInfo(string $query)
     {
         $db = $this->connectToDBNewWay();
         $stmt = $db->query($query);
@@ -324,7 +324,7 @@ class Sql
      * 
      * @return object
      */
-    function sqlselect(string $query) 
+    public function sqlselect(string $query)
     {
         $results = $this->getObjektInfo($query);
         return $results;
@@ -337,7 +337,7 @@ class Sql
      * 
      * @return object
      */
-    function getObjectsToArray(string $query) 
+    public function getObjectsToArray(string $query)
     {
          $this->getObjektInfo($query);
     }
@@ -350,7 +350,7 @@ class Sql
      * 
      * @return boolean
      */
-    function objectExists(string $query) 
+    public function objectExists(string $query)
     {
         $row = $this->getObjektInfo($query);
 
@@ -369,7 +369,7 @@ class Sql
      * 
      * @return unknown
      */
-    function getColumns(string $table) 
+    public function getColumns(string $table)
     {
         // COLUMNS SPEICHERN;
         $select1 = "SHOW COLUMNS FROM $table";
@@ -389,7 +389,7 @@ class Sql
      * 
      * @return $columns
      */
-    function getColumnsFromQuery(string $query) 
+    public function getColumnsFromQuery(string $query)
     {
         $createTempTable = "CREATE TEMPORARY TABLE IF NOT EXISTS tempTable AS ($query);";
         $this->sqlInsertUpdateDelete($createTempTable);
@@ -410,7 +410,7 @@ class Sql
      * 
      * @return int
      */
-    function getColumnAnzahl(string $query) 
+    public function getColumnAnzahl(string $query)
     {
         $createTempTable = "
         CREATE TEMPORARY TABLE
