@@ -60,8 +60,7 @@ class Login extends Functions
                 //HTML Tags und erlaubte Zeichen aus String herausfiltern:
                 $username = strip_tags(stripslashes($_POST['username']));
 
-                //Passwort mit md5 hash verändern:
-                $passwort = md5($_POST['passwort']);
+                $eingabePasswort = $_POST['passwort'];
 
                 //Unbekannt?
                 $hostname = $_SERVER['HTTP_HOST'];
@@ -86,7 +85,20 @@ class Login extends Functions
                 } else {
                     // Benutzername und Passwort werden gecheckt
 
-                    if ($row[0]->Passwort == $passwort) {
+                    $storedHash = $row[0]->Passwort;
+                    $loginOk = false;
+
+                    if (password_verify($eingabePasswort, $storedHash)) {
+                        $loginOk = true;
+                    } elseif ($storedHash == md5($eingabePasswort)) {
+                        $loginOk = true;
+                        $newHash = password_hash($eingabePasswort, PASSWORD_DEFAULT);
+                        $this->sqlInsertUpdateDeleteHW(
+                            "UPDATE benutzer SET Passwort='$newHash' WHERE id='$userID' LIMIT 1"
+                        );
+                    }
+
+                    if ($loginOk) {
                         //setzen der Session Variablen
                         $_SESSION['angemeldet'] = true;
                         $_SESSION['username'] = $row[0]->Name;
@@ -327,7 +339,7 @@ class Login extends Functions
                             }
 
                             //Benutzer anlegen
-                            $passwortneu = md5($passwort1);
+                            $passwortneu = password_hash($passwort1, PASSWORD_DEFAULT);
                             $query = "INSERT INTO benutzer (Name, Passwort, rights, versuche) VALUES ('$username','$passwortneu','0','0')";
                             if ($this->sqlInsertUpdateDelete($query) == true) {
                                 echo "<p class='erfolg'>Hallo $username! Du hast dich erfolgreich registriert! <a href='uebersicht.php'>Klicke hier</a></p>";
