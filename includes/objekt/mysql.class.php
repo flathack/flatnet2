@@ -456,7 +456,7 @@ class Sql
         , string $defaultPfad
         , string $besitzerFeld
     ) {
-        if (isset($_POST["${uniqueName}Submit"])) {
+        if (isset($_POST["{$uniqueName}Submit"])) {
             $currentObject = $_POST['currentObject'];
             $columns = $this->getColumns($tableName);
 
@@ -564,7 +564,7 @@ class Sql
             }
         }
         echo "<tbody>"; 
-        echo "<td><button type=submit name=${uniqueName}Submit />Speichern</button></td>"; 
+        echo "<td><button type=submit name={$uniqueName}Submit>Speichern</button></td>";
         echo "<td><a href=\"$defaultPfad\" class='highlightedLink'>Zurück</a></td>";
         echo "</tbody>";
         echo "</form></table>";
