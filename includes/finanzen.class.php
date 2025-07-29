@@ -384,7 +384,7 @@ class FinanzenNEW extends functions
      * 
      * @return string
      */
-    function getCategoryForUmsatz($id) 
+    public function getCategoryForUmsatz($id)
     {
         $list = [
         "amazon",
@@ -471,7 +471,7 @@ class FinanzenNEW extends functions
      * 
      * @return void
      */
-    function getBuchDesc(int $buchnr, int $kontoid, int $monat, int $jahr, string $view) 
+    public function getBuchDesc(int $buchnr, int $kontoid, int $monat, int $jahr, string $view)
     {
         
         echo "<div class='separateDivBox'>";

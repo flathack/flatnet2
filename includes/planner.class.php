@@ -33,7 +33,7 @@ class Planner Extends Functions
      * 
      * @return void
      */
-    function plannerMainFunction() 
+    public function plannerMainFunction()
     {
         $this->doLogin();
         if (!isset($_SESSION['eventid']) OR !isset($_SESSION['eventguest'])) {
@@ -59,7 +59,7 @@ class Planner Extends Functions
      * 
      * @return void
      */
-    function plannerWelcome() 
+    public function plannerWelcome()
     {
         // ChangeEvent
         $this->changeEvent();
@@ -79,7 +79,7 @@ class Planner Extends Functions
      * 
      * @return void
      */
-    function mainEventAdministration() 
+    public function mainEventAdministration()
     {
         
         #$this->eventNavigation();
@@ -106,7 +106,7 @@ class Planner Extends Functions
      * 
      * @return void
      */
-    function superAdministration() 
+    public function superAdministration()
     {
         echo "<div class='newFahrt'>";
         
@@ -132,7 +132,7 @@ class Planner Extends Functions
      * 
      * @return true
      */
-    function setActive(int $eventid) 
+    public function setActive(int $eventid)
     {
         if ($this->checkEventOwner($eventid) == true) {
             $_SESSION['eventid'] = $eventid;
@@ -147,7 +147,7 @@ class Planner Extends Functions
      * 
      * @return void
      */
-    function listAllEvents() 
+    public function listAllEvents()
     {
         // Event aus Liste als aktiv markieren:
         if (isset($_GET['active'])) {
@@ -206,7 +206,7 @@ class Planner Extends Functions
      * 
      * @return void
      */
-    function deleteAdminOfEvent() 
+    public function deleteAdminOfEvent()
     {
         if (isset($_GET['deladmin'])) {
             if (isset($_GET['eventid'])) {
@@ -229,7 +229,7 @@ class Planner Extends Functions
      * 
      * @return void
      */
-    function deleteCodeOfEvent()
+    public function deleteCodeOfEvent()
     {
         if (isset($_GET['delInvCode'])) {
             if (isset($_GET['eventid'])) {
@@ -274,7 +274,7 @@ class Planner Extends Functions
      * 
      * @return void
      */
-    function listAllEventAdministrators() 
+    public function listAllEventAdministrators()
     {
         if ($this->userHasRight(79, 0) == true) {
             echo "<div class='separateDivBox'>";
@@ -305,7 +305,7 @@ class Planner Extends Functions
      * 
      * @return void
      */
-    function createNewAdminOfEvent() 
+    public function createNewAdminOfEvent()
     {
         
         echo "<div class=''>";
@@ -371,7 +371,7 @@ class Planner Extends Functions
      * 
      * @return void
      */
-    function createNewEvent() 
+    public function createNewEvent()
     {
         // SPEICHERUNG
         if (isset($_POST['eventname'])) {
@@ -416,7 +416,7 @@ class Planner Extends Functions
      * 
      * @return string
      */
-    function getEventname(int $eventid) 
+    public function getEventname(int $eventid)
     {
         $eventname = $this->sqlselect("SELECT id, eventname FROM eventlist WHERE id=$eventid LIMIT 1");
 
@@ -428,7 +428,7 @@ class Planner Extends Functions
      * 
      * @return void
      */
-    function newheader() 
+    public function newheader()
     {
         echo '<meta http-equiv="content-type" content="text/html; charset=utf-8" />';
         echo '<link rel="apple-touch-icon" sizes="57x57" href="/apple-icon-57x57.png">';
@@ -491,7 +491,7 @@ class Planner Extends Functions
      * 
      * @return void
      */
-    function showFooter() 
+    public function showFooter()
     {
         // AUSGABE
         echo "<div class='newFahrt'><div class='footer'>";
@@ -507,7 +507,7 @@ class Planner Extends Functions
      * 
      * @return void
      */
-    function eventNavigation() 
+    public function eventNavigation()
     {
         echo "<ul class='finanzNAV'>";
         if (isset($_SESSION['username'])) {
@@ -527,7 +527,7 @@ class Planner Extends Functions
      * 
      * @return void
      */
-    function eventAdministration() 
+    public function eventAdministration()
     {   
         echo "<li><a id='login' href='index.php'>Login</a></li>";
         echo "<li><a id='evadmin' href='administration.php'>Administration</a></li>";
@@ -543,7 +543,7 @@ class Planner Extends Functions
      * 
      * @return void
      */
-    function addGuests() 
+    public function addGuests()
     {
         // SPEICHERUNG
         if (isset($_POST['guestname']) AND isset($_POST['guestcount']) AND isset($_POST['fullname'])) {
@@ -591,7 +591,7 @@ class Planner Extends Functions
      * 
      * @return void
      */
-    function addInviteCode(int $eventid) 
+    public function addInviteCode(int $eventid)
     {
         
         echo "<div class=''>";
@@ -633,7 +633,7 @@ class Planner Extends Functions
      * 
      * @return void
      */
-    function getGuestName(int $guestid) 
+    public function getGuestName(int $guestid)
     {
         $guestname = $this->sqlselect("SELECT id,guestname,fullname FROM eventguests WHERE id=$guestid LIMIT 1");
         if (isset($guestname[0]->fullname)) {
@@ -655,7 +655,7 @@ class Planner Extends Functions
      * 
      * @return void
      */
-    function showInviteCodes(int $eventid)
+    public function showInviteCodes(int $eventid)
     {
         echo "<div class='separateDivBox'>";
         
@@ -691,7 +691,7 @@ class Planner Extends Functions
      * 
      * @return void
      */
-    function showManageCountdowns(int $eventid) 
+    public function showManageCountdowns(int $eventid)
     {
         echo "<div class='separateDivBox'>";
         echo "<h3><a name='countdowns'>Countdowns</a></h3>";
@@ -719,7 +719,7 @@ class Planner Extends Functions
      * 
      * @return void
      */
-    function addCountdown(int $eventid) 
+    public function addCountdown(int $eventid)
     {
         
         echo "<div class=''>";
@@ -757,7 +757,7 @@ class Planner Extends Functions
      * 
      * @return void
      */
-    function deleteCountdown()
+    public function deleteCountdown()
     {
         if (isset($_GET['delCD'])) {
             if (isset($_GET['eventid'])) {
@@ -780,7 +780,7 @@ class Planner Extends Functions
      * 
      * @return void
      */
-    function doLogin() 
+    public function doLogin()
     {
         if (isset($_POST['submit'])) {
             $username = strip_tags($_POST['username']);
@@ -819,7 +819,7 @@ class Planner Extends Functions
      * 
      * @return void
      */
-    function eventSelector() 
+    public function eventSelector()
     {
         echo "<div class='eventlogin'>";
         
@@ -860,7 +860,7 @@ class Planner Extends Functions
      * 
      * @return void
      */
-    function updateCodesUsed(int $codeid, int $guestid) 
+    public function updateCodesUsed(int $codeid, int $guestid)
     {
         // Checke ob Eintrag bereits existiert
         $alreadyused = $this->sqlselect("SELECT * FROM eventcodeusage WHERE userid=$guestid");
@@ -879,7 +879,7 @@ class Planner Extends Functions
      * 
      * @return void
      */
-    function changeEvent() 
+    public function changeEvent()
     {
         if (isset($_GET['eventchange'])) {
             unset($_SESSION['eventid']);
@@ -892,7 +892,7 @@ class Planner Extends Functions
      * 
      * @return void
      */
-    function changeGuest() 
+    public function changeGuest()
     {
         if (isset($_GET['guestlogout'])) {
             unset($_SESSION['eventguest']);
@@ -904,7 +904,7 @@ class Planner Extends Functions
      * 
      * @return void
      */
-    function setGuest() 
+    public function setGuest()
     {
         if (isset($_GET['setGuest'])) {
             if (is_numeric($_GET['setGuest']) == true) {
@@ -919,7 +919,7 @@ class Planner Extends Functions
      * 
      * @return void
      */
-    function showEvent() 
+    public function showEvent()
     {
         if (isset($_SESSION['eventid']) AND isset($_SESSION['eventguest'])) {
             // event und gast informationen
@@ -945,7 +945,7 @@ class Planner Extends Functions
         }
     }
 
-    function showWelcomeMessage($eventid)
+    public function showWelcomeMessage($eventid)
     {
         echo "<div class=''>";
         $welcomemsg = $this->sqlselect("SELECT * FROM eventlist WHERE id=$eventid LIMIT 1");
@@ -977,7 +977,7 @@ class Planner Extends Functions
      * 
      * @return void
      */
-    function askUserForZusage(int $eventid) 
+    public function askUserForZusage(int $eventid)
     {
         if (isset($_SESSION['eventguest'])) {
             echo "<div class=''>";
@@ -1011,7 +1011,7 @@ class Planner Extends Functions
      * 
      * @return void
      */
-    function askUserForCount(int $eventid) 
+    public function askUserForCount(int $eventid)
     {
         // CHECK IF USER HASNT ZUGESAGT YET
         // echo "<div class='newFahrt'>";
@@ -1027,7 +1027,7 @@ class Planner Extends Functions
      * 
      * @return void
      */
-    function showBlogMessages(int $eventid) 
+    public function showBlogMessages(int $eventid)
     {
         // CHECK IF USER HASNT ZUGESAGT YET
         echo "<div class=''>";
@@ -1069,7 +1069,7 @@ class Planner Extends Functions
      * 
      * @return void
      */
-    function createNewBlogMessage(int $eventid) 
+    public function createNewBlogMessage(int $eventid)
     {
         // SPEICHERUNG
         if (isset($_POST['blogtext'])) {
@@ -1125,7 +1125,7 @@ class Planner Extends Functions
      * 
      * @return void
      */
-    function editBlogMessage(int $eventid) 
+    public function editBlogMessage(int $eventid)
     {
         // SPEICHERUNG
         if (isset($_POST['editblogentry']) AND isset($_POST['editblogid'])) {
@@ -1186,7 +1186,7 @@ class Planner Extends Functions
      * 
      * @return void
      */
-    function delBlogMessage(int $eventid)
+    public function delBlogMessage(int $eventid)
     {
         if (isset($_GET['delBlog'])) {
             if (is_numeric($_GET['delBlog']) == true) {
@@ -1213,7 +1213,7 @@ class Planner Extends Functions
      * 
      * @return void
      */
-    function showCountdowns(int $eventid) 
+    public function showCountdowns(int $eventid)
     {
         // CHECK IF USER HASNT ZUGESAGT YET
         echo "<div class='separateDivBox'>";
@@ -1235,7 +1235,7 @@ class Planner Extends Functions
      * 
      * @return void
      */
-    function showSmallGuestList() 
+    public function showSmallGuestList()
     {
         $eventid = $_SESSION['eventid'];
         $memberlist = $this->sqlselect("SELECT * FROM eventguests WHERE eventid=$eventid ORDER BY guestname");
@@ -1272,7 +1272,7 @@ class Planner Extends Functions
      * 
      * @return void
      */
-    function checkEventOwner(int $eventid) 
+    public function checkEventOwner(int $eventid)
     {
         $administrator = $this->sqlselect("SELECT * FROM eventadministrators WHERE eventid=$eventid");
         $found = 0;
@@ -1306,7 +1306,7 @@ class Planner Extends Functions
      * 
      * @return void
      */
-    function deleteEventGuest()
+    public function deleteEventGuest()
     {
         if (isset($_GET['delUser']) AND isset($_GET['eventid'])) {
             $userid = $_GET['delUser'];
@@ -1333,7 +1333,7 @@ class Planner Extends Functions
      * 
      * @return void
      */
-    function zusageGuest()
+    public function zusageGuest()
     {
         if (isset($_GET['zusageUser']) AND isset($_SESSION['eventid'])) {
             if (is_numeric($_GET['zusageUser']) AND is_numeric($_SESSION['eventid'])) {
@@ -1364,7 +1364,7 @@ class Planner Extends Functions
      * 
      * @return void
      */
-    function absageGuest()
+    public function absageGuest()
     {
         if (isset($_GET['absageUser']) AND isset($_SESSION['eventid'])) {
             if (is_numeric($_GET['absageUser']) AND is_numeric($_SESSION['eventid'])) {
@@ -1394,7 +1394,7 @@ class Planner Extends Functions
      * 
      * @return void
      */
-    function counterAction() 
+    public function counterAction()
     {
         // Runter zählen
         if (isset($_GET['CounterDOWN']) AND isset($_GET['eventid']) AND isset($_GET['wert'])) {
@@ -1444,7 +1444,7 @@ class Planner Extends Functions
      * 
      * @return void
      */
-    function showEventMembers(int $eventid) 
+    public function showEventMembers(int $eventid)
     {
         $memberlist = $this->sqlselect("SELECT * FROM eventguests WHERE eventid=$eventid ORDER BY zusage,guestname");
         if ($this->checkEventOwner($eventid) == true) { 
