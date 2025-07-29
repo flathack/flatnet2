@@ -226,8 +226,8 @@ class Usermanager extends Functions
         $abfrage = "SELECT Name, Passwort FROM benutzer WHERE Name LIKE '$user' LIMIT 1";
         $row = $this->sqlselect($abfrage);
 
-        //Check ob altes passwort = dem alten eingegeben Passwort ist:
-        $hashOldPass = md5($altesPasswort);
+        //Check ob altes Passwort korrekt ist
+        $storedHash = $row[0]->Passwort;
         if (isset($absenden)) {
 
             if ($this->userHasRight("7", 0) == true) {
@@ -237,9 +237,15 @@ class Usermanager extends Functions
                     return false;
                 }
 
-                if ($row[0]->Passwort != $hashOldPass) {
+                if (!password_verify($altesPasswort, $storedHash) && $storedHash != md5($altesPasswort)) {
                     echo "<p class='meldung'>Altes Passwort stimmt nicht!</p>";
                 } else {
+                    if ($storedHash == md5($altesPasswort)) {
+                        $upgrade = password_hash($altesPasswort, PASSWORD_DEFAULT);
+                        $this->sqlInsertUpdateDeleteHW(
+                            "UPDATE benutzer SET Passwort='$upgrade' WHERE Name='$user' LIMIT 1"
+                        );
+                    }
 
                     if ($neuesPass == "" or $neuesPass2 == "") {
                         echo "<p class='meldung'>Neues Passwort ist leer!</p>";
@@ -248,7 +254,7 @@ class Usermanager extends Functions
                         if ($neuesPass != $neuesPass2) {
                             echo "<p class='meldung'>Die beiden Passwörte stimmen nicht überein.</p>";
                         } else {
-                            $hashedPass = md5($neuesPass);
+                            $hashedPass = password_hash($neuesPass, PASSWORD_DEFAULT);
                             $sqlupdate = "UPDATE benutzer SET Passwort='$hashedPass' WHERE Name='$user' LIMIT 1";
 
                             if ($this->sqlInsertUpdateDelete($sqlupdate) == true) {

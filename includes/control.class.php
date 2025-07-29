@@ -241,7 +241,7 @@ class Control extends Functions
                             echo "<p class='meldung'>Fehler, der Benutzer <strong>$username</strong> existiert bereits.</p>";
                         } else {
                             if ($passwort1 == $passwort2) {
-                                $passwortneu = md5($passwort1);
+                                $passwortneu = password_hash($passwort1, PASSWORD_DEFAULT);
                                 $query = "INSERT INTO benutzer (Name, Passwort, rights, versuche, forumRights) VALUES ('$username','$passwortneu','1','3','1')";
 
                                 if ($this->sqlInsertUpdateDelete($query) == true) {
@@ -345,7 +345,7 @@ class Control extends Functions
                         $noPassChange = 1;
                     } else {
                         $noPassChange = 0;
-                        $updatepassmd5 = md5($updatepass);
+                        $updatepassHash = password_hash($updatepass, PASSWORD_DEFAULT);
                     }
                     $forumRights = $_POST['forumRights'];
                     $newUserName = $_POST['newname'];
@@ -365,7 +365,7 @@ class Control extends Functions
                     if ($noPassChange == 1) {
                         $sqlupdate = "UPDATE benutzer SET forumRights='$forumRights', Name='$newUserName', titel='$titel' WHERE id='$selectedid'";
                     } else {
-                        $sqlupdate = "UPDATE benutzer SET Passwort='$updatepassmd5', forumRights='$forumRights', Name='$newUserName', titel='$titel' WHERE id='$selectedid'";
+                        $sqlupdate = "UPDATE benutzer SET Passwort='$updatepassHash', forumRights='$forumRights', Name='$newUserName', titel='$titel' WHERE id='$selectedid'";
                     }
 
                     if ($this->sqlInsertUpdateDelete($sqlupdate) == true) {
