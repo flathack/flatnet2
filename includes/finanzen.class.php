@@ -1887,7 +1887,7 @@ class FinanzenNEW extends functions
                                         for ($x = 1; $x <= $number; $x++) {
                                             $newdate = new DateTime($datum);
                                             $newdate->modify("+$x month");
-                                            echo "<p class='dezentInfo'>${x}: Buchung f&uuml;r Monat " . $newdate->format("Y-m-d") . "</p>";
+                                            echo "<p class='dezentInfo'>{$x}: Buchung f&uuml;r Monat " . $newdate->format("Y-m-d") . "</p>";
 
                                             $this->createUeberweisung($besitzer, $von, $nach, $text, $betrag, $newdate->format("Y-m-d"), $link);
 
